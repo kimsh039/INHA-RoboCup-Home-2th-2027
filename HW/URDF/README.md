@@ -1,4 +1,14 @@
-# 센서 랙 URDF
+# 로봇 URDF
+
+| 모델 | 경로 | 대표 URDF |
+|---|---|---|
+| Tracer 기본형 | [tracer/](tracer/) | `tracer/tracer_v1.urdf` |
+| Piper 팔·그리퍼 | [piper/](piper/) | `piper/piper_with_gripper.urdf` |
+| 센서 랙 | [sensor_rack_description/](sensor_rack_description/) | `sensor_rack_description/urdf/sensor_rack.urdf` |
+
+Tracer와 Piper는 로컬에서 사용하던 URDF와 참조 메시를 함께 저장한 모델입니다. 메시 경로는 각 URDF 파일 위치 기준의 상대 경로입니다. Piper의 팔 단독 모델과 Gazebo용 사본은 [Piper 설명](piper/README.md)을 참고하세요. 세 모델은 아직 하나의 로봇으로 결합되어 있지 않습니다.
+
+## 센서 랙 URDF
 
 Autodesk Fusion의 `final_assembly`에서 내보낸 센서 랙 모델입니다. 프로파일 프레임과 마운트, YDLIDAR G2, Livox Mid-360S, RealSense D435f를 포함합니다. 이동 플랫폼 본체와 매니퓰레이터는 포함하지 않습니다.
 
@@ -7,6 +17,8 @@ Autodesk Fusion의 `final_assembly`에서 내보낸 센서 랙 모델입니다. 
 ```text
 HW/URDF/
 ├── README.md
+├── tracer/                      # Tracer 기본형 URDF + meshes
+├── piper/                       # Piper 팔·그리퍼 URDF + meshes
 └── sensor_rack_description/       # ROS 2 ament_cmake 패키지
     ├── README.md                 # 좌표·물성·보정 가정 상세 설명
     ├── CMakeLists.txt

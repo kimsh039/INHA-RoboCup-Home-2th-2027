@@ -1,0 +1,251 @@
+<?xml version='1.0' encoding='utf-8'?>
+<robot name="tracer_v1">
+  <link name="base_link">
+    <visual>
+      <origin rpy="1.57 0 0" xyz="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/tracer_base_link_no_wheel.dae" />
+      </geometry>
+    </visual>
+    <collision>
+      <origin rpy="1.57 0 0" xyz="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/tracer_base_link_no_wheel.dae" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="inertial_link">
+    <inertial>
+      <mass value="132.3898489950015" />
+      <origin xyz="0.015 0.0231316650320557 0" />
+      <inertia ixx="0.185196122711036" ixy="4.30144213829512E-08" ixz="5.81037523686401E-08" iyy="0.364893736238929" iyz="-0.000386720198091934" izz="0.223868521722778" />
+    </inertial>
+  </link>
+  <joint name="inertial_joint" type="fixed">
+    <origin rpy="0 0 0" xyz="0 0 0" />
+    <parent link="base_link" />
+    <child link="inertial_link" />
+  </joint>
+  <link name="right_wheel_link">
+    <inertial>
+      <mass value="6" />
+      <origin xyz="0 0 0" />
+      <inertia ixx="0.7171" ixy="0" ixz="0" iyy="0.1361" iyz="0" izz="0.7171" />
+    </inertial>
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/tracer_wheel.dae" />
+      </geometry>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/tracer_wheel.dae" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="right_wheel" type="continuous">
+    <parent link="base_link" />
+    <child link="right_wheel_link" />
+    <origin rpy="0 0 0" xyz="0 -0.17 -0.082" />
+    <axis rpy="0 0 0" xyz="0 1 0" />
+  </joint>
+  <link name="left_wheel_link">
+    <inertial>
+      <mass value="6" />
+      <origin xyz="0 0 0" />
+      <inertia ixx="0.7171" ixy="0" ixz="0" iyy="0.1361" iyz="0" izz="0.7171" />
+    </inertial>
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/tracer_wheel.dae" />
+      </geometry>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/tracer_wheel.dae" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="left_wheel" type="continuous">
+    <parent link="base_link" />
+    <child link="left_wheel_link" />
+    <origin rpy="3.14 0 0" xyz="0 0.17 -0.082" />
+    <axis rpy="0 0 0" xyz="0 1 0" />
+  </joint>
+  <link name="fl_castor_link">
+    <inertial>
+      <mass value="1" />
+      <origin xyz="0 0 0" />
+      <inertia ixx="0.7171" ixy="0" ixz="0" iyy="0.1361" iyz="0" izz="0.7171" />
+    </inertial>
+    <visual>
+      <geometry>
+        <mesh filename="meshes/castor_joint.dae" />
+      </geometry>
+    </visual>
+  </link>
+  <joint name="fl_castor_wheel" type="continuous">
+    <origin rpy="-1.57 0 0" xyz="0.18955 0.17 -0.0380886" />
+    <parent link="base_link" />
+    <child link="fl_castor_link" />
+    <axis rpy="0 0 0" xyz="0 1 0" />
+  </joint>
+  <link name="fr_castor_link">
+    <inertial>
+      <mass value="1" />
+      <origin xyz="0 0 0" />
+      <inertia ixx="0.7171" ixy="0" ixz="0" iyy="0.1361" iyz="0" izz="0.7171" />
+    </inertial>
+    <visual>
+      <geometry>
+        <mesh filename="meshes/castor_joint.dae" />
+      </geometry>
+    </visual>
+  </link>
+  <joint name="fr_castor_wheel" type="continuous">
+    <origin rpy="-1.57 0 0" xyz="0.18955 -0.17 -0.0380886" />
+    <parent link="base_link" />
+    <child link="fr_castor_link" />
+    <axis rpy="0 0 0" xyz="0 1 0" />
+  </joint>
+  <link name="rr_castor_link">
+    <inertial>
+      <mass value="1" />
+      <origin xyz="0 0 0" />
+      <inertia ixx="0.7171" ixy="0" ixz="0" iyy="0.1361" iyz="0" izz="0.7171" />
+    </inertial>
+    <visual>
+      <geometry>
+        <mesh filename="meshes/castor_joint.dae" />
+      </geometry>
+    </visual>
+  </link>
+  <joint name="rr_castor_wheel" type="continuous">
+    <origin rpy="-1.57 0 0" xyz="-0.18955 -0.17 -0.0380886" />
+    <parent link="base_link" />
+    <child link="rr_castor_link" />
+    <axis rpy="0 0 0" xyz="0 1 0" />
+  </joint>
+  <link name="rl_castor_link">
+    <inertial>
+      <mass value="1" />
+      <origin xyz="0 0 0" />
+      <inertia ixx="0.7171" ixy="0" ixz="0" iyy="0.1361" iyz="0" izz="0.7171" />
+    </inertial>
+    <visual>
+      <geometry>
+        <mesh filename="meshes/castor_joint.dae" />
+      </geometry>
+    </visual>
+  </link>
+  <joint name="rl_castor_wheel" type="continuous">
+    <origin rpy="-1.57 0 0" xyz="-0.18955 0.17 -0.0380886" />
+    <parent link="base_link" />
+    <child link="rl_castor_link" />
+    <axis rpy="0 0 0" xyz="0 1 0" />
+  </joint>
+  <link name="fl_wheel_link">
+    <inertial>
+      <mass value="1" />
+      <origin xyz="0 0 0" />
+      <inertia ixx="0.3131" ixy="0" ixz="0" iyy="0.3131" iyz="0" izz="0.1361" />
+    </inertial>
+    <visual>
+      <geometry>
+        <mesh filename="meshes/castor.dae" />
+      </geometry>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0" />
+      <geometry>--&gt;
+                <mesh filename="meshes/castor.dae" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="fl_wheel" type="continuous">
+    <parent link="fl_castor_link" />
+    <child link="fl_wheel_link" />
+    <dynamics damping="0.0" friction="0.0" />
+    <origin rpy="0 0 0" xyz="-0.0218084 0.067 0" />
+    <axis rpy="0 0 0" xyz="0 0 1" />
+  </joint>
+  <link name="fr_wheel_link">
+    <inertial>
+      <mass value="1" />
+      <origin xyz="0 0 0" />
+      <inertia ixx="0.3131" ixy="0" ixz="0" iyy="0.3131" iyz="0" izz="0.1361" />
+    </inertial>
+    <visual>
+      <geometry>
+        <mesh filename="meshes/castor.dae" />
+      </geometry>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0" />
+      <geometry>--&gt;
+                <mesh filename="meshes/castor.dae" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="fr_wheel" type="continuous">
+    <parent link="fr_castor_link" />
+    <child link="fr_wheel_link" />
+    <dynamics damping="0.0" friction="0.0" />
+    <origin rpy="0 0 0" xyz="-0.0218084 0.067 0" />
+    <axis rpy="0 0 0" xyz="0 0 1" />
+  </joint>
+  <link name="rr_wheel_link">
+    <inertial>
+      <mass value="1" />
+      <origin xyz="0 0 0" />
+      <inertia ixx="0.3131" ixy="0" ixz="0" iyy="0.3131" iyz="0" izz="0.1361" />
+    </inertial>
+    <visual>
+      <geometry>
+        <mesh filename="meshes/castor.dae" />
+      </geometry>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/castor.dae" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="rr_wheel" type="continuous">
+    <parent link="rr_castor_link" />
+    <child link="rr_wheel_link" />
+    <dynamics damping="0.0" friction="0.0" />
+    <origin rpy="0 0 0" xyz="-0.0218084 0.067 0" />
+    <axis rpy="0 0 0" xyz="0 0 1" />
+  </joint>
+  <link name="rl_wheel_link">
+    <inertial>
+      <mass value="1" />
+      <origin xyz="0 0 0" />
+      <inertia ixx="0.3131" ixy="0" ixz="0" iyy="0.3131" iyz="0" izz="0.1361" />
+    </inertial>
+    <visual>
+      <geometry>
+        <mesh filename="meshes/castor.dae" />
+      </geometry>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/castor.dae" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="rl_wheel" type="continuous">
+    <parent link="rl_castor_link" />
+    <child link="rl_wheel_link" />
+    <dynamics damping="0.0" friction="0.0" />
+    <origin rpy="0 0 0" xyz="-0.0218084 0.067 0" />
+    <axis rpy="0 0 0" xyz="0 0 1" />
+  </joint>
+</robot>
