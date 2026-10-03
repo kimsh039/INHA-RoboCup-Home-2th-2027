@@ -10,9 +10,9 @@
 
 | 단계 | 센서 / 모델 / 도구 | 역할 |
 |---|---|---|
-| 헤드 검출·분할 | 헤드 **D435f RGB**, Ultralytics **YOLO11s-seg** | 클래스, 바운딩박스, 인스턴스 마스크 생성 |
+| 헤드 검출·분할 | 헤드 **D435f RGB**, Ultralytics **YOLO11n-seg** | 클래스, 바운딩박스, 인스턴스 마스크 생성 |
 | 접근용 3D 위치 | **Livox Mid-360S**, `livox_ros_driver2`, ROS 2 `tf2`, **PCL** | 마스크에 대응하는 LiDAR 군집과 대표 위치 추정 |
-| 손목 재검출 | 손목 **D435 RGB**, YOLO11s-seg | 접근 후 달라진 시점에서 같은 목표를 다시 선택 |
+| 손목 재검출 | 손목 **D435 RGB**, YOLO11n-seg | 접근 후 달라진 시점에서 같은 목표를 다시 선택 |
 | 정밀 분할 | **SAM 2.1 Hiera Small**, `SAM2ImagePredictor` | 손목 이미지의 box/point prompt로 목표 마스크 정제 |
 | 물체·장면 점군 | 손목 D435 depth, `realsense-ros` / `librealsense`, **Open3D** | RGB-depth 정합, 유효 depth 선택, 역투영·이상점 제거 |
 | 파지 후보 | **GraspNet Baseline**, `graspnetAPI` | 6-DoF 파지 위치·방향, 그리퍼 폭, 접근 깊이, 점수 생성 |
@@ -21,7 +21,7 @@
 
 | 모델 | 체크포인트 / 설정 | 선택 기준 |
 |---|---|---|
-| YOLO11s-seg | `yolo11s-seg.pt` | 탐색 단계의 검출과 마스크를 한 모델에서 생성. 부하가 크면 `yolo11n-seg.pt` 비교 |
+| YOLO11n-seg | `yolo11n-seg.pt` | 헤드 검출·분할과 손목 재검출에 사용할 기본 모델 |
 | SAM 2.1 Small | `sam2.1_hiera_small.pt` + `configs/sam2.1/sam2.1_hiera_s.yaml` | 손목 정지 이미지의 정밀 분할. 추론 시간과 마스크 품질을 함께 평가 |
 | GraspNet Baseline | `checkpoint-rs.tar` | RealSense 데이터로 학습한 공식 baseline을 초기 비교 기준으로 사용 |
 
