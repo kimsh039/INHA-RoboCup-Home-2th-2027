@@ -5,9 +5,12 @@ import xml.etree.ElementTree as E
 parser=argparse.ArgumentParser()
 parser.add_argument('--test-wall',action='store_true',help='Add a wall 2 m forward for sensor validation')
 args=parser.parse_args()
-P=Path(__file__).resolve().parent
-r=E.parse(P/'tracer_sensor_rack_piper_gazebo.urdf')
-for m in r.findall('.//mesh'): m.set('filename',str((P/m.get('filename')).resolve()))
+HERE=Path(__file__).resolve().parent
+DESCRIPTION=HERE.parent/'robot_description'
+P=HERE/'build'
+P.mkdir(exist_ok=True)
+r=E.parse(DESCRIPTION/'tracer_sensor_rack_piper_gazebo.urdf')
+for m in r.findall('.//mesh'): m.set('filename',str((DESCRIPTION/m.get('filename')).resolve()))
 r.write(P/'sim_local.urdf',encoding='unicode')
 s=subprocess.run(['gz','sdf','-p',str(P/'sim_local.urdf')],capture_output=True,text=True,check=True)
 m=E.fromstring(s.stdout).find('model'); m.set('name','robocup')

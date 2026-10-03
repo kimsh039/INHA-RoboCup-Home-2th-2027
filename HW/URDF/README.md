@@ -6,7 +6,7 @@
 | Piper 팔·그리퍼 | [piper/](piper/) | `piper/piper_with_gripper.urdf` |
 | 센서 랙 | [sensor_rack_description/](sensor_rack_description/) | `sensor_rack_description/urdf/sensor_rack.urdf` |
 
-Tracer와 Piper는 로컬에서 사용하던 URDF와 참조 메시를 함께 저장한 모델입니다. 메시 경로는 각 URDF 파일 위치 기준의 상대 경로입니다. Piper의 팔 단독 모델과 Gazebo용 사본은 [Piper 설명](piper/README.md)을 참고하세요. 세 모델은 아직 하나의 로봇으로 결합되어 있지 않습니다.
+Tracer와 Piper는 로컬에서 사용하던 URDF와 참조 메시를 함께 저장한 모델입니다. 메시 경로는 각 URDF 파일 위치 기준의 상대 경로입니다. Piper의 팔 단독 모델과 Gazebo용 사본은 [Piper 설명](piper/README.md)을 참고하세요. 이 폴더는 세 원본 모델을 보관합니다. 결합된 URDF와 Gazebo 실행·제어 도구는 [simulation](../../simulation/README.md)에 있습니다.
 
 ## 센서 랙 URDF
 

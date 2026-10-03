@@ -69,9 +69,9 @@ Gazebo 렌더링 카메라는 +X 전방/+Z 상방을 사용하고 메시지의 `
 Gazebo Harmonic과 시스템 Python Gazebo 바인딩을 사용합니다.
 
 ```bash
-cd HW/URDF/tracer_sensor_rack_piper
-python3 build.py
-./start_sim.sh
+cd simulation
+python3 robot_description/build.py
+./gazebo/start_sim.sh
 ```
 
 센서 렌더링에는 world의 `gz-sim-sensors-system`/`ogre2`가 필요합니다. URDF만 다른 world에 넣으면 해당 플러그인도 추가해야 합니다. 실행 중 Play 상태여야 데이터가 갱신됩니다.
@@ -79,15 +79,15 @@ python3 build.py
 검증용 벽은 생성 옵션으로만 추가되며 기본 world에는 포함되지 않습니다.
 
 ```bash
-python3 make_sim.py --test-wall
-GZ_PARTITION=robocup_sensor_test gz sim -s -r motion.world.sdf
+python3 gazebo/make_sim.py --test-wall
+GZ_IP=127.0.0.1 GZ_PARTITION=robocup_sensor_test gz sim -s -r gazebo/build/motion.world.sdf
 # 다른 터미널
-GZ_PARTITION=robocup_sensor_test python3 check_sensors.py --wall
+GZ_PARTITION=robocup_sensor_test python3 tools/check_sensors.py --wall
 ```
 
-`check_sensors.py`는 각 토픽의 실제 메시지 5개로 sim-time 발행 주기, frame_id, 스캔/포인트 수, 영상 크기/버퍼, 유효 거리와 정면 벽의 깊이를 검사합니다. 벽 앞면 X=1.9 m, 카메라 X=−0.12495 m이므로 중심 깊이 기대값은 약 2.025 m입니다.
+`check_sensors.py`는 초기 메시지 3개를 제외하고 약 2초의 simulation time 샘플로 sim-time 발행 주기, frame_id, 스캔/포인트 수, 영상 크기/버퍼, 유효 거리와 정면 벽의 깊이를 검사합니다. 벽 앞면 X=1.9 m, 카메라 X=−0.12495 m이므로 중심 깊이 기대값은 약 2.025 m입니다.
 
-`gz_frame_id`/`optical_frame_id`에 대해 SDFormat 확장 태그 경고가 나올 수 있습니다. 실제 지원/프레임은 메시지 검증으로 확인합니다. 측정률은 simulation time 기준이며 GPU 성능에 따라 wall-clock 발행률이 낮아질 수 있습니다.
+`gz_frame_id`/`optical_frame_id`에 대해 SDFormat 확장 태그 경고가 나올 수 있습니다. 실제 지원/프레임은 메시지 검증으로 확인합니다. 통신은 기본 `GZ_IP=127.0.0.1`을 사용합니다. 측정률은 simulation time 기준이며 GPU 성능에 따라 wall-clock 발행률이 낮아질 수 있습니다.
 
 ## 확인 결과 (2026-10-03)
 
