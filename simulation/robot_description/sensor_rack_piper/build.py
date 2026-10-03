@@ -12,7 +12,7 @@ def build(source, output):
     rack = ET.parse(ROOT/'sensor_rack_description/urdf/sensor_rack.urdf').getroot()
     rack.set('name', 'sensor_rack_piper')
     for mesh in rack.findall('.//mesh'):
-        mesh.set('filename', os.path.relpath(ROOT/'sensor_rack_description'/mesh.get('filename').split('package://sensor_rack_description/')[1], HERE))
+        mesh.set('filename', os.path.relpath(ROOT/'sensor_rack_description'/mesh.get('filename').split('package://sensor_rack_description/')[1], HERE).replace(os.sep, '/'))
     arm = ET.parse(ROOT/'piper'/source).getroot()
     for node in arm:
         if node.tag == 'link' and node.get('name') == 'world':
@@ -27,7 +27,7 @@ def build(source, output):
                 if e.get(attr):
                     e.set(attr, 'piper_' + e.get(attr))
             if e.tag == 'mesh':
-                e.set('filename', os.path.relpath(ROOT/'piper'/e.get('filename'), HERE))
+                e.set('filename', os.path.relpath(ROOT/'piper'/e.get('filename'), HERE).replace(os.sep, '/'))
         rack.append(node)
     joint = ET.SubElement(rack,'joint',name='rack_to_piper_base',type='fixed')
     ET.SubElement(joint,'parent',link='cad_Manipulator_mount_1')
