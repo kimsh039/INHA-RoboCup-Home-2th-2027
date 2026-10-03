@@ -3,8 +3,7 @@ set -euo pipefail
 cd "$(dirname "$(readlink -f "$0")")"
 # Keep Gazebo discovery on this PC, avoiding other simulations on the LAN.
 export GZ_IP="${GZ_IP:-127.0.0.1}"
-python3 ../robot_description/build.py
-python3 make_sim.py
+python3 make_sim.py "$@"
 python3 ../tools/control.py &
 control_pid=$!
 trap 'kill "$control_pid" 2>/dev/null || true' EXIT

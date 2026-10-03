@@ -1,6 +1,7 @@
 from pathlib import Path
 import subprocess
 import argparse
+import tempfile
 import xml.etree.ElementTree as E
 parser=argparse.ArgumentParser()
 parser.add_argument('--test-wall',action='store_true',help='Add a wall 2 m forward for sensor validation')
@@ -10,7 +11,7 @@ HERE=Path(__file__).resolve().parent
 DESCRIPTION=HERE.parent/'robot_description'
 P=HERE/'build'
 P.mkdir(exist_ok=True)
-r=E.parse(DESCRIPTION/'tracer_sensor_rack_piper_gazebo.urdf')
+r=E.parse(DESCRIPTION/'robocup.urdf')
 for m in r.findall('.//mesh'): m.set('filename',str((DESCRIPTION/m.get('filename')).resolve()))
 # Wheel contact for the sim only; masses/inertias come from the URDF (HW/URDF/tracer, 30 kg).
 # With the source mesh collisions all six wheels touch the floor at once, so the drive wheels
@@ -32,8 +33,11 @@ for c in ('fl','fr','rl','rr'):
  # drive wheels are sprung); low-friction casters only catch the body when it pitches.
  set_collision(f'{c}_wheel_link','sphere',radius=0.0365)
  friction(f'{c}_wheel_link',0.01)
-r.write(P/'sim_local.urdf',encoding='unicode')
-s=subprocess.run(['gz','sdf','-p',str(P/'sim_local.urdf')],capture_output=True,text=True,check=True)
+# Convert through a temporary file; robocup.urdf remains the only stored URDF.
+with tempfile.TemporaryDirectory(prefix='robocup-sdf-') as temporary:
+ local=Path(temporary)/'robot.urdf'
+ r.write(local,encoding='unicode')
+ s=subprocess.run(['gz','sdf','-p',str(local)],capture_output=True,text=True,check=True)
 m=E.fromstring(s.stdout).find('model'); m.set('name','robocup')
 E.SubElement(m,'pose').text='0 0 0.145 0 0 0'
 # Cancel the source left wheel joint's half-turn so both drive axes point +Y.

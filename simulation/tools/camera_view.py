@@ -6,7 +6,8 @@ import threading
 import time
 
 p = argparse.ArgumentParser(description=__doc__)
-p.add_argument('--partition', default=os.environ.get('GZ_PARTITION', 'robocup_projectsh_sensor_view_20261003'))
+p.add_argument('--partition', default=os.environ.get('GZ_PARTITION', 'robocup_motion'))
+p.add_argument('--camera', choices=['head', 'wrist'], default='head', help='Select the rack or wrist camera')
 a = p.parse_args()
 os.environ.setdefault('GZ_IP', '127.0.0.1')
 os.environ['GZ_PARTITION'] = a.partition
@@ -29,8 +30,9 @@ def receive(kind):
             latest[kind] = (msg, time.monotonic())
     return callback
 
-for kind, topic in [('RGB', '/robocup/camera/color/image'), ('Depth', '/robocup/camera/depth/image')]:
-    win = Gtk.Window(title='RoboCup Camera — ' + kind)
+prefix = '/robocup/wrist_camera' if a.camera == 'wrist' else '/robocup/camera'
+for kind, topic in [('RGB', prefix + '/color/image'), ('Depth', prefix + '/depth/image')]:
+    win = Gtk.Window(title='RoboCup ' + a.camera + ' Camera — ' + kind)
     win.set_default_size(800, 490)
     box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=4)
     view = Gtk.Image()

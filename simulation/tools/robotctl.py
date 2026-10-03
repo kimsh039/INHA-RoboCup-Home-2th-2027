@@ -11,7 +11,7 @@ import tty
 
 LIMITS=[(-2.6179938,2.6179938),(0,3.1415926),(-2.9670597,0),(-1.7453292,1.7453292),(-1.2217304,1.2217304),(-2.0943951,2.0943951)]
 p=argparse.ArgumentParser(description='Gazebo Tracer / Piper terminal controls')
-p.add_argument('--partition',default=os.environ.get('GZ_PARTITION','robocup_projectsh_sensor_view_20261003'))
+p.add_argument('--partition',default=os.environ.get('GZ_PARTITION','robocup_motion'))
 s=p.add_subparsers(dest='command',required=True)
 d=s.add_parser('drive'); d.add_argument('linear',type=float,help='m/s'); d.add_argument('angular',type=float,help='rad/s'); d.add_argument('--seconds',type=float,default=1)
 s.add_parser('stop'); s.add_parser('home'); s.add_parser('teleop')
