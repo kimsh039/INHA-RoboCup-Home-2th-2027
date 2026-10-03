@@ -27,12 +27,12 @@
 
 | 항목 | 제조사 문서 | 적용 |
 |---|---|---|
-| 시야각 | 360° | 360° 회전의 714개 각도 bins |
-| 측정률 | 5,000 measurements/s | 714×7=4,998 rays/s (정수 샘플 수로 인한 반올림) |
-| 회전 주기 | 5~12 Hz, 공장 기본 7 Hz | 7 Hz |
-| 거리 | 0.12~16 m @80% 반사율 | 0.12~16 m |
+| 시야각 | 360° | 360° 회전의 500개 각도 bins |
+| 측정률 | 5,000 measurements/s | 500×10=5,000 rays/s |
+| 회전 주기 | 5~12 Hz, 공장 기본 7 Hz | 10 Hz (SLAM/Nav2 운영값, 실기 드라이버도 10 Hz로 설정해야 함) |
+| 거리 | 0.12~16 m @80% 반사율 | 0.12~12 m (운영 상한) |
 | 레이저 경사 | 대표 1°, 범위 0.25~1.75° | 로컬 수평면 위 1° 단일 원뿔 스캔 |
-| 각도 간격 | 7 Hz에서 0.504° | 약 0.5042° |
+| 각도 간격 | 10 Hz에서 0.72° | 0.72° |
 
 SDK에는 G2 최소 거리 0.28 m가 기재돼 있어 데이터시트와 다릅니다. 이번 프로필은 읽은 V1.3 데이터시트의 0.12 m를 선택했습니다. G2A/G2C 또는 다른 리비전으로 대체하지 않았습니다. 실물 리비전/드라이버 필터에 맞춰 최소 거리를 변경할 수 있습니다.
 
@@ -62,7 +62,7 @@ Gazebo 렌더링 카메라는 +X 전방/+Z 상방을 사용하고 메시지의 `
 | `/robocup/camera/color/image` | `gz.msgs.Image` | `camera_optical_frame` |
 | `/robocup/camera/color/camera_info` | `gz.msgs.CameraInfo` | `camera_optical_frame` |
 
-3D 라이다는 `/points`를 사용하세요. 다중 행 LaserScan을 ROS 2의 단일 평면 LaserScan으로 브리지하면 3D 구조를 표현할 수 없습니다. ROS 2 사용 시 별도 `ros_gz_bridge`와 `robot_state_publisher`를 구성해야 합니다. 이번 작업은 Gazebo Transport의 데이터 생성과 검증까지이며 ROS 설치/브리지 실행은 포함하지 않습니다.
+3D 라이다는 `/points`를 사용하세요. 다중 행 LaserScan을 ROS 2의 단일 평면 LaserScan으로 브리지하면 3D 구조를 표현할 수 없습니다. G2 `/scan`의 ROS 2 브리지는 `ros2/sim.launch.py`와 `ros2/ros_bridge.yaml`에 있습니다([README](../README.md#ros-2-시뮬레이션)). Mid-360S와 D435f는 아직 ROS 2로 브리지하지 않습니다.
 
 ## 실행 및 검증
 
@@ -93,12 +93,14 @@ GZ_PARTITION=robocup_sensor_test python3 tools/check_sensors.py --wall
 
 Harmonic 8.15.0에서 서버를 실행해 실제 메시지를 수신했습니다.
 
-- G2: 714 rays/scan, 유효 거리 277개, `laser_frame`, 관측 sim-time 주기 약 7.07 Hz.
+- G2: 500 rays/scan, `laser_frame`, sim-time 주기 10.0 Hz (2026-10-03 10 Hz/12 m 변경 후 재검증).
 - Mid-360S: 20,000 rays 및 20,000 points/frame, `livox_frame`, 약 10.42 Hz.
 - D435f depth/RGB: 각각 1280×720 / 1920×1080, `camera_optical_frame`, 약 31.75 Hz.
 - 정면 벽 중심 depth: 2.024 m, 기대값 약 2.025 m.
 - Depth와 RGB CameraInfo 토픽이 별도로 존재함을 확인.
 
-설정 주기는 각각 7/10/30 Hz입니다. 샘플 5개의 timestamp로 추정한 관측값은 Gazebo 렌더링 업데이트 스케줄에 따라 소폭 달랐습니다. 스크립트는 설정값 대비 15% 이내를 검사합니다. 이것은 실제 센서 주기/노이즈/재질 응답의 인증 시험이 아닙니다.
+설정 주기는 각각 10/10/30 Hz입니다. 처음 샘플 5개로 추정하던 이전 방식은 시작 직후의 불규칙한 timestamp 때문에 값이 흔들렸습니다. 스크립트는 설정값 대비 15% 이내를 검사합니다. 이것은 실제 센서 주기/노이즈/재질 응답의 인증 시험이 아닙니다.
 
-거리 검사를 추가한 최종 재검증에서도 통과했습니다. G2 정면 ray는 기대 1.9001 m / 측정 1.9001 m, Mid-360S는 기대 2.0802 m / 측정 2.0794 m였습니다. 이때 관측 주기는 G2 7.04 Hz, Mid-360S 10.00 Hz, 카메라 30.08 Hz였습니다.
+거리 검사를 추가한 최종 재검증에서도 통과했습니다. G2 정면 ray는 기대 1.9001 m / 측정 1.9001 m, Mid-360S는 기대 2.0802 m / 측정 2.0791 m, 정면 벽 depth는 2.024 m였습니다. 이때 관측 주기는 G2 10.0 Hz, Mid-360S 10.0 Hz, 카메라 30.3 Hz였습니다.
+
+빈 world에서도 G2 ray 일부(약 13%)가 랙 기둥에 닿습니다. 로봇 기준 ±68~80°에서 0.20~0.23 m, ±124~136°에서 0.25~0.28 m입니다. CAD 형상 그대로이므로 실제 G2도 같은 위치가 가려질 것으로 예상합니다. SLAM/Nav2에서는 최소 거리를 약 0.3 m로 두거나 해당 각도를 걸러야 합니다.
