@@ -37,7 +37,10 @@ def setup(context):
     gui = LaunchConfiguration('gui').perform(context) == 'true'
     rviz = LaunchConfiguration('rviz').perform(context) == 'true'
 
-    subprocess.run([sys.executable, str(SIM / 'robot_description' / 'build.py')], check=True)
+    build_cmd=[sys.executable, str(SIM / 'robot_description' / 'build.py')]
+    if LaunchConfiguration('wrist_camera').perform(context)=='true':
+        build_cmd.append('--with-wrist-camera')
+    subprocess.run(build_cmd, check=True)
     subprocess.run([sys.executable, str(SIM / 'gazebo' / 'make_sim.py'), '--world', world], check=True)
     # make_sim.py writes absolute mesh paths; RViz needs them as file:// URIs.
     urdf = (BUILD / 'sim_local.urdf').read_text().replace('filename="/', 'filename="file:///')
@@ -66,6 +69,7 @@ def generate_launch_description():
         DeclareLaunchArgument('world', default_value='empty', choices=['empty', 'room']),
         DeclareLaunchArgument('gui', default_value='true', choices=['true', 'false']),
         DeclareLaunchArgument('rviz', default_value='true', choices=['true', 'false']),
+        DeclareLaunchArgument('wrist_camera', default_value='false', choices=['true', 'false']),
         # Gazebo and the bridge must share these, or the bridge never finds the sim.
         # GZ_IP keeps discovery on this PC so other sims on the LAN don't mix in.
         SetEnvironmentVariable('GZ_PARTITION', 'robocup_motion'),

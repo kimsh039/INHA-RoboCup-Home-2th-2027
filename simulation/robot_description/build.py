@@ -11,7 +11,7 @@ HERE=Path(__file__).resolve().parent
 ROOT=HERE.parents[1]/'HW/URDF'
 sys.path.insert(0, str(HERE.parent/'gazebo'))
 
-def build(variant, xyz, yaw):
+def build(variant, xyz, yaw, wrist_camera=False):
     tracer=E.parse(ROOT/'tracer/tracer_v1.urdf').getroot()
     tracer.set('name','tracer_sensor_rack_piper')
     for m in tracer.findall('.//mesh'):
@@ -30,6 +30,11 @@ def build(variant, xyz, yaw):
     E.SubElement(j,'parent',link='base_link')
     E.SubElement(j,'child',link='rack_base_link')
     E.SubElement(j,'origin',xyz=' '.join(map(str,xyz)),rpy=f'0 0 {yaw}')
+    if wrist_camera:
+        import importlib.util
+        spec=importlib.util.spec_from_file_location('wrist_camera_merge',ROOT/'wrist_camera_description/merge.py')
+        module=importlib.util.module_from_spec(spec); spec.loader.exec_module(module)
+        module.add_wrist_camera(tracer,HERE,variant)
     links=[l.get('name') for l in tracer.findall('link')]
     joints=tracer.findall('joint'); names=[j.get('name') for j in joints]
     assert len(set(links))==len(links) and len(set(names))==len(names)
@@ -54,7 +59,8 @@ if __name__=='__main__':
     p=argparse.ArgumentParser()
     p.add_argument('--xyz',type=float,nargs=3,default=[0,0,0.01611])
     p.add_argument('--yaw',type=float,default=0)
+    p.add_argument('--with-wrist-camera',action='store_true',help='Attach provisional wrist camera geometry/TF; add camera sensors for Gazebo')
     a=p.parse_args()
     subprocess.run([sys.executable,str(HERE/'sensor_rack_piper/build.py')],check=True)
-    build(False,a.xyz,a.yaw)
-    build(True,a.xyz,a.yaw)
+    build(False,a.xyz,a.yaw,a.with_wrist_camera)
+    build(True,a.xyz,a.yaw,a.with_wrist_camera)

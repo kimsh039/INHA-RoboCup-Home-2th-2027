@@ -1,5 +1,7 @@
 # 로봇 URDF
 
+Piper 손목 카메라의 메시·독립 URDF·장착 좌표·병합 스크립트는 [wrist_camera_description](wrist_camera_description/README.md)에 있습니다. Ubuntu에서는 `wrist_camera:=true` 옵션으로 선택할 수 있습니다.
+
 | 모델 | 경로 | 대표 URDF |
 |---|---|---|
 | Tracer 기본형 | [tracer/](tracer/) | `tracer/tracer_v1.urdf` |

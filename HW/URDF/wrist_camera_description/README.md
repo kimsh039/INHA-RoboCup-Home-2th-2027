@@ -1,0 +1,91 @@
+# Ubuntu에서 Piper 손목 카메라 통합하기
+
+2026-10-03. 필요한 STL·독립 URDF·장착 좌표·병합 스크립트가 모두 저장소에 포함돼 있다. Fusion이나 CAD 변환 패키지 없이 Python 3 표준 라이브러리로 합칠 수 있다.
+
+## 가장 빠른 실행
+
+저장소 루트에서 `git pull`한 뒤 기존 ROS 2/Gazebo 실행 환경을 활성화하고 실행한다. 기존 시뮬레이션은 먼저 종료한다.
+
+```bash
+git pull --ff-only
+ros2 launch simulation/ros2/sim.launch.py world:=room wrist_camera:=true
+```
+
+기존 launch의 ROS/Gazebo 환경 요구사항은 [simulation 가이드](../../../simulation/README.md)를 따른다. 위 옵션은 통합 URDF를 재생성하고 손목 카메라의 형상·TF·Gazebo depth/RGB 센서를 추가한 다음 SDF/world를 생성한다. 랙 카메라는 그대로 유지한다. `wrist_camera`의 기본값은 `false`라 기존 팀원의 모델 실행 방식은 유지된다.
+
+실행 시 표준 통합 URDF 두 파일은 선택한 옵션에 맞춰 로컬에서 재생성된다. 하나의 checkout에서 두 옵션으로 동시에 실행하지 않는다.
+
+## URDF만 합치기
+
+ROS나 Gazebo 없이도 다음 명령으로 별도 통합 파일 두 개를 생성할 수 있다.
+
+```bash
+python3 simulation/robot_description/build.py
+python3 HW/URDF/wrist_camera_description/merge.py
+```
+
+결과는 아래 경로이며 이 두 파일도 이미 저장소에 포함돼 있다.
+
+- [일반 손목 카메라 통합 URDF](../../../simulation/robot_description/tracer_sensor_rack_piper_wrist_camera.urdf)
+- [Gazebo 손목 카메라 통합 URDF](../../../simulation/robot_description/tracer_sensor_rack_piper_wrist_camera_gazebo.urdf)
+
+Gazebo 실행 스크립트는 표준 파일명을 사용하므로 별도 파일을 만든 것만으로 기본 실행에 손목 카메라가 추가되지는 않는다. 위 launch 옵션을 쓰거나 다음처럼 표준 파일명을 직접 갱신한다.
+
+```bash
+python3 simulation/robot_description/build.py --with-wrist-camera
+python3 simulation/gazebo/make_sim.py --world room
+```
+
+`start_sim.sh`는 기본 모델을 다시 생성하므로 손목 카메라 실행에는 위 ROS launch 옵션을 사용한다. `merge.py --replace-main`도 제공하지만 이미 손목 카메라가 들어간 모델을 중복 병합하면 오류를 낸다. `build.py`는 원본부터 재생성하므로 반복 실행할 수 있다.
+
+## 포함된 자료
+
+| 파일 | 용도 |
+|---|---|
+| `meshes/wrist_camera_mount_link.stl` | 마운트 컴포넌트 원점 기준, 미터 단위 |
+| `meshes/wrist_camera_cad_link.stl` | 카메라 컴포넌트 원점 기준, 미터 단위 |
+| `wrist_camera.urdf` | 마운트·카메라·카메라 기준 프레임·광학 프레임 |
+| `placement.json` | `piper_gripper_base` → 마운트 장착 변환 |
+| `merge.py` | 이름 중복·부모 링크·단일 루트·메시 경로 검증 후 병합 |
+| `source/manipulator_mount_assembly.step` | 카메라와 마운트의 원본 CAD 형상 |
+| `source/*json` | 두 Fusion 문서의 부품 변환과 정합 계산 결과 |
+| `source/placement_check.png` | STEP과 기존 Piper 형상 비교 그림 |
+
+STL은 배치 STEP에서 마운트 solid 60, 카메라 solids 61·62를 추출한 뒤, Fusion JSON의 해당 컴포넌트 전역 변환의 역변환을 적용해 각 컴포넌트 좌표로 되돌린 것이다. STEP 치수는 mm, STL은 m이다. 배치 전체 STEP(약 38 MB)은 포함하지 않았으며 우분투에서 병합·실행하는 데 필요하지 않다.
+
+## 연결과 확인
+
+```text
+piper_gripper_base
+└─ wrist_camera_mount_link
+   └─ wrist_camera_cad_link
+      └─ wrist_camera_link          # +X 전방, +Y 왼쪽, +Z 위
+         └─ wrist_camera_optical_frame  # +Z 전방, +X 오른쪽, +Y 아래
+```
+
+모두 fixed 연결이다. Piper 6번 관절이 회전하면 카메라도 함께 회전하며 손가락 개폐에는 따라 움직이지 않는다. RViz에서 TF와 RobotModel을 표시하고 다음을 확인한다.
+
+1. 그리퍼 몸통 위에 마운트·카메라가 배치되는지 확인한다.
+2. 팔 6번 관절을 움직여 카메라가 몸통과 함께 회전하는지 확인한다.
+3. 손가락을 열고 닫아 카메라의 몸통 기준 위치가 유지되는지 확인한다.
+4. 광학 프레임의 +Z가 렌즈 전방인지 확인한다.
+
+```bash
+ros2 run tf2_ros tf2_echo piper_gripper_base wrist_camera_link
+ros2 run tf2_ros tf2_echo base_link wrist_camera_optical_frame
+ros2 topic list | grep wrist_camera
+ros2 topic hz /wrist_camera/color/image_raw
+```
+
+새 ROS 토픽은 `/wrist_camera/color/image_raw`, `/wrist_camera/color/camera_info`, `/wrist_camera/depth/image_raw`, `/wrist_camera/depth/camera_info`, `/wrist_camera/depth/points`이다. Gazebo 원본 토픽 접두사는 `/robocup/wrist_camera/`이며 기존 랙 카메라와 구분된다. 카메라가 꺼진 기본 모델에서는 이 토픽의 데이터가 발행되지 않는다.
+
+## 가정과 검증 상태
+
+- 장착 좌표는 [장착 계산 문서](../WRIST_CAMERA_INTEGRATION.md)의 **잠정 형상 정합값**이다. STEP과 기존 URDF의 그리퍼 리비전 차이가 있어 체결 기준면·볼트 구멍·실측 대조가 필요하다. `placement.json`에서 수정할 수 있다.
+- CAD 카메라의 +Z 전방·+X 왼쪽·+Y 위를 가정해 body/optical 프레임을 구성했다. body/optical 프레임은 CAD 원점을 공유하며 실제 RGB/depth 센서의 별도 광학 원점·외부 보정은 반영하지 않았다.
+- 마운트는 재료 미확인으로 **PLA 밀도 1240 kg/m³**, 체적 약 12.149 cm³, 질량 약 15.07 g을 가정했다. 실제 금속/다른 출력 재료이면 물성을 변경한다. 카메라는 기존 랙 D435f 모델과 같은 명목 75 g을 사용했다.
+- 두 부품의 무게중심과 관성은 각각의 경계 상자를 이용한 균일 밀도 근사다. 충돌 형상도 경계 상자이므로 마운트의 그리퍼를 감싸는 홈은 표현하지 않는다. 간섭 검증에 쓰지 않는다.
+- Gazebo depth/RGB는 기존 랙 카메라와 같은 핀홀 근사(30 Hz, depth 1280×720/FOV 87°, RGB 1920×1080/FOV 69°)다. 실제 D435f 보정·IR·정합·노이즈를 재현하지 않는다.
+- Windows에서 XML 트리, 메시 존재/단위, 관성, 좌표 변환과 팔 운동 시 TF 관계를 수치 검증했다. **Ubuntu ROS/Gazebo 실구동과 새 센서 메시지 수신은 아직 검증하지 않았다.**
+
+손목 카메라 포함 명목 총 질량은 약 51.16914 kg이다. 기본 모델의 51.07908 kg에 카메라 0.075 kg과 가정한 마운트 0.015065 kg을 더한 값이다.

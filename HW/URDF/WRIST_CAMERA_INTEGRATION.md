@@ -1,12 +1,12 @@
 # Piper 손목 카메라 통합 계획
 
-2026-10-03 기준. Fusion에서 배치한 마운트·카메라를 기존 통합 URDF에 연결하기 위한 계산 결과와 연결 구조를 정리한다. **마운트·손목 카메라는 아직 최종 URDF에 추가하지 않았다.**
+2026-10-03 기준. Fusion에서 배치한 마운트·카메라를 기존 통합 URDF에 연결하기 위한 계산 결과와 연결 구조를 정리한다. **별도 손목 카메라 통합 URDF와 메시를 추가했으며, 기본 실행에서는 옵션으로 선택한다.** Ubuntu 병합·실행 방법은 [손목 카메라 가이드](wrist_camera_description/README.md)를 참고한다.
 
 ## 현재 모델과 Fusion 파일
 
 - 최종 일반 모델: [tracer_sensor_rack_piper.urdf](../../simulation/robot_description/tracer_sensor_rack_piper.urdf)
 - Gazebo 모델: [tracer_sensor_rack_piper_gazebo.urdf](../../simulation/robot_description/tracer_sensor_rack_piper_gazebo.urdf)
-- 기존 D435f는 프로파일 랙에 고정돼 있으며 팔의 움직임을 따라가지 않는다. 추가할 손목 카메라와 별개의 모델이다.
+- 기존 D435f는 프로파일 랙에 고정돼 있으며 팔의 움직임을 따라가지 않는다. 추가 손목 카메라와 별개의 모델이다.
 - `manipulator_mount_assembly`: 카메라 홀더와 D435f를 조인트로 연결한 Fusion 조립품.
 - `mount_manipulator_locate`: 위 조립품을 Piper STEP에 구속으로 배치한 Fusion 문서. 팔과 마운트 사이의 조인트는 없다.
 
@@ -69,6 +69,6 @@ Piper 전체 STEP을 다시 URDF로 내보내지 않고 기존 팔의 링크·�
 - 그리퍼 전체의 최근접 정점 거리 중앙값은 약 1.16 mm, 90% 지점은 약 5.76 mm, 최대는 약 11.61 mm였다. 정점 밀도의 영향도 받는다.
 - STEP과 기존 URDF의 그리퍼 판·커넥터 형상이 완전히 같지 않다. 동일 리비전으로 확인되지 않았으므로 체결 기준면·볼트 구멍으로 추가 대조해야 한다.
 - 카메라 광학 원점·축, 손가락 개폐 및 팔 자세에 따른 간섭, 체결 강도는 검증하지 않았다.
-- 통합 후 RViz에서 팔 6번 관절 회전 시 카메라가 함께 회전하고 손가락 개폐 시 상대 위치가 유지되는지 확인해야 한다.
+- Ubuntu RViz에서 팔 6번 관절 회전 시 카메라가 함께 회전하고 손가락 개폐 시 상대 위치가 유지되는지 확인해야 한다.
 
-계산 당시 로컬 작업 자료는 저장소 외부의 `RoboCup/urdf_export/wrist_camera/`에 있다. 원본 STEP·JSON, `registration_result.json`, 정합 스크립트와 `placement_check.png`는 이 문서 커밋에 포함하지 않는다.
+계산 당시 전체 로컬 작업 자료는 저장소 외부의 `RoboCup/urdf_export/wrist_camera/`에 있다. 병합에 필요한 메시·독립 URDF·장착 설정과 원본 조립품 STEP·좌표 JSON·정합 결과·비교 그림은 `wrist_camera_description/`에 포함했다. 배치 전체 STEP과 정합용 중간 배열은 포함하지 않았으며 일반적인 Ubuntu 병합에는 필요하지 않다.

@@ -1,0 +1,56 @@
+<?xml version='1.0' encoding='utf-8'?>
+<robot name="wrist_camera_assembly">
+  <link name="wrist_camera_mount_link">
+    <inertial>
+      <mass value="0.0150652381071" />
+      <origin xyz="1.04083408559e-17 0.0065 0.04575" rpy="0 0 0" />
+      <inertia ixx="4.960543505902487e-06" iyy="9.26794616803508e-06" izz="4.73174020215032e-06" ixy="0" ixz="0" iyz="0" />
+    </inertial>
+    <visual>
+      <geometry>
+        <mesh filename="meshes/wrist_camera_mount_link.stl" scale="1 1 1" />
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="1.04083408559e-17 0.0065 0.04575" rpy="0 0 0" />
+      <geometry>
+        <box size="0.06 0.013 0.0615" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="wrist_camera_cad_link">
+    <inertial>
+      <mass value="0.075" />
+      <origin xyz="5.19494703412e-05 -2.11403410411e-08 -0.0122270001582" rpy="0 0 0" />
+      <inertia ixx="8.016970113793146e-06" iyy="5.461857737672868e-05" izz="5.441408083764847e-05" ixy="0" ixz="0" iyz="0" />
+    </inertial>
+    <visual>
+      <geometry>
+        <mesh filename="meshes/wrist_camera_cad_link.stl" scale="1 1 1" />
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="5.19494703412e-05 -2.11403410411e-08 -0.0122270001582" rpy="0 0 0" />
+      <geometry>
+        <box size="0.089895801059 0.0249999577195 0.0256460003164" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="wrist_mount_to_camera" type="fixed">
+    <parent link="wrist_camera_mount_link" />
+    <child link="wrist_camera_cad_link" />
+    <origin xyz="0 -0.02505 0.0665" rpy="1.5707963267948966 0 0" />
+  </joint>
+  <link name="wrist_camera_link" />
+  <joint name="wrist_camera_body_frame" type="fixed">
+    <parent link="wrist_camera_cad_link" />
+    <child link="wrist_camera_link" />
+    <origin xyz="0 0 0" rpy="-1.5707963267948966 -1.5707963267948966 0.0" />
+  </joint>
+  <link name="wrist_camera_optical_frame" />
+  <joint name="wrist_camera_optical_joint" type="fixed">
+    <parent link="wrist_camera_link" />
+    <child link="wrist_camera_optical_frame" />
+    <origin xyz="0 0 0" rpy="-1.5707963267948966 0 -1.5707963267948966" />
+  </joint>
+</robot>

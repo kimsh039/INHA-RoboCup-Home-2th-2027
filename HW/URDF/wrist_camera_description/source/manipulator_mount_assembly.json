@@ -1,0 +1,73 @@
+{
+  "document": "manipulator_mount_assembly",
+  "matrix_translation_unit": "cm",
+  "occurrences": [
+    {
+      "path": "PiPER Realsense D435 Holder:1",
+      "component": "PiPER Realsense D435 Holder",
+      "transform_rows": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "bodies": [
+        "본체1"
+      ]
+    },
+    {
+      "path": "D435f_Solid v1:1",
+      "component": "D435f_Solid v1",
+      "transform_rows": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          -1.0,
+          -2.505
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          6.65
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "bodies": [
+        "본체1",
+        "본체2"
+      ]
+    }
+  ]
+}
