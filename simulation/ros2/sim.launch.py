@@ -3,7 +3,8 @@
 ros2 launch simulation/ros2/sim.launch.py [world:=room] [gui:=false] [rviz:=false]
 
 Loads the final URDF and generates the SDF, starts Gazebo, bridges /clock /cmd_vel /odom /tf
-/joint_states /scan, and runs robot_state_publisher and RViz on sim time.
+/joint_states /scan /mid360/points, and runs robot_state_publisher, the Mid-360
+self filter and RViz on sim time.
 Drive with: ros2 run teleop_twist_keyboard teleop_twist_keyboard
 """
 import os
@@ -46,18 +47,25 @@ def setup(context):
     urdf = E.tostring(robot, encoding='unicode')
     sim_time = {'use_sim_time': True}
 
-    gz = ExecuteProcess(
-        cmd=['gz', 'sim', '-r', str(BUILD / 'motion.world.sdf')] + ([] if gui else ['-s']),
-        additional_env=nvidia_offload(), output='screen')
+    # Server and GUI run as separate processes: a GUI crash (e.g. an Ogre render-texture error
+    # when the window is minimised) or closing the window no longer stops the simulation.
+    # Stop everything with Ctrl+C in the launch terminal.
+    gz = ExecuteProcess(cmd=['gz', 'sim', '-s', '-r', str(BUILD / 'motion.world.sdf')],
+                        additional_env=nvidia_offload(), output='screen')
     actions = [
         gz,
-        # Closing the Gazebo window ends the whole launch.
         RegisterEventHandler(OnProcessExit(target_action=gz, on_exit=[EmitEvent(event=Shutdown())])),
         Node(package='ros_gz_bridge', executable='parameter_bridge', output='screen',
              parameters=[{'config_file': str(HERE / 'ros_bridge.yaml')}, sim_time]),
         Node(package='robot_state_publisher', executable='robot_state_publisher', output='screen',
              parameters=[{'robot_description': urdf}, sim_time]),
+        # Mid-360S cloud without self hits, for the Nav2 costmaps (/mid360/points_filtered).
+        ExecuteProcess(cmd=[sys.executable, str(HERE / 'cloud_self_filter.py'),
+                            '--ros-args', '-p', 'use_sim_time:=true'], output='screen'),
     ]
+    if gui:
+        actions.append(ExecuteProcess(cmd=['gz', 'sim', '-g'], additional_env=nvidia_offload(),
+                                      output='log'))
     if rviz:
         actions.append(Node(package='rviz2', executable='rviz2', output='log',
                             arguments=['-d', str(HERE / 'sim.rviz')], parameters=[sim_time]))
