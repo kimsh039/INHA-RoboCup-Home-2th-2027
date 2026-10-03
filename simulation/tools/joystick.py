@@ -2,33 +2,24 @@
 """GTK joystick and Piper controls over Gazebo Transport."""
 import argparse
 import math
-import os
 
-LIMITS = [(-2.6179938, 2.6179938), (0, 3.1415926), (-2.9670597, 0),
-          (-1.7453292, 1.7453292), (-1.2217304, 1.2217304), (-2.0943951, 2.0943951)]
+import robocup_gz as rg
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--partition', default=os.environ.get('GZ_PARTITION', 'robocup_motion'))
+    parser.add_argument('--partition', default=rg.default_partition())
     args = parser.parse_args()
-    os.environ['GZ_PARTITION'] = args.partition
-    os.environ.setdefault('GZ_IP', '127.0.0.1')
+    robot = rg.RobotCommands(args.partition)
     import gi
     gi.require_version('Gtk', '3.0')
     from gi.repository import Gtk, Gdk, GLib
-    from gz.transport13 import Node
-    from gz.msgs10.twist_pb2 import Twist
-    from gz.msgs10.double_pb2 import Double
 
     class Controls(Gtk.Window):
         def __init__(self):
             super().__init__(title='RoboCup — Joystick / Piper')
             self.set_default_size(480, 720)
-            self.node = Node()
-            self.drive_pub = self.node.advertise('/robocup/cmd_vel', Twist)
-            self.joints = {name: self.node.advertise(f'/model/robocup/joint/{name}/0/cmd_pos', Double)
-                           for name in [*[f'piper_joint{i}' for i in range(1, 7)], 'piper_gripper_joint1', 'piper_gripper_joint2']}
+            robot.advertise_all()
             self.active = False
             self.x = self.y = 0
             box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8)
@@ -53,7 +44,7 @@ def main():
             box.pack_start(Gtk.Label(label='Piper target angles (rad) — press Apply'), False, False, 0)
             grid = Gtk.Grid(column_spacing=8, row_spacing=4)
             self.spins = []
-            for i, (lo, hi) in enumerate(LIMITS, 1):
+            for i, (lo, hi) in enumerate(rg.ARM_LIMITS, 1):
                 spin = Gtk.SpinButton.new_with_range(lo, hi, .05)
                 spin.set_digits(3)
                 self.spins.append(spin)
@@ -65,7 +56,7 @@ def main():
             box.pack_start(grid, False, False, 0)
             row = Gtk.Box(spacing=8)
             row.pack_start(Gtk.Label(label='Gripper (m / finger)'), False, False, 0)
-            self.grip = Gtk.SpinButton.new_with_range(0, .05, .005)
+            self.grip = Gtk.SpinButton.new_with_range(0, rg.GRIPPER_MAX, .005)
             self.grip.set_digits(3)
             row.pack_start(self.grip, True, True, 0)
             button = Gtk.Button(label='Apply')
@@ -103,7 +94,7 @@ def main():
             self.pad.queue_draw()
 
         def press(self, _, event):
-            if event.button == 1 and self.drive_pub.has_connections():
+            if event.button == 1 and robot.drive_connected():
                 self.active = True
                 self.pad.grab_add()
                 self.move(event)
@@ -118,8 +109,7 @@ def main():
             return True
 
         def drive(self, v, w):
-            msg = Twist(); msg.linear.x = v; msg.angular.z = w
-            self.drive_pub.publish(msg)
+            robot.drive(v, w)
             self.speed.set_text(f'v = {v:.2f} m/s   ω = {w:.2f} rad/s')
 
         def stop(self):
@@ -131,21 +121,20 @@ def main():
             return False
 
         def tick(self):
-            connected = self.drive_pub.has_connections()
+            connected = robot.drive_connected()
             self.status.set_text(('Connected • ' if connected else 'Waiting for Gazebo • ') + args.partition)
             if self.active:
                 if connected:
-                    self.drive(-self.y*.2, -self.x*.5)
+                    self.drive(-self.y * rg.MAX_LINEAR, -self.x * rg.MAX_ANGULAR)
                 else:
                     self.stop()
             return True
 
         def joint(self, name, value):
-            pub = self.joints[name]
-            if not pub.has_connections():
+            if not robot.joint_connected(name):
                 self.status.set_text('No joint controller: ' + name)
                 return
-            msg = Double(); msg.data = value; pub.publish(msg)
+            robot.joint(name, value)
 
         def gripper(self, value):
             self.joint('piper_gripper_joint1', value)
