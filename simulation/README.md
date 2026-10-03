@@ -1,5 +1,7 @@
 # RoboCup 시뮬레이션
 
+> **Gazebo 개발 PC용 안내입니다.** 현재 Jetson의 실기 setup과 카메라 구성은 [프로젝트 README](../README.md)와 [Jetson 운영 문서](../setup/jetson/README.md)를 참고하세요. Jetson에는 Gazebo 및 robot-* 단축 명령을 설치하지 않았습니다.
+
 최종 URDF는 [robot_description/robocup.urdf](robot_description/robocup.urdf) 하나입니다.
 Tracer, 프로파일 랙, Piper·그리퍼, G2, Mid-360S, 헤드 D435f와 손목 D435f·마운트를 포함합니다.
 원본 메시·CAD·물성 자료는 `../HW/URDF/`에 유지하며 예전 독립·중간 URDF와 조립 생성기는 삭제했습니다.
@@ -30,5 +32,5 @@ robot-camera --partition robocup_motion --camera head
 robot-camera --partition robocup_motion --camera wrist
 ```
 
-위 별칭은 현재 PC에 설치돼 있습니다. 다른 PC에서는 [tools 안내](tools/README.md)의 Python 명령을 사용합니다.
+위 별칭은 기존 Gazebo 개발 PC에서 사용한 단축 명령입니다. 다른 PC에서는 [tools 안내](tools/README.md)의 Python 명령을 사용합니다.
 손목 카메라는 항상 포함되므로 이전 `--with-wrist-camera`, `wrist_camera:=true` 옵션은 사용하지 않습니다.

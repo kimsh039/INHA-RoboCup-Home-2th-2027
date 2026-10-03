@@ -32,4 +32,4 @@ ros2 topic hz /wrist_camera/depth/image_raw
 헤드 영상과 Mid-360S는 Gazebo 토픽/팝업을 사용하며 현재 ROS 브리지에는 포함하지 않습니다.
 SLAM/Nav2 설정은 slam_params.yaml과 nav2_params.yaml에 있지만 이 런치가 해당 노드들을 실행하지는 않습니다.
 
-최종 URDF 정리 후 Gazebo 센서는 재검증했습니다. 현재 Ubuntu에 ROS 2가 없어 ROS 런치는 구문 검사까지만 했으며 실행 검증은 아직 하지 않았습니다.
+최종 URDF 정리 후 Gazebo 센서는 기존 개발 PC에서 재검증했습니다. 당시 개발 PC에는 ROS 2가 없어 ROS 런치는 구문 검사까지만 했습니다. 별도 Jetson에는 ROS Humble을 준비했지만 Gazebo·bridge를 설치하거나 이 시뮬레이션 launch를 실행하지 않았습니다.

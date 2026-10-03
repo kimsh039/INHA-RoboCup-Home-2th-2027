@@ -1,5 +1,8 @@
 # Detection Workflow
 
+> [!IMPORTANT]
+> **현재 Jetson 실기 환경은 [프로젝트 README](../README.md)와 [Jetson 운영 문서](../setup/jetson/README.md)를 기준으로 사용하세요.** Head D435 / Wrist D405, YOLO11n·YOLO11n-seg, SAM 2.1 **Tiny GPU**를 준비했습니다. 초기 3D 실습은 RealSense aligned depth입니다. 아래 D435 손목 / SAM Small / LiDAR 투영·융합 / GraspNet 내용은 기존 후속 설계의 가정이며, 현재 설치·실시간 통합 완료를 뜻하지 않습니다.
+
 헤드 카메라에서 물체를 찾고, 3D LiDAR로 접근용 위치를 추정한 뒤, 손목 카메라에서 정밀 분할·점군 생성·파지 후보 추정을 수행한다.
 
 > **상태: 구현 전 설계 문서.** 손목 카메라는 **RealSense D435**를 사용한다. 관측 거리, depth 설정, 품질 임계값은 실제 물체를 측정한 뒤 확정한다. 아래 노드·토픽은 제안이며, 현재 실행 가능한 detection 패키지는 포함하지 않는다.
@@ -176,7 +179,7 @@ RealSense Viewer와 `rosbag2`로 원본 영상·depth·`CameraInfo`·TF·관절 
 
 ## 6. 현재 저장소와 구현 순서
 
-2026-10-03에 확인한 `main` 기준으로 Tracer·Piper·센서 랙과 선택형 손목 카메라 모델이 포함되어 있다.
+2026-10-03의 최종 `main` 모델에는 Tracer·Piper·센서 랙과 손목 카메라가 기본 포함되어 있다.
 
 | 입력 | 현재 상태 | detection 연결에 필요한 작업 |
 |---|---|---|

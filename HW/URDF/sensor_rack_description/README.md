@@ -4,7 +4,7 @@
 최종 파일은 [robocup.urdf](../../../simulation/robot_description/robocup.urdf)이며 실행은 [Gazebo 안내](../../../simulation/gazebo/README.md)를 사용하세요.
 아래는 최초 랙 내보내기 당시 좌표·물성 기록입니다.
 
-# 센서 프레임 URDF
+## 최초 센서 프레임 내보내기 기록
 
 Fusion의 `final_assembly`를 기준으로 내보낸 고정형 센서 랙입니다. 이동 플랫폼 본체와 매니퓰레이터는 포함되어 있지 않습니다.
 
@@ -51,18 +51,11 @@ G2 구형 데이터시트에는 214g, V1.3에는 185g이 기재되어 있습니�
 - [Livox Mid-360S 사양](https://www.livoxtech.com/mid-360s/specs): 265g.
 - [RealSense D400 데이터시트](https://www.realsenseai.com/download/21345/?tmstv=1770190765): D435/D435f 계열 명목 75g, 실제 질량 편차 존재.
 
-## ROS 2 실행
+## 현재 실행 경로
 
-이 폴더를 Ubuntu ROS 2 워크스페이스의 `src` 아래에 복사한 뒤 실행합니다.
+독립 sensor_rack_description ROS 패키지와 display.launch.py는 최종 통합 과정에서 삭제했습니다. 이 폴더를 colcon 패키지로 빌드하지 않고 [통합 모델 실행 안내](../../../simulation/README.md)를 사용합니다. `rviz/display.rviz`는 초기 랙 표시 설정으로 보관합니다.
 
-```bash
-cd ~/ros2_ws
-colcon build --packages-select sensor_rack_description
-source install/setup.bash
-ros2 launch sensor_rack_description display.launch.py
-```
-
-RViz의 Fixed Frame은 `base_link`입니다. 모든 관절이 fixed이므로 joint_state_publisher가 필요하지 않습니다. 실제 센서 드라이버의 frame_id가 `laser_frame` 또는 `livox_frame`과 맞는지 확인하고 동일한 TF를 다른 노드에서 중복 발행하지 마세요.
+실기 Jetson은 [Jetson 운영 문서](../../../setup/jetson/README.md)를 따릅니다. 여기의 G2·Mid-360S·D435f 명칭과 CAD 좌표는 당시 내보내기 자료이며 현재 실물 모델·외부 보정값과 별도로 대조합니다.
 
 메시는 미터 단위이며 URDF scale은 1입니다. 충돌 형상은 각 솔리드의 경계 박스로 단순화해 프로파일 홈과 구멍을 표현하지 않습니다. 정밀 접촉 시뮬레이션에는 별도의 충돌 형상이 필요합니다.
 

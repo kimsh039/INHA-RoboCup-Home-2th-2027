@@ -30,7 +30,7 @@ Gazebo Harmonic 설치 후 `./gazebo/start_sim.sh`를 실행하고 `http://127.0
 동작 world에서는 static을 해제하고 바닥, 중력, 차륜 DiffDrive와 팔 JointPositionController를 추가합니다.
 팔은 `use_velocity_commands`의 이상적인 위치 제어로 속도를 제한합니다. 실제 모터 토크 성능 검증용이 아닙니다.
 차륜 좌측의 원본 joint 회전으로 뒤집힌 축은 생성된 SDF에서만 보정합니다.
-Tracer 총 질량은 제조사 명목값 30 kg으로 보정했으며 통합 모델 총 질량은 51.07908 kg입니다. 부품별 질량 분배·관성은 메시 기반 근사이며 [Tracer 물성 설명](../../HW/URDF/tracer/README.md)에 가정과 출처를 기록했습니다. 물성, 접촉 메시와 캐스터 구성은 실측 검증되지 않아 주행 동역학 결과를 실제 성능으로 해석하면 안 됩니다.
+Tracer 총 질량은 제조사 명목값 30 kg으로 보정했습니다. 손목 카메라 추가 전 통합 모델은 51.07908 kg, 현재 최종 모델은 약 51.16914 kg입니다. 부품별 질량 분배·관성은 메시 기반 근사이며 [Tracer 물성 설명](../../HW/URDF/tracer/README.md)에 가정과 출처를 기록했습니다. 물성, 접촉 메시와 캐스터 구성은 실측 검증되지 않아 주행 동역학 결과를 실제 성능으로 해석하면 안 됩니다.
 `make_sim.py`는 현재 checkout의 절대 메시 경로로 임시 SDF/URDF를 재생성합니다.
 
 ## 저장 기준 자세
@@ -79,13 +79,13 @@ python3 tools/robotctl.py home
 python3 tools/robotctl.py --partition robocup_motion teleop
 ```
 
-현재 PC에는 `~/.local/bin/robotctl` 실행기를 설치해 어느 폴더에서든 `robotctl teleop`로 사용할 수 있습니다.
+기존 Gazebo 개발 PC에는 `~/.local/bin/robotctl` 실행기를 설치해 어느 폴더에서든 `robotctl teleop`로 사용할 수 있습니다.
 이 실행기는 이 checkout의 스크립트를 참조합니다. 다른 PC에서는 위의 Python 명령을 사용하세요.
 
 ## 카메라 팝업
 
 Gazebo 실행 중 `python3 tools/camera_view.py`를 실행하면 RGB와 뎁스 창이 각각 열립니다.
-현재 PC에서는 어느 폴더에서든 `robot-camera`로 실행합니다.
+기존 Gazebo 개발 PC에서는 어느 폴더에서든 `robot-camera`로 실행합니다. 이 Jetson에는 해당 단축 명령을 설치하지 않았습니다.
 `./gazebo/start_sim.sh`를 사용하는 경우 `robot-camera --partition robocup_motion`을 실행합니다.
 GTK3(PyGObject), Pillow, NumPy와 Gazebo Python Transport가 필요합니다.
 뎁스는 0~3 m를 빨강(가까움)~파랑(멀어짐)으로 표시하며 반환이 없는 픽셀은 검정입니다.

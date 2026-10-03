@@ -1,5 +1,7 @@
 # 손목 카메라 통합 검증 기록
 
+> 아래는 통합 전후의 역사적 생성·Gazebo 검증 기록입니다. 당시 build.py와 선택형 URDF는 이후 정리됐습니다. 현재 최종 모델은 [robocup.urdf](../../../simulation/robot_description/robocup.urdf) 하나이며 89 links / 88 joints입니다. 이 기록은 Jetson 실기 D405 검증 결과가 아닙니다.
+
 2026-10-03, Windows에서 생성 파일을 읽어 확인했다.
 
 - 기본 모델과 `--with-wrist-camera` 모델 모두 생성 성공. 기본 모델은 86/85 links·joints, 카메라 모델은 90/89이다. Gazebo 버전은 각각 85/84, 89/88이다.

@@ -20,4 +20,4 @@
 
 최종 확정 후 별도 Gazebo 서버에서 G2 10 Hz/500 rays, Mid-360S 10 Hz/20,000 rays·points,
 헤드·손목 RGB/depth 약 30 Hz 메시지와 프레임을 확인했고 정면 검사 벽 거리 검사를 통과했습니다.
-ROS 런치는 현재 PC에 ROS가 없어 구문 확인까지만 했습니다.
+ROS 런치는 당시 Gazebo 개발 PC에 ROS가 없어 구문 확인까지만 했습니다. 별도 Jetson 실기 setup은 [Jetson 문서](../../setup/jetson/README.md)에 기록했으며 이 시뮬레이션 실행 검증과 구분합니다.

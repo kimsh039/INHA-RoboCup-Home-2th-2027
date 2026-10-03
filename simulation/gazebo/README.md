@@ -80,5 +80,5 @@ GZ_PARTITION=robocup_sensor_test python3 simulation/tools/check_sensors.py --wal
 
 검사는 두 라이다·3D 점군·헤드/손목 영상 크기·프레임·sim-time 주기와 헤드 정면 벽 거리를 확인합니다.
 손목 영상의 정면 거리는 팔 자세가 달라 헤드 검사 벽 기대값을 적용하지 않습니다.
-방은 내부 6×4 m, 벽 높이 1 m, 책상 윗면 0.75 m입니다.
+현재 make_sim.py의 방은 내부 6×6 m, 벽 높이 1 m, 책상 윗면 0.72 m입니다.
 G2는 책상 상판 아래에서 스캔하므로 다리만 검출합니다.
