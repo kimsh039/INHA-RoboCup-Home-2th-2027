@@ -2,8 +2,7 @@
 
 아래 명령은 저장소의 `simulation/` 폴더에서 실행합니다. 통합 URDF는 `robot_description/`에 있습니다.
 
-`tracer_sensor_rack_piper.urdf`: 원본 Piper 그리퍼 mimic 관계 포함.
-`tracer_sensor_rack_piper_gazebo.urdf`: 기존 Gazebo용 Piper 변형 사용.
+최종 모델은 [robocup.urdf](../robot_description/robocup.urdf) 하나이며 손목 카메라와 Gazebo 센서를 포함합니다.
 
 Tracer의 `base_link`를 전체 루트로 사용합니다. 랙 루트는 `rack_base_link`로 변경하고 센서 및 Piper 프레임 이름은 유지했습니다.
 `tracer_to_rack` fixed joint로 랙 바닥 중심을 Tracer 기준 `(0, 0, 0.01611)` m에 연결합니다.
@@ -17,12 +16,9 @@ URDF visual 회전 RPY=(1.57,0,0)을 적용하면 두 프로파일의 Y 중심�
 이는 메시 기반 중앙 정렬이며 실제 체결 구멍/볼트 위치를 검증한 배치는 아닙니다.
 원본 Tracer의 약식 회전 1.57 rad을 유지해 두 레일에 약 0.18 mm 높이 차이가 있습니다.
 
-재생성 및 위치 조정:
-```bash
-python3 robot_description/build.py --xyz 0 0 0.01611 --yaw 0
-```
+위치를 변경하려면 최종 URDF의 fixed joint origin을 수정하고 Gazebo를 재실행합니다.
 
-모든 메시를 기존 폴더의 상대 경로로 참조합니다. 세 원본 모델은 그대로 보관합니다.
+모든 메시를 기존 폴더의 상대 경로로 참조합니다. 독립·중간 URDF는 삭제했으며 메시와 CAD 자료는 유지합니다.
 URDF는 차륜과 팔 관절을 유지하며, 동작용 제어 플러그인은 생성된 Gazebo world에 추가합니다.
 Gazebo 동작 world는 `gazebo/make_sim.py`로 생성합니다.
 
@@ -47,7 +43,7 @@ URDF는 로봇 링크 간 변환을 정의하며 Gazebo에서 이동한 world �
 
 Gazebo용 URDF에 Mid-360S, YDLIDAR G2와 D435f 시뮬레이션 센서를 추가했습니다.
 사양 출처, 모델별 적용값, 데이터 토픽, 실제 장치와의 차이 및 검증 방법은 [SENSORS.md](SENSORS.md)에 정리했습니다.
-센서 설정을 변경한 뒤 `python3 robot_description/build.py`로 URDF를 갱신합니다.
+센서 설정은 최종 URDF에서 수정한 뒤 Gazebo world를 다시 생성합니다.
 
 ## 터미널 제어
 
@@ -76,7 +72,7 @@ python3 tools/robotctl.py home
 선속도는 ±0.2 m/s, 각속도는 ±0.5 rad/s로 제한합니다.
 
 기본 partition은 `GZ_PARTITION` 환경변수가 있으면 그 값, 없으면 현재 NVIDIA 미리보기의
-`robocup_projectsh_sensor_view_20261003`입니다.
+`robocup_motion`입니다.
 `./gazebo/start_sim.sh`로 시작한 Gazebo에는 다음처럼 지정합니다.
 
 ```bash

@@ -2,7 +2,7 @@
 
 ros2 launch simulation/ros2/sim.launch.py [world:=room] [gui:=false] [rviz:=false]
 
-Regenerates the URDF/SDF, starts Gazebo, bridges /clock /cmd_vel /odom /tf
+Loads the final URDF and generates the SDF, starts Gazebo, bridges /clock /cmd_vel /odom /tf
 /joint_states /scan, and runs robot_state_publisher and RViz on sim time.
 Drive with: ros2 run teleop_twist_keyboard teleop_twist_keyboard
 """
@@ -10,6 +10,7 @@ import os
 import shutil
 import subprocess
 import sys
+import xml.etree.ElementTree as E
 from pathlib import Path
 
 from launch import LaunchDescription
@@ -37,13 +38,12 @@ def setup(context):
     gui = LaunchConfiguration('gui').perform(context) == 'true'
     rviz = LaunchConfiguration('rviz').perform(context) == 'true'
 
-    build_cmd=[sys.executable, str(SIM / 'robot_description' / 'build.py')]
-    if LaunchConfiguration('wrist_camera').perform(context)=='true':
-        build_cmd.append('--with-wrist-camera')
-    subprocess.run(build_cmd, check=True)
     subprocess.run([sys.executable, str(SIM / 'gazebo' / 'make_sim.py'), '--world', world], check=True)
-    # make_sim.py writes absolute mesh paths; RViz needs them as file:// URIs.
-    urdf = (BUILD / 'sim_local.urdf').read_text().replace('filename="/', 'filename="file:///')
+    final = SIM / 'robot_description' / 'robocup.urdf'
+    robot = E.parse(final).getroot()
+    for mesh in robot.findall('.//mesh'):
+        mesh.set('filename', (final.parent / mesh.get('filename')).resolve().as_uri())
+    urdf = E.tostring(robot, encoding='unicode')
     sim_time = {'use_sim_time': True}
 
     gz = ExecuteProcess(
@@ -69,7 +69,6 @@ def generate_launch_description():
         DeclareLaunchArgument('world', default_value='empty', choices=['empty', 'room']),
         DeclareLaunchArgument('gui', default_value='true', choices=['true', 'false']),
         DeclareLaunchArgument('rviz', default_value='true', choices=['true', 'false']),
-        DeclareLaunchArgument('wrist_camera', default_value='false', choices=['true', 'false']),
         # Gazebo and the bridge must share these, or the bridge never finds the sim.
         # GZ_IP keeps discovery on this PC so other sims on the LAN don't mix in.
         SetEnvironmentVariable('GZ_PARTITION', 'robocup_motion'),

@@ -4,8 +4,7 @@
 
 ## 현재 모델과 Fusion 파일
 
-- 최종 일반 모델: [tracer_sensor_rack_piper.urdf](../../simulation/robot_description/tracer_sensor_rack_piper.urdf)
-- Gazebo 모델: [tracer_sensor_rack_piper_gazebo.urdf](../../simulation/robot_description/tracer_sensor_rack_piper_gazebo.urdf)
+- 최종 모델: [robocup.urdf](../../simulation/robot_description/robocup.urdf)
 - 기존 D435f는 프로파일 랙에 고정돼 있으며 팔의 움직임을 따라가지 않는다. 추가 손목 카메라와 별개의 모델이다.
 - `manipulator_mount_assembly`: 카메라 홀더와 D435f를 조인트로 연결한 Fusion 조립품.
 - `mount_manipulator_locate`: 위 조립품을 Piper STEP에 구속으로 배치한 Fusion 문서. 팔과 마운트 사이의 조인트는 없다.

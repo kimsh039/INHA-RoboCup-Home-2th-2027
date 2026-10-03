@@ -181,7 +181,7 @@ RealSense Viewer와 `rosbag2`로 원본 영상·depth·`CameraInfo`·TF·관절 
 | 입력 | 현재 상태 | detection 연결에 필요한 작업 |
 |---|---|---|
 | 헤드 RGB/depth·Mid-360S | Gazebo 센서 모델 존재, ROS 브리지 미포함 | Image·CameraInfo·PointCloud2 브리지 또는 실제 driver 연결 |
-| 손목 RGB/depth·점군 | `wrist_camera:=true` 옵션, 손목 URDF/광학 프레임과 `/wrist_camera/…` ROS 브리지 설정 존재 | Ubuntu 실구동·메시지 수신 검증, 실제 D435 보정, RGB-depth 정합 |
+| 손목 RGB/depth·점군 | 최종 모델에 손목 카메라 기본 포함, 손목 URDF/광학 프레임과 `/wrist_camera/…` ROS 브리지 설정 존재 | Ubuntu 실구동·메시지 수신 검증, 실제 D435 보정, RGB-depth 정합 |
 | 검출·분할·파지 후보 | 설계 단계 | 모델 wrapper, 품질 판정, 데이터 계약 구현 |
 
 [손목 카메라 가이드](../HW/URDF/wrist_camera_description/README.md)의 Gazebo 모델은 핀홀 근사이며 실제 depth 노이즈를 재현하지 않는다. `/wrist_camera/depth/image_raw`와 RGB 토픽이 존재한다는 것만으로 정합된 depth라는 뜻은 아니다. 기존 CAD/시뮬레이션의 D435f 표기와 실제 손목 D435를 구분하고, 성능 판단은 실측 데이터로 수행한다. 헤드 센서의 상세 제약은 [센서 문서](../simulation/docs/SENSORS.md)를 참고한다.

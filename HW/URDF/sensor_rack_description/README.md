@@ -1,3 +1,9 @@
+# 보관 자료 안내
+
+최종 모델 확정으로 독립 랙 URDF·ROS 패키지 실행 파일은 삭제했습니다. 메시·CAD 검증 보고서는 유지합니다.
+최종 파일은 [robocup.urdf](../../../simulation/robot_description/robocup.urdf)이며 실행은 [Gazebo 안내](../../../simulation/gazebo/README.md)를 사용하세요.
+아래는 최초 랙 내보내기 당시 좌표·물성 기록입니다.
+
 # 센서 프레임 URDF
 
 Fusion의 `final_assembly`를 기준으로 내보낸 고정형 센서 랙입니다. 이동 플랫폼 본체와 매니퓰레이터는 포함되어 있지 않습니다.

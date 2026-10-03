@@ -2,7 +2,7 @@
 
 ## Hardware
 
-- [센서 랙 URDF 및 ROS 2 실행 안내](HW/URDF/README.md)
+- [로봇 메시·CAD 자료](HW/URDF/README.md)
 
 ## Simulation
 

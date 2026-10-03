@@ -62,7 +62,7 @@ Gazebo 렌더링 카메라는 +X 전방/+Z 상방을 사용하고 메시지의 `
 | `/robocup/camera/color/image` | `gz.msgs.Image` | `camera_optical_frame` |
 | `/robocup/camera/color/camera_info` | `gz.msgs.CameraInfo` | `camera_optical_frame` |
 
-3D 라이다는 `/points`를 사용하세요. 다중 행 LaserScan을 ROS 2의 단일 평면 LaserScan으로 브리지하면 3D 구조를 표현할 수 없습니다. G2 `/scan`의 ROS 2 브리지는 `ros2/sim.launch.py`와 `ros2/ros_bridge.yaml`에 있습니다([README](../README.md#ros-2-시뮬레이션)). Mid-360S와 D435f는 아직 ROS 2로 브리지하지 않습니다.
+3D 라이다는 `/points`를 사용하세요. 다중 행 LaserScan을 ROS 2의 단일 평면 LaserScan으로 브리지하면 3D 구조를 표현할 수 없습니다. G2 `/scan`의 ROS 2 브리지는 `ros2/sim.launch.py`와 `ros2/ros_bridge.yaml`에 있습니다([README](../README.md#ros-2-시뮬레이션)). Mid-360S와 헤드 D435f는 아직 ROS 2로 브리지하지 않습니다. 손목 D435f 영상·CameraInfo·depth points 브리지는 포함됩니다.
 
 ## 실행 및 검증
 
@@ -70,7 +70,6 @@ Gazebo Harmonic과 시스템 Python Gazebo 바인딩을 사용합니다.
 
 ```bash
 cd simulation
-python3 robot_description/build.py
 ./gazebo/start_sim.sh
 ```
 

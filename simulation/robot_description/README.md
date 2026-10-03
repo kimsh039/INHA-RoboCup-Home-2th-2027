@@ -1,0 +1,23 @@
+# 최종 로봇 URDF
+
+[robocup.urdf](robocup.urdf)가 유일한 최종 URDF입니다. 예전 모델은 Git 이력에서 확인할 수 있습니다.
+89개 링크, 88개 조인트이며 단일 루트는 `base_link`입니다.
+일반 URDF 구조에 Gazebo 센서 확장을 포함해 RViz와 Gazebo에서 같은 파일을 사용합니다.
+그리퍼 두 관절은 별도로 정의하며 제어 도구가 대칭 목표값을 보냅니다.
+
+- Tracer → 랙: fixed, xyz `(0, 0, 0.01611)` m.
+- 랙 2층 마운트 → Piper 베이스: fixed, 마운트 기준 Z `0.0038` m.
+- `piper_gripper_base` → 손목 마운트: CAD 정합 변환으로 fixed 연결.
+- 2D/3D 라이다, 헤드 RGB/depth, 손목 RGB/depth 센서 포함.
+- 명목 총질량 약 51.16914 kg. Tracer 30 kg, 손목 카메라 75 g, 마운트 약 15.07 g.
+- 모든 가동 관절의 URDF 기준 자세는 0입니다. Gazebo 시작 위치는 X/Y/yaw=0, Z=0.145 m입니다.
+
+메시는 `../../HW/URDF/` 아래를 상대 경로로 참조합니다. 메시 폴더는 삭제하지 마세요.
+좌표·관성·센서 설정을 바꿀 때는 이 최종 파일을 수정한 뒤 Gazebo를 다시 실행합니다.
+실물 체결 좌표·물성·광학 보정은 별도 검증이 필요합니다.
+
+[조립 상세](../docs/ASSEMBLY.md) · [손목 장착 계산](../../HW/URDF/WRIST_CAMERA_INTEGRATION.md)
+
+최종 확정 후 별도 Gazebo 서버에서 G2 10 Hz/500 rays, Mid-360S 10 Hz/20,000 rays·points,
+헤드·손목 RGB/depth 약 30 Hz 메시지와 프레임을 확인했고 정면 검사 벽 거리 검사를 통과했습니다.
+ROS 런치는 현재 PC에 ROS가 없어 구문 확인까지만 했습니다.

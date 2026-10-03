@@ -15,3 +15,13 @@
 - Python 구문 및 ROS bridge YAML 구문·토픽 이름 중복을 검사했다.
 
 Ubuntu의 ROS 노드·Gazebo 실행, fixed-joint lumping 후 생성 SDF, 이미지/CameraInfo/포인트클라우드 실제 발행, 렌즈 방향·간섭은 아직 확인하지 않았다. README의 실행·TF·토픽 확인 절차로 후속 검증한다.
+
+## Ubuntu Gazebo 확인 (2026-10-03)
+
+- `build.py --with-wrist-camera`로 표준 URDF 두 파일을 생성하고 `make_sim.py --world room`으로 변환했다.
+- NVIDIA PRIME 환경에서 Gazebo GUI를 실행했다. fixed-joint lumping 후 손목 센서는 `piper_gripper_base`에 합쳐졌다.
+- 헤드와 손목의 RGB 1920×1080/RGB_INT8 및 depth 1280×720/R_FLOAT32 메시지를 실제 수신했다.
+- 손목 frame_id는 `wrist_camera_optical_frame`이며 헤드와 토픽·프레임이 구분됐다. 손목 depth에서 유효 거리 픽셀을 확인했다.
+- 6번 관절 0.2 rad 명령 후 실제 관절 값 0.20000000000005 rad를 확인하고 0으로 복귀시켰다.
+- `robot-camera --partition robocup_motion --camera wrist`로 RGB/depth 팝업을 실행했다.
+- CAD 정합 장착값은 유지했으며 실물 체결·간섭·렌즈 외부 보정 검증은 포함하지 않았다.

@@ -18,6 +18,8 @@ topics={
  '/robocup/mid360s/scan/points':(PointCloudPacked,'livox_frame',20000,10),
  '/robocup/camera/depth/image':(Image,'camera_optical_frame',1280*720,30),
  '/robocup/camera/color/image':(Image,'camera_optical_frame',1920*1080,30),
+ '/robocup/wrist_camera/depth/image':(Image,'wrist_camera_optical_frame',1280*720,30),
+ '/robocup/wrist_camera/color/image':(Image,'wrist_camera_optical_frame',1920*1080,30),
 }
 # Skip startup messages, whose stamps are irregular, then time about 2 s of stream.
 SKIP=3
@@ -65,7 +67,7 @@ for topic,(kind,frame,count,rate) in topics.items():
   assert msg.width*msg.height==count
   assert len(msg.data)==msg.step*msg.height
   print(topic,'size',msg.width,msg.height,'Hz',round(hz,2),'frame',frame)
-  if a.wall and 'depth' in topic:
+  if a.wall and topic == '/robocup/camera/depth/image':
    z=struct.unpack_from('<f',msg.data,(msg.height//2)*msg.step+(msg.width//2)*4)[0]
    assert abs(z-2.025)<.06,z
    print('Depth wall center (m):',z)
