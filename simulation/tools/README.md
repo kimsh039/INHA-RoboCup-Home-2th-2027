@@ -5,6 +5,7 @@ Python Gazebo Transport(`gz.transport13`, `gz.msgs10`)가 필요합니다.
 이 문서의 `현재 PC`와 robot-* 단축 명령은 기존 Gazebo 개발 PC 기준입니다. Jetson에는 해당 단축 명령을 설치하지 않았으므로 의존성을 갖춘 PC에서 `python3 simulation/tools/...` 명령을 사용합니다.
 팝업은 GTK3(PyGObject), 카메라는 추가로 Pillow·NumPy가 필요합니다.
 모든 도구의 기본 partition은 환경변수 `GZ_PARTITION` 또는 `robocup_motion`입니다.
+토픽 이름, 관절 한계, 주행·관절·그리퍼 명령은 공통 모듈 [robocup_gz.py](robocup_gz.py)에 있으며 `control.py`, `robotctl.py`, `joystick.py`가 함께 사용합니다.
 
 ## 조이스틱 팝업
 

@@ -27,9 +27,11 @@ ros2 topic hz /wrist_camera/color/image_raw
 ros2 topic hz /wrist_camera/depth/image_raw
 ```
 
-현재 브리지는 /clock, /cmd_vel, /odom, /tf, /joint_states, /scan와 손목 color/depth 영상·CameraInfo·depth points입니다.
+현재 브리지는 /clock, /cmd_vel, /odom, /tf, /joint_states, /scan, Mid-360S 점군 /mid360/points와 손목 color/depth 영상·CameraInfo·depth points입니다.
 정확한 매핑은 [ros_bridge.yaml](ros_bridge.yaml)을 참고하세요.
-헤드 영상과 Mid-360S는 Gazebo 토픽/팝업을 사용하며 현재 ROS 브리지에는 포함하지 않습니다.
-SLAM/Nav2 설정은 slam_params.yaml과 nav2_params.yaml에 있지만 이 런치가 해당 노드들을 실행하지는 않습니다.
+헤드 영상은 Gazebo 토픽/팝업을 사용하며 현재 ROS 브리지에는 포함하지 않습니다.
+런치는 Nav2용 Mid-360S 자기 점 필터(`/mid360/points_filtered`)도 실행합니다.
+SLAM/Nav2 노드는 이 런치가 실행하지 않습니다. 실행 방법은 [SLAM.md](SLAM.md)와 [NAV2.md](NAV2.md)를 참고하세요.
+Gazebo 서버와 창은 별도 프로세스입니다. 창을 닫아도 시뮬레이션은 계속되며 런치 터미널의 Ctrl+C로 종료합니다.
 
 최종 URDF 정리 후 Gazebo 센서는 기존 개발 PC에서 재검증했습니다. 당시 개발 PC에는 ROS 2가 없어 ROS 런치는 구문 검사까지만 했습니다. 별도 Jetson에는 ROS Humble을 준비했지만 Gazebo·bridge를 설치하거나 이 시뮬레이션 launch를 실행하지 않았습니다.

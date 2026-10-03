@@ -67,3 +67,11 @@
   ros_type_name: sensor_msgs/msg/LaserScan
   gz_type_name: gz.msgs.LaserScan
   direction: GZ_TO_ROS
+
+# Livox Mid-360S point cloud, frame_id livox_frame (mounted upside down). Self hits are
+# removed by cloud_self_filter.py before Nav2 uses it.
+- ros_topic_name: /mid360/points
+  gz_topic_name: /robocup/mid360s/scan/points
+  ros_type_name: sensor_msgs/msg/PointCloud2
+  gz_type_name: gz.msgs.PointCloudPacked
+  direction: GZ_TO_ROS
