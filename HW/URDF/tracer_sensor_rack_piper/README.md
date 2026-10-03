@@ -40,3 +40,9 @@ Gazebo Harmonic 설치 후 `./start_sim.sh`를 실행하고 `http://127.0.0.1:80
 저장한 URDF의 모든 가동 관절 기준값은 0입니다. Piper 팔 6축과 그리퍼, Tracer 바퀴의 영점 자세를 사용합니다.
 URDF는 로봇 링크 간 변환을 정의하며 Gazebo에서 이동한 world 위치는 기록하지 않습니다.
 동작 world 생성 시 차체 위치는 X=0, Y=0, yaw=0, Z=0.145 m로 시작합니다. Z는 바퀴가 바닥 위에 놓이도록 준 높이입니다.
+
+## 센서 기능
+
+Gazebo용 URDF에 Mid-360S, YDLIDAR G2와 D435f 시뮬레이션 센서를 추가했습니다.
+사양 출처, 모델별 적용값, 데이터 토픽, 실제 장치와의 차이 및 검증 방법은 [SENSORS.md](SENSORS.md)에 정리했습니다.
+센서 설정을 변경한 뒤 `python3 build.py`로 URDF를 갱신합니다.

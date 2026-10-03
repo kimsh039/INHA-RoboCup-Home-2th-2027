@@ -1,6 +1,10 @@
 from pathlib import Path
 import subprocess
+import argparse
 import xml.etree.ElementTree as E
+parser=argparse.ArgumentParser()
+parser.add_argument('--test-wall',action='store_true',help='Add a wall 2 m forward for sensor validation')
+args=parser.parse_args()
 P=Path(__file__).resolve().parent
 r=E.parse(P/'tracer_sensor_rack_piper_gazebo.urdf')
 for m in r.findall('.//mesh'): m.set('filename',str((P/m.get('filename')).resolve()))
@@ -24,10 +28,15 @@ sdf=E.Element('sdf',version='1.10'); w=E.SubElement(sdf,'world',name='robocup_mo
 E.SubElement(w,'gravity').text='0 0 -9.81'
 ph=E.SubElement(w,'physics',name='physics',type='ignored'); E.SubElement(ph,'max_step_size').text='0.001'; E.SubElement(ph,'real_time_factor').text='1'
 for f,n in [('physics','Physics'),('user-commands','UserCommands'),('scene-broadcaster','SceneBroadcaster')]: plugin(w,f'gz-sim-{f}-system',f'gz::sim::systems::{n}')
+plugin(w,'gz-sim-sensors-system','gz::sim::systems::Sensors',render_engine='ogre2')
 w.append(m)
 ground=E.SubElement(w,'model',name='ground'); E.SubElement(ground,'static').text='true'; l=E.SubElement(ground,'link',name='ground')
 for tag in ('collision','visual'):
  e=E.SubElement(l,tag,name='ground_'+tag); g=E.SubElement(e,'geometry'); pl=E.SubElement(g,'plane'); E.SubElement(pl,'normal').text='0 0 1'; E.SubElement(pl,'size').text='100 100'
+if args.test_wall:
+ wall=E.SubElement(w,'model',name='sensor_test_wall'); E.SubElement(wall,'static').text='true'; E.SubElement(wall,'pose').text='2 0 1 0 0 0'; wl=E.SubElement(wall,'link',name='wall')
+ for tag in ('visual','collision'):
+  e=E.SubElement(wl,tag,name='wall_'+tag); g=E.SubElement(e,'geometry'); box=E.SubElement(g,'box'); E.SubElement(box,'size').text='0.2 4 2'
 light=E.SubElement(w,'light',name='sun',type='directional'); E.SubElement(light,'pose').text='0 0 5 0 0 0'; E.SubElement(light,'direction').text='-0.5 -0.5 -1'; E.SubElement(light,'diffuse').text='0.8 0.8 0.8 1'
 scene=E.SubElement(w,'scene'); E.SubElement(scene,'ambient').text='0.6 0.6 0.6 1'
 gui=E.SubElement(w,'gui',fullscreen='false'); p=E.SubElement(gui,'plugin',filename='MinimalScene',name='3D View'); E.SubElement(p,'engine').text='ogre2'; E.SubElement(p,'scene').text='scene'; E.SubElement(p,'camera_pose').text='2.2 2.2 1.9 0 0.32 -2.35619'

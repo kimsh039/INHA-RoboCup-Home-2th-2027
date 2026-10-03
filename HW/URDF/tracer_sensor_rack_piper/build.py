@@ -38,6 +38,9 @@ def build(variant, xyz, yaw):
             visited.add(link); link=parents[link]
         assert link=='base_link'
     for m in tracer.findall('.//mesh'): assert (HERE/m.get('filename')).is_file()
+    if variant:
+        from sensors import add_sensors
+        add_sensors(tracer)
     E.indent(tracer)
     out=HERE/f'tracer_sensor_rack_piper{suffix}.urdf'
     E.ElementTree(tracer).write(out,encoding='utf-8',xml_declaration=True)

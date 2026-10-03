@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 cd "$(dirname "$(readlink -f "$0")")"
+python3 build.py
 python3 make_sim.py
 python3 control.py &
 control_pid=$!
