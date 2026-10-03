@@ -89,17 +89,54 @@ TF는 `odom` → `base_link`(DiffDrive)와 `base_link` 이하 URDF 트리(`robot
 
 | 대상 | 중심 (x, y, z) m | 크기 (X × Y × Z) m | 비고 |
 |---|---|---|---|
-| 방 내부 | (0, 0) | 6.0 × 4.0 | 벽 안쪽 면 기준 x ±3.0, y ±2.0 |
-| 북쪽 벽 | (0, 2.05, 0.5) | 6.2 × 0.1 × 1.0 | 두께 0.1, 높이 1.0 |
-| 남쪽 벽 | (0, −2.05, 0.5) | 6.2 × 0.1 × 1.0 | |
-| 동쪽 벽 | (3.05, 0, 0.5) | 0.1 × 4.0 × 1.0 | |
-| 서쪽 벽 | (−3.05, 0, 0.5) | 0.1 × 4.0 × 1.0 | |
-| 칸막이 | (−1.5, 1.25, 0.5) | 0.1 × 1.5 × 1.0 | 북쪽 벽에서 y=0.5까지, 방의 대칭을 깨서 스캔 매칭 모호성 방지 |
-| 테이블 상판 | (1.8, −1.0, 0.73) | 1.2 × 0.8 × 0.04 | 윗면 높이 0.75 |
-| 테이블 다리 ×4 | (1.8 ± 0.525, −1.0 ± 0.325, 0.355) | 0.05 × 0.05 × 0.71 | 가장자리에서 0.05 안쪽 |
+| 방 내부 | (0, 0) | 6.0 × 6.0 | 벽 안쪽 면 기준 x ±3.0, y ±3.0 |
+| 북쪽 벽 | (0, 3.05, 0.5) | 6.2 × 0.1 × 1.0 | 두께 0.1, 높이 1.0 |
+| 남쪽 벽 | (0, −3.05, 0.5) | 6.2 × 0.1 × 1.0 | |
+| 동쪽 벽 | (3.05, 0, 0.5) | 0.1 × 6.0 × 1.0 | |
+| 서쪽 벽 | (−3.05, 0, 0.5) | 0.1 × 6.0 × 1.0 | |
+| 칸막이 | (−1.5, 2.25, 0.5) | 0.1 × 1.5 × 1.0 | 북쪽 벽에서 y=1.5까지, 정사각형 방의 대칭을 깨서 스캔 매칭 모호성 방지 |
+| 테이블 상판 | (1.8, −1.0, 0.705) | 1.6 × 0.8 × 0.03 | 실제 테이블 160 × 80 cm, 상판 두께 3 cm, 윗면 높이 0.72 |
+| 테이블 다리 ×4 | (1.8 ± 0.725, −1.0 ± 0.325, 0.345) | 0.05 × 0.05 × 0.69 | 가장자리에서 0.05 안쪽 |
 
 G2 스캔 평면은 바닥에서 약 0.49 m(`base_link` 0.1425 m + 0.343 m)입니다. 따라서 2D 스캔에는 테이블 상판이 아니라 **다리 4개만** 점으로 잡힙니다. 상판 아래 공간을 Nav2가 빈 곳으로 판단할 수 있으므로, 3D 센서(Mid-360S, D435f)를 costmap에 넣기 전까지는 테이블 주변 주행에 주의해야 합니다.
 빈 world에서도 G2 ray 약 13%가 랙 기둥에 0.20~0.28 m로 닿습니다([SENSORS.md](docs/SENSORS.md#확인-결과-2026-10-03)). SLAM/Nav2의 최소 거리는 약 0.3 m로 두세요.
+
+### 주행 물리
+
+`gazebo/make_sim.py`가 Gazebo용 URDF를 만들 때만 바퀴 접촉을 바꿉니다. 원본 URDF와 질량·관성(Tracer 30 kg)은 그대로 씁니다.
+
+- 구동 바퀴 충돌 형상: 메시 대신 반지름 60.5 mm 구, 마찰 1.0. 메시나 폭 전체 원기둥은 제자리 회전 때 바닥을 비틀며 미끄러졌습니다.
+- 캐스터 4개: 반지름 36.5 mm 구(실제 37.5 mm보다 1 mm 작게), 마찰 0.01. 구동 바퀴가 하중을 받고, 캐스터는 차체가 기울 때만 닿습니다. 실제 Tracer 구동 바퀴의 서스펜션을 대신합니다.
+- DiffDrive: 최고 속도 1.6 m/s(TRACER 사양), 가속 ±1.0 m/s², 각가속 ±2.0 rad/s². 가속 값은 실측값이 아니라 가정값입니다. 정지 상태에서 속도가 순간적으로 바뀌면 바퀴가 미끄러져서 넣었습니다.
+
+검증(빈 world, 2026-10-03): 1 m 정사각형 경로 2바퀴(8 m, 회전 720°) 뒤 odom과 Gazebo 실제 위치 차이는 0.011 m, 0.3°였습니다. 수정 전에는 같은 종류의 주행에서 수십 cm, 100° 이상 어긋났습니다. 시뮬레이션 odom은 실제 로봇보다 오차가 작을 수 있으므로, 실기 odom 오차는 별도로 측정해야 합니다.
+
+### SLAM과 Nav2
+
+SLAM Toolbox와 Nav2 설치: `sudo apt-get install ros-humble-slam-toolbox ros-humble-navigation2 ros-humble-nav2-bringup`.
+같은 네트워크의 다른 PC ROS 노드와 섞이지 않도록 모든 터미널에서 `export ROS_LOCALHOST_ONLY=1`을 먼저 실행합니다.
+
+```bash
+# 터미널 1: 시뮬레이션
+ros2 launch simulation/ros2/sim.launch.py world:=room rviz:=false
+# 터미널 2: SLAM
+ros2 launch slam_toolbox online_async_launch.py \
+  slam_params_file:=$PWD/simulation/ros2/slam_params.yaml use_sim_time:=true
+# 터미널 3: Nav2
+ros2 launch nav2_bringup navigation_launch.py \
+  params_file:=$PWD/simulation/ros2/nav2_params.yaml use_sim_time:=true
+# 터미널 4: RViz (Nav2 Goal로 목표 지정)
+ros2 run rviz2 rviz2 -d /opt/ros/humble/share/nav2_bringup/rviz/nav2_default_view.rviz \
+  --ros-args -p use_sim_time:=true
+# 키보드 주행 (한글 입력 모드면 키가 무시되므로 영문으로 전환)
+ros2 run teleop_twist_keyboard teleop_twist_keyboard --ros-args -p speed:=0.2 -p turn:=0.5
+# 지도 저장
+ros2 run nav2_map_server map_saver_cli -f ~/maps/room --ros-args -p use_sim_time:=true
+```
+
+`ros2/slam_params.yaml`, `ros2/nav2_params.yaml`은 Humble 기본값에서 `base_link` 프레임, 스캔 사용 거리 0.35~12 m, Tracer footprint(0.70 × 0.58 m), 로컬 costmap 4 × 4 m만 바꾼 임시 설정입니다.
+SLAM은 위 방에서 약 25 m를 주행해 6.05 × 6.05 m 지도, 칸막이, 테이블 다리 4개를 확인했고, 주행 후 SLAM 위치 오차는 3 cm 이내였습니다. Nav2 목표 주행은 아직 검증하지 않았습니다.
+Gazebo 창을 닫거나 리셋하면 시뮬레이션 시간이 0으로 돌아가 RViz가 종료될 수 있습니다.
 
 ## 모델 재생성과 센서 검사
 
