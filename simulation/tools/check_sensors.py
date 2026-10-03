@@ -13,7 +13,7 @@ os.environ.setdefault('GZ_IP','127.0.0.1')  # keep discovery off the LAN
 p=argparse.ArgumentParser(); p.add_argument('--wall',action='store_true'); a=p.parse_args()
 node=Node(); samples={}; lock=threading.Lock()
 topics={
- '/robocup/g2/scan':(LaserScan,'laser_frame',714,7),
+ '/robocup/g2/scan':(LaserScan,'laser_frame',500,10),
  '/robocup/mid360s/scan':(LaserScan,'livox_frame',20000,10),
  '/robocup/mid360s/scan/points':(PointCloudPacked,'livox_frame',20000,10),
  '/robocup/camera/depth/image':(Image,'camera_optical_frame',1280*720,30),

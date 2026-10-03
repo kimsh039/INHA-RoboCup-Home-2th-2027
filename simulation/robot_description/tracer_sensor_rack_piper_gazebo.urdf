@@ -1276,14 +1276,14 @@
       <topic>/robocup/g2/scan</topic>
       <gz_frame_id>laser_frame</gz_frame_id>
       <always_on>true</always_on>
-      <update_rate>7</update_rate>
+      <update_rate>10</update_rate>
       <lidar>
         <scan>
           <horizontal>
-            <samples>714</samples>
+            <samples>500</samples>
             <resolution>1</resolution>
             <min_angle>-3.141592653589793</min_angle>
-            <max_angle>3.132792674167973</max_angle>
+            <max_angle>3.129026282975434</max_angle>
           </horizontal>
           <vertical>
             <samples>1</samples>
@@ -1294,7 +1294,7 @@
         </scan>
         <range>
           <min>0.12</min>
-          <max>16</max>
+          <max>12</max>
           <resolution>0.001</resolution>
         </range>
       </lidar>
