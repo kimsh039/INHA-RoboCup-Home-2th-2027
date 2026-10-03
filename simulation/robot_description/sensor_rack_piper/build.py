@@ -2,16 +2,17 @@
 """Combine sensor rack and Piper; keep original meshes and joint kinematics."""
 from pathlib import Path
 import copy
+import os
 import xml.etree.ElementTree as ET
 
 HERE = Path(__file__).resolve().parent
-ROOT = HERE.parent
+ROOT = HERE.parents[2] / 'HW/URDF'
 
 def build(source, output):
     rack = ET.parse(ROOT/'sensor_rack_description/urdf/sensor_rack.urdf').getroot()
     rack.set('name', 'sensor_rack_piper')
     for mesh in rack.findall('.//mesh'):
-        mesh.set('filename', '../sensor_rack_description/' + mesh.get('filename').split('package://sensor_rack_description/')[1])
+        mesh.set('filename', os.path.relpath(ROOT/'sensor_rack_description'/mesh.get('filename').split('package://sensor_rack_description/')[1], HERE))
     arm = ET.parse(ROOT/'piper'/source).getroot()
     for node in arm:
         if node.tag == 'link' and node.get('name') == 'world':
@@ -26,7 +27,7 @@ def build(source, output):
                 if e.get(attr):
                     e.set(attr, 'piper_' + e.get(attr))
             if e.tag == 'mesh':
-                e.set('filename', '../piper/' + e.get('filename'))
+                e.set('filename', os.path.relpath(ROOT/'piper'/e.get('filename'), HERE))
         rack.append(node)
     joint = ET.SubElement(rack,'joint',name='rack_to_piper_base',type='fixed')
     ET.SubElement(joint,'parent',link='cad_Manipulator_mount_1')

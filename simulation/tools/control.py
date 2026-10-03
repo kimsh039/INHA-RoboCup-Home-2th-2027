@@ -4,6 +4,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 import json, subprocess, os, threading, time
 from pathlib import Path
 os.environ['GZ_PARTITION']='robocup_motion'
+os.environ.setdefault('GZ_IP','127.0.0.1')  # keep discovery off the LAN
 from gz.transport13 import Node
 from gz.msgs10.double_pb2 import Double
 from gz.msgs10.twist_pb2 import Twist

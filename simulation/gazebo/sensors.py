@@ -30,7 +30,7 @@ def add_sensors(robot):
     # along with the rack, while original CAD / ROS TF frames remain untouched.
     g=E.SubElement(robot,'gazebo',reference='rack_base_link')
     lidar(g,'ydlidar_g2','0.0001749995366 0 0.3266 0 0 0.1537539717',
-          '/robocup/g2/scan','laser_frame',7,714,1,1,1,.12,16)
+          '/robocup/g2/scan','laser_frame',10,500,1,1,1,.12,12)
     lidar(g,'livox_mid360s','-0.18 0 1.183 3.141592653589793 0 0',
           '/robocup/mid360s/scan','livox_frame',10,1000,20,-7,52,.1,100)
     # Separate color and depth projections; a single RGBD camera would give

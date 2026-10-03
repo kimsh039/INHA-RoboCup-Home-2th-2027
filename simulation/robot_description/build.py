@@ -2,20 +2,24 @@
 """Attach the rack bottom center to the Tracer top mounting rails."""
 from pathlib import Path
 import argparse
+import os
 import subprocess
 import sys
 import xml.etree.ElementTree as E
 
 HERE=Path(__file__).resolve().parent
-ROOT=HERE.parent
+ROOT=HERE.parents[1]/'HW/URDF'
+sys.path.insert(0, str(HERE.parent/'gazebo'))
 
 def build(variant, xyz, yaw):
     tracer=E.parse(ROOT/'tracer/tracer_v1.urdf').getroot()
     tracer.set('name','tracer_sensor_rack_piper')
     for m in tracer.findall('.//mesh'):
-        m.set('filename','../tracer/'+m.get('filename'))
+        m.set('filename',os.path.relpath(ROOT/'tracer'/m.get('filename'), HERE))
     suffix='_gazebo' if variant else ''
-    rack=E.parse(ROOT/f'sensor_rack_piper/sensor_rack_piper{suffix}.urdf').getroot()
+    rack=E.parse(HERE/f'sensor_rack_piper/sensor_rack_piper{suffix}.urdf').getroot()
+    for mesh in rack.findall('.//mesh'):
+        mesh.set('filename', os.path.relpath((HERE/'sensor_rack_piper'/mesh.get('filename')).resolve(), HERE))
     # Preserve Piper and sensor frame names; only the duplicate root needs renaming.
     for node in rack:
         for e in node.iter():
@@ -51,6 +55,6 @@ if __name__=='__main__':
     p.add_argument('--xyz',type=float,nargs=3,default=[0,0,0.01611])
     p.add_argument('--yaw',type=float,default=0)
     a=p.parse_args()
-    subprocess.run([sys.executable,str(ROOT/'sensor_rack_piper/build.py')],check=True)
+    subprocess.run([sys.executable,str(HERE/'sensor_rack_piper/build.py')],check=True)
     build(False,a.xyz,a.yaw)
     build(True,a.xyz,a.yaw)
