@@ -15,11 +15,11 @@ def build(variant, xyz, yaw):
     tracer=E.parse(ROOT/'tracer/tracer_v1.urdf').getroot()
     tracer.set('name','tracer_sensor_rack_piper')
     for m in tracer.findall('.//mesh'):
-        m.set('filename',os.path.relpath(ROOT/'tracer'/m.get('filename'), HERE))
+        m.set('filename',os.path.relpath(ROOT/'tracer'/m.get('filename'), HERE).replace(os.sep, '/'))
     suffix='_gazebo' if variant else ''
     rack=E.parse(HERE/f'sensor_rack_piper/sensor_rack_piper{suffix}.urdf').getroot()
     for mesh in rack.findall('.//mesh'):
-        mesh.set('filename', os.path.relpath((HERE/'sensor_rack_piper'/mesh.get('filename')).resolve(), HERE))
+        mesh.set('filename', os.path.relpath((HERE/'sensor_rack_piper'/mesh.get('filename')).resolve(), HERE).replace(os.sep, '/'))
     # Preserve Piper and sensor frame names; only the duplicate root needs renaming.
     for node in rack:
         for e in node.iter():

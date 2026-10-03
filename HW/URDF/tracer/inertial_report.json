@@ -1,0 +1,217 @@
+{
+  "source": "https://docs.trossenrobotics.com/agilex_tracer_docs/specifications.html",
+  "nominal_total_mass_kg": 30.0,
+  "assumption": "body 26 kg; two drive wheels 1.5 kg each; four forks and four caster wheels 0.125 kg each. Not measured component masses.",
+  "links": {
+    "inertial_link": {
+      "mass_kg": 26.0,
+      "approximation": "uniform bounding box",
+      "center_m": [
+        0.0,
+        -7.326205738744651e-05,
+        -0.04306136964323939
+      ],
+      "mesh_envelope_m": [
+        0.6850168,
+        0.5699998192711456,
+        0.1302898741977636
+      ],
+      "diagonal_inertia_kg_m2": [
+        0.74072969812315,
+        1.0534841798015362,
+        1.7206535888779868
+      ]
+    },
+    "right_wheel_link": {
+      "mass_kg": 1.5,
+      "approximation": "solid cylinder, local Y axis",
+      "center_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_envelope_m": [
+        0.121,
+        0.0844,
+        0.121
+      ],
+      "diagonal_inertia_kg_m2": [
+        0.00226301375,
+        0.0027451875,
+        0.00226301375
+      ]
+    },
+    "left_wheel_link": {
+      "mass_kg": 1.5,
+      "approximation": "solid cylinder, local Y axis",
+      "center_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mesh_envelope_m": [
+        0.121,
+        0.0844,
+        0.121
+      ],
+      "diagonal_inertia_kg_m2": [
+        0.00226301375,
+        0.0027451875,
+        0.00226301375
+      ]
+    },
+    "fl_castor_link": {
+      "mass_kg": 0.125,
+      "approximation": "uniform bounding box",
+      "center_m": [
+        0.008624490000000002,
+        0.032734559,
+        -0.0009999999999999974
+      ],
+      "mesh_envelope_m": [
+        0.09745000000000001,
+        0.084800002,
+        0.08399999999999999
+      ],
+      "diagonal_inertia_kg_m2": [
+        0.00014840667020000003,
+        0.00017242190104166667,
+        0.00017382857124166674
+      ]
+    },
+    "fr_castor_link": {
+      "mass_kg": 0.125,
+      "approximation": "uniform bounding box",
+      "center_m": [
+        0.008624490000000002,
+        0.032734559,
+        -0.0009999999999999974
+      ],
+      "mesh_envelope_m": [
+        0.09745000000000001,
+        0.084800002,
+        0.08399999999999999
+      ],
+      "diagonal_inertia_kg_m2": [
+        0.00014840667020000003,
+        0.00017242190104166667,
+        0.00017382857124166674
+      ]
+    },
+    "rr_castor_link": {
+      "mass_kg": 0.125,
+      "approximation": "uniform bounding box",
+      "center_m": [
+        0.008624490000000002,
+        0.032734559,
+        -0.0009999999999999974
+      ],
+      "mesh_envelope_m": [
+        0.09745000000000001,
+        0.084800002,
+        0.08399999999999999
+      ],
+      "diagonal_inertia_kg_m2": [
+        0.00014840667020000003,
+        0.00017242190104166667,
+        0.00017382857124166674
+      ]
+    },
+    "rl_castor_link": {
+      "mass_kg": 0.125,
+      "approximation": "uniform bounding box",
+      "center_m": [
+        0.008624490000000002,
+        0.032734559,
+        -0.0009999999999999974
+      ],
+      "mesh_envelope_m": [
+        0.09745000000000001,
+        0.084800002,
+        0.08399999999999999
+      ],
+      "diagonal_inertia_kg_m2": [
+        0.00014840667020000003,
+        0.00017242190104166667,
+        0.00017382857124166674
+      ]
+    },
+    "fl_wheel_link": {
+      "mass_kg": 0.125,
+      "approximation": "solid cylinder, local Z axis",
+      "center_m": [
+        2.300000000003688e-07,
+        -6.549999999987122e-07,
+        0.0
+      ],
+      "mesh_envelope_m": [
+        0.07500000000000001,
+        0.07446264999999999,
+        0.053
+      ],
+      "diagonal_inertia_kg_m2": [
+        7.320572916666668e-05,
+        7.320572916666668e-05,
+        8.789062500000002e-05
+      ]
+    },
+    "fr_wheel_link": {
+      "mass_kg": 0.125,
+      "approximation": "solid cylinder, local Z axis",
+      "center_m": [
+        2.300000000003688e-07,
+        -6.549999999987122e-07,
+        0.0
+      ],
+      "mesh_envelope_m": [
+        0.07500000000000001,
+        0.07446264999999999,
+        0.053
+      ],
+      "diagonal_inertia_kg_m2": [
+        7.320572916666668e-05,
+        7.320572916666668e-05,
+        8.789062500000002e-05
+      ]
+    },
+    "rr_wheel_link": {
+      "mass_kg": 0.125,
+      "approximation": "solid cylinder, local Z axis",
+      "center_m": [
+        2.300000000003688e-07,
+        -6.549999999987122e-07,
+        0.0
+      ],
+      "mesh_envelope_m": [
+        0.07500000000000001,
+        0.07446264999999999,
+        0.053
+      ],
+      "diagonal_inertia_kg_m2": [
+        7.320572916666668e-05,
+        7.320572916666668e-05,
+        8.789062500000002e-05
+      ]
+    },
+    "rl_wheel_link": {
+      "mass_kg": 0.125,
+      "approximation": "solid cylinder, local Z axis",
+      "center_m": [
+        2.300000000003688e-07,
+        -6.549999999987122e-07,
+        0.0
+      ],
+      "mesh_envelope_m": [
+        0.07500000000000001,
+        0.07446264999999999,
+        0.053
+      ],
+      "diagonal_inertia_kg_m2": [
+        7.320572916666668e-05,
+        7.320572916666668e-05,
+        8.789062500000002e-05
+      ]
+    }
+  },
+  "total_mass_kg": 30.0
+}

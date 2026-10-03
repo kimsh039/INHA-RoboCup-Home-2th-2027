@@ -34,7 +34,7 @@ Gazebo Harmonic 설치 후 `./gazebo/start_sim.sh`를 실행하고 `http://127.0
 동작 world에서는 static을 해제하고 바닥, 중력, 차륜 DiffDrive와 팔 JointPositionController를 추가합니다.
 팔은 `use_velocity_commands`의 이상적인 위치 제어로 속도를 제한합니다. 실제 모터 토크 성능 검증용이 아닙니다.
 차륜 좌측의 원본 joint 회전으로 뒤집힌 축은 생성된 SDF에서만 보정합니다.
-원본 질량/관성, 접촉 메시와 캐스터 구성은 실측 검증되지 않아 주행 동역학 결과를 실제 성능으로 해석하면 안 됩니다.
+Tracer 총 질량은 제조사 명목값 30 kg으로 보정했으며 통합 모델 총 질량은 51.07908 kg입니다. 부품별 질량 분배·관성은 메시 기반 근사이며 [Tracer 물성 설명](../../HW/URDF/tracer/README.md)에 가정과 출처를 기록했습니다. 물성, 접촉 메시와 캐스터 구성은 실측 검증되지 않아 주행 동역학 결과를 실제 성능으로 해석하면 안 됩니다.
 `make_sim.py`는 현재 checkout의 절대 메시 경로로 임시 SDF/URDF를 재생성합니다.
 
 ## 저장 기준 자세
