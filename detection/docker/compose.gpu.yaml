@@ -1,0 +1,16 @@
+# x86 NVIDIA GPU override; requires NVIDIA Container Toolkit on the host.
+services:
+  head_detection:
+    build:
+      args:
+        TORCH_INDEX: https://download.pytorch.org/whl/cu121
+    image: robocup/head-detection:humble-cuda121
+    environment:
+      ROBOCUP_DEVICE: ${ROBOCUP_DEVICE:-0}
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]

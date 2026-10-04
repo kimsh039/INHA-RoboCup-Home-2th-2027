@@ -1,0 +1,24 @@
+head_detection_node:
+  ros__parameters:
+    # Model path/device are supplied by environment or launch arguments.
+    # No weights are bundled or automatically downloaded.
+    task: detect                  # YOLO11n bbox default; segment for optional YOLO-seg weights
+    confidence: 0.35              # Initial tuning values, not measured operating limits
+    nms_iou: 0.45
+    imgsz: 640
+    target_class: ""              # Empty = initially select highest-confidence class
+    tracker_type: CSRT            # CSRT or KCF
+    confirm_frames: 3             # Confirmation outputs are valid=false
+    redetect_interval: 5          # Number of PROCESSED frames, not camera frame count
+    roi_margin: 2.0               # Multiply bbox width and height by this factor
+    match_iou: 0.25               # Same class AND IoU threshold required
+    max_unconfirmed: 2
+    max_verification_age: 0.5     # Force verification or invalidate, source-time seconds
+    max_frame_gap: 0.5            # Reset tracker on camera gap/resolution change
+    input_topic: /head_camera/color/image_raw
+    compressed_input: false       # If true, set input_topic to the compressed topic
+    target_topic: /detection/head/target
+    mask_topic: /detection/head/target_mask
+    debug_topic: /detection/head/debug_image
+    input_timeout: 1.0            # Wall-clock input-loss watchdog
+    max_input_age: 0.5            # ROS clock; configure use_sim_time for simulation

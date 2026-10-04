@@ -1,0 +1,27 @@
+services:
+  head_detection:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    image: robocup/head-detection:humble
+    network_mode: host
+    init: true
+    environment:
+      ROS_DOMAIN_ID: ${ROS_DOMAIN_ID:-0}
+      RMW_IMPLEMENTATION: rmw_fastrtps_cpp
+      FASTRTPS_DEFAULT_PROFILES_FILE: /fastdds_udp.xml
+      ROBOCUP_MODEL: ${ROBOCUP_MODEL:-}
+      ROBOCUP_DEVICE: ${ROBOCUP_DEVICE:-cpu}
+    volumes:
+      - ../models:/models:ro
+      - ../head_detection_ws/src/robocup_head_detection/config:/params:ro
+      - ../head_detection_ws/src/robocup_head_detection/robocup_head_detection:/ros_ws/src/robocup_head_detection/robocup_head_detection:ro
+      - ./fastdds_udp.xml:/fastdds_udp.xml:ro
+    command:
+      - ros2
+      - launch
+      - robocup_head_detection
+      - head_detection.launch.py
+      - config:=/params/head_detection.yaml
+      - use_sim_time:=${USE_SIM_TIME:-false}
+    restart: unless-stopped

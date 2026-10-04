@@ -1,0 +1,8 @@
+head_detection_ws/build/
+head_detection_ws/install/
+head_detection_ws/log/
+__pycache__/
+*.pyc
+.venv*/
+models/*
+!models/.gitkeep

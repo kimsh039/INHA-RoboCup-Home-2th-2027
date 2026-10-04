@@ -34,6 +34,7 @@ TRACER × PiPER · Calibration · Detection · Simulation
 | 확인한 범위와 미완료 항목 | [SETUP_REPORT.md](setup/jetson/SETUP_REPORT.md) |
 | Gazebo 모델을 실행하거나 수정하는 방법 | [Simulation](simulation/README.md) / [Hardware](HW/URDF/README.md) |
 | 인지·분할·파지의 후속 설계 | [Detection 설계](detection/README.md) |
+| 헤드 검출·ROI 추적 ROS 코드와 Docker 실행 | [헤드 검출 구현 가이드](detection/HEAD_DETECTION.md) |
 
 ## 로봇 구성
 
