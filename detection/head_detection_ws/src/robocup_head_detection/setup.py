@@ -15,5 +15,6 @@ setup(
     description="Head detection and verified tracking", license="Apache-2.0",
     entry_points={"console_scripts": [
         "head_detection_node = robocup_head_detection.node:main",
+        "detection_nav_goal_node = robocup_head_detection.nav_goal_node:main",
     ]},
 )

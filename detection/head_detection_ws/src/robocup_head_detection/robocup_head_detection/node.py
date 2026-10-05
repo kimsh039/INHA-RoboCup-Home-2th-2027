@@ -15,7 +15,7 @@ from std_msgs.msg import Header
 from robocup_detection_msgs.msg import HeadTarget
 
 from .backends import YoloDetector, make_tracker_factory
-from .core import Config, HeadPipeline, Observation
+from .core import Config, HeadPipeline, Observation, roi_bounds
 from .images import decode_compressed, decode_raw
 
 
@@ -110,6 +110,8 @@ class HeadDetectionNode(Node):
             if box:
                 x, y, w, h = (round(v) for v in (box.x, box.y, box.width, box.height))
                 cv2.rectangle(debug, (x, y), (x+w, y+h), (0, 255, 0), 2)
+                x0, y0, x1, y1 = roi_bounds(box, frame.shape[1], frame.shape[0], self.pipeline.cfg.roi_margin)
+                cv2.rectangle(debug, (x0, y0), (x1, y1), (255, 180, 0), 1)
             text = f"{observation.state} YOLO={observation.measured} {elapsed:.1f}ms"
             cv2.putText(debug, text, (10, 25), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 255), 2)
             self.debug_pub.publish(self.image_message(debug, msg.header, "bgr8"))

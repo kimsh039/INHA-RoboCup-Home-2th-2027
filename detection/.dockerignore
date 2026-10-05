@@ -3,5 +3,6 @@ head_detection_ws/install
 head_detection_ws/log
 **/__pycache__
 models
+demo_assets
 tests
 .venv*

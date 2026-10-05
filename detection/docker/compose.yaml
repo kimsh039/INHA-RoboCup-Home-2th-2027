@@ -8,6 +8,7 @@ services:
     init: true
     environment:
       ROS_DOMAIN_ID: ${ROS_DOMAIN_ID:-0}
+      ROS_LOCALHOST_ONLY: ${ROS_LOCALHOST_ONLY:-0}
       RMW_IMPLEMENTATION: rmw_fastrtps_cpp
       FASTRTPS_DEFAULT_PROFILES_FILE: /fastdds_udp.xml
       ROBOCUP_MODEL: ${ROBOCUP_MODEL:-}
@@ -22,6 +23,6 @@ services:
       - launch
       - robocup_head_detection
       - head_detection.launch.py
-      - config:=/params/head_detection.yaml
+      - config:=/params/${ROBOCUP_CONFIG:-head_detection.yaml}
       - use_sim_time:=${USE_SIM_TIME:-false}
     restart: unless-stopped

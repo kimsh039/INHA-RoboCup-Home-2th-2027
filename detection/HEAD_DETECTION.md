@@ -1,5 +1,8 @@
 # 헤드 검출·추적 구현
 
+Gazebo에서 검출한 목표를 SLAM 지도 좌표로 변환해 Nav2로 이동하는 테스트는
+[시뮬레이션 검출·주행 가이드](SIM_NAV_TEST.md)를 참고한다. 도착 후 closed approach 연결 자리도 남겨두었다.
+
 전체 영상 YOLO 탐색 → OpenCV CSRT/KCF 추적 → 주기적 ROI YOLO 재검증 구조다.
 한 컨테이너의 한 ROS 2 노드에서 YOLO와 OpenCV를 실행한다. 카메라·LiDAR 드라이버,
 CameraInfo·TF·시간 동기화와 3D 위치 추정은 호스트의 별도 노드가 담당한다.

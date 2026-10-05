@@ -1,4 +1,5 @@
 import os
+import sys
 from pathlib import Path
 
 from ament_index_python.packages import get_package_share_directory
@@ -17,7 +18,9 @@ def generate_launch_description():
         DeclareLaunchArgument("model_path", default_value=os.environ.get("ROBOCUP_MODEL", "")),
         DeclareLaunchArgument("device", default_value=os.environ.get("ROBOCUP_DEVICE", "cpu")),
         DeclareLaunchArgument("use_sim_time", default_value="false"),
+        DeclareLaunchArgument("python_executable", default_value=sys.executable),
         Node(package="robocup_head_detection", executable="head_detection_node",
+             prefix=LaunchConfiguration("python_executable"),
              name="head_detection_node", output="screen",
              parameters=[LaunchConfiguration("config"), {
                  "model_path": ParameterValue(LaunchConfiguration("model_path"), value_type=str),

@@ -4,5 +4,6 @@ head_detection_ws/log/
 __pycache__/
 *.pyc
 .venv*/
+demo_assets/
 models/*
 !models/.gitkeep

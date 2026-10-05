@@ -36,6 +36,7 @@ TRACER × PiPER · Calibration · Detection · Simulation
 | 인지·분할·파지의 후속 설계 | [Detection 설계](detection/README.md) |
 | 2D LiDAR·두 D435·Mid-360의 역할 | [센서 역할과 접근 설계](detection/SENSOR_ROLES.md) |
 | 헤드 검출·ROI 추적 ROS 코드와 Docker 실행 | [헤드 검출 구현 가이드](detection/HEAD_DETECTION.md) |
+| Gazebo 검출 → SLAM 지도 → Nav2 이동 테스트 | [시뮬레이션 검출·주행 가이드](detection/SIM_NAV_TEST.md) |
 
 ## 로봇 구성
 
