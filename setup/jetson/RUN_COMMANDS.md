@@ -75,21 +75,37 @@ ros2 launch realsense2_camera rs_launch.py --show-args
 
 serial 변수에는 **실제 serial**을 입력합니다. 빈 값으로는 실행되지 않습니다. downloaded apt와 같은 wrapper 4.58.4의 공식 source에서 serial의 underscore prefix 제거 지원을 확인했습니다. 실제 serial과 장치 프로파일은 연결 후 대조합니다.
 
-Head 터미널:
+**2026-10-05 카메라 구성: Head D435 + Wrist D435.** 두 카메라는 서로 다른 실제 serial을 지정합니다. RGB 설정은 두 장치 모두 `rgb_camera.color_profile`, depth 설정은 `depth_module.depth_profile`을 사용합니다. [wrapper 4.58.4의 공식 인자](https://github.com/realsenseai/realsense-ros/blob/4.58.4/realsense2_camera/launch/rs_launch.py)를 기준으로 명령을 갱신했으며 두 장치의 실행·관측 품질을 확인한 결과는 아닙니다.
+
+Head D435 터미널:
 
 ```bash
 HEAD_SERIAL=''
-ros2 launch realsense2_camera rs_launch.py camera_namespace:=sensors camera_name:=head serial_no:="_${HEAD_SERIAL:?D435 실제 serial 필요}" enable_color:=true enable_depth:=true align_depth.enable:=true enable_sync:=true pointcloud.enable:=true publish_tf:=true rgb_camera.color_profile:=640,480,30 depth_module.depth_profile:=640,480,30
+ros2 launch realsense2_camera rs_launch.py \
+  camera_namespace:=sensors camera_name:=head \
+  serial_no:="_${HEAD_SERIAL:?Head D435 실제 serial 필요}" \
+  enable_color:=true enable_depth:=true \
+  align_depth.enable:=true enable_sync:=true \
+  pointcloud.enable:=true publish_tf:=true \
+  rgb_camera.color_profile:=640,480,30 \
+  depth_module.depth_profile:=640,480,30
 ```
 
-Wrist 터미널:
+Wrist D435 터미널:
 
 ```bash
 WRIST_SERIAL=''
-ros2 launch realsense2_camera rs_launch.py camera_namespace:=sensors camera_name:=wrist serial_no:="_${WRIST_SERIAL:?D405 실제 serial 필요}" enable_color:=true enable_depth:=true align_depth.enable:=true enable_sync:=true pointcloud.enable:=true publish_tf:=true depth_module.color_profile:=640,480,30 depth_module.depth_profile:=640,480,30
+ros2 launch realsense2_camera rs_launch.py \
+  camera_namespace:=sensors camera_name:=wrist \
+  serial_no:="_${WRIST_SERIAL:?Wrist D435 실제 serial 필요}" \
+  enable_color:=true enable_depth:=true \
+  align_depth.enable:=true enable_sync:=true \
+  pointcloud.enable:=true publish_tf:=true \
+  rgb_camera.color_profile:=640,480,30 \
+  depth_module.depth_profile:=640,480,30
 ```
 
-profile이 지원되지 않으면 실제 지원 목록에 맞춰 변경값을 기록합니다. `enable_sync`는 각 카메라의 stream 동기화이며 두 카메라 사이 hardware 동기화를 보장하지 않습니다. D435도 depth를 제공합니다.
+profile이 지원되지 않으면 실제 지원 목록에 맞춰 변경값을 기록합니다. `640×480@30`은 시작 설정이며 손목의 최소 관측 거리·품질을 보장하지 않습니다. `enable_sync`는 각 카메라의 stream 동기화이며 두 카메라 사이 hardware 동기화를 보장하지 않습니다. 두 D435의 intrinsic·외부 장착 보정값을 각각 관리합니다.
 
 카메라별 예상 topic suffix:
 

@@ -4,6 +4,8 @@
 
 최종 업데이트: 2026-10-03. 다운로드와 설치를 우선하고 검증은 설치 확인·필수 GPU 샘플 추론·짧은 ROS 통신 확인으로 제한했습니다.
 
+> **2026-10-05 구성 변경:** 현재 선택은 **Head D435 + Wrist D435**이며 D405를 사용하지 않습니다. 아래 D405 관련 언급은 2026-10-03의 확인 범위·wrapper 조사 기록입니다. 최신 실행 명령은 [RUN_COMMANDS](RUN_COMMANDS.md#2-realsense-head--wrist)을 따릅니다. 이번 문서 변경에서 Jetson이나 두 카메라를 실행하지 않았습니다.
+
 **YOLO와 SAM을 모두 Jetson GPU 버전으로 전환했습니다. torch 2.8.0 / torchvision 0.23.0 / CUDA 12.6 / Orin sm_87이며, 두 환경에서 GPU 인식과 실제 추론을 확인했습니다.** 이전 보고서 이후 설치된 ROS Humble Desktop을 재사용하고 Calibration·PiPER·Livox·YOLO workspace의 핵심 패키지 빌드를 완료했습니다.
 
 실제 보정·사용자 물체 학습·로봇 통합 완료를 의미하지 않습니다. 센서용 apt 일부와 실제 하드웨어 입력은 남아 있습니다. Koide는 사용자의 요청대로 설정만 준비했습니다.
@@ -127,7 +129,7 @@ libapr1-dev
 
 의존성 .deb 약 427 MiB는 이미 다운로드했습니다. 현재 전체 요청 목록 기준 apt 시뮬레이션은 7개 upgrade / 40개 신규 / 제거 0개입니다. sudo 인증은 아직 password required이며 남은 apt 설치만 사용자 터미널 인증이 필요합니다. 구체적인 설치 명령은 README_SETUP에 있습니다. 비밀번호 저장/요청, sudoers 변경은 하지 않았습니다.
 
-추가 실제 입력: D435/D405 serial·USB profile, tag 크기, PiPER/TRACER CAN, firmware/URDF/gripper, MID360 NIC/host/sensor IP, 장착/base↔arm/base↔2D LiDAR/TCP 값, 2D LiDAR 모델, 목표 class와 촬영 session별 split/label. [CONFIG_REQUIRED.md](CONFIG_REQUIRED.md)에 이유와 입력 경로를 기록했습니다.
+현재 구성의 추가 실제 입력: Head/Wrist 두 D435의 serial·USB profile, tag 크기, PiPER/TRACER CAN, firmware/URDF/gripper, MID360 NIC/host/sensor IP, 장착/base↔arm/base↔2D LiDAR/TCP 값, 2D LiDAR 모델, 목표 class와 촬영 session별 split/label. [CONFIG_REQUIRED.md](CONFIG_REQUIRED.md)에 이유와 입력 경로를 기록했습니다.
 
 SAM 전체 notebooks extras의 eva-decord는 Linux ARM64 배포가 없어서 영상 notebook 의존성만 BLOCKED입니다. image predictor/Jupyter/GPU 분할은 준비 완료. SAM CUDA extension은 기존 미빌드 상태를 유지하며 선택적 후처리 일부가 빠질 수 있으나 모델은 GPU에서 실행됩니다. SAM ROS publisher/training 환경은 추가하지 않았습니다.
 

@@ -1,6 +1,8 @@
 # Nav2 params for the Gazebo sim (ROS 2 Humble nav2_bringup defaults with robot-specific changes):
 # base_link frames, Tracer footprint, local costmap 4x4 m, scan obstacle_min_range 0.35 m,
 # Mid-360S point cloud as a second obstacle source in both costmaps.
+# Sensor roles: /scan supplies 2D SLAM/localization; Mid-360 supplements 3D obstacles.
+# Support-surface extraction and approach-pose generation are future nodes, not costmap functions.
 amcl:
   ros__parameters:
     use_sim_time: True

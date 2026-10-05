@@ -39,7 +39,13 @@ def setup(context):
     gui = LaunchConfiguration('gui').perform(context) == 'true'
     rviz = LaunchConfiguration('rviz').perform(context) == 'true'
 
-    subprocess.run([sys.executable, str(SIM / 'gazebo' / 'make_sim.py'), '--world', world], check=True)
+    generator = [sys.executable, str(SIM / 'gazebo' / 'make_sim.py'), '--world', world]
+    if LaunchConfiguration('detection_demo').perform(context) == 'true':
+        generator.append('--detection-demo')
+    target_image = LaunchConfiguration('target_image').perform(context)
+    if target_image:
+        generator += ['--target-image', target_image]
+    subprocess.run(generator, check=True)
     final = SIM / 'robot_description' / 'robocup.urdf'
     robot = E.parse(final).getroot()
     for mesh in robot.findall('.//mesh'):
@@ -77,9 +83,12 @@ def generate_launch_description():
         DeclareLaunchArgument('world', default_value='empty', choices=['empty', 'room']),
         DeclareLaunchArgument('gui', default_value='true', choices=['true', 'false']),
         DeclareLaunchArgument('rviz', default_value='true', choices=['true', 'false']),
+        DeclareLaunchArgument('detection_demo', default_value='false', choices=['true', 'false']),
+        DeclareLaunchArgument('target_image', default_value=''),
+        DeclareLaunchArgument('partition', default_value='robocup_motion'),
         # Gazebo and the bridge must share these, or the bridge never finds the sim.
         # GZ_IP keeps discovery on this PC so other sims on the LAN don't mix in.
-        SetEnvironmentVariable('GZ_PARTITION', 'robocup_motion'),
+        SetEnvironmentVariable('GZ_PARTITION', LaunchConfiguration('partition')),
         SetEnvironmentVariable('GZ_IP', os.environ.get('GZ_IP', '127.0.0.1')),
         OpaqueFunction(function=setup),
     ])

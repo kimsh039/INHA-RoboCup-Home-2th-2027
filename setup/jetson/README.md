@@ -6,6 +6,8 @@
 
 이 폴더는 `/home/sparo/robot_setup/`의 실제 setup 기록을 팀 저장소에 공유한 문서 사본입니다. 설치 로그·wheel·모델·venv·실측 데이터는 Jetson 로컬에 있으며 이 폴더에 포함하지 않습니다. 다른 PC에서 재현할 때는 CPU 아키텍처, JetPack/CUDA와 사용자 경로를 대조합니다.
 
+**2026-10-05 운영 구성 갱신: Head D435 + Wrist D435.** [카메라 실행 명령](RUN_COMMANDS.md#2-realsense-head--wrist)과 [장치 입력 목록](CONFIG_REQUIRED.md)을 이 구성에 맞췄습니다. SETUP_REPORT의 2026-10-03 관측은 과거 기록이며, 이번 변경은 실기 설치·센서 실행 결과가 아닙니다. Mid-360의 장애물·작업면·접근 역할은 [센서 역할 문서](../../detection/SENSOR_ROLES.md)를 참고합니다.
+
 ## 읽는 순서
 
 | 순서 | 문서 | 목적 |

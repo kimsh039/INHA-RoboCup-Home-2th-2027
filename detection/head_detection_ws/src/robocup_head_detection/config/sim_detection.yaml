@@ -1,0 +1,16 @@
+head_detection_node:
+  ros__parameters:
+    task: detect
+    confidence: 0.25
+    target_class: bus
+    imgsz: 640
+    tracker_type: CSRT
+    confirm_frames: 3
+    redetect_interval: 5
+    roi_margin: 2.0
+    match_iou: 0.25
+    max_unconfirmed: 2
+    max_verification_age: 0.8
+    max_frame_gap: 1.0
+    input_topic: /head_camera/color/image_raw
+    max_input_age: 1.0

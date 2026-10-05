@@ -52,6 +52,8 @@ def parse_args():
     parser.add_argument('--test-wall', action='store_true', help='Add a wall 2 m forward for sensor validation')
     parser.add_argument('--world', choices=['empty', 'room'], default='empty',
                         help='room: walls, partition and table for SLAM/Nav2 tests (see README)')
+    parser.add_argument('--detection-demo', action='store_true', help='640x480 head sensors, 10 Hz, 5 m depth')
+    parser.add_argument('--target-image', type=Path, help='Add a textured test billboard ahead of the robot')
     return parser.parse_args()
 
 
@@ -215,10 +217,38 @@ def main():
     args = parse_args()
     BUILD.mkdir(exist_ok=True)
     urdf = load_robot_urdf()
+    if args.detection_demo:
+        for name in ('d435f_color', 'd435f_depth'):
+            sensor = urdf.find(f".//sensor[@name='{name}']")
+            sensor.find('update_rate').text = '10'
+            sensor.find('camera/image/width').text = '640'
+            sensor.find('camera/image/height').text = '480'
+            if name == 'd435f_depth':
+                sensor.find('camera/clip/far').text = '5'
     set_wheel_contacts(urdf)
     model = urdf_to_model(urdf)
     add_robot_plugins(model)
     sdf = build_world(model, room=args.world == 'room', test_wall=args.test_wall)
+    if args.target_image:
+        image = args.target_image.resolve(strict=True)
+        world = sdf.find('world')
+        target = sub(world, 'model', name='detection_billboard')
+        sub(target, 'static', 'true')
+        sub(target, 'pose', '2.2 0.25 1.3 0 0 0')
+        link = sub(target, 'link', name='board')
+        visual = sub(link, 'visual', name='image')
+        plane = sub(sub(visual, 'geometry'), 'plane')
+        sub(plane, 'normal', '-1 0 0')
+        sub(plane, 'size', '1.5 2.0')
+        material = sub(visual, 'material')
+        sub(material, 'diffuse', '1 1 1 1')
+        sub(material, 'ambient', '1 1 1 1')
+        metal = sub(sub(material, 'pbr'), 'metal')
+        sub(metal, 'albedo_map', image.as_uri())
+        sub(metal, 'metalness', '0')
+        sub(metal, 'roughness', '1')
+        collision = sub(link, 'collision', name='board_collision')
+        sub(sub(sub(collision, 'geometry'), 'box'), 'size', '0.04 1.5 2.0')
     E.indent(sdf)
     E.ElementTree(sdf).write(WORLD_FILE, encoding='unicode', xml_declaration=True)
     print(WORLD_FILE)

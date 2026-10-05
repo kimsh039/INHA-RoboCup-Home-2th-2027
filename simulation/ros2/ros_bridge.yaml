@@ -1,5 +1,29 @@
 # ros_gz_bridge topics for the robocup_motion world (see sim.launch.py).
 # Optional wrist camera: enabled with wrist_camera:=true.
+- ros_topic_name: /head_camera/color/image_raw
+  gz_topic_name: /robocup/camera/color/image
+  ros_type_name: sensor_msgs/msg/Image
+  gz_type_name: gz.msgs.Image
+  direction: GZ_TO_ROS
+
+- ros_topic_name: /head_camera/color/camera_info
+  gz_topic_name: /robocup/camera/color/camera_info
+  ros_type_name: sensor_msgs/msg/CameraInfo
+  gz_type_name: gz.msgs.CameraInfo
+  direction: GZ_TO_ROS
+
+- ros_topic_name: /head_camera/depth/image_raw
+  gz_topic_name: /robocup/camera/depth/image
+  ros_type_name: sensor_msgs/msg/Image
+  gz_type_name: gz.msgs.Image
+  direction: GZ_TO_ROS
+
+- ros_topic_name: /head_camera/depth/camera_info
+  gz_topic_name: /robocup/camera/depth/camera_info
+  ros_type_name: sensor_msgs/msg/CameraInfo
+  gz_type_name: gz.msgs.CameraInfo
+  direction: GZ_TO_ROS
+
 - ros_topic_name: /wrist_camera/depth/image_raw
   gz_topic_name: /robocup/wrist_camera/depth/image
   ros_type_name: sensor_msgs/msg/Image
