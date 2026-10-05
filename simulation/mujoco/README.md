@@ -71,6 +71,20 @@ flowchart LR
 
 GraspNet은 2D 픽셀 좌표가 아닌 **카메라에서 보이는 표면의 3D XYZ 점군**을 받습니다. 카메라 프레임, 물체 프레임, 그리퍼 TCP는 서로 다르므로 metadata의 강체 변환과 `target_tcp()`의 depth 오프셋을 적용합니다. 관측 자세가 접근 시작 자세이며 기존 20cm 참고 pre-grasp를 별도 경유하지 않습니다.
 
+## ROS 인터페이스
+
+| 이름 | 형식 | 방향·의미 |
+| --- | --- | --- |
+| `/arm_controller/follow_joint_trajectory` | `control_msgs/action/FollowJointTrajectory` | MoveIt → 브리지, 팔 6관절 궤적 |
+| `/joint_states` | `sensor_msgs/msg/JointState` | 브리지 → MoveIt, 실제 관절 상태 |
+| `/simulation/grasp_status` | `std_msgs/msg/String` 안의 JSON | 단계·시뮬레이션 시간·world 변환·접촉력·개구·실패 |
+| `/gripper_command` | `std_msgs/msg/Float64` | 닫기/열기 목표; **joint7 변위(0~0.035m)**, 전체 폭과 구분 |
+| `/base_state` | `std_msgs/msg/String` | `MOVING` / `STOPPED`, 접힌 자세 인터록 |
+| `/manipulation_stage` | `std_msgs/msg/String` | 실행 단계 전달 |
+| `/grasp_targets` | `geometry_msgs/msg/PoseArray` | MuJoCo 목표 마커 |
+
+손가락 joint8은 joint7의 반대 방향입니다. 전체 개구는 메시의 실제 안쪽 표면으로 측정하며 명령값을 전체 폭으로 해석하지 않습니다.
+
 ## 개발환경과 실행 순서
 
 검증된 로컬 환경은 Ubuntu 22.04.5 / Python 3.10.12 / ROS 2 Humble / MoveIt 2.5.10 / MuJoCo 3.3.7입니다. 로컬 NVIDIA GPU는 필요 없습니다. ROS 저장소 등록부터 설명한 [환경 구축](docs/TUTORIAL.md#4-개발환경-구축--로컬-nvidia-gpu-불필요)을 먼저 완료합니다.

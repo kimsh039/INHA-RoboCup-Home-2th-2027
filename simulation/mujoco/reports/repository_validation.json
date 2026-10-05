@@ -27,5 +27,6 @@
     0.03999962657690048
   ],
   "cube_extent_tolerance_m": 0.002,
-  "original_success_report_sha256": "7de2e13f661c40f62c7dea6a158b0f711471da3f01fb910895296fc262bed71c"
+  "original_success_report_sha256": "7de2e13f661c40f62c7dea6a158b0f711471da3f01fb910895296fc262bed71c",
+  "shared_meshes_byte_identical": 32
 }
