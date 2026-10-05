@@ -6,6 +6,8 @@ CameraInfo·TF·시간 동기화와 3D 위치 추정은 호스트의 별도 노�
 최신 설계에 맞춰 기본 모델 task는 **detect (YOLO11n bbox)**다. 선택적으로 YOLO-seg
 가중치와 `task: segment`를 연결하면 검증 프레임의 마스크도 출력할 수 있다.
 
+**카메라 구성은 Head D435 + Wrist D435다.** 이 노드는 Head의 목표 식별·2D 추적을 담당한다. Mid-360의 3D 장애물·작업면·접근 자세와 Wrist D435의 SAM·depth 점군·파지 연결은 [센서 역할 설계](SENSOR_ROLES.md)에 구분했다. 이 노드가 해당 후속 기능을 실행하지는 않는다.
+
 ARMS의 이전 `arms_detection_node.py`(`45af414` 직전)의 detect-then-track 상태 구조,
 ROI 재검증, 재초기화 흐름을 참고해 새로 작성했다. 현재 ARMS main은 추적기 드리프트로
 CSRT/KCF를 제거한 버전이다. 빨간 풍선용 HSV와 ARMS 메시지·제어 의존성은 가져오지 않았다.
@@ -16,7 +18,7 @@ CSRT/KCF를 제거한 버전이다. 빨간 풍선용 HSV와 ARMS 메시지·제�
   raw/JPEG 입력, 디버그 영상, 파라미터·launch·Docker CPU/GPU 설정, 모델 없이 실행하는 테스트.
 - 가중치: **미포함**. 학습·다운로드하지 않는다. 빈 경로/없는 파일이면 `WAITING_MODEL`로
   무효 결과를 발행한다. 나중에 로컬 `.pt` 파일을 연결하고 노드를 재시작한다.
-- 후속 구현: LiDAR 위치 추정, SAM 손목 분할, depth 점군 생성, GraspNet, 팔 제어.
+- 후속 구현: Mid-360 작업면·경계·접근 자세, D435 목표 위치와 작업면 연결, Wrist D435의 SAM 분할·depth 점군, GraspNet·주변 충돌 장면·팔 제어.
 - 실제 센서·학습 모델의 성능과 ROS/Docker 전체 구동은 대상 PC에서 검증해야 한다.
 
 ## 파일 구조

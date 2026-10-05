@@ -7,7 +7,7 @@
 | 항목 | 상태 | 필요한 이유 / 확인 방법 |
 | --- | --- | --- |
 | 남은 apt 설치 / sudo 인증 | BLOCKED | ROS Desktop과 네 workspace의 핵심 build는 완료. RealSense/AprilTag/image tools 등 15개 요청 apt가 아직 없음. apt-cache/remaining_packages.txt와 README의 캐시 설치 명령으로 재개 |
-| D435/D405 serial / USB 연결 | CONFIGURE_REQUIRED | 한 차례 D435 ID 8086:0b07이 관측됐으나 마지막 USB 목록에는 없음. serial/영상은 미확인. 재연결 후 모델·serial·USB 3 속도·지원 profile 기록 |
+| Head D435 / Wrist D435 serial·USB 연결 | CONFIGURE_REQUIRED | 한 차례 D435 ID 8086:0b07이 관측됐으나 마지막 USB 목록에는 없음. 두 장치의 모델·서로 다른 serial·USB 3 속도·지원 profile을 각각 기록. 두 카메라 영상은 미확인 |
 | camera profile / TF / topic / QoS | CONFIGURE_REQUIRED | 640×480@30 지원과 namespace/frame 실제 이름 확인. --show-args 및 topic info -v |
 | AprilTag 검은 외곽 테두리 한 변[m] | CONFIGURE_REQUIRED | pose의 길이 척도 결정. 인쇄 후 실측. 흰 여백 포함하지 않음 |
 | PiPER CAN / TRACER CAN / USB bus ID | CONFIGURE_REQUIRED | 차체 버스와 팔 버스 분리. can0 이름만으로 판별하지 않음 |

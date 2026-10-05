@@ -34,25 +34,28 @@ TRACER × PiPER · Calibration · Detection · Simulation
 | 확인한 범위와 미완료 항목 | [SETUP_REPORT.md](setup/jetson/SETUP_REPORT.md) |
 | Gazebo 모델을 실행하거나 수정하는 방법 | [Simulation](simulation/README.md) / [Hardware](HW/URDF/README.md) |
 | 인지·분할·파지의 후속 설계 | [Detection 설계](detection/README.md) |
+| 2D LiDAR·두 D435·Mid-360의 역할 | [센서 역할과 접근 설계](detection/SENSOR_ROLES.md) |
 | 헤드 검출·ROI 추적 ROS 코드와 Docker 실행 | [헤드 검출 구현 가이드](detection/HEAD_DETECTION.md) |
 
 ## 로봇 구성
 
-| 구성 | Jetson 실기 setup 기준 | 담당 역할 |
+**2026-10-05 센서 선택: Head D435 + Wrist D435.** Mid-360은 주변 3D 환경의 기하를 관측한다. [센서별 역할·구현 우선순위](detection/SENSOR_ROLES.md)를 기준으로 개발하며, 두 카메라의 실제 연결·보정·관측 품질은 별도로 확인한다.
+
+| 구성 | 현재 선택·실기 준비 | 담당 역할 |
 | --- | --- | --- |
 | 차체 | **AgileX original TRACER** | 이동 플랫폼. TRACER 2 / Mini와 구분 |
 | 상부 구조 | 프로파일로 제작한 플랫폼 | 팔과 고정 센서 장착 |
 | 매니퓰레이터 | **AgileX PiPER** | 손목 관측·파지 준비. 실제 CAN과 펌웨어 확인 필요 |
 | Head camera | **RealSense D435** | 넓은 공간 관측, RGB 검출, aligned depth |
-| Wrist camera | **RealSense D405** | 접근 후 재검출, 근거리 RGB-D와 정밀 분할 |
-| 고정 3D LiDAR | **Livox MID-360** | 점군 관측 및 이후 카메라–LiDAR 보정·융합 |
-| 주행용 2D LiDAR | **실물 모델 미확정** | 모델 확인 후 공식 드라이버 선택 |
+| Wrist camera | **RealSense D435** | 접근 후 재검출, 근거리 RGB-D와 정밀 분할 |
+| 고정 3D LiDAR | **Livox MID-360** | 3D 장애물 감지·작업면 기하·근접 접근 자세 생성; 이후 주변 충돌 장면 |
+| 주행용 2D LiDAR | **실물 모델 미확정** | 2D SLAM·위치 추정과 Nav2 기본 입력. 모델 확인 후 공식 드라이버 선택 |
 
 ### CAD·시뮬레이션과 실기를 대조할 때
 
 | 항목 | 저장소의 기존 CAD / Gazebo | 현재 Jetson 실기 준비 |
 | --- | --- | --- |
-| 카메라 | Head / Wrist D435f 형상·핀홀 근사 | Head D435 / Wrist D405 |
+| 카메라 | Head / Wrist D435f 형상·핀홀 근사 | Head D435 / Wrist D435 |
 | LiDAR | YDLIDAR G2 / Mid-360S 모델 | 2D 모델 미확정 / MID-360 |
 | SAM | 기존 Detection 설계는 Small 평가안 | **SAM 2.1 Hiera Tiny GPU** 설치·추론 확인 |
 | 3D 위치 | 기존 설계는 LiDAR 영상 투영·융합 | 초기 실습은 **RealSense aligned depth** |
@@ -253,25 +256,35 @@ python -c 'import torch; print(torch.__version__, torch.version.cuda, torch.cuda
 
 ## 센서 입력과 보정 흐름
 
+**2D LiDAR는 위치 추정·주행, Mid-360은 환경 기하, Head D435는 목표 식별·추적, Wrist D435는 물체 관측·파지 입력**을 담당합니다.
+
 ```mermaid
 flowchart LR
-    H["Head D435 RGB"] --> Y["YOLO 검출"]
-    D["Head aligned depth + CameraInfo"] --> P["초기 3D 위치 실습"]
-    Y --> P
-    P -. "후속 접근 모듈" .-> W["Wrist D405 재검출"]
-    W --> S["SAM 2.1 마스크"]
-    WD["Wrist aligned depth + CameraInfo"] --> G["대상 점군 · 정밀 파지 준비"]
-    S --> G
-    L["MID-360 점군"] -. "별도 보정 후 투영·융합 구현" .-> P
+    SCAN["2D LiDAR"] --> LOC["2D SLAM / Localization"]
+    LOC --> NAV["Nav2"]
+    L["MID-360 점군"] --> FILTER["자기 점 제거"]
+    FILTER --> OBS["3D 장애물 / costmap"]
+    OBS --> NAV
+    FILTER -. "후속 구현" .-> SURFACE["작업면 / 경계 / 접근 자세"]
+    H["Head D435 RGB"] --> Y["YOLO / OpenCV / 목표 식별"]
+    D["Head aligned depth + CameraInfo"] -. "목표 위치 보조" .-> SURFACE
+    Y -. "목표와 작업면 연결" .-> SURFACE
+    NAV -. "이동·경로 검사" .-> A["Closed approach"]
+    SURFACE -. "후속 연결" .-> A
+    A -. "정지 후 관측" .-> W["Wrist D435 재검출 / SAM 2.1"]
+    WD["Wrist aligned depth + CameraInfo"] --> G["물체·주변 점군 / GraspNet"]
+    W -. "후속 연결" .-> G
+    G -. "후속 연결" .-> M["MoveIt IK·충돌 검사 / Pick & Place"]
+    SURFACE -. "후속 주변 충돌 장면" .-> M
 ```
 
-점선은 후속 연결이며 현재 실시간 통합 노드가 존재한다는 뜻이 아닙니다.
+Mid-360의 Nav2 장애물 소스와 자기 점 필터는 **시뮬레이션 코드·설정에 존재**합니다. 점선의 작업면 추출·접근 자세·자동 접근·손목 파지 연결은 후속 구현이며, 위 그림이 실기 통합 완료를 뜻하지 않습니다. 자세한 입력·상태·우선순위는 [센서 역할 문서](detection/SENSOR_ROLES.md)에 있습니다.
 
 | 입력 / 출력 | 준비할 이름 | 상태 / 주의 |
 | --- | --- | --- |
 | Head RGB | `/sensors/head/color/image_raw` | RealSense 연결 후 실제 이름·QoS 확인 |
 | Head aligned depth | `/sensors/head/aligned_depth_to_color/image_raw` | 해당 CameraInfo와 함께 사용 |
-| Wrist RGB / depth | `/sensors/wrist/color/image_raw`, `/sensors/wrist/aligned_depth_to_color/image_raw` | D405 profile·serial 확인 |
+| Wrist RGB / depth | `/sensors/wrist/color/image_raw`, `/sensors/wrist/aligned_depth_to_color/image_raw` | D435 profile·serial 확인 |
 | LiDAR | `/livox/lidar` / `livox_frame` | `PointCloud2` + `intensity` 확인 필요 |
 | PiPER feedback | `/piper/joint_states_feedback` | 제조사 읽기 노드 출력 remap. command 값과 구분 |
 | YOLO namespace | `head_yolo`, `wrist_yolo` | 실제 launch 인자는 실행 문서 참고 |
@@ -295,7 +308,7 @@ flowchart LR
 ### 실기 전에 채울 입력
 
 1. **공통 apt 마무리:** RealSense / AprilTag / image tools 등 요청 패키지 15개가 미설치입니다. `.deb` cache 약 427 MiB는 로컬에 준비돼 있습니다. [설치 기록](setup/jetson/README_SETUP.md)의 남은 패키지 명령으로 진행합니다.
-2. **카메라:** D435 / D405 실제 serial, USB 연결 속도, 지원 profile, topic/frame/QoS.
+2. **카메라:** Head/Wrist 두 D435의 실제 serial, USB 연결 속도, 지원 profile, topic/frame/QoS.
 3. **팔·차체:** PiPER / TRACER CAN 구분, PiPER 펌웨어와 old/new URDF, 실제 feedback.
 4. **LiDAR:** 실제 NIC / host IP / MID-360 IP, 2D LiDAR 모델. 기록된 `192.168.1.184`는 확인할 센서 후보이고, 관측된 host `eno1=192.168.50.184/24`와 구분합니다.
 5. **보정·학습:** 태그 검은 외곽 한 변[m], 장착·TCP 실측, 독립 validation bag, 물체 class와 촬영 세션별 split.
@@ -309,7 +322,8 @@ flowchart LR
 ### 후속 개발
 
 - 실기 센서의 영상·점군·feedback 읽기 확인과 실제 보정
-- MID-360 영상 투영·가림 처리·융합
+- MID-360 3D 장애물 입력의 실기 연결 → 작업면·경계 추출 → 근접 접근 자세 생성
+- 필요할 때 Head–LiDAR 투영으로 목표와 작업면 연결, 이후 MoveIt 주변 충돌 장면
 - SAM ROS mask publisher와 관측 시각의 TF 연결
 - Nav2 / MoveIt / GraspNet 통합과 로봇 자동 접근·파지
 
