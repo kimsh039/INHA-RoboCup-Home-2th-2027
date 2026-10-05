@@ -1,0 +1,27 @@
+# Python virtual environment
+.venv/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# VS Code
+.vscode/
+
+# SAM2 repository clone
+third_party/sam2/
+
+# Model checkpoints
+*.pt
+*.pth
+*.ckpt
+
+# Temporary result images / logs
+results/images/
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
