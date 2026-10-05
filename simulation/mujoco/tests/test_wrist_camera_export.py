@@ -9,15 +9,25 @@ import zipfile
 import numpy as np
 
 from manipulation.wrist_camera_cloud import apply_transform
+from manipulation.wrist_camera_cloud import scan_cube
+from manipulation.sim_model import config, load_model
+from manipulation.observation import top_down_pose, apply_observation
 from scripts.import_graspnet_output import import_output
 
 ROOT = Path(__file__).resolve().parents[1]
 
 
 class WristCameraExportTest(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        # Exercise current-model hash validation without altering preserved run data.
+        model, data = load_model()
+        apply_observation(model, data, top_down_pose(model, data))
+        cls.cloud, _, _, cls.metadata = scan_cube(model, data, config(), 64)
+
     def test_network_output_object_world_pregrasp_import_roundtrip(self):
-        meta = json.loads((ROOT/'data/pointclouds/cube_wrist_camera/metadata.json').read_text())
-        cloud = np.load(ROOT/'data/pointclouds/cube_wrist_camera/points.npy')
+        meta = self.metadata
+        cloud = self.cloud
         T = np.array(meta['T_network_object']);W = np.array(meta['T_world_object'])
         raw = np.zeros((2,17))
         raw[:, :4] = [[.6,.05,.02,.03],[.9,0,.02,.04]]
@@ -27,6 +37,8 @@ class WristCameraExportTest(unittest.TestCase):
         code = ''.join(nb['cells'][10]['source'])
         code = code[code.index('# Preserve original network-frame decoded output'):]
         with tempfile.TemporaryDirectory() as directory:
+            metadata_path = Path(directory)/'metadata.json'
+            metadata_path.write_text(json.dumps(meta))
             output = Path(directory)/'export'
             code = code.replace("pathlib.Path('/content/graspnet_output')", 'pathlib.Path(TEST_OUTPUT)')
             env = {'np':np,'json':json,'pathlib':__import__('pathlib'),'sys':__import__('sys'),
@@ -50,6 +62,6 @@ class WristCameraExportTest(unittest.TestCase):
                 for name in ['grasps.json','grasps_raw.npy','grasps_network_raw.npy','network_input_sensor.npy']:
                     z.write(output/name,name)
             dest=Path(directory)/'import'
-            self.assertEqual(import_output(archive,ROOT/'data/pointclouds/cube_wrist_camera/metadata.json',dest),2)
+            self.assertEqual(import_output(archive,metadata_path,dest),2)
             self.assertTrue((dest/'network_input_sensor.npy').exists())
             self.assertFalse(json.loads((dest/'pregrasps_object.json').read_text())['feasibility_checked'])

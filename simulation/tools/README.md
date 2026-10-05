@@ -6,6 +6,8 @@ Python Gazebo Transport(`gz.transport13`, `gz.msgs10`)가 필요합니다.
 팝업은 GTK3(PyGObject), 카메라는 추가로 Pillow·NumPy가 필요합니다.
 모든 도구의 기본 partition은 환경변수 `GZ_PARTITION` 또는 `robocup_motion`입니다.
 토픽 이름, 관절 한계, 주행·관절·그리퍼 명령은 공통 모듈 [robocup_gz.py](robocup_gz.py)에 있으며 `control.py`, `robotctl.py`, `joystick.py`가 함께 사용합니다.
+1번 관절은 원본 Piper의 1.6 rad 자세를 영점으로 사용하며 범위는 `[-4.2179938, 1.0179938] rad`입니다.
+HOME과 관절 원점 버튼은 모든 팔 관절을 0으로 보내 이 기본 자세로 복귀합니다.
 
 ## 조이스틱 팝업
 

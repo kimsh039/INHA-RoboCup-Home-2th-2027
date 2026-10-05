@@ -1018,11 +1018,11 @@
     </collision>
   </link>
   <joint name="piper_joint1" type="revolute">
-    <origin xyz="0 0 0.123" rpy="0 0 0" />
+    <origin xyz="0 0 0.123" rpy="0 0 1.6" />
     <parent link="piper_base_link" />
     <child link="piper_link1" />
     <axis xyz="0 0 1" />
-    <limit lower="-2.6179938" upper="2.6179938" effort="100" velocity="5" />
+    <limit lower="-4.2179938" upper="1.0179938" effort="100" velocity="5" />
   </joint>
   <link name="piper_link2">
     <inertial>

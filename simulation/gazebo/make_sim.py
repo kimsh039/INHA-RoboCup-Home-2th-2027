@@ -43,8 +43,8 @@ ROOM_WALLS = [('wall_north', '0 3.05 0.5 0 0 0', '6.2 0.1 1.0'), ('wall_south', 
 # Table 1.6 x 0.8 m, top 0.03 m thick with surface at 0.72 m; legs 0.05 m square inset 0.05 m.
 TABLE_CENTRE = (1.8, -1.0)
 TABLE_LEG_OFFSETS = [(.725, .325), (.725, -.325), (-.725, .325), (-.725, -.325)]
-GUI_PLUGINS = ('GzSceneManager', 'InteractiveViewControl', 'CameraTracking', 'WorldControl',
-               'WorldStats', 'EntityTree', 'JointPositionController')
+GUI_PLUGINS = ('GzSceneManager', 'InteractiveViewControl', 'SelectEntities', 'CameraTracking', 'WorldControl',
+               'WorldStats', 'EntityTree', 'TransformControl', 'JointPositionController')
 
 
 def parse_args():

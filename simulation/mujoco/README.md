@@ -4,6 +4,10 @@
 
 로봇은 [공용 조립 URDF](../robot_description/robocup.urdf)를 사용하며, 메시와 CAD는 [HW/URDF](../../HW/URDF/README.md)를 참조합니다. 저장소 전체를 clone해야 합니다. Gazebo와 MuJoCo는 별도 실행 경로이므로 튜토리얼 실행 중 Gazebo/다른 ROS 관절 게시 노드는 종료합니다.
 
+공용 URDF의 1번 관절 영점은 원본 Piper의 1.6 rad 자세입니다. 튜토리얼의 초기·접힘 자세와 관측 IK seed는
+1번 관절값을 1.6 rad 빼서 기존 물리적 자세를 유지합니다. 보존된 점군·GraspNet 결과·성공 로그는 변경 전 모델의 기록입니다.
+새 URDF와 설정에서는 기존 metadata의 모델 해시 검사가 거절하므로, [튜토리얼](docs/TUTORIAL.md)의 관측·점군 생성·Colab 추론 순서로 입력을 다시 생성하세요.
+
 ## 먼저 확인할 문서
 
 | 알고 싶은 것 | 읽을 문서·파일 |
