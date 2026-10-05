@@ -1,0 +1,32 @@
+{
+  "date": "2026-10-05",
+  "scope": "CPU validation after relocation; full ROS physical execution not rerun here",
+  "source_urdf_unchanged": true,
+  "fk": {
+    "samples": 20,
+    "max_position_error_m": 5.642153411145046e-13,
+    "max_rotation_matrix_error": 5.41131028874986e-12,
+    "result": "FK_PASS",
+    "collision_export": "source assembly meshes/primitives; MuJoCo mesh contacts are convex hulls",
+    "tcp": "model-derived tip frame; hardware calibration not validated"
+  },
+  "unit_tests": {
+    "run": 19,
+    "passed": 19,
+    "failed": 0,
+    "command": "python -m unittest discover -s tests -v"
+  },
+  "rviz_check": {
+    "top": 50,
+    "markers": 609,
+    "points": 25296,
+    "result": "CHECK_PASS"
+  },
+  "preserved_input_extent_xy_m": [
+    0.03999962657690048,
+    0.03999962657690048
+  ],
+  "cube_extent_tolerance_m": 0.002,
+  "original_success_report_sha256": "7de2e13f661c40f62c7dea6a158b0f711471da3f01fb910895296fc262bed71c",
+  "shared_meshes_byte_identical": 32
+}
