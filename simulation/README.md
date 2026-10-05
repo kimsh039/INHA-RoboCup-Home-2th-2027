@@ -7,6 +7,10 @@ Tracer, 프로파일 랙, Piper·그리퍼, G2, Mid-360S, 헤드 D435f와 손목
 원본 메시·CAD·물성 자료는 `../HW/URDF/`에 유지하며 예전 독립·중간 URDF와 조립 생성기는 삭제했습니다.
 URDF의 상대 메시 경로가 유효하도록 저장소 전체를 사용하세요.
 
+팔의 기본 자세는 원본 Piper의 1번 관절을 1.6 rad(약 91.7°) 돌린 모습입니다.
+이 자세가 최종 URDF의 관절 영점이므로 처음부터 모든 팔 관절값이 0인 상태로 생성되며,
+`home`과 웹·조이스틱 HOME도 이 자세로 돌아옵니다. 좌표와 가동 범위는 [모델 안내](robot_description/README.md)를 참고하세요.
+
 | 폴더 | 내용·사용법 |
 |---|---|
 | [robot_description](robot_description/README.md) | 최종 모델과 좌표·물성 |

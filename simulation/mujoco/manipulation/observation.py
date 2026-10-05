@@ -18,7 +18,8 @@ def top_down_pose(model, data, height=.30):
         # Image roll is free. Fix camera position and optical viewing axis only.
         return np.r_[5*(T[:3,3]-target),T[:3,2]-[0,0,-1]]
     try:
-        for seed in ([-.2,1.6,-.3,0,0,0],[-.2,2.,-1.,0,.6,0]):
+        # Match the original physical seeds in the shared URDF's new joint 1 zero.
+        for seed in ([-1.8,1.6,-.3,0,0,0],[-1.8,2.,-1.,0,.6,0]):
             result = least_squares(residual,np.clip(seed,bounds[:,0]+1e-6,bounds[:,1]-1e-6),
                                    bounds=(bounds[:,0],bounds[:,1]),max_nfev=600)
             residual(result.x)

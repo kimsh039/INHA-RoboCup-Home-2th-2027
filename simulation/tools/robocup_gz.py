@@ -17,7 +17,8 @@ CAMERA_PREFIX = {'head': '/robocup/camera', 'wrist': '/robocup/wrist_camera'}
 ARM_JOINTS = [f'piper_joint{i}' for i in range(1, 7)]
 GRIPPER_JOINTS = ('piper_gripper_joint1', 'piper_gripper_joint2')
 # Piper joint limits in rad, as in robot_description/robocup.urdf.
-ARM_LIMITS = [(-2.6179938, 2.6179938), (0, 3.1415926), (-2.9670597, 0),
+# Joint 1 zero is the original Piper angle 1.6 rad; q1 = original q1 - 1.6.
+ARM_LIMITS = [(-4.2179938, 1.0179938), (0, 3.1415926), (-2.9670597, 0),
               (-1.7453292, 1.7453292), (-1.2217304, 1.2217304), (-2.0943951, 2.0943951)]
 GRIPPER_MAX = 0.05            # one-finger travel, m
 
