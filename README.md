@@ -33,6 +33,7 @@ TRACER × PiPER · Calibration · Detection · Simulation
 | 아직 필요한 실측값과 장치 설정 | [CONFIG_REQUIRED.md](setup/jetson/CONFIG_REQUIRED.md) |
 | 확인한 범위와 미완료 항목 | [SETUP_REPORT.md](setup/jetson/SETUP_REPORT.md) |
 | Gazebo 모델을 실행하거나 수정하는 방법 | [Simulation](simulation/README.md) / [Hardware](HW/URDF/README.md) |
+| 손목 탑다운 관측과 MuJoCo 물리 픽앤플레이스 재현 | [Manipulation 튜토리얼](simulation/mujoco/README.md) |
 | 인지·분할·파지의 후속 설계 | [Detection 설계](detection/README.md) |
 | 2D LiDAR·두 D435·Mid-360의 역할 | [센서 역할과 접근 설계](detection/SENSOR_ROLES.md) |
 | 헤드 검출·ROI 추적 ROS 코드와 Docker 실행 | [헤드 검출 구현 가이드](detection/HEAD_DETECTION.md) |

@@ -1,0 +1,16 @@
+# 실행 중 생성되는 모델, 로그, 환경은 로컬에만 유지한다.
+.ros_venv/
+.venv*/
+__pycache__/
+*.pyc
+simulation/generated/
+reports/*
+!reports/wrist_camera_grasp_execution_success.json
+!reports/repository_validation.json
+!reports/ros_logs/
+reports/ros_logs/*
+!reports/ros_logs/.gitkeep
+*.tar
+*.pth
+*.pt
+data/grasps/*/previous_*/

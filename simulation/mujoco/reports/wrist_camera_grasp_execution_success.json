@@ -1,0 +1,1327 @@
+{
+  "result": "PICK_AND_PLACE_PASS",
+  "planner": "MoveIt 2 OMPL/KDL",
+  "scope": "assembled robot pick and place, contact-driven physics",
+  "grasp_file": "data/grasps/cube_wrist_camera/grasps.json",
+  "metadata_file": "data/pointclouds/cube_wrist_camera/metadata.json",
+  "fixed_open_width": true,
+  "events": [
+    {
+      "state": "INIT",
+      "time_wall": 1791181663.3397522
+    },
+    {
+      "state": "OPEN_GRIPPER",
+      "time_wall": 1791181664.453055
+    },
+    {
+      "state": "LOAD_OBJECT",
+      "time_wall": 1791181667.855068
+    },
+    {
+      "state": "BASE_STOPPED",
+      "time_wall": 1791181668.0136065
+    },
+    {
+      "state": "SELECT_GRASP",
+      "time_wall": 1791181668.1161005
+    },
+    {
+      "state": "APPROACH_GRASP",
+      "time_wall": 1791181668.7698796
+    },
+    {
+      "state": "CLOSE_GRIPPER",
+      "time_wall": 1791181785.2145696
+    },
+    {
+      "state": "VERIFY_GRASP",
+      "time_wall": 1791181791.9255452
+    },
+    {
+      "state": "LIFT_OBJECT",
+      "time_wall": 1791181792.0754688
+    },
+    {
+      "state": "PLAN_PLACE_LEFT",
+      "time_wall": 1791181863.3898103
+    },
+    {
+      "state": "MOVE_TO_PLACE",
+      "time_wall": 1791181863.6627982
+    },
+    {
+      "state": "LOWER_OBJECT",
+      "time_wall": 1791181899.3998742
+    },
+    {
+      "state": "OPEN_GRIPPER",
+      "time_wall": 1791181961.0472074
+    },
+    {
+      "state": "RETREAT",
+      "time_wall": 1791181965.1689894
+    },
+    {
+      "state": "FOLD_ARM",
+      "time_wall": 1791182026.601828
+    },
+    {
+      "state": "DONE",
+      "time_wall": 1791182065.816855
+    }
+  ],
+  "rejected_candidates": [],
+  "grasp_contact_status": {
+    "simulation_time_s": 236.97600000040342,
+    "jaw_opening_m": 0.039068954529609845,
+    "finger_contacts": [
+      "link7",
+      "link8"
+    ],
+    "finger_contact_forces": [
+      {
+        "finger": "link7",
+        "normal_force_N": 1.8061266478496165,
+        "tangential_force_N": 0.6172106232880417
+      },
+      {
+        "finger": "link8",
+        "normal_force_N": 1.7557949285939782,
+        "tangential_force_N": 0.8223027783561475
+      }
+    ],
+    "gripper_actuator_force_N": -3.6310025441274396
+  },
+  "selected": {
+    "candidate_id": 634,
+    "score": 1.4420915842056274,
+    "width_m": 0.07750345766544342,
+    "width_policy": "actual maximum opening",
+    "actual_opening_m": 0.06999999895837095,
+    "opening_check": {
+      "fits": true,
+      "jaw_axis_min_m": -0.01963582629019247,
+      "jaw_axis_max_m": 0.023424297034218743,
+      "opening_m": 0.06999999895837095,
+      "margin_per_side_m": 0.001
+    },
+    "T_world_pre_tcp": [
+      [
+        0.001050155991211327,
+        0.18623293429557086,
+        0.9825050592012528,
+        0.4357872626632472
+      ],
+      [
+        -0.0017628688372472584,
+        0.9825044190671836,
+        -0.18623092870659322,
+        -0.08620755781853612
+      ],
+      [
+        -0.9999978947307131,
+        -0.001536456025773597,
+        0.00136008713841374,
+        0.9336345320758845
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "T_world_grasp_tcp": [
+      [
+        0.0444441512227059,
+        -0.9968202710151672,
+        -0.0661367401480675,
+        0.5016604526380545
+      ],
+      [
+        -0.5559899210929871,
+        -0.07968281209468847,
+        0.8273608088493347,
+        -0.09699982680351218
+      ],
+      [
+        -0.8300000429153442,
+        -4.245894073929178e-13,
+        -0.557763397693634,
+        0.7348844879816291
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "approach_start": "measured wrist observation"
+  },
+  "lift_samples": [
+    {
+      "rise_m": 0.1994461287315652,
+      "relative_position_error_m": 0.002090924986870738,
+      "relative_orientation_error_rad": 0.09039994652616015,
+      "finger_contacts": [
+        "link7",
+        "link8"
+      ],
+      "finger_contact_forces": [
+        {
+          "finger": "link7",
+          "normal_force_N": 0.47936905769297644,
+          "tangential_force_N": 0.04366393861514611
+        },
+        {
+          "finger": "link7",
+          "normal_force_N": 0.44903692042973964,
+          "tangential_force_N": 0.10620721748320619
+        },
+        {
+          "finger": "link7",
+          "normal_force_N": 0.4633542448447632,
+          "tangential_force_N": 0.09649324080060734
+        },
+        {
+          "finger": "link7",
+          "normal_force_N": 0.4524788522606992,
+          "tangential_force_N": 0.05301837501785951
+        },
+        {
+          "finger": "link8",
+          "normal_force_N": 0.44919715010674566,
+          "tangential_force_N": 0.024616187530072515
+        },
+        {
+          "finger": "link8",
+          "normal_force_N": 0.4801868715799852,
+          "tangential_force_N": 0.060674549643531965
+        },
+        {
+          "finger": "link8",
+          "normal_force_N": 0.4614458751006984,
+          "tangential_force_N": 0.03281583616165793
+        },
+        {
+          "finger": "link8",
+          "normal_force_N": 0.4534698255050542,
+          "tangential_force_N": 0.049846369354317
+        }
+      ]
+    },
+    {
+      "rise_m": 0.19944599239178462,
+      "relative_position_error_m": 0.002091031196224906,
+      "relative_orientation_error_rad": 0.09039530709929706,
+      "finger_contacts": [
+        "link7",
+        "link8"
+      ],
+      "finger_contact_forces": [
+        {
+          "finger": "link7",
+          "normal_force_N": 0.4793680204424138,
+          "tangential_force_N": 0.04366380617987607
+        },
+        {
+          "finger": "link7",
+          "normal_force_N": 0.44903452958365797,
+          "tangential_force_N": 0.106206901767904
+        },
+        {
+          "finger": "link7",
+          "normal_force_N": 0.4633516425409313,
+          "tangential_force_N": 0.0964930471626627
+        },
+        {
+          "finger": "link7",
+          "normal_force_N": 0.4524779097868347,
+          "tangential_force_N": 0.05301750705256817
+        },
+        {
+          "finger": "link8",
+          "normal_force_N": 0.44919459041151844,
+          "tangential_force_N": 0.024616957545340875
+        },
+        {
+          "finger": "link8",
+          "normal_force_N": 0.4801858066156678,
+          "tangential_force_N": 0.060675649922093164
+        },
+        {
+          "finger": "link8",
+          "normal_force_N": 0.4614432668799253,
+          "tangential_force_N": 0.032816544992652255
+        },
+        {
+          "finger": "link8",
+          "normal_force_N": 0.4534690854643812,
+          "tangential_force_N": 0.049847162845503216
+        }
+      ]
+    },
+    {
+      "rise_m": 0.19944585099927636,
+      "relative_position_error_m": 0.00209114134582255,
+      "relative_orientation_error_rad": 0.09039049714529471,
+      "finger_contacts": [
+        "link7",
+        "link8"
+      ],
+      "finger_contact_forces": [
+        {
+          "finger": "link7",
+          "normal_force_N": 0.4793669448432053,
+          "tangential_force_N": 0.04366366885124035
+        },
+        {
+          "finger": "link7",
+          "normal_force_N": 0.4490320502766072,
+          "tangential_force_N": 0.10620657436670405
+        },
+        {
+          "finger": "link7",
+          "normal_force_N": 0.46334894393110226,
+          "tangential_force_N": 0.09649284637295355
+        },
+        {
+          "finger": "link7",
+          "normal_force_N": 0.4524769325329645,
+          "tangential_force_N": 0.053016606942247205
+        },
+        {
+          "finger": "link8",
+          "normal_force_N": 0.4491919360062727,
+          "tangential_force_N": 0.02461775606282267
+        },
+        {
+          "finger": "link8",
+          "normal_force_N": 0.4801847022853142,
+          "tangential_force_N": 0.06067679090672828
+        },
+        {
+          "finger": "link8",
+          "normal_force_N": 0.461440562133723,
+          "tangential_force_N": 0.032817280045572904
+        },
+        {
+          "finger": "link8",
+          "normal_force_N": 0.45346831816647976,
+          "tangential_force_N": 0.0498479856880217
+        }
+      ]
+    },
+    {
+      "rise_m": 0.1994457045552298,
+      "relative_position_error_m": 0.002091255436447507,
+      "relative_orientation_error_rad": 0.0903855168008086,
+      "finger_contacts": [
+        "link7",
+        "link8"
+      ],
+      "finger_contact_forces": [
+        {
+          "finger": "link7",
+          "normal_force_N": 0.4793658308883327,
+          "tangential_force_N": 0.04366352664434123
+        },
+        {
+          "finger": "link7",
+          "normal_force_N": 0.44902948251975283,
+          "tangential_force_N": 0.10620623526709241
+        },
+        {
+          "finger": "link7",
+          "normal_force_N": 0.46334614902860327,
+          "tangential_force_N": 0.09649263841911279
+        },
+        {
+          "finger": "link7",
+          "normal_force_N": 0.45247592049620683,
+          "tangential_force_N": 0.0530156746867637
+        },
+        {
+          "finger": "link8",
+          "normal_force_N": 0.4491891868875899,
+          "tangential_force_N": 0.024618583088205942
+        },
+        {
+          "finger": "link8",
+          "normal_force_N": 0.4801835585978781,
+          "tangential_force_N": 0.060677972614939575
+        },
+        {
+          "finger": "link8",
+          "normal_force_N": 0.46143776087051047,
+          "tangential_force_N": 0.032818041329589105
+        },
+        {
+          "finger": "link8",
+          "normal_force_N": 0.4534675235958362,
+          "tangential_force_N": 0.049848837897689666
+        }
+      ]
+    },
+    {
+      "rise_m": 0.1994455682097892,
+      "relative_position_error_m": 0.0020913616652911446,
+      "relative_orientation_error_rad": 0.09038088120060586,
+      "finger_contacts": [
+        "link7",
+        "link8"
+      ],
+      "finger_contact_forces": [
+        {
+          "finger": "link7",
+          "normal_force_N": 0.4793647938049074,
+          "tangential_force_N": 0.043663394275158675
+        },
+        {
+          "finger": "link7",
+          "normal_force_N": 0.4490270919389082,
+          "tangential_force_N": 0.10620591954234164
+        },
+        {
+          "finger": "link7",
+          "normal_force_N": 0.4633435469592798,
+          "tangential_force_N": 0.09649244480640438
+        },
+        {
+          "finger": "link7",
+          "normal_force_N": 0.45247497835631684,
+          "tangential_force_N": 0.05301480672599656
+        },
+        {
+          "finger": "link8",
+          "normal_force_N": 0.4491866274363723,
+          "tangential_force_N": 0.024619353071190155
+        },
+        {
+          "finger": "link8",
+          "normal_force_N": 0.48018249386191014,
+          "tangential_force_N": 0.06067907281253498
+        },
+        {
+          "finger": "link8",
+          "normal_force_N": 0.46143515287211445,
+          "tangential_force_N": 0.03281875009804361
+        },
+        {
+          "finger": "link8",
+          "normal_force_N": 0.45346678392802164,
+          "tangential_force_N": 0.04984963132490595
+        }
+      ]
+    },
+    {
+      "rise_m": 0.1994454773124592,
+      "relative_position_error_m": 0.002091432488029965,
+      "relative_orientation_error_rad": 0.09037779148146229,
+      "finger_contacts": [
+        "link7",
+        "link8"
+      ],
+      "finger_contact_forces": [
+        {
+          "finger": "link7",
+          "normal_force_N": 0.47936410243950117,
+          "tangential_force_N": 0.04366330604693348
+        },
+        {
+          "finger": "link7",
+          "normal_force_N": 0.44902549826635185,
+          "tangential_force_N": 0.10620570905168078
+        },
+        {
+          "finger": "link7",
+          "normal_force_N": 0.4633418122905556,
+          "tangential_force_N": 0.09649231572942482
+        },
+        {
+          "finger": "link7",
+          "normal_force_N": 0.4524743503153248,
+          "tangential_force_N": 0.053014228086165176
+        },
+        {
+          "finger": "link8",
+          "normal_force_N": 0.44918492117315423,
+          "tangential_force_N": 0.024619866390714853
+        },
+        {
+          "finger": "link8",
+          "normal_force_N": 0.4801817840789413,
+          "tangential_force_N": 0.06067980627270379
+        },
+        {
+          "finger": "link8",
+          "normal_force_N": 0.46143341424632967,
+          "tangential_force_N": 0.03281922260465072
+        },
+        {
+          "finger": "link8",
+          "normal_force_N": 0.4534662908686072,
+          "tangential_force_N": 0.04985016027343529
+        }
+      ]
+    },
+    {
+      "rise_m": 0.19944532076651555,
+      "relative_position_error_m": 0.0020915544671134046,
+      "relative_orientation_error_rad": 0.09037247157506455,
+      "finger_contacts": [
+        "link7",
+        "link8"
+      ],
+      "finger_contact_forces": [
+        {
+          "finger": "link7",
+          "normal_force_N": 0.47936291179709006,
+          "tangential_force_N": 0.043663154133253675
+        },
+        {
+          "finger": "link7",
+          "normal_force_N": 0.4490227536983661,
+          "tangential_force_N": 0.10620534652410486
+        },
+        {
+          "finger": "link7",
+          "normal_force_N": 0.4633388248889331,
+          "tangential_force_N": 0.09649209342476853
+        },
+        {
+          "finger": "link7",
+          "normal_force_N": 0.45247326878541383,
+          "tangential_force_N": 0.05301323154083896
+        },
+        {
+          "finger": "link8",
+          "normal_force_N": 0.4491819826776258,
+          "tangential_force_N": 0.024620750437277756
+        },
+        {
+          "finger": "link8",
+          "normal_force_N": 0.4801805617518742,
+          "tangential_force_N": 0.06068106944776216
+        },
+        {
+          "finger": "link8",
+          "normal_force_N": 0.4614304200209918,
+          "tangential_force_N": 0.03282003635685381
+        },
+        {
+          "finger": "link8",
+          "normal_force_N": 0.45346544180545934,
+          "tangential_force_N": 0.0498510712373365
+        }
+      ]
+    },
+    {
+      "rise_m": 0.19944517431977815,
+      "relative_position_error_m": 0.0020916685841294107,
+      "relative_orientation_error_rad": 0.09036749635052162,
+      "finger_contacts": [
+        "link7",
+        "link8"
+      ],
+      "finger_contact_forces": [
+        {
+          "finger": "link7",
+          "normal_force_N": 0.47936179801797607,
+          "tangential_force_N": 0.043663012061512456
+        },
+        {
+          "finger": "link7",
+          "normal_force_N": 0.44902018630280227,
+          "tangential_force_N": 0.10620500736634614
+        },
+        {
+          "finger": "link7",
+          "normal_force_N": 0.46333603031883086,
+          "tangential_force_N": 0.09649188545519452
+        },
+        {
+          "finger": "link7",
+          "normal_force_N": 0.4524722571406273,
+          "tangential_force_N": 0.05301229928997612
+        },
+        {
+          "finger": "link8",
+          "normal_force_N": 0.4491792338404375,
+          "tangential_force_N": 0.0246215774448417
+        },
+        {
+          "finger": "link8",
+          "normal_force_N": 0.48017941837283445,
+          "tangential_force_N": 0.060682251121712535
+        },
+        {
+          "finger": "link8",
+          "normal_force_N": 0.46142761905702434,
+          "tangential_force_N": 0.03282079759926382
+        },
+        {
+          "finger": "link8",
+          "normal_force_N": 0.4534646476268139,
+          "tangential_force_N": 0.049851923427086546
+        }
+      ]
+    },
+    {
+      "rise_m": 0.19944508847147224,
+      "relative_position_error_m": 0.002091735483706074,
+      "relative_orientation_error_rad": 0.09036458049666976,
+      "finger_contacts": [
+        "link7",
+        "link8"
+      ],
+      "finger_contact_forces": [
+        {
+          "finger": "link7",
+          "normal_force_N": 0.4793611451341284,
+          "tangential_force_N": 0.04366292879681219
+        },
+        {
+          "finger": "link7",
+          "normal_force_N": 0.4490186813243552,
+          "tangential_force_N": 0.10620480854093509
+        },
+        {
+          "finger": "link7",
+          "normal_force_N": 0.4633343921657344,
+          "tangential_force_N": 0.09649176353852408
+        },
+        {
+          "finger": "link7",
+          "normal_force_N": 0.45247166415618884,
+          "tangential_force_N": 0.05301175279866074
+        },
+        {
+          "finger": "link8",
+          "normal_force_N": 0.44917762248792903,
+          "tangential_force_N": 0.024622062240816853
+        },
+        {
+          "finger": "link8",
+          "normal_force_N": 0.48017874815579,
+          "tangential_force_N": 0.06068294382497278
+        },
+        {
+          "finger": "link8",
+          "normal_force_N": 0.4614259771510659,
+          "tangential_force_N": 0.03282124384069416
+        },
+        {
+          "finger": "link8",
+          "normal_force_N": 0.4534641821210027,
+          "tangential_force_N": 0.04985242298602663
+        }
+      ]
+    },
+    {
+      "rise_m": 0.19944495212384605,
+      "relative_position_error_m": 0.0020918417411312624,
+      "relative_orientation_error_rad": 0.09035995043295333,
+      "finger_contacts": [
+        "link7",
+        "link8"
+      ],
+      "finger_contact_forces": [
+        {
+          "finger": "link7",
+          "normal_force_N": 0.4793601082329427,
+          "tangential_force_N": 0.043662796581477016
+        },
+        {
+          "finger": "link7",
+          "normal_force_N": 0.44901629113522534,
+          "tangential_force_N": 0.10620449274585837
+        },
+        {
+          "finger": "link7",
+          "normal_force_N": 0.4633317904589126,
+          "tangential_force_N": 0.09649156990070724
+        },
+        {
+          "finger": "link7",
+          "normal_force_N": 0.45247072243111947,
+          "tangential_force_N": 0.05301088484269078
+        },
+        {
+          "finger": "link8",
+          "normal_force_N": 0.449175063333682,
+          "tangential_force_N": 0.024622832208657873
+        },
+        {
+          "finger": "link8",
+          "normal_force_N": 0.4801776837536743,
+          "tangential_force_N": 0.060684043997508846
+        },
+        {
+          "finger": "link8",
+          "normal_force_N": 0.46142336947648377,
+          "tangential_force_N": 0.03282195257100318
+        },
+        {
+          "finger": "link8",
+          "normal_force_N": 0.4534634428594447,
+          "tangential_force_N": 0.04985321640233437
+        }
+      ]
+    },
+    {
+      "rise_m": 0.19944480062603887,
+      "relative_position_error_m": 0.0020919598123598153,
+      "relative_orientation_error_rad": 0.09035480735476263,
+      "finger_contacts": [
+        "link7",
+        "link8"
+      ],
+      "finger_contact_forces": [
+        {
+          "finger": "link7",
+          "normal_force_N": 0.47935895616640223,
+          "tangential_force_N": 0.04366264971672209
+        },
+        {
+          "finger": "link7",
+          "normal_force_N": 0.4490136354713935,
+          "tangential_force_N": 0.1062041418427649
+        },
+        {
+          "finger": "link7",
+          "normal_force_N": 0.4633288997681386,
+          "tangential_force_N": 0.096491354739521
+        },
+        {
+          "finger": "link7",
+          "normal_force_N": 0.45246967617605915,
+          "tangential_force_N": 0.05300992044828866
+        },
+        {
+          "finger": "link8",
+          "normal_force_N": 0.4491722199046715,
+          "tangential_force_N": 0.024623687725248544
+        },
+        {
+          "finger": "link8",
+          "normal_force_N": 0.4801765011712613,
+          "tangential_force_N": 0.06068526640717136
+        },
+        {
+          "finger": "link8",
+          "normal_force_N": 0.4614204721442623,
+          "tangential_force_N": 0.03282274004041991
+        },
+        {
+          "finger": "link8",
+          "normal_force_N": 0.45346262156003153,
+          "tangential_force_N": 0.049854097975175315
+        }
+      ]
+    },
+    {
+      "rise_m": 0.19944468952735328,
+      "relative_position_error_m": 0.002092046402892869,
+      "relative_orientation_error_rad": 0.0903510367255918,
+      "finger_contacts": [
+        "link7",
+        "link8"
+      ],
+      "finger_contact_forces": [
+        {
+          "finger": "link7",
+          "normal_force_N": 0.47935811134824147,
+          "tangential_force_N": 0.043662542043543036
+        },
+        {
+          "finger": "link7",
+          "normal_force_N": 0.44901168805274055,
+          "tangential_force_N": 0.10620388450059176
+        },
+        {
+          "finger": "link7",
+          "normal_force_N": 0.46332677999157107,
+          "tangential_force_N": 0.0964911969491896
+        },
+        {
+          "finger": "link7",
+          "normal_force_N": 0.45246890899322695,
+          "tangential_force_N": 0.053009213226477656
+        },
+        {
+          "finger": "link8",
+          "normal_force_N": 0.4491701347739865,
+          "tangential_force_N": 0.02462431510197169
+        },
+        {
+          "finger": "link8",
+          "normal_force_N": 0.4801756340021557,
+          "tangential_force_N": 0.060686162838097975
+        },
+        {
+          "finger": "link8",
+          "normal_force_N": 0.4614183474901935,
+          "tangential_force_N": 0.03282331751223951
+        },
+        {
+          "finger": "link8",
+          "normal_force_N": 0.4534620193420631,
+          "tangential_force_N": 0.04985474446138613
+        }
+      ]
+    },
+    {
+      "rise_m": 0.19944452792882594,
+      "relative_position_error_m": 0.002092172360256997,
+      "relative_orientation_error_rad": 0.09034555362660417,
+      "finger_contacts": [
+        "link7",
+        "link8"
+      ],
+      "finger_contact_forces": [
+        {
+          "finger": "link7",
+          "normal_force_N": 0.47935688256802705,
+          "tangential_force_N": 0.043662385469874394
+        },
+        {
+          "finger": "link7",
+          "normal_force_N": 0.4490088555467239,
+          "tangential_force_N": 0.10620351016469792
+        },
+        {
+          "finger": "link7",
+          "normal_force_N": 0.463323696775892,
+          "tangential_force_N": 0.09649096742769356
+        },
+        {
+          "finger": "link7",
+          "normal_force_N": 0.45246779319785585,
+          "tangential_force_N": 0.053008184541395845
+        },
+        {
+          "finger": "link8",
+          "normal_force_N": 0.44916710193301523,
+          "tangential_force_N": 0.02462522764683996
+        },
+        {
+          "finger": "link8",
+          "normal_force_N": 0.48017437275294084,
+          "tangential_force_N": 0.060687466733448193
+        },
+        {
+          "finger": "link8",
+          "normal_force_N": 0.46141525716926746,
+          "tangential_force_N": 0.03282415746267142
+        },
+        {
+          "finger": "link8",
+          "normal_force_N": 0.45346114349162614,
+          "tangential_force_N": 0.0498556848042092
+        }
+      ]
+    },
+    {
+      "rise_m": 0.19944443702942594,
+      "relative_position_error_m": 0.0020922432151797127,
+      "relative_orientation_error_rad": 0.0903424701400426,
+      "finger_contacts": [
+        "link7",
+        "link8"
+      ],
+      "finger_contact_forces": [
+        {
+          "finger": "link7",
+          "normal_force_N": 0.4793561914032022,
+          "tangential_force_N": 0.0436622974189065
+        },
+        {
+          "finger": "link7",
+          "normal_force_N": 0.44900726231571897,
+          "tangential_force_N": 0.10620329959023046
+        },
+        {
+          "finger": "link7",
+          "normal_force_N": 0.46332196251688773,
+          "tangential_force_N": 0.09649083831743789
+        },
+        {
+          "finger": "link7",
+          "normal_force_N": 0.45246716561870526,
+          "tangential_force_N": 0.05300760590656443
+        },
+        {
+          "finger": "link8",
+          "normal_force_N": 0.44916539599972466,
+          "tangential_force_N": 0.024625740951685526
+        },
+        {
+          "finger": "link8",
+          "normal_force_N": 0.4801736633458772,
+          "tangential_force_N": 0.06068820017246271
+        },
+        {
+          "finger": "link8",
+          "normal_force_N": 0.46141351890795823,
+          "tangential_force_N": 0.0328246299302969
+        },
+        {
+          "finger": "link8",
+          "normal_force_N": 0.45346065087940857,
+          "tangential_force_N": 0.049856213746718114
+        }
+      ]
+    },
+    {
+      "rise_m": 0.19944433602990008,
+      "relative_position_error_m": 0.0020923219461691776,
+      "relative_orientation_error_rad": 0.09033904468285993,
+      "finger_contacts": [
+        "link7",
+        "link8"
+      ],
+      "finger_contact_forces": [
+        {
+          "finger": "link7",
+          "normal_force_N": 0.4793554234626305,
+          "tangential_force_N": 0.04366219960305814
+        },
+        {
+          "finger": "link7",
+          "normal_force_N": 0.4490054921043117,
+          "tangential_force_N": 0.10620306560996144
+        },
+        {
+          "finger": "link7",
+          "normal_force_N": 0.4633200356045366,
+          "tangential_force_N": 0.09649069485811024
+        },
+        {
+          "finger": "link7",
+          "normal_force_N": 0.4524664683555593,
+          "tangential_force_N": 0.053006962979635815
+        },
+        {
+          "finger": "link8",
+          "normal_force_N": 0.44916350055187687,
+          "tangential_force_N": 0.024626311289018335
+        },
+        {
+          "finger": "link8",
+          "normal_force_N": 0.4801728751543102,
+          "tangential_force_N": 0.06068901510293627
+        },
+        {
+          "finger": "link8",
+          "normal_force_N": 0.46141158754387707,
+          "tangential_force_N": 0.03282515489053662
+        },
+        {
+          "finger": "link8",
+          "normal_force_N": 0.45346010357772193,
+          "tangential_force_N": 0.04985680146035604
+        }
+      ]
+    },
+    {
+      "rise_m": 0.19944414413024192,
+      "relative_position_error_m": 0.0020924715446104534,
+      "relative_orientation_error_rad": 0.09033253816754792,
+      "finger_contacts": [
+        "link7",
+        "link8"
+      ],
+      "finger_contact_forces": [
+        {
+          "finger": "link7",
+          "normal_force_N": 0.4793539644344288,
+          "tangential_force_N": 0.04366201380616519
+        },
+        {
+          "finger": "link7",
+          "normal_force_N": 0.44900212883396406,
+          "tangential_force_N": 0.10620262102170412
+        },
+        {
+          "finger": "link7",
+          "normal_force_N": 0.46331637459308667,
+          "tangential_force_N": 0.09649042227460776
+        },
+        {
+          "finger": "link7",
+          "normal_force_N": 0.4524651436920485,
+          "tangential_force_N": 0.05300574141979663
+        },
+        {
+          "finger": "link8",
+          "normal_force_N": 0.4491598992983221,
+          "tangential_force_N": 0.02462739492596017
+        },
+        {
+          "finger": "link8",
+          "normal_force_N": 0.4801713777020735,
+          "tangential_force_N": 0.06069056346559871
+        },
+        {
+          "finger": "link8",
+          "normal_force_N": 0.46140791806041903,
+          "tangential_force_N": 0.032826152304025955
+        },
+        {
+          "finger": "link8",
+          "normal_force_N": 0.4534590638358639,
+          "tangential_force_N": 0.04985791811541073
+        }
+      ]
+    },
+    {
+      "rise_m": 0.1994440582801581,
+      "relative_position_error_m": 0.0020925384742848372,
+      "relative_orientation_error_rad": 0.09032962814440348,
+      "finger_contacts": [
+        "link7",
+        "link8"
+      ],
+      "finger_contact_forces": [
+        {
+          "finger": "link7",
+          "normal_force_N": 0.47935331173626666,
+          "tangential_force_N": 0.04366193070912634
+        },
+        {
+          "finger": "link7",
+          "normal_force_N": 0.4490006242687208,
+          "tangential_force_N": 0.1062024221160837
+        },
+        {
+          "finger": "link7",
+          "normal_force_N": 0.463314736823942,
+          "tangential_force_N": 0.09649030032482839
+        },
+        {
+          "finger": "link7",
+          "normal_force_N": 0.45246455113729445,
+          "tangential_force_N": 0.05300519493310292
+        },
+        {
+          "finger": "link8",
+          "normal_force_N": 0.44915828825251136,
+          "tangential_force_N": 0.0246278797092161
+        },
+        {
+          "finger": "link8",
+          "normal_force_N": 0.48017070783663895,
+          "tangential_force_N": 0.06069125615193165
+        },
+        {
+          "finger": "link8",
+          "normal_force_N": 0.46140627649535493,
+          "tangential_force_N": 0.03282659851067027
+        },
+        {
+          "finger": "link8",
+          "normal_force_N": 0.45345859874389227,
+          "tangential_force_N": 0.04985841767124955
+        }
+      ]
+    },
+    {
+      "rise_m": 0.19944390677965318,
+      "relative_position_error_m": 0.002092656591589006,
+      "relative_orientation_error_rad": 0.09032449399543646,
+      "finger_contacts": [
+        "link7",
+        "link8"
+      ],
+      "finger_contact_forces": [
+        {
+          "finger": "link7",
+          "normal_force_N": 0.4793521599536756,
+          "tangential_force_N": 0.04366178410149865
+        },
+        {
+          "finger": "link7",
+          "normal_force_N": 0.44899796923760404,
+          "tangential_force_N": 0.10620207108984245
+        },
+        {
+          "finger": "link7",
+          "normal_force_N": 0.4633118467212123,
+          "tangential_force_N": 0.09649008511258128
+        },
+        {
+          "finger": "link7",
+          "normal_force_N": 0.4524635055396825,
+          "tangential_force_N": 0.05300423054581221
+        },
+        {
+          "finger": "link8",
+          "normal_force_N": 0.44915544529276946,
+          "tangential_force_N": 0.024628735206539826
+        },
+        {
+          "finger": "link8",
+          "normal_force_N": 0.48016952579264305,
+          "tangential_force_N": 0.06069247853621802
+        },
+        {
+          "finger": "link8",
+          "normal_force_N": 0.46140337968514666,
+          "tangential_force_N": 0.032827385927161855
+        },
+        {
+          "finger": "link8",
+          "normal_force_N": 0.4534577780772739,
+          "tangential_force_N": 0.049859299239812194
+        }
+      ]
+    },
+    {
+      "rise_m": 0.1994437350785303,
+      "relative_position_error_m": 0.002092790467302128,
+      "relative_orientation_error_rad": 0.09031867712382996,
+      "finger_contacts": [
+        "link7",
+        "link8"
+      ],
+      "finger_contact_forces": [
+        {
+          "finger": "link7",
+          "normal_force_N": 0.4793508546582365,
+          "tangential_force_N": 0.04366161799891352
+        },
+        {
+          "finger": "link7",
+          "normal_force_N": 0.44899496033197084,
+          "tangential_force_N": 0.1062016732348918
+        },
+        {
+          "finger": "link7",
+          "normal_force_N": 0.4633085713919207,
+          "tangential_force_N": 0.09648984119492056
+        },
+        {
+          "finger": "link7",
+          "normal_force_N": 0.4524623206637645,
+          "tangential_force_N": 0.05300313757503039
+        },
+        {
+          "finger": "link8",
+          "normal_force_N": 0.44915222336785265,
+          "tangential_force_N": 0.024629704766207707
+        },
+        {
+          "finger": "link8",
+          "normal_force_N": 0.48016818625305757,
+          "tangential_force_N": 0.060693863899966484
+        },
+        {
+          "finger": "link8",
+          "normal_force_N": 0.4614000967405053,
+          "tangential_force_N": 0.032828278321668625
+        },
+        {
+          "finger": "link8",
+          "normal_force_N": 0.45345684811806064,
+          "tangential_force_N": 0.04986029835006295
+        }
+      ]
+    },
+    {
+      "rise_m": 0.19944359872722262,
+      "relative_position_error_m": 0.0020928967875092764,
+      "relative_orientation_error_rad": 0.09031405922918437,
+      "finger_contacts": [
+        "link7",
+        "link8"
+      ],
+      "finger_contact_forces": [
+        {
+          "finger": "link7",
+          "normal_force_N": 0.4793498181440998,
+          "tangential_force_N": 0.04366148613377877
+        },
+        {
+          "finger": "link7",
+          "normal_force_N": 0.4489925710050216,
+          "tangential_force_N": 0.10620135727212111
+        },
+        {
+          "finger": "link7",
+          "normal_force_N": 0.4633059704863012,
+          "tangential_force_N": 0.09648964748764836
+        },
+        {
+          "finger": "link7",
+          "normal_force_N": 0.4524613798348419,
+          "tangential_force_N": 0.05300226962871943
+        },
+        {
+          "finger": "link8",
+          "normal_force_N": 0.4491496648531652,
+          "tangential_force_N": 0.024630474707663358
+        },
+        {
+          "finger": "link8",
+          "normal_force_N": 0.48016712258451744,
+          "tangential_force_N": 0.06069496403790048
+        },
+        {
+          "finger": "link8",
+          "normal_force_N": 0.4613974897771611,
+          "tangential_force_N": 0.032828986979700304
+        },
+        {
+          "finger": "link8",
+          "normal_force_N": 0.4534561097191525,
+          "tangential_force_N": 0.04986109176054696
+        }
+      ]
+    }
+  ],
+  "placement": {
+    "side": "left",
+    "offset_m": 0.1,
+    "T_world_place_tcp": [
+      [
+        0.0444441512227059,
+        -0.9968202710151672,
+        -0.0661367401480675,
+        0.5016604526380545
+      ],
+      [
+        -0.5559899210929871,
+        -0.07968281209468847,
+        0.8273608088493347,
+        0.003000173196487821
+      ],
+      [
+        -0.8300000429153442,
+        -4.245894073929178e-13,
+        -0.557763397693634,
+        0.7348844879816291
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "expected_object_position_m": [
+      0.5005137199325786,
+      9.965972846553983e-06,
+      0.739839220027313
+    ],
+    "actual_object_position_m": [
+      0.501637107422081,
+      -0.0010603880873614963,
+      0.7397844891595659
+    ]
+  },
+  "place_rejections": null,
+  "last_simulation_status": {
+    "stage": "DONE",
+    "base_state": "STOPPED",
+    "failure": null,
+    "simulation_time_s": 410.81200000123346,
+    "finger_contact_forces": [],
+    "gripper_actuator_force_N": 1.4259212477440997e-08,
+    "T_world_tcp": [
+      [
+        0.9959059042430218,
+        0.0003862305626991109,
+        -0.0903951365939722,
+        0.3128592192109588
+      ],
+      [
+        0.00014485673177431325,
+        0.9999827694719883,
+        0.005868541186775994,
+        -0.021525750933766335
+      ],
+      [
+        0.09039584564800372,
+        -0.005857609161258853,
+        0.9958886883103442,
+        1.1906707072180516
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "T_world_object": [
+      [
+        0.9968262578300269,
+        -0.07960786205257184,
+        7.11666700025914e-18,
+        0.501637107422081
+      ],
+      [
+        0.07960786205257184,
+        0.9968262578300269,
+        -8.203856927632598e-17,
+        -0.0010603880873614963
+      ],
+      [
+        -5.6316542815064515e-19,
+        8.234474265428032e-17,
+        0.9999999999999982,
+        0.7397844891595659
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "jaw_opening_m": 0.07000366609065259,
+    "max_jaw_opening_m": 0.06999999895837095,
+    "T_world_base": [
+      [
+        1.0,
+        0.0,
+        0.0,
+        0.107767729724
+      ],
+      [
+        0.0,
+        1.0,
+        0.0,
+        -0.0215535459447
+      ],
+      [
+        0.0,
+        0.0,
+        1.0,
+        0.142544676935
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "object_support_contact": true,
+    "finger_contacts": [],
+    "unexpected_contacts": [],
+    "joint_positions": [
+      0.00016541562756988424,
+      0.01651753798224835,
+      -0.024600769785869874,
+      -0.0041313822065728685,
+      0.004830335405310896,
+      -0.0017522247400173015,
+      0.03499999992886797,
+      -0.03500366720332555
+    ]
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "result": "PICK_AND_PLACE_PASS",
+  "release_date": "2026-10-05",
+  "versions": {
+    "ubuntu": "22.04.5 LTS",
+    "python": "3.10.12",
+    "mujoco": "3.3.7",
+    "numpy": "1.26.4",
+    "scipy": "1.15.3",
+    "ros": "Humble",
+    "moveit": "2.5.10"
+  },
+  "graspnet_commit": "280c215129f759ed8649cb4e89fc5dfee55f4f80",
+  "checkpoint_sha256": "60680087c61cba2b6791614fef1519071e294f6dcaf99b3f581bb95f7c51a868",
+  "source_robot_commit": "0e0a28d7866832ecf1e0841bd41760ebde672a79",
+  "repository_base_commit": "c292bd3",
+  "shared_urdf_sha256": "193207635a76bde7c430a4dc75940d919cd654fc6cda4b15ae1b36968c8eb01b",
+  "scope": "Preserved original physical success; repository relocation validated separately",
+  "file_sha256": {
+    "data/grasps/cube_wrist_camera/candidate_frames.png": "88a6573b37f5772d9f8b39f3b6630583a3e709023c88e5b92a900d61ecfa6b23",
+    "data/grasps/cube_wrist_camera/grasps.json": "fd91e034147dcf83393f85c5114982cced1923795bc1d832bd8db2e8588c1fa6",
+    "data/grasps/cube_wrist_camera/grasps_network_raw.npy": "bde86aeda28d24150583d3a84e58c1bc20085bdee63f9578d9cdd5f1d82d565a",
+    "data/grasps/cube_wrist_camera/grasps_raw.npy": "a5e3ee05bad1b56907c3a18fdade3c908fded834d0b7a1d911e1310e614954dd",
+    "data/grasps/cube_wrist_camera/network_input_sensor.npy": "88591b521ed24f7d6d9a229f65c0263419456c7f45e8ce1b30556e52e00e27fc",
+    "data/grasps/cube_wrist_camera/pregrasps_object.json": "6c626f855a354fcb531c685fd11935ebac2d92502acad2347c26ba0be0f88034",
+    "data/pointclouds/cube_wrist_camera/cube_wrist_camera_input.zip": "9a6641a073e1a69f86d6f1932fb01ab5533aa665ec67f0912d9fd902160490f2",
+    "data/pointclouds/cube_wrist_camera/metadata.json": "1b888b768b2c0e48941b9fb6c8acb0df791bfe2a6106e26e030705838fea2af0",
+    "data/pointclouds/cube_wrist_camera/points.npy": "ea493a7994a3a98e0ba6b93e4bdeb95ffbbbbdaacefe45cc4db7504f6e38900f",
+    "data/pointclouds/cube_wrist_camera/points_camera.npy": "8ca3c19878d2faddddcddb4eccaadbc8fd01999ad79d629c2c0a9b73a36fbcd1",
+    "data/pointclouds/cube_wrist_camera/points_network.npy": "8ca3c19878d2faddddcddb4eccaadbc8fd01999ad79d629c2c0a9b73a36fbcd1",
+    "colab/graspnet_wrist_camera.ipynb": "b3141fb5310b424f21f6f413bf616da55dc937fd806703050c837fd9f5b1164e"
+  }
+}

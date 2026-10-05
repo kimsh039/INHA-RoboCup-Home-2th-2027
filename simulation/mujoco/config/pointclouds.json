@@ -1,0 +1,25 @@
+{
+  "units": "meters",
+  "source_frame": "object",
+  "num_points": 20000,
+  "noise_std_m": 0.0,
+  "seed": 42,
+  "objects": {
+    "cube": {
+      "dimensions_m": [
+        0.04,
+        0.04,
+        0.04
+      ]
+    },
+    "pringles": {
+      "radius_m": 0.0375,
+      "height_m": 0.25
+    },
+    "can": {
+      "radius_m": 0.033,
+      "height_m": 0.115
+    }
+  },
+  "exclude_support_face": true
+}
