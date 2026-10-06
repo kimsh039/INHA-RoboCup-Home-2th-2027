@@ -44,4 +44,4 @@ robot-camera --partition robocup_motion --camera wrist
 
 **2D/3D LiDAR 보정을 쓰려면 `robocup.calibrated.urdf`를 읽는 `calibration_runtime.launch.py`를 실행합니다.** [보정 URDF 적용하기](robot_description/README.md#보정-urdf-적용하기)에 Ubuntu/Mac 전체 명령, RViz 표시, TF 수치 읽기, 기존 TF와 중복하지 않는 방법을 적었습니다. 일반 `sim.launch.py`와 Gazebo world 생성기는 기본으로 `robocup.urdf`를 읽으므로 이 파일 선택을 자동으로 대신하지 않습니다.
 
-측정·로봇 이동·독립 정확도 평가는 [Ubuntu 전체 실행 가이드](calibration/README.md)에서 진행합니다.
+전체 센서 보정 순서·현재 계산값·정확도 결과·저장 위치는 [Calibration 전체 과정과 결과](calibration/README.md)에 정리했습니다. Mid360 측정·로봇 이동·독립 정확도 평가는 [Ubuntu 상세 실행 가이드](calibration/BASE_MID360.md)에서 진행합니다.

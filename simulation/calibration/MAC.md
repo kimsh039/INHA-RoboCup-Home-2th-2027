@@ -1,6 +1,6 @@
 # Mac에서 현재 자료로 이어가기
 
-현재 Mac의 전체 계산/평가 안내는 옵시디언의 `N - RoboCup Tutorial - Calibration 01 Base와 Mid360`이다. 이 Git의 README 8~12번과 같은 수집·이동·평가 명령을 사용하고 아래 환경 차이를 적용한다.
+현재 Mac의 전체 계산/평가 안내는 옵시디언의 `N - RoboCup Tutorial - Calibration 01 Base와 Mid360`이다. 이 Git의 [Mid360 실행 가이드 8~12번](BASE_MID360.md#8-검증-a-준비--보정값-고정-새-저장-폴더-만들기)과 같은 수집·이동·평가 명령을 사용하고 아래 환경 차이를 적용한다.
 
 - REPO는 자신의 Git checkout 절대 경로, PROJECT는 기존 `robocup-tutorial-calibration` 폴더로 설정한다.
 - Gazebo server: `gz sim -s -r --render-engine-api-backend metal "$REPO/simulation/gazebo/build/motion.world.sdf"`. GUI: `gz sim -g --render-engine-api-backend metal`.

@@ -63,7 +63,7 @@ ROS 런치는 당시 Gazebo 개발 PC에 ROS가 없어 구문 확인까지만 �
 
 메시가 `HW/URDF/`에 있으므로 URDF 한 파일만 내려받지 않고 저장소 전체를 사용합니다. 아래 명령은 **저장소 루트에서 실행**합니다. 이미 clone한 위치가 다르면 먼저 그 위치로 `cd`합니다.
 
-Gazebo Server/GUI를 별도 터미널에서 실행 중이라면 그대로 둡니다. 같은 ROS 통신 그룹에서 이전 `robot_state_publisher`를 실행한 창은 Ctrl+C로 종료하고 보정 런치를 시작합니다. 같은 센서 TF를 기존 URDF와 새 URDF가 동시에 발행하면 안 됩니다. `sim.launch.py` 전체를 종료하면 그 런치가 실행한 Gazebo도 종료되므로, GUI를 유지할 실험은 [Gazebo Server/GUI 분리 실행](../calibration/README.md#2-gazebo-방과-gui-실행)을 사용합니다.
+Gazebo Server/GUI를 별도 터미널에서 실행 중이라면 그대로 둡니다. 같은 ROS 통신 그룹에서 이전 `robot_state_publisher`를 실행한 창은 Ctrl+C로 종료하고 보정 런치를 시작합니다. 같은 센서 TF를 기존 URDF와 새 URDF가 동시에 발행하면 안 됩니다. `sim.launch.py` 전체를 종료하면 그 런치가 실행한 Gazebo도 종료되므로, GUI를 유지할 실험은 [Gazebo Server/GUI 분리 실행](../calibration/BASE_MID360.md#2-gazebo-방과-gui-실행)을 사용합니다.
 
 ### 2-A. Ubuntu에서 적용 — ROS 2 Jazzy
 
@@ -149,7 +149,7 @@ Mid360 결과의 translation은 약 `(-0.179962, 0.000156, 1.198867)`m이며 rol
 - **Gazebo:** 실행 중인 로봇/SDF를 자동 변경하지 않습니다. 현재 `make_sim.py`와 일반 `sim.launch.py`의 기본 모델은 명목 `robocup.urdf`입니다. 아래 보정 런치를 실행했다고 Gazebo 센서 장착값도 바뀐 것으로 해석하지 않습니다.
 - **센서 데이터·주행:** 이 런치는 점군/영상 bridge, SLAM, Nav2를 시작하지 않습니다. 기존 TF 발행기와 중복시키거나 다른 시간 기준의 전체 런치에 그대로 추가하지 않습니다.
 
-**적용 확인과 정확도 평가는 별개입니다.** TF 수치를 읽은 다음 새 base 자세에서 점군·실제 pose를 저장하고 같은 보정값으로 평가하는 절차는 [캘리브레이션 가이드 8~12번](../calibration/README.md#8-검증-a-준비--보정값-고정-새-저장-폴더-만들기)에 있습니다. 로봇 이동·회전 명령, 보고서 경로, 통과/실패 숫자와 기록 방법까지 포함합니다. 보정 JSON의 `computed_validation_pending`은 별도 평가 보고서가 생겨도 자동으로 바뀌지 않습니다.
+**적용 확인과 정확도 평가는 별개입니다.** TF 수치를 읽은 다음 새 base 자세에서 점군·실제 pose를 저장하고 같은 보정값으로 평가하는 절차는 [캘리브레이션 가이드 8~12번](../calibration/BASE_MID360.md#8-검증-a-준비--보정값-고정-새-저장-폴더-만들기)에 있습니다. 로봇 이동·회전 명령, 보고서 경로, 통과/실패 숫자와 기록 방법까지 포함합니다. 보정 JSON의 `computed_validation_pending`은 별도 평가 보고서가 생겨도 자동으로 바뀌지 않습니다.
 
 ### 5. 이후 새 보정값을 얻었을 때
 

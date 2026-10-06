@@ -46,6 +46,7 @@ Gazebo 기반 보정 결과입니다. Head/Wrist D435와 실물 센서는 별도
 | 아직 필요한 실측값과 장치 설정 | [CONFIG_REQUIRED.md](setup/jetson/CONFIG_REQUIRED.md) |
 | 확인한 범위와 미완료 항목 | [SETUP_REPORT.md](setup/jetson/SETUP_REPORT.md) |
 | Gazebo 모델을 실행하거나 수정하는 방법 | [Simulation](simulation/README.md) / [Hardware](HW/URDF/README.md) |
+| 전체 캘리브레이션 순서·과정·계산·평가 결과 | [Calibration 전체 과정과 결과](simulation/calibration/README.md) |
 | 2D·3D LiDAR 보정 URDF 적용·RViz 실행 | [보정 URDF 적용하기 — Ubuntu/Mac](simulation/robot_description/README.md#보정-urdf-적용하기) |
 | 손목 탑다운 관측과 MuJoCo 물리 픽앤플레이스 재현 | [Manipulation 튜토리얼](simulation/mujoco/README.md) |
 | 인지·분할·파지의 후속 설계 | [Detection 설계](detection/README.md) |
