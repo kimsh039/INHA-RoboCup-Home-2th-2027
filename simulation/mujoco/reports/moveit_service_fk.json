@@ -1,0 +1,11 @@
+{
+  "result": "PASS",
+  "samples": 20,
+  "frames": [
+    "arm_base",
+    "tcp",
+    "wrist_camera_optical_frame"
+  ],
+  "max_position_error_m": 8.575270218945797e-13,
+  "max_rotation_error_rad": 6.0497823207733646e-12
+}

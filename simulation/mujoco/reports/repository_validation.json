@@ -1,32 +1,46 @@
 {
-  "date": "2026-10-05",
-  "scope": "CPU validation after relocation; full ROS physical execution not rerun here",
-  "source_urdf_unchanged": true,
+  "date": "2026-10-06",
+  "result": "REPOSITORY_CPU_PASS",
+  "physical_execution": {
+    "result": "PICK_AND_PLACE_PASS",
+    "record": "reports/updated_urdf_pick_place.json",
+    "executed_in": "original updated-URDF local project; exact config/input/URDF preserved",
+    "final_return": {
+      "target_joints_rad": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "actual_joints_rad": [
+        0.004216091813178951,
+        0.0025850180618134577,
+        -0.004851634954382149,
+        -0.00029670042192125835,
+        -0.004026209660030125,
+        0.004633406042927265
+      ],
+      "max_joint_error_rad": 0.004851634954382149,
+      "tolerance_rad": 0.02
+    }
+  },
+  "relocated_full_ros_pick_place": "NOT_REEXECUTED",
+  "tests": {
+    "count": 47,
+    "result": "PASS",
+    "duration_s": 23.792
+  },
+  "model_prepare": "PASS",
   "fk": {
     "samples": 20,
-    "max_position_error_m": 5.642153411145046e-13,
-    "max_rotation_matrix_error": 5.41131028874986e-12,
-    "result": "FK_PASS",
-    "collision_export": "source assembly meshes/primitives; MuJoCo mesh contacts are convex hulls",
-    "tcp": "model-derived tip frame; hardware calibration not validated"
+    "max_position_error_m": 7.003286839335487e-13,
+    "max_rotation_matrix_error": 5.6725180108685436e-12
   },
-  "unit_tests": {
-    "run": 19,
-    "passed": 19,
-    "failed": 0,
-    "command": "python -m unittest discover -s tests -v"
-  },
-  "rviz_check": {
-    "top": 50,
-    "markers": 609,
-    "points": 25296,
-    "result": "CHECK_PASS"
-  },
-  "preserved_input_extent_xy_m": [
-    0.03999962657690048,
-    0.03999962657690048
-  ],
-  "cube_extent_tolerance_m": 0.002,
-  "original_success_report_sha256": "7de2e13f661c40f62c7dea6a158b0f711471da3f01fb910895296fc262bed71c",
-  "shared_meshes_byte_identical": 32
+  "metadata_exact_match": true,
+  "input_and_candidates_byte_identical_to_success": true,
+  "unrelated_files_changed": [],
+  "previous_time_rewind_root_cause": "UNRESOLVED; guard and prior failure recorded",
+  "rviz_raw_top50": "manual review step; not independently audited by automated tests"
 }

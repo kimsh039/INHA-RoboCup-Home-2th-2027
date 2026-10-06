@@ -14,7 +14,7 @@ URDF의 상대 메시 경로가 유효하도록 저장소 전체를 사용하세
 | 폴더 | 내용·사용법 |
 |---|---|
 | [robot_description](robot_description/README.md) | 최종 모델과 좌표·물성 |
-| [mujoco](mujoco/README.md) | 손목 탑다운 관측·GraspNet·RViz·PiPER 물리 픽앤플레이스 튜토리얼 |
+| [mujoco](mujoco/README.md) | 최신 nominal URDF의 손목 관측·물리 파지·배치·시작 자세 복귀 검증 |
 | [gazebo](gazebo/README.md) | GPU 실행, 빈 월드·책상/벽 월드, 센서 실시간 수신 |
 | [tools](tools/README.md) | 조이스틱·터미널 제어·카메라 팝업 |
 | [ros2](ros2/README.md) | ROS 2 브리지·RViz·토픽 |

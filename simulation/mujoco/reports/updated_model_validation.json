@@ -1,0 +1,337 @@
+{
+  "fk": {
+    "samples": 20,
+    "max_position_error_m": 7.003286839335487e-13,
+    "max_rotation_matrix_error": 5.6725180108685436e-12,
+    "result": "FK_PASS",
+    "collision_export": "source assembly meshes/primitives; MuJoCo mesh contacts are convex hulls",
+    "tcp": "model-derived tip frame; hardware calibration not validated"
+  },
+  "initial": {
+    "joint_positions_rad": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "T_world_arm": [
+      [
+        1.0,
+        0.0,
+        0.0,
+        0.088267729724
+      ],
+      [
+        0.0,
+        1.0,
+        0.0,
+        -0.021553545944702008
+      ],
+      [
+        0.0,
+        0.0,
+        1.0,
+        0.948654676935
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "contacts": []
+  },
+  "observation_plan": {
+    "joint_positions_rad": [
+      -1.7655854337035704,
+      1.9846863334979674,
+      -1.1869339017585794,
+      1.70742058082926e-05,
+      0.8603117562023465,
+      0.10187636953238169
+    ],
+    "T_world_camera": [
+      [
+        -0.30458389542647535,
+        -0.9524855120403858,
+        3.9219644655756705e-14,
+        0.4999999999999807
+      ],
+      [
+        -0.9524855120403858,
+        0.30458389542647535,
+        -1.1401885080022788e-14,
+        -0.10000000000000026
+      ],
+      [
+        -1.0855417978213835e-15,
+        -4.082897389485871e-14,
+        -1.0000000000000009,
+        1.0400999999999792
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "object_center_world_m": [
+      0.5,
+      -0.1,
+      0.7401
+    ],
+    "camera_height_above_center_m": 0.3,
+    "position_error_m": 2.8441015224752736e-14,
+    "static_collision_check": "no penetration deeper than 1mm",
+    "motion_path_checked": false
+  },
+  "checks": [
+    {
+      "stage": "initial_hold",
+      "simulation_time_s": 3.999999999999781,
+      "max_arm_error_rad": 1.4513762914135969e-19,
+      "measured_arm_joints_rad": [
+        -3.2629701946821977e-23,
+        2.6364827836365285e-20,
+        -1.4513762914135969e-19,
+        -8.348354980404788e-23,
+        1.763165500374463e-20,
+        1.8522105049763763e-24
+      ],
+      "joint_limits_rad": [
+        [
+          -4.2179938,
+          1.0179938
+        ],
+        [
+          0.0,
+          3.1415926
+        ],
+        [
+          -2.9670597,
+          0.0
+        ],
+        [
+          -1.7453292,
+          1.7453292
+        ],
+        [
+          -1.2217304,
+          1.2217304
+        ],
+        [
+          -2.0943951,
+          2.0943951
+        ]
+      ],
+      "limit_violations_rad": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "jaw_gap_m": 0.06999999876594137,
+      "contacts": [],
+      "physics_warning_count": 0,
+      "within_joint_limits": true,
+      "finite": true,
+      "pass": true
+    },
+    {
+      "stage": "folded_hold",
+      "simulation_time_s": 3.999999999999781,
+      "max_arm_error_rad": 4.218847493575595e-15,
+      "measured_arm_joints_rad": [
+        -1.6000000000000043,
+        0.019999999999999993,
+        -0.02,
+        1.1246375437280827e-22,
+        -4.946998005032754e-20,
+        -8.819523477375577e-23
+      ],
+      "joint_limits_rad": [
+        [
+          -4.2179938,
+          1.0179938
+        ],
+        [
+          0.0,
+          3.1415926
+        ],
+        [
+          -2.9670597,
+          0.0
+        ],
+        [
+          -1.7453292,
+          1.7453292
+        ],
+        [
+          -1.2217304,
+          1.2217304
+        ],
+        [
+          -2.0943951,
+          2.0943951
+        ]
+      ],
+      "limit_violations_rad": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "jaw_gap_m": 0.06999999876594129,
+      "contacts": [],
+      "physics_warning_count": 0,
+      "within_joint_limits": true,
+      "finite": true,
+      "pass": true
+    },
+    {
+      "stage": "folded_gripper_close",
+      "simulation_time_s": 3.7419999999998095,
+      "max_arm_error_rad": 1.0475614169447311e-06,
+      "measured_arm_joints_rad": [
+        -1.5999989524385831,
+        0.0199999995640477,
+        -0.02000000014292518,
+        -3.6917007499930735e-08,
+        -6.729514898075638e-12,
+        -3.794267608326543e-08
+      ],
+      "joint_limits_rad": [
+        [
+          -4.2179938,
+          1.0179938
+        ],
+        [
+          0.0,
+          3.1415926
+        ],
+        [
+          -2.9670597,
+          0.0
+        ],
+        [
+          -1.7453292,
+          1.7453292
+        ],
+        [
+          -1.2217304,
+          1.2217304
+        ],
+        [
+          -2.0943951,
+          2.0943951
+        ]
+      ],
+      "limit_violations_rad": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "jaw_gap_m": 3.689297131681535e-11,
+      "contacts": [
+        {
+          "geom1": "link7_collision_0",
+          "geom2": "link8_collision_0",
+          "body1": "link7",
+          "body2": "link8",
+          "depth_m": 0.053000004871344486
+        },
+        {
+          "geom1": "link7_collision_0",
+          "geom2": "link8_collision_0",
+          "body1": "link7",
+          "body2": "link8",
+          "depth_m": 0.053000004871344486
+        },
+        {
+          "geom1": "link7_collision_0",
+          "geom2": "link8_collision_0",
+          "body1": "link7",
+          "body2": "link8",
+          "depth_m": 0.053000004871344486
+        },
+        {
+          "geom1": "link7_collision_0",
+          "geom2": "link8_collision_0",
+          "body1": "link7",
+          "body2": "link8",
+          "depth_m": 0.053000004871344486
+        }
+      ],
+      "physics_warning_count": 0,
+      "within_joint_limits": true,
+      "finite": true,
+      "pass": false
+    },
+    {
+      "stage": "folded_gripper_open",
+      "simulation_time_s": 3.999999999999781,
+      "max_arm_error_rad": 4.218847493575595e-15,
+      "measured_arm_joints_rad": [
+        -1.6000000000000043,
+        0.019999999999999993,
+        -0.02,
+        1.1246375437280827e-22,
+        -4.946998005032754e-20,
+        -8.819523477375577e-23
+      ],
+      "joint_limits_rad": [
+        [
+          -4.2179938,
+          1.0179938
+        ],
+        [
+          0.0,
+          3.1415926
+        ],
+        [
+          -2.9670597,
+          0.0
+        ],
+        [
+          -1.7453292,
+          1.7453292
+        ],
+        [
+          -1.2217304,
+          1.2217304
+        ],
+        [
+          -2.0943951,
+          2.0943951
+        ]
+      ],
+      "limit_violations_rad": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "jaw_gap_m": 0.06999999876594129,
+      "contacts": [],
+      "physics_warning_count": 0,
+      "within_joint_limits": true,
+      "finite": true,
+      "pass": true
+    }
+  ],
+  "scope": "scratch stationary holding with original bridge bias compensation and actuator clipping; strict joint limits; no live trajectory or grasp claim",
+  "result": "FAIL"
+}

@@ -265,6 +265,19 @@ class Demo(Node):
         self.move_goal(c,False)
         if max(abs(a-b) for a,b in zip(self.status["joint_positions"][:6],self.cfg["folded_candidate_rad"]))>self.cfg["arm_goal_tolerance_rad"]:raise RuntimeError("RETURN_HOME_FAILED")
 
+    def return_to_initial(self):
+        # 마지막에는 예전 운반 자세가 아니라 시뮬레이터 시작 관절각으로 복귀한다.
+        target=list(self.cfg["initial_joints_rad"])
+        c=Constraints()
+        for name,value in zip(JOINTS,target):
+            c.joint_constraints.append(JointConstraint(joint_name=name,position=float(value),tolerance_above=.005,tolerance_below=.005,weight=1.))
+        self.move_goal(c,False)
+        actual=list(self.status["joint_positions"][:6])
+        error=max(abs(a-b) for a,b in zip(actual,target))
+        self.final_return={"target_joints_rad":target,"actual_joints_rad":actual,"max_joint_error_rad":error,
+                           "tolerance_rad":self.cfg["arm_goal_tolerance_rad"]}
+        if error>self.cfg["arm_goal_tolerance_rad"]:raise RuntimeError("RETURN_TO_INITIAL_FAILED")
+
     def run(self):
         self.stage("INIT")
         until=time.monotonic()+15
@@ -408,7 +421,7 @@ class Demo(Node):
         if np.linalg.norm(actual-expected)>.02 or not self.status["object_support_contact"] or self.status["finger_contacts"]:raise RuntimeError("PLACEMENT_VERIFICATION_FAILED")
         self.placement.update(expected_object_position_m=expected.tolist(),actual_object_position_m=actual.tolist())
         self.support_allowed=False;self.allow_fingers(False)
-        self.stage("FOLD_ARM");self.fold_arm();self.stage("DONE")
+        self.stage("RETURN_TO_INITIAL");self.return_to_initial();self.stage("DONE")
 
 
 def main():
@@ -429,7 +442,8 @@ def main():
         result.update({"events":node.events,"rejected_candidates":node.rejected,
                        "grasp_contact_status":getattr(node,"grasp_contact_status",None),
                        "selected":getattr(node,"selected",None),"lift_samples":getattr(node,"lift_samples",None),
-                       "placement":getattr(node,"placement",None),"place_rejections":getattr(node,"place_rejections",None),"last_simulation_status":node.status})
+                       "placement":getattr(node,"placement",None),"place_rejections":getattr(node,"place_rejections",None),
+                       "final_return":getattr(node,"final_return",None),"last_simulation_status":node.status})
         args.result.parent.mkdir(parents=True,exist_ok=True)
         args.result.write_text(json.dumps(result,indent=2,allow_nan=False)+"\n")
         print("Result:",args.result,flush=True)

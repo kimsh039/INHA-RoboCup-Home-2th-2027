@@ -54,7 +54,7 @@ def load_model():
         from manipulation.inha_model import build_robot
         root,_=build_robot(cfg)
     else:
-        raise ValueError("ROBOT_MODEL_UNSUPPORTED: use the shared INHA assembly (robot_model=inha)")
+        raise ValueError("ROBOT_MODEL_UNSUPPORTED: use robot_model=inha")
     # Original keyframe has nq=8; adding a free object changes nq. Initialize separately.
     for keyframe in list(root.findall("keyframe")):
         root.remove(keyframe)

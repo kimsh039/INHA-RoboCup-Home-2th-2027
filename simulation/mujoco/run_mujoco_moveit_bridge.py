@@ -30,6 +30,8 @@ class Bridge(Node):
         self.lock=threading.RLock()
         self.active=None
         self.failure=None
+        self.last_simulation_time=float(data.time)
+        self.clock_discontinuity=None
         self.base_state="STOPPED"
         self.stage="INIT"
         self.jq=[int(model.joint(n).qposadr[0]) for n in JOINTS]
@@ -122,6 +124,13 @@ class Bridge(Node):
             if times[0]>0:
                 times=np.r_[0,times];positions=np.vstack((self.data.qpos[self.jq],positions));velocities=np.vstack((np.zeros(6),velocities))
             pending={"t0":self.data.time,"times":times,"q":positions,"v":velocities,"event":threading.Event(),"error":None}
+            out=ROOT/"reports/runtime_diagnostics";out.mkdir(parents=True,exist_ok=True)
+            trajectory_file=out/f"trajectory_{time.time_ns()}.json"
+            pending["diagnostic_file"]=str(trajectory_file)
+            # 시간 보간과 추종 오차를 동일한 계획으로 재검증할 수 있게 원본 궤적을 저장한다.
+            trajectory_file.write_text(json.dumps({"stage":self.stage,"start_simulation_time_s":float(self.data.time),
+                "joint_names":JOINTS,"times_s":times.tolist(),"positions_rad":positions.tolist(),
+                "velocities_rad_s":velocities.tolist(),"measured_start_rad":self.data.qpos[self.jq].tolist()},indent=2)+"\n")
             self.active=pending
         wall_started=time.monotonic()
         self.get_logger().info(f"Trajectory started: duration={pending['times'][-1]:.3f} simulation seconds")
@@ -156,8 +165,45 @@ class Bridge(Node):
                 unexpected.append({"bodies":names,"geoms":geoms,"penetration_m":float(-c.dist)})
         return sorted(fingers),unexpected
 
+    def save_runtime_incident(self, kind, details):
+        # 최초 오류 당시의 상태를 보존해, 이후 정지 상태를 원인 상태로 오인하지 않는다.
+        p=self.active
+        record={"kind":kind,"stage":self.stage,"wall_time":time.time(),
+                "simulation_time_s":float(self.data.time),"details":details,
+                "joint_positions_rad":self.data.qpos[self.jq].tolist(),
+                "arm_target_rad":self.arm_target.tolist(),
+                "gripper_target_m":float(self.gripper_target),
+                "physics_warnings":[{"index":i,"count":int(w.number),"last_info":int(w.lastinfo)} for i,w in enumerate(self.data.warning) if w.number],
+                "trajectory_file":p.get("diagnostic_file") if p and not p.get("reserved") else None}
+        out=ROOT/"reports/runtime_diagnostics";out.mkdir(parents=True,exist_ok=True)
+        text=json.dumps(record,indent=2)+"\n"
+        (out/f"incident_{time.time_ns()}.json").write_text(text)
+        (ROOT/"reports/runtime_incident_latest.json").write_text(text)
+
+    def check_simulation_clock(self, location):
+        # MuJoCo 시간이 되돌아가면 이전 궤적의 t0/목표를 새 상태에 적용할 수 없다.
+        # 물리 step 안의 자동 초기화와 viewer 등 step 사이 변경을 구분해 기록한다.
+        if self.clock_discontinuity is not None:return False
+        current=float(self.data.time)
+        if current+1e-9 < self.last_simulation_time:
+            details={"location":location,"previous_time_s":self.last_simulation_time,
+                     "current_time_s":current,"previous_arm_target_rad":self.arm_target.tolist()}
+            self.clock_discontinuity=details
+            self.failure=f"SIMULATION_TIME_RESET: {details}"
+            self.save_runtime_incident("SIMULATION_TIME_RESET",details)
+            self.arm_target=self.data.qpos[self.jq].copy()
+            p=self.active
+            if p and not p.get("reserved"):
+                p["error"]=self.failure;p["event"].set()
+            self.get_logger().error(self.failure)
+            # 재시작 전까지 physics를 진행하지 않는다. 충돌 검사를 우회하지 않는다.
+            return False
+        self.last_simulation_time=current
+        return True
+
     def step(self):
         with self.lock:
+            if not self.check_simulation_clock("before_physics_step"):return
             p=self.active
             if p and not p.get("reserved"):
                 t=self.data.time-p["t0"]
@@ -182,9 +228,11 @@ class Bridge(Node):
             ranges=self.model.actuator_ctrlrange[self.act]
             self.data.ctrl[self.act]=np.clip(compensated,ranges[:,0],ranges[:,1])
             mujoco.mj_step(self.model,self.data)
+            if not self.check_simulation_clock("inside_physics_step"):return
             _,unexpected=self.contacts()
             if unexpected and not self.failure:
                 self.failure=f"UNEXPECTED_COLLISION: {unexpected[0]}"
+                self.save_runtime_incident("UNEXPECTED_COLLISION",{"contacts":unexpected})
                 self.get_logger().error(self.failure)
             if not np.isfinite(self.data.qpos).all() or any(w.number for w in self.data.warning):self.failure="PHYSICS_UNSTABLE"
             if self.base_state=="MOVING" and np.max(np.abs(self.data.qpos[self.jq]-self.cfg["folded_candidate_rad"]))>self.cfg["arm_goal_tolerance_rad"]:
@@ -227,6 +275,7 @@ class Bridge(Node):
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--prepare-only",action="store_true",help="Generate/check MoveIt model without opening the viewer")
+    parser.add_argument("--headless",action="store_true",help="Execute the same physics and ROS loop without a viewer")
     args=parser.parse_args()
     model,data=load_model()
     print("Generated matching MoveIt model:",write_moveit_files(model),flush=True)
@@ -244,6 +293,15 @@ def main():
             node.get_logger().error(f"ROS_EXECUTOR_FAILED: {error}; trajectory execution unavailable")
     thread=threading.Thread(target=spin_ros,daemon=True);thread.start()
     try:
+        if args.headless:
+            # 화면 유무와 무관하게 기존 브리지의 물리 step·접촉·추종 검사를 그대로 실행한다.
+            print("MuJoCo headless bridge ready",flush=True)
+            while rclpy.ok():
+                if executor_errors and not node.failure:
+                    node.failure=f"ROS_EXECUTOR_FAILED: {executor_errors[0]}"
+                start=time.monotonic();node.step()
+                time.sleep(max(0,model.opt.timestep-(time.monotonic()-start)))
+            return
         with mujoco.viewer.launch_passive(model,data) as viewer:
             viewer.cam.lookat[:]=[0.30,0,0.75];viewer.cam.distance=2.6;viewer.cam.azimuth=135;viewer.cam.elevation=-25
             print("MuJoCo viewer ready. Keep this terminal open; start MoveIt in terminal 2.",flush=True)
@@ -259,7 +317,7 @@ def main():
         with node.lock:
             if node.active and not node.active.get("reserved"):
                 node.active["error"]="VIEWER_CLOSED";node.active["event"].set()
-        executor.shutdown(timeout_sec=2);node.destroy_node();rclpy.shutdown()
+        executor.shutdown(timeout_sec=2);node.destroy_node();rclpy.try_shutdown()
 
 
 if __name__=="__main__":main()

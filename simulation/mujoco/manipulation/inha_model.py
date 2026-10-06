@@ -12,7 +12,7 @@ import numpy as np
 from scipy.spatial.transform import Rotation
 
 ROOT=Path(__file__).resolve().parents[1]
-SOURCE=ROOT.parent/'robot_description/robocup.urdf'  # 팀 공용 URDF와 HW 메시를 직접 참조한다.
+SOURCE=ROOT.parent/'robot_description/robocup.urdf'  # 팀 공용 nominal 모델과 HW 메시를 직접 참조한다.
 OUT=ROOT/'simulation/generated'
 ALIASES={'piper_base_link':'arm_base', **{f'piper_link{i}':f'link{i}' for i in range(1,7)},
          'piper_gripper_link1':'link7','piper_gripper_link2':'link8',
@@ -98,7 +98,7 @@ def mesh_file(file):
     return out
 
 def build_robot(cfg):
-    OUT.mkdir(parents=True,exist_ok=True)
+    OUT.mkdir(exist_ok=True)
     urdf=ET.parse(SOURCE).getroot()
     for e in urdf.iter():
         for k in ('name','link','joint'):
@@ -206,6 +206,6 @@ def build_robot(cfg):
     for a,b in sorted(disabled):ET.SubElement(srdf,'disable_collisions',link1=a,link2=b,reason='Rigid assembly or adjacent moving component')
     for tag,tree in [('inha_source.urdf',urdf),('piper.srdf',srdf)]:
         ET.indent(tree);(OUT/tag).write_text(ET.tostring(tree,encoding='unicode'))
-    report={'source_repository':'https://github.com/kimsh039/INHA-RoboCup-Home-2th-2027','commit':'0e0a28d7866832ecf1e0841bd41760ebde672a79','source_urdf':str(SOURCE),'aliases':ALIASES,'tcp_parent':'piper_gripper_base','tcp_tip_m':[0,0,tip],'robot_links':list(links),'collision_mesh_policy':'MuJoCo convex hull; matching compiled convex hulls exported for MoveIt','modifications':['fixed mobile base and wheels at zero','implicitfast integrator for added damped position servos','added effort-limited tutorial position servos kp=1000 kv=80 arm, kp=200 kv=10 gripper','joint damping 2 arm / 1 gripper, armature .01','added opposite gripper coupling','DAE triangle meshes converted to OBJ including scene matrices; uniform visual color','rigid/adjacent collision exclusions','joint/link aliases for existing tutorial API'],'mesh_files':mesh_map}
+    report={'source_repository':'https://github.com/kimsh039/INHA-RoboCup-Home-2th-2027','commit':__import__('subprocess').check_output(['git','-C',str(ROOT.parents[1]),'rev-parse','HEAD'],text=True).strip(),'source_urdf_sha256':hashlib.sha256(SOURCE.read_bytes()).hexdigest(),'source_urdf':str(SOURCE),'aliases':ALIASES,'tcp_parent':'piper_gripper_base','tcp_tip_m':[0,0,tip],'robot_links':list(links),'collision_mesh_policy':'MuJoCo convex hull; matching compiled convex hulls exported for MoveIt','modifications':['fixed mobile base and wheels at zero','implicitfast integrator for added damped position servos','added effort-limited tutorial position servos kp=1000 kv=80 arm, kp=200 kv=10 gripper','joint damping 2 arm / 1 gripper, armature .01','added opposite gripper coupling','DAE triangle meshes converted to OBJ including scene matrices; uniform visual color','rigid/adjacent collision exclusions','joint/link aliases for existing tutorial API'],'mesh_files':mesh_map}
     (OUT/'inha_import.json').write_text(json.dumps(report,indent=2)+'\n')
     return root,report
