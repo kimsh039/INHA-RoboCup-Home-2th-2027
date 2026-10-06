@@ -2,7 +2,7 @@
 
 > **Gazebo·MuJoCo 개발 PC용 안내입니다.** 현재 Jetson의 실기 setup과 카메라 구성은 [프로젝트 README](../README.md)와 [Jetson 운영 문서](../setup/jetson/README.md)를 참고하세요. Jetson에는 Gazebo 및 robot-* 단축 명령을 설치하지 않았습니다.
 
-최종 URDF는 [robot_description/robocup.urdf](robot_description/robocup.urdf) 하나입니다.
+명목 URDF는 [robot_description/robocup.urdf](robot_description/robocup.urdf)이며, 2D/3D LiDAR 보정 모델은 [robot_description/robocup.calibrated.urdf](robot_description/robocup.calibrated.urdf)입니다.
 Tracer, 프로파일 랙, Piper·그리퍼, G2, Mid-360S, 헤드 D435f와 손목 D435f·마운트를 포함합니다.
 원본 메시·CAD·물성 자료는 `../HW/URDF/`에 유지하며 예전 독립·중간 URDF와 조립 생성기는 삭제했습니다.
 URDF의 상대 메시 경로가 유효하도록 저장소 전체를 사용하세요.
@@ -42,4 +42,6 @@ robot-camera --partition robocup_motion --camera wrist
 
 ## 캘리브레이션 — 측정·적용·정확도 평가
 
-최신 명목 모델은 `robocup.urdf`이며 `robot_description/robocup.calibrated.urdf`는 보관한 Base–2D/Mid360 결과를 최신 구조에 적용한 별도 후보다. 센서 보정과 독립 관측 평가를 포함한 [Ubuntu 실행 가이드](calibration/README.md)에서 로봇 이동, pose/점군 저장, 결과 적용, A/B 오차 판정과 보고서 경로를 따라 한다. Mid360 결과는 검증 대기이며 이 업데이트에서 ROS/Gazebo/정확도 평가를 실행하지 않았다.
+**2D/3D LiDAR 보정을 쓰려면 `robocup.calibrated.urdf`를 읽는 `calibration_runtime.launch.py`를 실행합니다.** [보정 URDF 적용하기](robot_description/README.md#보정-urdf-적용하기)에 Ubuntu/Mac 전체 명령, RViz 표시, TF 수치 읽기, 기존 TF와 중복하지 않는 방법을 적었습니다. 일반 `sim.launch.py`와 Gazebo world 생성기는 기본으로 `robocup.urdf`를 읽으므로 이 파일 선택을 자동으로 대신하지 않습니다.
+
+측정·로봇 이동·독립 정확도 평가는 [Ubuntu 전체 실행 가이드](calibration/README.md)에서 진행합니다.

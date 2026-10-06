@@ -33,6 +33,7 @@ TRACER × PiPER · Calibration · Detection · Simulation
 | 아직 필요한 실측값과 장치 설정 | [CONFIG_REQUIRED.md](setup/jetson/CONFIG_REQUIRED.md) |
 | 확인한 범위와 미완료 항목 | [SETUP_REPORT.md](setup/jetson/SETUP_REPORT.md) |
 | Gazebo 모델을 실행하거나 수정하는 방법 | [Simulation](simulation/README.md) / [Hardware](HW/URDF/README.md) |
+| 2D·3D LiDAR 보정 URDF 적용·RViz 실행 | [보정 URDF 적용하기 — Ubuntu/Mac](simulation/robot_description/README.md#보정-urdf-적용하기) |
 | 손목 탑다운 관측과 MuJoCo 물리 픽앤플레이스 재현 | [Manipulation 튜토리얼](simulation/mujoco/README.md) |
 | 인지·분할·파지의 후속 설계 | [Detection 설계](detection/README.md) |
 | 2D LiDAR·두 D435·Mid-360의 역할 | [센서 역할과 접근 설계](detection/SENSOR_ROLES.md) |
@@ -117,7 +118,9 @@ INHA-RoboCup-Home-2th-2027/
 │       ├── sensor_rack_description/  # 프로파일·센서 메시 / CAD 보고서
 │       └── wrist_camera_description/ # 손목 마운트·카메라 / STEP·배치 자료
 ├── simulation/
-│   ├── robot_description/robocup.urdf # 유일한 통합 URDF: 94 links / 93 joints
+│   ├── robot_description/robocup.urdf # 명목 통합 URDF: 94 links / 93 joints
+│   ├── robot_description/robocup.calibrated.urdf # Base–2D / Base–Mid360 보정 모델
+│   ├── calibration/                  # 보정 결과·원자료 / 적용·정확도 평가 가이드
 │   ├── mujoco/                       # 손목 관측·GraspNet·물리 픽앤플레이스
 │   ├── gazebo/                       # world 생성 / Gazebo 실행
 │   ├── ros2/                         # ROS bridge·RViz·SLAM/Nav2 설정

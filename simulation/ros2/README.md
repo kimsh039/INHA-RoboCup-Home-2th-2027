@@ -53,4 +53,6 @@ Gazebo 서버와 창은 별도 프로세스입니다. 창을 닫아도 시뮬레
 
 ## 보정 TF 실행 — 측정·적용·정확도 평가
 
-최신 명목 모델은 `robocup.urdf`이며 `robot_description/robocup.calibrated.urdf`는 보관한 Base–2D/Mid360 결과를 최신 구조에 적용한 별도 후보다. 센서 보정과 독립 관측 평가를 포함한 [Ubuntu 실행 가이드](../calibration/README.md)에서 로봇 이동, pose/점군 저장, 결과 적용, A/B 오차 판정과 보고서 경로를 따라 한다. Mid360 결과는 검증 대기이며 이 업데이트에서 ROS/Gazebo/정확도 평가를 실행하지 않았다.
+**2D/3D LiDAR 보정을 쓰려면 `robocup.calibrated.urdf`를 읽는 `calibration_runtime.launch.py`를 실행합니다.** [보정 URDF 적용하기](../robot_description/README.md#보정-urdf-적용하기)에 Ubuntu/Mac 전체 명령, RViz 표시, TF 수치 읽기, 기존 TF와 중복하지 않는 방법을 적었습니다. 일반 `sim.launch.py`와 Gazebo world 생성기는 기본으로 `robocup.urdf`를 읽으므로 이 파일 선택을 자동으로 대신하지 않습니다.
+
+측정·로봇 이동·독립 정확도 평가는 [Ubuntu 전체 실행 가이드](../calibration/README.md)에서 진행합니다.
