@@ -5,7 +5,7 @@ Gazebo Harmonic을 사용합니다. 아래 명령은 저장소 루트에서 실�
 
 ## 실행
 
-빈 월드와 책상·벽·칸막이가 있는 방:
+빈 월드와 책상 2개·벽·칸막이가 있는 방:
 
 ```bash
 ./simulation/gazebo/start_sim.sh
@@ -80,5 +80,6 @@ GZ_PARTITION=robocup_sensor_test python3 simulation/tools/check_sensors.py --wal
 
 검사는 두 라이다·3D 점군·헤드/손목 영상 크기·프레임·sim-time 주기와 헤드 정면 벽 거리를 확인합니다.
 손목 영상의 정면 거리는 팔 자세가 달라 헤드 검사 벽 기대값을 적용하지 않습니다.
-현재 make_sim.py의 방은 내부 6×6 m, 벽 높이 1 m, 책상 윗면 0.72 m입니다.
+현재 make_sim.py의 방은 내부 6×6 m, 벽 높이 1 m이며 같은 책상(1.6×0.8 m, 윗면 0.72 m) 2개가 있습니다.
+책상 중심은 (1.8, -1.0)과 (1.8, 1.8)이고, 긴 변끼리 마주 보며 사이 간격은 2 m입니다.
 G2는 책상 상판 아래에서 스캔하므로 다리만 검출합니다.
