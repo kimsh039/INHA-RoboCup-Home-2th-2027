@@ -31,8 +31,8 @@ def sensor_topics():
     # topic: (message, frame_id, rays/points/pixels, rate Hz)
     return {
         '/robocup/g2/scan': (LaserScan, 'laser_frame', 500, 10),
-        '/robocup/mid360s/scan': (LaserScan, 'livox_frame', 20000, 10),
-        '/robocup/mid360s/scan/points': (PointCloudPacked, 'livox_frame', 20000, 10),
+        '/robocup/mid360s/scan': (LaserScan, 'livox_frame', 340 * 60, 10),
+        '/robocup/mid360s/scan/points': (PointCloudPacked, 'livox_frame', 340 * 60, 10),
         '/robocup/camera/depth/image': (Image, 'camera_optical_frame', 1280 * 720, 30),
         '/robocup/camera/color/image': (Image, 'camera_optical_frame', 1920 * 1080, 30),
         '/robocup/wrist_camera/depth/image': (Image, 'wrist_camera_optical_frame', 1280 * 720, 30),
