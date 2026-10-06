@@ -1,0 +1,713 @@
+{
+  "record_id": "20261006_wrist_d435",
+  "measurement_date_kst": "2026-10-06",
+  "publication_date_kst": "2026-10-06",
+  "simulation": true,
+  "camera_model": "D435",
+  "current_urdf_applied": false,
+  "new_measurement_or_evaluation_during_publication": false,
+  "source_files_preserved_byte_for_byte": true,
+  "files": [
+    {
+      "archived_path": "config/automated_pose_plan.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/config/automated_pose_plan.json",
+      "bytes": 9831,
+      "sha256": "f18e4f7695542f1db6a85aafc2f542aa70d0871423b18e2d2d14d68843cc6f8c"
+    },
+    {
+      "archived_path": "config/scene_source.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/config/scene_source.json",
+      "bytes": 472,
+      "sha256": "ff10134b4e79821d718e466370d99ad9fea4a885ba34638801af4b5eed088230"
+    },
+    {
+      "archived_path": "dataset.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/dataset.json",
+      "bytes": 120221,
+      "sha256": "bf79a9b91afa14c6ca71b99b953dfad6f20698b5271c1cc4c1d47bffea1b6e86"
+    },
+    {
+      "archived_path": "holdout/001/capture_record.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/holdout/001/capture_record.json",
+      "bytes": 764,
+      "sha256": "92a8943dabb3f05a6fcb93d00ff429a7031bcdea832fba4409c63773e37591d7"
+    },
+    {
+      "archived_path": "holdout/002/capture_record.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/holdout/002/capture_record.json",
+      "bytes": 767,
+      "sha256": "937f1c9a740328fc188a0a7a3b45ac91dd2af6ae951491aa5053e020fb7e77a9"
+    },
+    {
+      "archived_path": "holdout/003/capture_record.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/holdout/003/capture_record.json",
+      "bytes": 766,
+      "sha256": "583ea8082fbcbe1bdd1fdc85024350fd3aaa08b85b753e348503f17f1261fe4a"
+    },
+    {
+      "archived_path": "holdout/004/capture_record.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/holdout/004/capture_record.json",
+      "bytes": 768,
+      "sha256": "fe73d5c6ff25e566a25a0c96eccb320d995eaed63e54c3226174e916d03ced59"
+    },
+    {
+      "archived_path": "holdout/005/capture_record.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/holdout/005/capture_record.json",
+      "bytes": 751,
+      "sha256": "df1799c3571cdab2f0732f27506ebcbce36a94ddf52ba424514748b9bb2d02e6"
+    },
+    {
+      "archived_path": "holdout/006/capture_record.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/holdout/006/capture_record.json",
+      "bytes": 764,
+      "sha256": "7d62c1c54e15d42080b308eda2aea2f08e430186b143bd62a3dccb0f25a29b2a"
+    },
+    {
+      "archived_path": "holdout/007/capture_record.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/holdout/007/capture_record.json",
+      "bytes": 768,
+      "sha256": "315a338d3c600d44e61f05c97c7a0ea7c1557b86308139218478a818471414b6"
+    },
+    {
+      "archived_path": "holdout/008/capture_record.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/holdout/008/capture_record.json",
+      "bytes": 764,
+      "sha256": "cb71325ae9853f5efc5c92f6efb2eca17a46d5aab47516d249cfc1fbc3de1e20"
+    },
+    {
+      "archived_path": "holdout/009/capture_record.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/holdout/009/capture_record.json",
+      "bytes": 768,
+      "sha256": "fae6454b2c1e480c79f084622323ddb3c6b7b28165f177355fd0eb9b6bf20edc"
+    },
+    {
+      "archived_path": "holdout/010/capture_record.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/holdout/010/capture_record.json",
+      "bytes": 764,
+      "sha256": "46764d7afc873d70ea1be6e82bec33b5e74738b39305da239b56642d091ff854"
+    },
+    {
+      "archived_path": "images/wrist_000.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/images/wrist_000.png",
+      "bytes": 29897,
+      "sha256": "2704a5726e1f352caabe1ed75f8f56f0e70818e43d3397f2adaeceb30d4b2b03"
+    },
+    {
+      "archived_path": "images/wrist_000_preview.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/images/wrist_000_preview.png",
+      "bytes": 29536,
+      "sha256": "f79c88a77bd05f6f989ecc9c15c272b9d30c93cf7a606cbc096cdc22bf866bc8"
+    },
+    {
+      "archived_path": "images/wrist_001.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/images/wrist_001.png",
+      "bytes": 34598,
+      "sha256": "18ad011f10a4dd9928c6ac26a178a04797875548ac247e18d55f9ff3e41f55ad"
+    },
+    {
+      "archived_path": "images/wrist_001_preview.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/images/wrist_001_preview.png",
+      "bytes": 32924,
+      "sha256": "0b793a29751c90be7fdac5d575305fe092cff9cd76ce7285ef2d586590a89e4e"
+    },
+    {
+      "archived_path": "images/wrist_002.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/images/wrist_002.png",
+      "bytes": 33583,
+      "sha256": "e61143b4f9a5287d18a3cc1990fd1672f864eb649ab4f505f1738d5b1bc140df"
+    },
+    {
+      "archived_path": "images/wrist_002_preview.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/images/wrist_002_preview.png",
+      "bytes": 32317,
+      "sha256": "3f1e3d9673170b8d54ebc77b3d5cdab35a3bbcd7fd12be5955eb6f246be23a6b"
+    },
+    {
+      "archived_path": "images/wrist_003.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/images/wrist_003.png",
+      "bytes": 41232,
+      "sha256": "215d9b95fd850b38eafe631d8150d8d45decd3fc10df4ef9b521951c8a1bd5d7"
+    },
+    {
+      "archived_path": "images/wrist_003_preview.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/images/wrist_003_preview.png",
+      "bytes": 39281,
+      "sha256": "f16adae7a45cf02ca837821efec87c4d589f24708bc4a79d94d279027862145d"
+    },
+    {
+      "archived_path": "images/wrist_004.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/images/wrist_004.png",
+      "bytes": 37612,
+      "sha256": "a8ae83316028599b276715ff72aa8144feefeb8169362efcc31af7cfd7ddb4e7"
+    },
+    {
+      "archived_path": "images/wrist_004_preview.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/images/wrist_004_preview.png",
+      "bytes": 35759,
+      "sha256": "78cbc35661882e56ade4ae72b5c3f20e83ab08d86aea63f34b08a3253bfa225d"
+    },
+    {
+      "archived_path": "images/wrist_005.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/images/wrist_005.png",
+      "bytes": 34020,
+      "sha256": "7bcfd0b5813412cec0b1883f371fc56277d0f3b05092fb7305f4093cb4091d73"
+    },
+    {
+      "archived_path": "images/wrist_005_preview.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/images/wrist_005_preview.png",
+      "bytes": 32888,
+      "sha256": "2c01923fe26e25041ffec1caf4aff82603842802784e2dc7411b234353212974"
+    },
+    {
+      "archived_path": "images/wrist_006.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/images/wrist_006.png",
+      "bytes": 31211,
+      "sha256": "22f58fe1665cdaa99461312f0f2e9bd2e113ba2f53b646fa14caa36ba03b8ea4"
+    },
+    {
+      "archived_path": "images/wrist_006_preview.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/images/wrist_006_preview.png",
+      "bytes": 30093,
+      "sha256": "bfb6837655d984639d39e6d999ece30a0c1d43ae3a0616c0714171a00795210b"
+    },
+    {
+      "archived_path": "images/wrist_007.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/images/wrist_007.png",
+      "bytes": 35642,
+      "sha256": "48d734a201135a15b7582e412e1ad06d360be9c8ab32a277612b0aa37506a171"
+    },
+    {
+      "archived_path": "images/wrist_007_preview.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/images/wrist_007_preview.png",
+      "bytes": 34351,
+      "sha256": "987d8df9bf29079512fd6432f7a19c9df3f15c97079a75885fa03f8311ccaade"
+    },
+    {
+      "archived_path": "images/wrist_008.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/images/wrist_008.png",
+      "bytes": 31827,
+      "sha256": "fd2ef5dc343590d67fc1d570b64cbfc4f1d3e5d7411d4e3926e9e70a8937774d"
+    },
+    {
+      "archived_path": "images/wrist_008_preview.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/images/wrist_008_preview.png",
+      "bytes": 30659,
+      "sha256": "b8796c5a66c8fc1af50b99a9a981447033b258b63b50b294519808617a8f6600"
+    },
+    {
+      "archived_path": "images/wrist_009.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/images/wrist_009.png",
+      "bytes": 43597,
+      "sha256": "39f88799fec84ecf4c9cc032b4d7a3750f2fb83346f29fe6a9b9c23b3bf8c475"
+    },
+    {
+      "archived_path": "images/wrist_009_preview.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/images/wrist_009_preview.png",
+      "bytes": 41802,
+      "sha256": "aac032a952db138fb2733a1248a732b8832b91a4770ddc103586b7bbc7fa7c17"
+    },
+    {
+      "archived_path": "images/wrist_010.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/images/wrist_010.png",
+      "bytes": 37154,
+      "sha256": "51e87e76b35b01ce3f9e72a6615977520898c6a9954c88b78d9f456a6ca4e349"
+    },
+    {
+      "archived_path": "images/wrist_010_preview.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/images/wrist_010_preview.png",
+      "bytes": 35325,
+      "sha256": "a57462261e0d13abaefa5ec707d9259994ecb8cdbf4c6f88abac2b26b6f1d43f"
+    },
+    {
+      "archived_path": "images/wrist_011.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/images/wrist_011.png",
+      "bytes": 41876,
+      "sha256": "72bad71a2528d923e5675c5b27dbe7a89bf520a2e218b0c211db0ece3e900140"
+    },
+    {
+      "archived_path": "images/wrist_011_preview.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/images/wrist_011_preview.png",
+      "bytes": 40636,
+      "sha256": "8eadd632a52e49561b73ba24d2df6d5433bef6e66d605abd95527e812134768e"
+    },
+    {
+      "archived_path": "images/wrist_012.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/images/wrist_012.png",
+      "bytes": 38786,
+      "sha256": "a59b2732797595de9440fbbe13c7259d4d628b267691f7cbffaec99cc5de3e79"
+    },
+    {
+      "archived_path": "images/wrist_012_preview.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/images/wrist_012_preview.png",
+      "bytes": 36709,
+      "sha256": "14e1931cc20b748cd5781552f54af059ebc004f2c43885753aef255ca7981ca0"
+    },
+    {
+      "archived_path": "images/wrist_013.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/images/wrist_013.png",
+      "bytes": 39087,
+      "sha256": "4ef380b9f29de0f9ec7978a16bfcfb5a37836272133865d7af87b5a91795cbcc"
+    },
+    {
+      "archived_path": "images/wrist_013_preview.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/images/wrist_013_preview.png",
+      "bytes": 37420,
+      "sha256": "b38ec7558f3fa52de7092405b8c36ae7ee7bf2525ca0358ca3b2bb3fb3286c2e"
+    },
+    {
+      "archived_path": "images/wrist_014.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/images/wrist_014.png",
+      "bytes": 38738,
+      "sha256": "8f8d3dd76914ce6bedc87be772f994d70a5e13232d0bd073025a8e530ba77fa9"
+    },
+    {
+      "archived_path": "images/wrist_014_preview.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/images/wrist_014_preview.png",
+      "bytes": 36960,
+      "sha256": "270467df1b3712d51ff67f72248da23f3d8d388f2de5d8f3d46c2aba8c661d62"
+    },
+    {
+      "archived_path": "images/wrist_015.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/images/wrist_015.png",
+      "bytes": 43427,
+      "sha256": "fe50cc59a7e6e6250b8d3e14d8f0e1195c631a2e40a670e5863ee058a42a2069"
+    },
+    {
+      "archived_path": "images/wrist_015_preview.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/images/wrist_015_preview.png",
+      "bytes": 41708,
+      "sha256": "75520afb3667257e9cc0c310e58a1bf8e3a4bafb56c5ec4f6b3cb1b22c077a0c"
+    },
+    {
+      "archived_path": "images/wrist_016.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/images/wrist_016.png",
+      "bytes": 38299,
+      "sha256": "8b62cf59aa88c6e4762c45442eb4efc1268023eafb6e1ed1fa534ccbbd9e3047"
+    },
+    {
+      "archived_path": "images/wrist_016_preview.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/images/wrist_016_preview.png",
+      "bytes": 36435,
+      "sha256": "18c5f4cec9788f152c7f7ff124e5dbbd57e044cd4347204f1963c2a02a02f900"
+    },
+    {
+      "archived_path": "images/wrist_017.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/images/wrist_017.png",
+      "bytes": 36127,
+      "sha256": "42460a5a1695cd4f28590d3f9d9a2105a8ceaca8ab7333b233abf3fab9b3ae0e"
+    },
+    {
+      "archived_path": "images/wrist_017_preview.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/images/wrist_017_preview.png",
+      "bytes": 34827,
+      "sha256": "d9c6fb1161f3c37c077e28a8d311752062e3818ddf6c4c74ff8f1475fce70e3f"
+    },
+    {
+      "archived_path": "images/wrist_018.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/images/wrist_018.png",
+      "bytes": 43822,
+      "sha256": "4bf8548d046ad68554701767f9467481c0df206f3ffc9d30d2d32ef577a79d9d"
+    },
+    {
+      "archived_path": "images/wrist_018_preview.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/images/wrist_018_preview.png",
+      "bytes": 42396,
+      "sha256": "19067bad60edfd47cc6f7881f96d159e8325a55ff421110d2f94755cbce14e8b"
+    },
+    {
+      "archived_path": "images/wrist_019.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/images/wrist_019.png",
+      "bytes": 34665,
+      "sha256": "4e34f0ed2aa5abcbe0b6e34f0947b9827dca09e5ff30270fb7c94f2707b8c793"
+    },
+    {
+      "archived_path": "images/wrist_019_preview.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/images/wrist_019_preview.png",
+      "bytes": 33246,
+      "sha256": "ac9725adcb380ca0605926045314a05523658eb76634708c5804655a7ad40b1d"
+    },
+    {
+      "archived_path": "images/wrist_020.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/images/wrist_020.png",
+      "bytes": 31856,
+      "sha256": "f7114a877711da41a7db9580c7a9f64ae16379a4445199e6e1545f491aed37c5"
+    },
+    {
+      "archived_path": "images/wrist_020_preview.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/images/wrist_020_preview.png",
+      "bytes": 30430,
+      "sha256": "f7cb81345e0fa1a7cac0a2d5e912397581e1ac8e8cf70db7426fc5c9338cf735"
+    },
+    {
+      "archived_path": "images/wrist_021.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/images/wrist_021.png",
+      "bytes": 39663,
+      "sha256": "c0c7cb44e233ef5535e9f148f991f5f7233d9d52c4f47f4bcaada260496d9b23"
+    },
+    {
+      "archived_path": "images/wrist_021_preview.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/images/wrist_021_preview.png",
+      "bytes": 38235,
+      "sha256": "f29679a49aa9c6ea8fcdcb2f536d19e7be12d55fff30c4ec9dbd5468c4451011"
+    },
+    {
+      "archived_path": "images/wrist_022.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/images/wrist_022.png",
+      "bytes": 33875,
+      "sha256": "88192f545b889301213d28750f73d6e824a7a0ff40b0a93a39410ee138bd65bb"
+    },
+    {
+      "archived_path": "images/wrist_022_preview.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/images/wrist_022_preview.png",
+      "bytes": 32477,
+      "sha256": "d7ffa058cd5d0b042e158c897e3c246740b104206a5dde5b8d3028a53d475ba9"
+    },
+    {
+      "archived_path": "images/wrist_023.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/images/wrist_023.png",
+      "bytes": 37195,
+      "sha256": "a0def41116a622dea29ee6a554b50f581b4dd4f5e0420df25c1585cbdc35d19c"
+    },
+    {
+      "archived_path": "images/wrist_023_preview.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/images/wrist_023_preview.png",
+      "bytes": 35583,
+      "sha256": "01822e5030337955fbb72a7d71e5b51f366bb2f3f6dd704d5954cd06997c2663"
+    },
+    {
+      "archived_path": "images/wrist_024.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/images/wrist_024.png",
+      "bytes": 39184,
+      "sha256": "6d97587ec16ea24d76d5d5a1daf9f2f8521a6aae858853b017d445bbd15f3a36"
+    },
+    {
+      "archived_path": "images/wrist_024_preview.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/images/wrist_024_preview.png",
+      "bytes": 37509,
+      "sha256": "0d5689fcc6b571788672db3bd55f7ec4355a205378f706260769c3e3c5c6814f"
+    },
+    {
+      "archived_path": "images/wrist_025.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/images/wrist_025.png",
+      "bytes": 39500,
+      "sha256": "311a68794482ff1952aa41717340b4492dd55a5b0cf4b4f4d5b777832fa49bad"
+    },
+    {
+      "archived_path": "images/wrist_025_preview.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/images/wrist_025_preview.png",
+      "bytes": 38009,
+      "sha256": "cae2cd18c57dd11a8309bcc9d5415b1650d8b3b65adb23a6312c8604d14d3ab8"
+    },
+    {
+      "archived_path": "images/wrist_026.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/images/wrist_026.png",
+      "bytes": 39427,
+      "sha256": "53b6a3d3ba2dd487e7b6e334923291ecc305f57233ce1fb4e4fc045fd1ad8d3a"
+    },
+    {
+      "archived_path": "images/wrist_026_preview.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/images/wrist_026_preview.png",
+      "bytes": 37832,
+      "sha256": "311b7f7f80202117999f513acfe2d62adb59892bf5181785c16bc3734b57c74b"
+    },
+    {
+      "archived_path": "images/wrist_027.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/images/wrist_027.png",
+      "bytes": 34379,
+      "sha256": "2e55aee9faf4463ddc2e53fccbf52ae479212cc9a58053ebd4d67523bb81dfbd"
+    },
+    {
+      "archived_path": "images/wrist_027_preview.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/images/wrist_027_preview.png",
+      "bytes": 32883,
+      "sha256": "66878db4901988f3e73953abdbf679c03d4ea79579399651c270e9e10b844a96"
+    },
+    {
+      "archived_path": "images/wrist_028.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/images/wrist_028.png",
+      "bytes": 36718,
+      "sha256": "a45356ba95f5807a05d9cf792b195120a16534a3bdfa10610e61034a099c337f"
+    },
+    {
+      "archived_path": "images/wrist_028_preview.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/images/wrist_028_preview.png",
+      "bytes": 34817,
+      "sha256": "1df76d40038a5161598a0b21c11c2d04deb06e1277989ade42152acf7408cb36"
+    },
+    {
+      "archived_path": "images/wrist_029.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/images/wrist_029.png",
+      "bytes": 35470,
+      "sha256": "baa7c57b2721ea6c5e8b13600806b97c5c36002cd22758d10bd25e2504b10cfd"
+    },
+    {
+      "archived_path": "images/wrist_029_preview.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/images/wrist_029_preview.png",
+      "bytes": 33960,
+      "sha256": "59a2b3e3e6245cc0aa409b13be93a02bddb0f41e2aa0aa3f853412886c377307"
+    },
+    {
+      "archived_path": "images/wrist_030.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/images/wrist_030.png",
+      "bytes": 36788,
+      "sha256": "9f0d116a8849ae4a884416fad1da5e1b6d6fd852a5f1176fe5c7dddede91fac5"
+    },
+    {
+      "archived_path": "images/wrist_030_preview.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/images/wrist_030_preview.png",
+      "bytes": 35368,
+      "sha256": "ed7b43c42f43256d1066806c2c485334c493ae28235140b701dea28a8bd86852"
+    },
+    {
+      "archived_path": "images/wrist_031.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/images/wrist_031.png",
+      "bytes": 36730,
+      "sha256": "601654d59e8cc5ea1301c04550ba67fee35aa2fb89a72735e5e09d3903428c14"
+    },
+    {
+      "archived_path": "images/wrist_031_preview.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/images/wrist_031_preview.png",
+      "bytes": 35202,
+      "sha256": "03e30fe7043233314eca305edd8b34126f406077f584111f70da0e5c65c9ef45"
+    },
+    {
+      "archived_path": "images/wrist_032.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/images/wrist_032.png",
+      "bytes": 38744,
+      "sha256": "ec4aa4c939924f2a03c3beb7ddaf30859ffa2474f58b972beccba6123ac0bb81"
+    },
+    {
+      "archived_path": "images/wrist_032_preview.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/images/wrist_032_preview.png",
+      "bytes": 37024,
+      "sha256": "183b805172f2a8f5d5b6a8af75f29209767cbd5788ad24e5c16b088ead6dd8c9"
+    },
+    {
+      "archived_path": "images/wrist_033.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/images/wrist_033.png",
+      "bytes": 34877,
+      "sha256": "b36bb50fc0508bfe3efd23192f0c3ef2645219a335ee68bf7056ae73048217d6"
+    },
+    {
+      "archived_path": "images/wrist_033_preview.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/images/wrist_033_preview.png",
+      "bytes": 33422,
+      "sha256": "3e66a0cda1ea634f08503ba4ab6321e45bfa30e2a37e874f9ac75ed610acdb2f"
+    },
+    {
+      "archived_path": "images/wrist_034.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/images/wrist_034.png",
+      "bytes": 37517,
+      "sha256": "dcd104bf493efec775a5276f3da8b51540a4eb193fbb5f24e554209ce7dff0c6"
+    },
+    {
+      "archived_path": "images/wrist_034_preview.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/images/wrist_034_preview.png",
+      "bytes": 36002,
+      "sha256": "b4d30c34c57cca658b4154b9f33c4d120035faaa17463e71fcde7e9cab04dc7a"
+    },
+    {
+      "archived_path": "results/actual_pose_overlap.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/results/actual_pose_overlap.json",
+      "bytes": 371,
+      "sha256": "548725c1f1e5dec25a3b61d7367b5c7aec8ac8f8b6255d9e475a9f553281975f"
+    },
+    {
+      "archived_path": "results/evaluation_summary.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/results/evaluation_summary.json",
+      "bytes": 1955,
+      "sha256": "47b64749ba34377d2ba8e79379ff98e76c45c26e5605bd8bc5c2ea2ccb6444a5"
+    },
+    {
+      "archived_path": "results/flange_wrist.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/results/flange_wrist.json",
+      "bytes": 1030,
+      "sha256": "48010d828e095cceaebfc7e4872170d6649143023161584e861382866f483afb"
+    },
+    {
+      "archived_path": "results/handeye_01.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/results/handeye_01.json",
+      "bytes": 2139,
+      "sha256": "7942815e9a9dcbcc184cd21bf638100f75cf68ece5f0d7abfd1650a2795ca178"
+    },
+    {
+      "archived_path": "results/handeye_validation_01.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/results/handeye_validation_01.json",
+      "bytes": 441,
+      "sha256": "8c24867feaf871ac393e31fb46b3c0f35d16464ad66709a32093fcddfc11c92d"
+    },
+    {
+      "archived_path": "train/001/capture_record.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/train/001/capture_record.json",
+      "bytes": 774,
+      "sha256": "401dcdea7eafad10428bb130a2020e8b508d5b513ea4957c1fbc9e2710280dc9"
+    },
+    {
+      "archived_path": "train/002/capture_record.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/train/002/capture_record.json",
+      "bytes": 774,
+      "sha256": "39ae357ded8d184877dbe9d19cd36680bc01cb0b8d33bd7357f9c7b73acea086"
+    },
+    {
+      "archived_path": "train/003/capture_record.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/train/003/capture_record.json",
+      "bytes": 757,
+      "sha256": "feb263d276abef0c226e15bcc5f3643df3882d66b0709cc322e48831346d1505"
+    },
+    {
+      "archived_path": "train/004/capture_record.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/train/004/capture_record.json",
+      "bytes": 755,
+      "sha256": "a6c262a0c942df5dadbe6b26bb6e8f3f16efb919ca5799fc38ad5df92005e8cb"
+    },
+    {
+      "archived_path": "train/005/capture_record.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/train/005/capture_record.json",
+      "bytes": 777,
+      "sha256": "6c64270d740d786a2e37cc5d29dcd81d38c933f3e5e5026fe57291d23fadd866"
+    },
+    {
+      "archived_path": "train/006/capture_record.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/train/006/capture_record.json",
+      "bytes": 758,
+      "sha256": "31fc87973687284cc2bbba8f9e7da270ebf55e06c6b3d9508b2ab561facb24ba"
+    },
+    {
+      "archived_path": "train/007/capture_record.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/train/007/capture_record.json",
+      "bytes": 773,
+      "sha256": "89d8fec71f2e761cdcf9fe29957f061d808b45ed7e1ee5a9d19fc83b0643674d"
+    },
+    {
+      "archived_path": "train/008/capture_record.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/train/008/capture_record.json",
+      "bytes": 751,
+      "sha256": "b033adf1ebc316b986e4f73819dc0a15cc99ea27be32860b22c685cf710b4b96"
+    },
+    {
+      "archived_path": "train/009/capture_record.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/train/009/capture_record.json",
+      "bytes": 757,
+      "sha256": "ecfd0a1fb2d9be3431a4f68dcded35fb050b74cddf4c972f300b9180be35883d"
+    },
+    {
+      "archived_path": "train/010/capture_record.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/train/010/capture_record.json",
+      "bytes": 752,
+      "sha256": "2796ca2b6a6e7aa43ebc4971ceed5d618deb36124ca29b5cf40f5a3f93c62cc6"
+    },
+    {
+      "archived_path": "train/011/capture_record.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/train/011/capture_record.json",
+      "bytes": 759,
+      "sha256": "0632cd682014700ce2418d9585f66d94bf009a358ba9e77d53a5cdacfeb97d63"
+    },
+    {
+      "archived_path": "train/012/capture_record.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/train/012/capture_record.json",
+      "bytes": 753,
+      "sha256": "ba8a53644d08ec8990401221bb9692e08a1828421e3ba1f6886d6aeda9c4d076"
+    },
+    {
+      "archived_path": "train/013/capture_record.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/train/013/capture_record.json",
+      "bytes": 761,
+      "sha256": "6b6f85bc9db98c06307543ea16c748e51ecdabe6ba887ac533a43c78210677af"
+    },
+    {
+      "archived_path": "train/014/capture_record.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/train/014/capture_record.json",
+      "bytes": 755,
+      "sha256": "2994c3961ed73843613e7da6a5bc2648629f4f880a8bb84fa71e841949d1241b"
+    },
+    {
+      "archived_path": "train/015/capture_record.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/train/015/capture_record.json",
+      "bytes": 758,
+      "sha256": "e50226a40d91b1a58aee766db01a2ca1dd3149c3748377b0000f6ea49cecea77"
+    },
+    {
+      "archived_path": "train/016/capture_record.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/train/016/capture_record.json",
+      "bytes": 754,
+      "sha256": "debed5fb7decd5534e3b7409f1b4ef1531d202d53c533d09db69a65b7207ca94"
+    },
+    {
+      "archived_path": "train/017/capture_record.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/train/017/capture_record.json",
+      "bytes": 758,
+      "sha256": "5a50a52d99c6fc896b3e1c6009c327371f418ed6478a77481ba9244d412b6caa"
+    },
+    {
+      "archived_path": "train/018/capture_record.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/train/018/capture_record.json",
+      "bytes": 757,
+      "sha256": "3d89891f6e4f30fc93498fd7f57729961e8cf0388f4b1a897ad87356db4493d6"
+    },
+    {
+      "archived_path": "train/019/capture_record.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/train/019/capture_record.json",
+      "bytes": 756,
+      "sha256": "ca944e6f33c89a24cd84070a8daf81b73b23d653b56aec18e0ea01047ce490da"
+    },
+    {
+      "archived_path": "train/020/capture_record.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/train/020/capture_record.json",
+      "bytes": 756,
+      "sha256": "bdaec506d8a2db63ba36d9af80d73c0d3e5e95541c2a906eea820a1dd7e47ae4"
+    },
+    {
+      "archived_path": "train/021/capture_record.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/train/021/capture_record.json",
+      "bytes": 762,
+      "sha256": "3244b79f7af8fa941c4ca2ab5fee9f0a1407760d79a2f1f2919b4d2ab7c41c0d"
+    },
+    {
+      "archived_path": "train/022/capture_record.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/train/022/capture_record.json",
+      "bytes": 758,
+      "sha256": "48e208f9f83a119e99d082ddb885ee83991a68d79f82e7cc3c0b29081fc44e0a"
+    },
+    {
+      "archived_path": "train/023/capture_record.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/train/023/capture_record.json",
+      "bytes": 778,
+      "sha256": "40ae0c4090a2fe589ab50b878e71b92a288467f27f114ba9475d4cddfc0b6235"
+    },
+    {
+      "archived_path": "train/024/capture_record.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/train/024/capture_record.json",
+      "bytes": 737,
+      "sha256": "3483e190e9ee02066b1fa6c074235c918ee01bcd5e9f23c14ae28015b3c6c426"
+    },
+    {
+      "archived_path": "train/025/capture_record.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/train/025/capture_record.json",
+      "bytes": 758,
+      "sha256": "0ca51c78d77db1309fd5d3d1dd077204f41b2e0a1a5fca28ad49a8fedd8d426a"
+    },
+    {
+      "archived_path": "config/wrist.world.sdf",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/cli/world/wrist.world.sdf",
+      "bytes": 100222,
+      "sha256": "742d1a3e37ce304e3466fe2412c1e4d27fc83be766f640223c36ba40348afb39"
+    }
+  ],
+  "excluded": [
+    "xyz.html (derived viewer)",
+    "incomplete captures",
+    "console logs",
+    "virtual environments"
+  ],
+  "related_run_record": "../20261006_camera_run/README.md",
+  "measurement_model": "../20261006_camera_run/config/measurement_model.urdf",
+  "source_repository_commit_field": "Legacy collector constant; model/scene/source hashes are the archived provenance.",
+  "train_count": 25,
+  "holdout_count": 10,
+  "archived_held_out_status": "passed_provisional_limits",
+  "ground_truth_error": {
+    "translation_mm": 0.5982197677990355,
+    "rotation_deg": 0.19457313056486647
+  },
+  "transform_direction": "piper_link6 <- wrist_camera_optical_frame"
+}

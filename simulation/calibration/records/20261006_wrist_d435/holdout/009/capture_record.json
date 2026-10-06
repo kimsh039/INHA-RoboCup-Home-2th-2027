@@ -1,0 +1,28 @@
+{
+  "requested_pose": {
+    "split": "holdout",
+    "sample_id": "009",
+    "joint_targets_rad": [
+      -0.08,
+      0.0,
+      0.0,
+      -0.04,
+      -0.03,
+      0.0
+    ],
+    "table": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/cli/poses/wrist_holdout10.csv"
+  },
+  "image_id": 33,
+  "measured_joint_positions": {
+    "piper_joint1": -0.07999999999999997,
+    "piper_joint2": -1.763579536828363e-14,
+    "piper_joint3": 7.4125497772199e-14,
+    "piper_joint4": -0.039999999999972044,
+    "piper_joint5": -0.029999999999836074,
+    "piper_joint6": -2.436324776409088e-15
+  },
+  "max_joint_command_error_rad": 1.6392442958590436e-13,
+  "image_sim_time": 236.948,
+  "time_skew_s": 0.0,
+  "partition": "robocup_auto_20261006"
+}

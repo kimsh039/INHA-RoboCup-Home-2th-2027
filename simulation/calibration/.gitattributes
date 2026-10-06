@@ -1,0 +1,2 @@
+# Preserve measurement bytes and SHA-256 provenance when cloning on another platform.
+records/** -text

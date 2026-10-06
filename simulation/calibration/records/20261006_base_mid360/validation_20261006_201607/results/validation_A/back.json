@@ -1,0 +1,14 @@
+{
+  "plane_id": "back",
+  "nx": 0.8662299180781463,
+  "ny": 0.4996343473141563,
+  "nz": 0.0033538053439553235,
+  "d": 3.8393248868539196,
+  "unit": "m",
+  "frame": "livox_frame",
+  "inlier_count": 869,
+  "rms_m": 0.0035293904018368644,
+  "manual_roi": false,
+  "cloud_sha256": "c28dda325adc9198d155d86850d1e1ec4b7ea752a4b8afa75581cca611d5c887",
+  "raw_sha256": "af8f834c624938ba608d7b92afd7225b30db7721b9d1329daa9b6aa1bfa6935f"
+}

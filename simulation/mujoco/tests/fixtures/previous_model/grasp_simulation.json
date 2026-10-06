@@ -1,0 +1,91 @@
+{
+  "table_center_world_m": [
+    0.68,
+    0,
+    0.695
+  ],
+  "table_half_size_m": [
+    0.3,
+    0.45,
+    0.025
+  ],
+  "base_world_m": [
+    0.10776772972363197,
+    -0.021553545944726388,
+    0.142544676935325
+  ],
+  "object_world_m": [
+    0.5,
+    -0.1,
+    0.7401
+  ],
+  "object_mass_kg": 0.04,
+  "object_friction": [
+    1.0,
+    0.005,
+    0.0001
+  ],
+  "tcp_tip_link6_m": [
+    0.0,
+    0.0,
+    0.13503
+  ],
+  "tcp_axes_in_link6": [
+    [
+      0,
+      0,
+      -1
+    ],
+    [
+      0,
+      1,
+      0
+    ],
+    [
+      1,
+      0,
+      0
+    ]
+  ],
+  "folded_candidate_rad": [
+    0,
+    0.02,
+    -0.02,
+    0,
+    0,
+    0
+  ],
+  "initial_joints_rad": [
+    0,
+    0.02,
+    -0.02,
+    0,
+    0,
+    0
+  ],
+  "joint_velocity_limit_rad_s": 0.8,
+  "joint_acceleration_limit_rad_s2": 0.5,
+  "planning_velocity_scale": 0.2,
+  "pregrasp_distance_m": 0.2,
+  "pregrasp_wait_s": 1.0,
+  "lift_distance_m": 0.2,
+  "cartesian_step_m": 0.002,
+  "arm_goal_tolerance_rad": 0.02,
+  "arm_path_tolerance_rad": 0.1,
+  "tcp_position_tolerance_m": 0.003,
+  "tcp_orientation_tolerance_rad": 0.04,
+  "penetration_tolerance_m": 0.001,
+  "grasp_close_duration_s": 3.0,
+  "relative_position_tolerance_m": 0.01,
+  "relative_orientation_tolerance_rad": 0.2,
+  "lift_height_tolerance_m": 0.02,
+  "robot_model": "inha",
+  "place_lateral_offset_m": 0.1,
+  "table_top_height_m": 0.72,
+  "hardware_max_jaw_opening_m": 0.07,
+  "close_approach_distance_m": 0.4,
+  "close_approach_reference": "base_link origin to object center, horizontal",
+  "observation_camera_height_m": 0.3,
+  "contact_multiccd": true,
+  "contact_noslip_iterations": 5
+}

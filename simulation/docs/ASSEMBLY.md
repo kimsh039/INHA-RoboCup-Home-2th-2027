@@ -2,11 +2,11 @@
 
 아래 명령은 저장소의 `simulation/` 폴더에서 실행합니다. 통합 URDF는 `robot_description/`에 있습니다.
 
-최종 모델은 [robocup.urdf](../robot_description/robocup.urdf) 하나이며 손목 카메라와 Gazebo 센서를 포함합니다.
+**현재 최종 보정 모델은 [robocup.calibrated.urdf](../robot_description/robocup.calibrated.urdf)**이며 손목 D435와 Gazebo 센서를 포함합니다. 2026-10-06 최신 랙·PiPER 구조에 2D/Mid360 보정값을 반영해 업로드했습니다. [보정·변경·업로드 이력](../robot_description/README.md#모델-변경보정업로드-이력)을 참고하세요. [robocup.urdf](../robot_description/robocup.urdf)는 CAD 기준 원본이며 Gazebo world 생성기의 입력입니다.
 
 Tracer의 `base_link`를 전체 루트로 사용합니다. 랙 루트는 `rack_base_link`로 변경하고 센서 및 Piper 프레임 이름은 유지했습니다.
 `tracer_to_rack` fixed joint로 랙 바닥 중심을 Tracer 기준 `(0, 0, 0.01611)` m에 연결합니다.
-랙과 Tracer의 +X 전방, +Z 상방을 맞췄습니다. 기존 Piper 마운트 연결은 유지합니다.
+랙과 Tracer의 +X 전방, +Z 상방을 맞췄습니다. Piper 베이스는 2026-10-06 Fusion `Assembly` 기준으로 랙 좌표 `(-0.0195, 0, 0.790)` m, RPY `(0, 0, 0)`에 직접 고정 연결했습니다. 기존 판형 Piper 마운트는 새 랙에서 제거됐습니다. 센서 설정과 팔 내부 관절·손목 카메라 연결은 유지했습니다.
 
 배치 근거: Tracer 차체 DAE의 geometry11/geometry57은 길이 약 458.5 mm, 폭 40 mm인 상단 프로파일입니다.
 URDF visual 회전 RPY=(1.57,0,0)을 적용하면 두 프로파일의 Y 중심은 약 ±115 mm, X 중심은 0입니다.
@@ -16,7 +16,7 @@ URDF visual 회전 RPY=(1.57,0,0)을 적용하면 두 프로파일의 Y 중심�
 이는 메시 기반 중앙 정렬이며 실제 체결 구멍/볼트 위치를 검증한 배치는 아닙니다.
 원본 Tracer의 약식 회전 1.57 rad을 유지해 두 레일에 약 0.18 mm 높이 차이가 있습니다.
 
-위치를 변경하려면 최종 URDF의 fixed joint origin을 수정하고 Gazebo를 재실행합니다.
+CAD 장착 위치 변경은 원본 `robocup.urdf`의 fixed joint origin을 수정하고 Gazebo world를 다시 생성합니다. 보정 결과는 최신 원본에 다시 적용해 `robocup.calibrated.urdf`를 갱신하고 변경 날짜·항목을 기록합니다. 센서 장착을 바꿨다면 이전 보정값을 새 장착값으로 간주하지 않습니다.
 
 모든 메시를 기존 폴더의 상대 경로로 참조합니다. 독립·중간 URDF는 삭제했으며 메시와 CAD 자료는 유지합니다.
 URDF는 차륜과 팔 관절을 유지하며, 동작용 제어 플러그인은 생성된 Gazebo world에 추가합니다.
@@ -30,7 +30,7 @@ Gazebo Harmonic 설치 후 `./gazebo/start_sim.sh`를 실행하고 `http://127.0
 동작 world에서는 static을 해제하고 바닥, 중력, 차륜 DiffDrive와 팔 JointPositionController를 추가합니다.
 팔은 `use_velocity_commands`의 이상적인 위치 제어로 속도를 제한합니다. 실제 모터 토크 성능 검증용이 아닙니다.
 차륜 좌측의 원본 joint 회전으로 뒤집힌 축은 생성된 SDF에서만 보정합니다.
-Tracer 총 질량은 제조사 명목값 30 kg으로 보정했습니다. 손목 카메라 추가 전 통합 모델은 51.07908 kg, 현재 최종 모델은 약 51.16914 kg입니다. 부품별 질량 분배·관성은 메시 기반 근사이며 [Tracer 물성 설명](../../HW/URDF/tracer/README.md)에 가정과 출처를 기록했습니다. 물성, 접촉 메시와 캐스터 구성은 실측 검증되지 않아 주행 동역학 결과를 실제 성능으로 해석하면 안 됩니다.
+Tracer 총 질량은 제조사 명목값 30 kg으로 보정했습니다. 손목 카메라 추가 전 통합 모델은 51.07908 kg이었고, 2026-10-06 랙 형상 변경 후 현재 최종 모델은 약 50.96143 kg입니다. 부품별 질량 분배·관성은 메시 기반 근사이며 [Tracer 물성 설명](../../HW/URDF/tracer/README.md)에 가정과 출처를 기록했습니다. 물성, 접촉 메시와 캐스터 구성은 실측 검증되지 않아 주행 동역학 결과를 실제 성능으로 해석하면 안 됩니다.
 `make_sim.py`는 현재 checkout의 절대 메시 경로로 임시 SDF/URDF를 재생성합니다.
 
 ## 저장 기준 자세
@@ -45,7 +45,7 @@ URDF는 로봇 링크 간 변환을 정의하며 Gazebo에서 이동한 world �
 
 Gazebo용 URDF에 Mid-360S, YDLIDAR G2와 D435f 시뮬레이션 센서를 추가했습니다.
 사양 출처, 모델별 적용값, 데이터 토픽, 실제 장치와의 차이 및 검증 방법은 [SENSORS.md](SENSORS.md)에 정리했습니다.
-센서 설정은 최종 URDF에서 수정한 뒤 Gazebo world를 다시 생성합니다.
+Gazebo 센서 설정은 CAD 원본 `robocup.urdf`에서 수정한 뒤 world를 다시 생성합니다. ROS의 보정 TF는 `robocup.calibrated.urdf`로 적용하며 [적용 방법](../robot_description/README.md#보정-urdf-적용하기)을 따릅니다.
 
 ## 터미널 제어
 

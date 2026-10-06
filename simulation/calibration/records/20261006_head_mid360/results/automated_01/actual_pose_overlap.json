@@ -1,0 +1,10 @@
+{
+  "count": 35,
+  "duplicates": [],
+  "minimum_board_orientation_separation_deg": 7.7418348160438955,
+  "minimum_train_holdout_orientation_separation_deg": 7.7418348160438955,
+  "max_reprojection_px": 0.09572114592787309,
+  "max_image_joint_skew_s": 0.001999999999995339,
+  "train_count": 25,
+  "holdout_count": 10
+}

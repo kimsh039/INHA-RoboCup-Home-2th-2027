@@ -5,7 +5,6 @@ __pycache__/
 *.pyc
 simulation/generated/
 reports/*
-!reports/wrist_camera_grasp_execution_success.json
 !reports/repository_validation.json
 !reports/ros_logs/
 reports/ros_logs/*
@@ -14,3 +13,14 @@ reports/ros_logs/*
 *.pth
 *.pt
 data/grasps/*/previous_*/
+
+logs/
+!reports/hardware_comparison.json
+!reports/updated_urdf_pick_place.json
+!reports/live_observation.json
+!reports/moveit_service_fk.json
+!reports/updated_model_validation.json
+!reports/empty_gripper_baseline_comparison.json
+!reports/time_reset_collision_failure.json
+!reports/updated_initial_scene.png
+!reports/updated_planned_observation.png

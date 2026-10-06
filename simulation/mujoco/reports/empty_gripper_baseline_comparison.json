@@ -1,0 +1,62 @@
+{
+  "scope": "empty gripper closure diagnostic; not an object grasp or new inference",
+  "cases": {
+    "old": {
+      "simulation_time_s": 3.7439999999998093,
+      "jaw_gap_m": -1.0422877838589528e-11,
+      "unexpected_contacts": [
+        {
+          "geom1": "link7_collision_0",
+          "geom2": "link8_collision_0",
+          "depth_m": 0.053000004824028585
+        },
+        {
+          "geom1": "link7_collision_0",
+          "geom2": "link8_collision_0",
+          "depth_m": 0.053000004824028585
+        },
+        {
+          "geom1": "link7_collision_0",
+          "geom2": "link8_collision_0",
+          "depth_m": 0.053000004824028585
+        },
+        {
+          "geom1": "link7_collision_0",
+          "geom2": "link8_collision_0",
+          "depth_m": 0.053000004824028585
+        }
+      ],
+      "warnings": 0,
+      "result": "FAIL"
+    },
+    "new": {
+      "simulation_time_s": 3.7419999999998095,
+      "jaw_gap_m": 3.689297131681535e-11,
+      "unexpected_contacts": [
+        {
+          "geom1": "link7_collision_0",
+          "geom2": "link8_collision_0",
+          "depth_m": 0.053000004871344486
+        },
+        {
+          "geom1": "link7_collision_0",
+          "geom2": "link8_collision_0",
+          "depth_m": 0.053000004871344486
+        },
+        {
+          "geom1": "link7_collision_0",
+          "geom2": "link8_collision_0",
+          "depth_m": 0.053000004871344486
+        },
+        {
+          "geom1": "link7_collision_0",
+          "geom2": "link8_collision_0",
+          "depth_m": 0.053000004871344486
+        }
+      ],
+      "warnings": 0,
+      "result": "FAIL"
+    }
+  },
+  "same_pair_in_old_and_new": true
+}

@@ -1,10 +1,11 @@
 # Piper 손목 카메라 통합 계획
 
-2026-10-03 기준. Fusion에서 배치한 마운트·카메라를 기존 통합 URDF에 연결하기 위한 계산 결과와 연결 구조를 정리한다. **현재 손목 카메라는 최종 robocup.urdf에 기본 포함되며 독립·중간 URDF는 정리했다.** Ubuntu 병합·실행 방법은 [손목 카메라 가이드](wrist_camera_description/README.md)를 참고한다.
+2026-10-03 기준. Fusion에서 배치한 마운트·카메라를 기존 통합 URDF에 연결하기 위한 계산 결과와 연결 구조를 정리한다. **현재 손목 D435는 CAD 원본 `robocup.urdf`와 최종 보정 모델 `robocup.calibrated.urdf`에 기본 포함되며 독립·중간 URDF는 정리했다.** Ubuntu 병합·실행 방법은 [손목 카메라 가이드](wrist_camera_description/README.md)를 참고한다.
 
 ## 현재 모델과 Fusion 파일
 
-- 최종 모델: [robocup.urdf](../../simulation/robot_description/robocup.urdf)
+- 최종 보정 모델: [robocup.calibrated.urdf](../../simulation/robot_description/robocup.calibrated.urdf). 2026-10-06 2D/Mid360 보정 반영·업로드: [모델 변경 이력](../../simulation/robot_description/README.md#모델-변경보정업로드-이력).
+- CAD 기준 원본: [robocup.urdf](../../simulation/robot_description/robocup.urdf). 손목 카메라 외부 보정 완료를 뜻하지 않는다.
 - 기존 D435f는 프로파일 랙에 고정돼 있으며 팔의 움직임을 따라가지 않는다. 추가 손목 카메라와 별개의 모델이다.
 - `manipulator_mount_assembly`: 카메라 홀더와 D435f를 조인트로 연결한 Fusion 조립품.
 - `mount_manipulator_locate`: 위 조립품을 Piper STEP에 구속으로 배치한 Fusion 문서. 팔과 마운트 사이의 조인트는 없다.

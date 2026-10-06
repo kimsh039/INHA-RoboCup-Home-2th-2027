@@ -1,0 +1,14 @@
+{
+  "plane_id": "floor",
+  "nx": 0.004272597394827151,
+  "ny": 0.00012071949601526473,
+  "nz": -0.9999908651274295,
+  "d": 1.3402156508471819,
+  "unit": "m",
+  "frame": "livox_frame",
+  "inlier_count": 7605,
+  "rms_m": 0.010440924287423183,
+  "manual_roi": false,
+  "cloud_sha256": "c28dda325adc9198d155d86850d1e1ec4b7ea752a4b8afa75581cca611d5c887",
+  "raw_sha256": "af8f834c624938ba608d7b92afd7225b30db7721b9d1329daa9b6aa1bfa6935f"
+}

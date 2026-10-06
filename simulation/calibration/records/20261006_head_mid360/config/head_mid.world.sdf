@@ -1,0 +1,2563 @@
+<?xml version='1.0' encoding='utf-8'?>
+<sdf version="1.10">
+  <world name="robocup_motion">
+    <gravity>0 0 -9.81</gravity>
+    <physics name="physics" type="ignored">
+      <max_step_size>0.001</max_step_size>
+      <real_time_factor>1</real_time_factor>
+    </physics>
+    <plugin filename="gz-sim-physics-system" name="gz::sim::systems::Physics" />
+    <plugin filename="gz-sim-user-commands-system" name="gz::sim::systems::UserCommands" />
+    <plugin filename="gz-sim-scene-broadcaster-system" name="gz::sim::systems::SceneBroadcaster" />
+    <plugin filename="gz-sim-sensors-system" name="gz::sim::systems::Sensors">
+      <render_engine>ogre2</render_engine>
+    </plugin>
+    <model name="robocup">
+      <link name="base_link">
+        <inertial>
+          <pose>-0.020346273112724831 -4.0668205893015118e-05 0.19074434672863849 0 0 0</pose>
+          <mass>43.399079739999998</mass>
+          <inertia>
+            <ixx>7.3197364408762082</ixx>
+            <ixy>4.6480950756684511e-05</ixy>
+            <ixz>0.66628906704204593</ixz>
+            <iyy>7.4790860904302532</iyy>
+            <iyz>-0.00056002301696732532</iyz>
+            <izz>2.492987131551808</izz>
+          </inertia>
+        </inertial>
+        <collision name="base_link_collision">
+          <pose>0 0 0 1.5700000000000001 0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/robot/HW/URDF/tracer/meshes/tracer_base_link_no_wheel.dae</uri>
+            </mesh>
+          </geometry>
+        </collision>
+        <collision name="base_link_fixed_joint_lump__profiles_470mm_1_body1_collision_1">
+          <pose>0.17999999999999999 -2.6290081219999999e-15 0.036110000000000003 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.040000000000000001 0.46999999999999997 0.040000000000000001</size>
+            </box>
+          </geometry>
+        </collision>
+        <collision name="base_link_fixed_joint_lump__profiles_320mm_1_body1_collision_2">
+          <pose>9.6811447750000005e-16 -0.215 0.036110000000000003 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.32000000000000001 0.040000000000000001 0.040000000000000001</size>
+            </box>
+          </geometry>
+        </collision>
+        <collision name="base_link_fixed_joint_lump__profiles_320mm_2_body1_collision_3">
+          <pose>2.042810365e-16 0.215 0.036110000000000003 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.32000000000000001 0.040000000000000001 0.040000000000000001</size>
+            </box>
+          </geometry>
+        </collision>
+        <collision name="base_link_fixed_joint_lump__profiles_470mm_2_body1_collision_4">
+          <pose>-0.17999999999999999 -2.6290081219999999e-15 0.036110000000000003 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.040000000000000001 0.46999999999999997 0.040000000000000001</size>
+            </box>
+          </geometry>
+        </collision>
+        <collision name="base_link_fixed_joint_lump__profiles_250mm_1_body1_collision_5">
+          <pose>0.17999999999999999 0.215 0.18110999999999999 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.040000000000000001 0.040000000000000001 0.25</size>
+            </box>
+          </geometry>
+        </collision>
+        <collision name="base_link_fixed_joint_lump__profiles_250mm_2_body1_collision_6">
+          <pose>0.17999999999999999 -0.215 0.18110999999999999 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.040000000000000001 0.040000000000000001 0.25</size>
+            </box>
+          </geometry>
+        </collision>
+        <collision name="base_link_fixed_joint_lump__profiles_250mm_3_body1_collision_7">
+          <pose>-0.17999999999999999 -0.215 0.18110999999999999 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.040000000000000001 0.040000000000000001 0.25</size>
+            </box>
+          </geometry>
+        </collision>
+        <collision name="base_link_fixed_joint_lump__profiles_250mm_4_body1_collision_8">
+          <pose>-0.17999999999999999 0.215 0.18110999999999999 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.040000000000000001 0.040000000000000001 0.25</size>
+            </box>
+          </geometry>
+        </collision>
+        <collision name="base_link_fixed_joint_lump__profiles_320mm_3_body1_collision_9">
+          <pose>2.2204460490000001e-16 -0.215 0.28610999999999998 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.32000000000000001 0.040000000000000001 0.040000000000000001</size>
+            </box>
+          </geometry>
+        </collision>
+        <collision name="base_link_fixed_joint_lump__profiles_320mm_4_body1_collision_10">
+          <pose>1.71418435e-15 0.215 0.28610999999999998 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.32000000000000001 0.040000000000000001 0.040000000000000001</size>
+            </box>
+          </geometry>
+        </collision>
+        <collision name="base_link_fixed_joint_lump__profiles_390mm_1_body1_collision_11">
+          <pose>0.059999999999999998 -1.9895196600000001e-15 0.28610999999999998 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.040000000000000001 0.39000000000000001 0.040000000000000001</size>
+            </box>
+          </geometry>
+        </collision>
+        <collision name="base_link_fixed_joint_lump__profiles_390mm_2_body1_collision_12">
+          <pose>-0.059999999999999998 -2.6290081219999999e-15 0.28610999999999998 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.040000000000000001 0.39000000000000001 0.040000000000000001</size>
+            </box>
+          </geometry>
+        </collision>
+        <collision name="base_link_fixed_joint_lump__bracket_1_body1_collision_13">
+          <pose>0.10000000000000001 0.17499999999999999 0.28576000000000001 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.040000000000000001 0.040000000000000001 0.040000000000000001</size>
+            </box>
+          </geometry>
+        </collision>
+        <collision name="base_link_fixed_joint_lump__bracket_2_body1_collision_14">
+          <pose>0.02 0.17499999999999999 0.28593499999999999 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.040000000000000001 0.040000000000000001 0.040000000000000001</size>
+            </box>
+          </geometry>
+        </collision>
+        <collision name="base_link_fixed_joint_lump__bracket_3_body1_collision_15">
+          <pose>-0.02 0.17499999999999999 0.28593499999999999 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.040000000000000001 0.040000000000000001 0.040000000000000001</size>
+            </box>
+          </geometry>
+        </collision>
+        <collision name="base_link_fixed_joint_lump__bracket_4_body1_collision_16">
+          <pose>-0.10000000000000001 0.17499999999999999 0.28593499999999999 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.040000000000000001 0.040000000000000001 0.040000000000000001</size>
+            </box>
+          </geometry>
+        </collision>
+        <collision name="base_link_fixed_joint_lump__bracket_5_body1_collision_17">
+          <pose>0.10000000000000001 -0.17499999999999999 0.28593499999999999 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.040000000000000001 0.040000000000000001 0.040000000000000001</size>
+            </box>
+          </geometry>
+        </collision>
+        <collision name="base_link_fixed_joint_lump__bracket_6_body1_collision_18">
+          <pose>0.02 -0.17499999999999999 0.28593499999999999 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.040000000000000001 0.040000000000000001 0.040000000000000001</size>
+            </box>
+          </geometry>
+        </collision>
+        <collision name="base_link_fixed_joint_lump__bracket_7_body1_collision_19">
+          <pose>-0.02 -0.17499999999999999 0.28593499999999999 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.040000000000000001 0.040000000000000001 0.040000000000000001</size>
+            </box>
+          </geometry>
+        </collision>
+        <collision name="base_link_fixed_joint_lump__bracket_8_body1_collision_20">
+          <pose>-0.10000000000000001 -0.17499999999999999 0.28593499999999999 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.040000000000000001 0.040000000000000001 0.040000000000000001</size>
+            </box>
+          </geometry>
+        </collision>
+        <collision name="base_link_fixed_joint_lump__profiles_500mm_1_body1_collision_21">
+          <pose>-0.17999999999999999 -0.215 0.55610999999999999 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.040000000000000001 0.040000000000000001 0.5</size>
+            </box>
+          </geometry>
+        </collision>
+        <collision name="base_link_fixed_joint_lump__profiles_500mm_2_body1_collision_22">
+          <pose>-0.17999999999999999 0.215 0.55610999999999999 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.040000000000000001 0.040000000000000001 0.5</size>
+            </box>
+          </geometry>
+        </collision>
+        <collision name="base_link_fixed_joint_lump__profiles_390mm_3_body1_collision_23">
+          <pose>-0.17999999999999999 -2.6290081219999999e-15 0.78610999999999998 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.040000000000000001 0.39000000000000001 0.040000000000000001</size>
+            </box>
+          </geometry>
+        </collision>
+        <collision name="base_link_fixed_joint_lump__profiles_500mm_3_body1_collision_24">
+          <pose>0.059999999999999998 -0.215 0.55610999999999999 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.040000000000000001 0.040000000000000001 0.5</size>
+            </box>
+          </geometry>
+        </collision>
+        <collision name="base_link_fixed_joint_lump__profiles_500mm_4_body1_collision_25">
+          <pose>0.059999999999999998 0.215 0.55610999999999999 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.040000000000000001 0.040000000000000001 0.5</size>
+            </box>
+          </geometry>
+        </collision>
+        <collision name="base_link_fixed_joint_lump__bracket_9_body1_collision_26">
+          <pose>0.10000000000000001 0.21482499999999999 0.32611000000000001 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.040000000000000001 0.040000000000000001 0.040000000000000001</size>
+            </box>
+          </geometry>
+        </collision>
+        <collision name="base_link_fixed_joint_lump__bracket_10_body1_collision_27">
+          <pose>0.10000000000000001 -0.21482499999999999 0.32611000000000001 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.040000000000000001 0.040000000000000001 0.040000000000000001</size>
+            </box>
+          </geometry>
+        </collision>
+        <collision name="base_link_fixed_joint_lump__bracket_11_body1_collision_28">
+          <pose>-0.14000000000000001 -0.21482499999999999 0.32611000000000001 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.040000000000000001 0.040000000000000001 0.040000000000000001</size>
+            </box>
+          </geometry>
+        </collision>
+        <collision name="base_link_fixed_joint_lump__bracket_12_body1_collision_29">
+          <pose>0.02 0.21517500000000001 0.32611000000000001 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.040000000000000001 0.040000000000000001 0.040000000000000001</size>
+            </box>
+          </geometry>
+        </collision>
+        <collision name="base_link_fixed_joint_lump__bracket_13_body1_collision_30">
+          <pose>-0.14000000000000001 0.21482499999999999 0.32611000000000001 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.040000000000000001 0.040000000000000001 0.040000000000000001</size>
+            </box>
+          </geometry>
+        </collision>
+        <collision name="base_link_fixed_joint_lump__bracket_14_body1_collision_31">
+          <pose>0.02 -0.21482499999999999 0.32611000000000001 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.040000000000000001 0.040000000000000001 0.040000000000000001</size>
+            </box>
+          </geometry>
+        </collision>
+        <collision name="base_link_fixed_joint_lump__profiles_390mm_4_body1_collision_32">
+          <pose>0.059999999999999998 1.9184653870000001e-15 0.78610999999999998 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.040000000000000001 0.39000000000000001 0.040000000000000001</size>
+            </box>
+          </geometry>
+        </collision>
+        <collision name="base_link_fixed_joint_lump__bracket_15_body1_collision_33">
+          <pose>0.059825000000000003 0.17499999999999999 0.74610999999999994 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.040000000000000001 0.040000000000000001 0.040000000000000001</size>
+            </box>
+          </geometry>
+        </collision>
+        <collision name="base_link_fixed_joint_lump__bracket_16_body1_collision_34">
+          <pose>-0.180175 0.17499999999999999 0.74610999999999994 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.040000000000000001 0.040000000000000001 0.040000000000000001</size>
+            </box>
+          </geometry>
+        </collision>
+        <collision name="base_link_fixed_joint_lump__bracket_17_body1_collision_35">
+          <pose>0.059825000000000003 -0.17499999999999999 0.74610999999999994 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.040000000000000001 0.040000000000000001 0.040000000000000001</size>
+            </box>
+          </geometry>
+        </collision>
+        <collision name="base_link_fixed_joint_lump__bracket_18_body1_collision_36">
+          <pose>-0.180175 -0.17499999999999999 0.74610999999999994 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.040000000000000001 0.040000000000000001 0.040000000000000001</size>
+            </box>
+          </geometry>
+        </collision>
+        <collision name="base_link_fixed_joint_lump__profiles_500mm_5_body1_collision_37">
+          <pose>-0.17999999999999999 -0.14499999999999999 1.0561100000000001 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.040000000000000001 0.040000000000000001 0.5</size>
+            </box>
+          </geometry>
+        </collision>
+        <collision name="base_link_fixed_joint_lump__profiles_500mm_6_body1_collision_38">
+          <pose>-0.17999999999999999 0.14499999999999999 1.0561100000000001 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.040000000000000001 0.040000000000000001 0.5</size>
+            </box>
+          </geometry>
+        </collision>
+        <collision name="base_link_fixed_joint_lump__profiles_250mm_5_body1_collision_39">
+          <pose>-0.17999999999999999 -2.6112445539999999e-15 1.2861100000000001 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.040000000000000001 0.25 0.040000000000000001</size>
+            </box>
+          </geometry>
+        </collision>
+        <collision name="base_link_fixed_joint_lump__bracket_21_body1_collision_40">
+          <pose>-0.180175 0.105 0.82611000000000001 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.040000000000000001 0.040000000000000001 0.040000000000000001</size>
+            </box>
+          </geometry>
+        </collision>
+        <collision name="base_link_fixed_joint_lump__bracket_22_body1_collision_41">
+          <pose>-0.180175 -0.105 0.82611000000000001 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.040000000000000001 0.040000000000000001 0.040000000000000001</size>
+            </box>
+          </geometry>
+        </collision>
+        <collision name="base_link_fixed_joint_lump__bracket_23_body1_collision_42">
+          <pose>-0.180175 -0.105 1.2461100000000001 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.040000000000000001 0.040000000000000001 0.040000000000000001</size>
+            </box>
+          </geometry>
+        </collision>
+        <collision name="base_link_fixed_joint_lump__bracket_24_body1_collision_43">
+          <pose>-0.180175 0.105 1.2461100000000001 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.040000000000000001 0.040000000000000001 0.040000000000000001</size>
+            </box>
+          </geometry>
+        </collision>
+        <collision name="base_link_fixed_joint_lump__2D_LiDARMount_1_body1_collision_44">
+          <pose>0.0001750004027 3.1035193970000002e-10 0.30861 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.16000000010000001 0.1199999994 0.0050000000000000001</size>
+            </box>
+          </geometry>
+        </collision>
+        <collision name="base_link_fixed_joint_lump__3D_LiDAR_Camera_mount_1_body1_collision_45">
+          <pose>-0.17999999999999999 -2.6112445539999999e-15 1.2763599999999999 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.065000000000000002 0.12 0.060499999999999998</size>
+            </box>
+          </geometry>
+        </collision>
+        <collision name="base_link_fixed_joint_lump__Manipulator_mount_1_body1_collision_46">
+          <pose>-0.059999999999999998 -1.2523315719999999e-15 0.81060999999999994 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.28000000000000003 0.14999999999999999 0.0089999999999999993</size>
+            </box>
+          </geometry>
+        </collision>
+        <collision name="base_link_fixed_joint_lump__piper_base_link_collision_47">
+          <pose>0.0067516150909999999 -1.2434121236517441e-15 0.81511 -9.9116705936300002e-18 -6.9388939039100002e-18 -4.1061244550799998e-16</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/robot/HW/URDF/piper/meshes/base_link.stl</uri>
+            </mesh>
+          </geometry>
+        </collision>
+        <collision name="base_link_fixed_joint_lump__D435f_Solid_v1_1_body1_collision_48">
+          <pose>-0.13720999999 4.7596943757388763e-05 1.286109978853202 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.025579999990000001 0.089904506110000004 0.02499995771</size>
+            </box>
+          </geometry>
+        </collision>
+        <collision name="base_link_fixed_joint_lump__D435f_Solid_v1_1_body2_collision_49">
+          <pose>-0.124387 0.001399999999997389 1.2861100000000001 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>6.6000000000000005e-05 0.08319 0.015389999999999999</size>
+            </box>
+          </geometry>
+        </collision>
+        <collision name="base_link_fixed_joint_lump__Base_1_body1_collision_50">
+          <pose>-0.0036500004633999998 -9.2082341750790109e-12 0.32135999999999998 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.081350000000000006 0.078282032299999998 0.020500000000000001</size>
+            </box>
+          </geometry>
+        </collision>
+        <collision name="base_link_fixed_joint_lump__TOP_1_body1_collision_51">
+          <pose>0.00017499953660000001 -9.2082785840000001e-12 0.34186 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.073700000000000002 0.073700000000000002 0.020500000000000001</size>
+            </box>
+          </geometry>
+        </collision>
+        <collision name="base_link_fixed_joint_lump__mid_360s_axis_1_body1_collision_52">
+          <pose>-0.184 -2.5757174169999999e-15 1.2263219999999999 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.072999999999999995 0.065000000000000002 0.039576</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="base_link_visual">
+          <pose>0 0 0 1.5700000000000001 0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/robot/HW/URDF/tracer/meshes/tracer_base_link_no_wheel.dae</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <visual name="base_link_fixed_joint_lump__rack_base_link_visual_1">
+          <pose>0 0 0.016109999999999999 0 0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/robot/HW/URDF/sensor_rack_description/meshes/base_link.stl</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <diffuse>0.900000036 0.925000012 0.962499976 1</diffuse>
+            <ambient>0.900000036 0.925000012 0.962499976 1</ambient>
+          </material>
+        </visual>
+        <visual name="base_link_fixed_joint_lump__piper_base_link_visual_2">
+          <pose>0.0067516150909999999 -1.2434121236517441e-15 0.81511 -9.9116705936300002e-18 -6.9388939039100002e-18 -4.1061244550799998e-16</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/robot/HW/URDF/piper/meshes/dae/base_link.dae</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <visual name="base_link_fixed_joint_lump__camera_link_visual_3">
+          <pose>-0.12495000000000001 -2.6112445539999999e-15 1.2861100000000001 0 0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/robot/HW/URDF/sensor_rack_description/meshes/camera_link.stl</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <diffuse>0.149999991 0.149999991 0.174999997 1</diffuse>
+            <ambient>0.149999991 0.149999991 0.174999997 1</ambient>
+          </material>
+        </visual>
+        <visual name="base_link_fixed_joint_lump__g2_link_visual_4">
+          <pose>0.00017499953660000001 -9.2082785840000001e-12 0.34271000000000001 0 0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/robot/HW/URDF/sensor_rack_description/meshes/g2_link.stl</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <diffuse>0.149999991 0.149999991 0.174999997 1</diffuse>
+            <ambient>0.149999991 0.149999991 0.174999997 1</ambient>
+          </material>
+        </visual>
+        <visual name="base_link_fixed_joint_lump__mid360_link_visual_5">
+          <pose>-0.17999999999999999 -2.5757174169999999e-15 1.1991099999999999 0 0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/robot/HW/URDF/sensor_rack_description/meshes/mid360_link.stl</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <diffuse>0.149999991 0.149999991 0.174999997 1</diffuse>
+            <ambient>0.149999991 0.149999991 0.174999997 1</ambient>
+          </material>
+        </visual>
+        <sensor name="ydlidar_g2" type="gpu_lidar">
+          <topic>/robocup/g2/scan</topic>
+          <always_on>true</always_on>
+          <update_rate>10</update_rate>
+          <lidar>
+            <scan>
+              <horizontal>
+                <samples>500</samples>
+                <resolution>1</resolution>
+                <min_angle>-3.1415926535897931</min_angle>
+                <max_angle>3.1290262829754338</max_angle>
+              </horizontal>
+              <vertical>
+                <samples>1</samples>
+                <resolution>1</resolution>
+                <min_angle>0.017453292519943295</min_angle>
+                <max_angle>0.017453292519943295</max_angle>
+              </vertical>
+            </scan>
+            <range>
+              <min>0.12</min>
+              <max>12</max>
+              <resolution>0.001</resolution>
+            </range>
+          </lidar>
+          <pose>0.000175 0 0.34271000000000001 0 0 0.15375400000000003</pose>
+          <gz_frame_id>laser_frame</gz_frame_id>
+        </sensor>
+        <sensor name="livox_mid360s" type="gpu_lidar">
+          <topic>/robocup/mid360s/scan</topic>
+          <always_on>true</always_on>
+          <update_rate>10</update_rate>
+          <lidar>
+            <scan>
+              <horizontal>
+                <samples>1000</samples>
+                <resolution>1</resolution>
+                <min_angle>-3.1415926535897931</min_angle>
+                <max_angle>3.1353094682826135</max_angle>
+              </horizontal>
+              <vertical>
+                <samples>20</samples>
+                <resolution>1</resolution>
+                <min_angle>-0.12217304763960307</min_angle>
+                <max_angle>0.90757121103705141</max_angle>
+              </vertical>
+            </scan>
+            <range>
+              <min>0.10000000000000001</min>
+              <max>100</max>
+              <resolution>0.001</resolution>
+            </range>
+          </lidar>
+          <pose>-0.17999999999999999 0 1.1991099999999999 3.1415899999999999 0 0</pose>
+          <gz_frame_id>livox_frame</gz_frame_id>
+        </sensor>
+        <sensor name="d435f_depth" type="depth_camera">
+          <topic>/robocup/camera/depth/image</topic>
+          <always_on>true</always_on>
+          <update_rate>30</update_rate>
+          <camera>
+            <horizontal_fov>1.5184364492350666</horizontal_fov>
+            <image>
+              <width>1280</width>
+              <height>720</height>
+              <format>R8G8B8</format>
+            </image>
+            <clip>
+              <near>0.20000000000000001</near>
+              <far>3</far>
+            </clip>
+          </camera>
+          <pose>-0.12495000000000001 0 1.2861100000000001 0 0 0</pose>
+          <gz_frame_id>camera_optical_frame</gz_frame_id>
+          <optical_frame_id>camera_optical_frame</optical_frame_id>
+        </sensor>
+        <sensor name="d435f_color" type="camera">
+          <topic>/robocup/camera/color/image</topic>
+          <always_on>true</always_on>
+          <update_rate>30</update_rate>
+          <camera>
+            <horizontal_fov>1.2042771838760873</horizontal_fov>
+            <image>
+              <width>1920</width>
+              <height>1080</height>
+              <format>R8G8B8</format>
+            </image>
+            <clip>
+              <near>0.01</near>
+              <far>100</far>
+            </clip>
+          </camera>
+          <pose>-0.12495000000000001 0 1.2861100000000001 0 0 0</pose>
+          <gz_frame_id>camera_optical_frame</gz_frame_id>
+          <optical_frame_id>camera_optical_frame</optical_frame_id>
+        </sensor>
+      </link>
+      <joint name="fl_castor_wheel" type="revolute">
+        <pose relative_to="base_link">0.18955 0.17000000000000001 -0.0380886 -1.5700000000000001 0 0</pose>
+        <parent>base_link</parent>
+        <child>fl_castor_link</child>
+        <axis>
+          <xyz>0 1 0</xyz>
+          <limit>
+            <lower>-inf</lower>
+            <upper>inf</upper>
+          </limit>
+          <dynamics>
+            <spring_reference>0</spring_reference>
+            <spring_stiffness>0</spring_stiffness>
+          </dynamics>
+        </axis>
+      </joint>
+      <link name="fl_castor_link">
+        <pose relative_to="fl_castor_wheel">0 0 0 0 0 0</pose>
+        <inertial>
+          <pose>0.0086244900000000003 0.032734559000000003 -0.001 0 0 0</pose>
+          <mass>0.125</mass>
+          <inertia>
+            <ixx>0.0001484066702</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>0.00017242190104200001</iyy>
+            <iyz>0</iyz>
+            <izz>0.00017382857124199999</izz>
+          </inertia>
+        </inertial>
+        <visual name="fl_castor_link_visual">
+          <pose>0 0 0 0 0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/robot/HW/URDF/tracer/meshes/castor_joint.dae</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+      <joint name="fl_wheel" type="revolute">
+        <pose relative_to="fl_castor_link">-0.021808399999999999 0.067000000000000004 0 0 0 0</pose>
+        <parent>fl_castor_link</parent>
+        <child>fl_wheel_link</child>
+        <axis>
+          <xyz>0 0 1</xyz>
+          <limit>
+            <lower>-inf</lower>
+            <upper>inf</upper>
+          </limit>
+          <dynamics>
+            <damping>0</damping>
+            <friction>0</friction>
+            <spring_reference>0</spring_reference>
+            <spring_stiffness>0</spring_stiffness>
+          </dynamics>
+        </axis>
+      </joint>
+      <link name="fl_wheel_link">
+        <pose relative_to="fl_wheel">0 0 0 0 0 0</pose>
+        <inertial>
+          <pose>2.2999999999999999e-07 -6.5499999999899995e-07 0 0 0 0</pose>
+          <mass>0.125</mass>
+          <inertia>
+            <ixx>7.3205729166700003e-05</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>7.3205729166700003e-05</iyy>
+            <iyz>0</iyz>
+            <izz>8.7890624999999997e-05</izz>
+          </inertia>
+        </inertial>
+        <collision name="fl_wheel_link_collision">
+          <pose>0 0 0 0 0 0</pose>
+          <geometry>
+            <sphere>
+              <radius>0.036499999999999998</radius>
+            </sphere>
+          </geometry>
+          <surface>
+            <contact>
+              <ode />
+            </contact>
+            <friction>
+              <ode>
+                <mu>0.01</mu>
+                <mu2>0.01</mu2>
+              </ode>
+            </friction>
+          </surface>
+        </collision>
+        <visual name="fl_wheel_link_visual">
+          <pose>0 0 0 0 0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/robot/HW/URDF/tracer/meshes/castor.dae</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+      <joint name="fr_castor_wheel" type="revolute">
+        <pose relative_to="base_link">0.18955 -0.17000000000000001 -0.0380886 -1.5700000000000001 0 0</pose>
+        <parent>base_link</parent>
+        <child>fr_castor_link</child>
+        <axis>
+          <xyz>0 1 0</xyz>
+          <limit>
+            <lower>-inf</lower>
+            <upper>inf</upper>
+          </limit>
+          <dynamics>
+            <spring_reference>0</spring_reference>
+            <spring_stiffness>0</spring_stiffness>
+          </dynamics>
+        </axis>
+      </joint>
+      <link name="fr_castor_link">
+        <pose relative_to="fr_castor_wheel">0 0 0 0 0 0</pose>
+        <inertial>
+          <pose>0.0086244900000000003 0.032734559000000003 -0.001 0 0 0</pose>
+          <mass>0.125</mass>
+          <inertia>
+            <ixx>0.0001484066702</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>0.00017242190104200001</iyy>
+            <iyz>0</iyz>
+            <izz>0.00017382857124199999</izz>
+          </inertia>
+        </inertial>
+        <visual name="fr_castor_link_visual">
+          <pose>0 0 0 0 0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/robot/HW/URDF/tracer/meshes/castor_joint.dae</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+      <joint name="fr_wheel" type="revolute">
+        <pose relative_to="fr_castor_link">-0.021808399999999999 0.067000000000000004 0 0 0 0</pose>
+        <parent>fr_castor_link</parent>
+        <child>fr_wheel_link</child>
+        <axis>
+          <xyz>0 0 1</xyz>
+          <limit>
+            <lower>-inf</lower>
+            <upper>inf</upper>
+          </limit>
+          <dynamics>
+            <damping>0</damping>
+            <friction>0</friction>
+            <spring_reference>0</spring_reference>
+            <spring_stiffness>0</spring_stiffness>
+          </dynamics>
+        </axis>
+      </joint>
+      <link name="fr_wheel_link">
+        <pose relative_to="fr_wheel">0 0 0 0 0 0</pose>
+        <inertial>
+          <pose>2.2999999999999999e-07 -6.5499999999899995e-07 0 0 0 0</pose>
+          <mass>0.125</mass>
+          <inertia>
+            <ixx>7.3205729166700003e-05</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>7.3205729166700003e-05</iyy>
+            <iyz>0</iyz>
+            <izz>8.7890624999999997e-05</izz>
+          </inertia>
+        </inertial>
+        <collision name="fr_wheel_link_collision">
+          <pose>0 0 0 0 0 0</pose>
+          <geometry>
+            <sphere>
+              <radius>0.036499999999999998</radius>
+            </sphere>
+          </geometry>
+          <surface>
+            <contact>
+              <ode />
+            </contact>
+            <friction>
+              <ode>
+                <mu>0.01</mu>
+                <mu2>0.01</mu2>
+              </ode>
+            </friction>
+          </surface>
+        </collision>
+        <visual name="fr_wheel_link_visual">
+          <pose>0 0 0 0 0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/robot/HW/URDF/tracer/meshes/castor.dae</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+      <joint name="left_wheel" type="revolute">
+        <pose relative_to="base_link">0 0.17000000000000001 -0.082000000000000003 3.1400000000000001 0 0</pose>
+        <parent>base_link</parent>
+        <child>left_wheel_link</child>
+        <axis>
+          <xyz>0 -1 0</xyz>
+          <limit>
+            <lower>-inf</lower>
+            <upper>inf</upper>
+          </limit>
+          <dynamics>
+            <spring_reference>0</spring_reference>
+            <spring_stiffness>0</spring_stiffness>
+          </dynamics>
+        </axis>
+      </joint>
+      <link name="left_wheel_link">
+        <pose relative_to="left_wheel">0 0 0 0 0 0</pose>
+        <inertial>
+          <pose>0 0 0 0 0 0</pose>
+          <mass>1.5</mass>
+          <inertia>
+            <ixx>0.00226301375</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>0.0027451874999999998</iyy>
+            <iyz>0</iyz>
+            <izz>0.00226301375</izz>
+          </inertia>
+        </inertial>
+        <collision name="left_wheel_link_collision">
+          <pose>0 0 0 0 0 0</pose>
+          <geometry>
+            <sphere>
+              <radius>0.060499999999999998</radius>
+            </sphere>
+          </geometry>
+          <surface>
+            <contact>
+              <ode />
+            </contact>
+            <friction>
+              <ode>
+                <mu>1</mu>
+                <mu2>1</mu2>
+              </ode>
+            </friction>
+          </surface>
+        </collision>
+        <visual name="left_wheel_link_visual">
+          <pose>0 0 0 0 0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/robot/HW/URDF/tracer/meshes/tracer_wheel.dae</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+      <joint name="right_wheel" type="revolute">
+        <pose relative_to="base_link">0 -0.17000000000000001 -0.082000000000000003 0 0 0</pose>
+        <parent>base_link</parent>
+        <child>right_wheel_link</child>
+        <axis>
+          <xyz>0 1 0</xyz>
+          <limit>
+            <lower>-inf</lower>
+            <upper>inf</upper>
+          </limit>
+          <dynamics>
+            <spring_reference>0</spring_reference>
+            <spring_stiffness>0</spring_stiffness>
+          </dynamics>
+        </axis>
+      </joint>
+      <link name="right_wheel_link">
+        <pose relative_to="right_wheel">0 0 0 0 0 0</pose>
+        <inertial>
+          <pose>0 0 0 0 0 0</pose>
+          <mass>1.5</mass>
+          <inertia>
+            <ixx>0.00226301375</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>0.0027451874999999998</iyy>
+            <iyz>0</iyz>
+            <izz>0.00226301375</izz>
+          </inertia>
+        </inertial>
+        <collision name="right_wheel_link_collision">
+          <pose>0 0 0 0 0 0</pose>
+          <geometry>
+            <sphere>
+              <radius>0.060499999999999998</radius>
+            </sphere>
+          </geometry>
+          <surface>
+            <contact>
+              <ode />
+            </contact>
+            <friction>
+              <ode>
+                <mu>1</mu>
+                <mu2>1</mu2>
+              </ode>
+            </friction>
+          </surface>
+        </collision>
+        <visual name="right_wheel_link_visual">
+          <pose>0 0 0 0 0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/robot/HW/URDF/tracer/meshes/tracer_wheel.dae</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+      <joint name="rl_castor_wheel" type="revolute">
+        <pose relative_to="base_link">-0.18955 0.17000000000000001 -0.0380886 -1.5700000000000001 0 0</pose>
+        <parent>base_link</parent>
+        <child>rl_castor_link</child>
+        <axis>
+          <xyz>0 1 0</xyz>
+          <limit>
+            <lower>-inf</lower>
+            <upper>inf</upper>
+          </limit>
+          <dynamics>
+            <spring_reference>0</spring_reference>
+            <spring_stiffness>0</spring_stiffness>
+          </dynamics>
+        </axis>
+      </joint>
+      <link name="rl_castor_link">
+        <pose relative_to="rl_castor_wheel">0 0 0 0 0 0</pose>
+        <inertial>
+          <pose>0.0086244900000000003 0.032734559000000003 -0.001 0 0 0</pose>
+          <mass>0.125</mass>
+          <inertia>
+            <ixx>0.0001484066702</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>0.00017242190104200001</iyy>
+            <iyz>0</iyz>
+            <izz>0.00017382857124199999</izz>
+          </inertia>
+        </inertial>
+        <visual name="rl_castor_link_visual">
+          <pose>0 0 0 0 0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/robot/HW/URDF/tracer/meshes/castor_joint.dae</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+      <joint name="rl_wheel" type="revolute">
+        <pose relative_to="rl_castor_link">-0.021808399999999999 0.067000000000000004 0 0 0 0</pose>
+        <parent>rl_castor_link</parent>
+        <child>rl_wheel_link</child>
+        <axis>
+          <xyz>0 0 1</xyz>
+          <limit>
+            <lower>-inf</lower>
+            <upper>inf</upper>
+          </limit>
+          <dynamics>
+            <damping>0</damping>
+            <friction>0</friction>
+            <spring_reference>0</spring_reference>
+            <spring_stiffness>0</spring_stiffness>
+          </dynamics>
+        </axis>
+      </joint>
+      <link name="rl_wheel_link">
+        <pose relative_to="rl_wheel">0 0 0 0 0 0</pose>
+        <inertial>
+          <pose>2.2999999999999999e-07 -6.5499999999899995e-07 0 0 0 0</pose>
+          <mass>0.125</mass>
+          <inertia>
+            <ixx>7.3205729166700003e-05</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>7.3205729166700003e-05</iyy>
+            <iyz>0</iyz>
+            <izz>8.7890624999999997e-05</izz>
+          </inertia>
+        </inertial>
+        <collision name="rl_wheel_link_collision">
+          <pose>0 0 0 0 0 0</pose>
+          <geometry>
+            <sphere>
+              <radius>0.036499999999999998</radius>
+            </sphere>
+          </geometry>
+          <surface>
+            <contact>
+              <ode />
+            </contact>
+            <friction>
+              <ode>
+                <mu>0.01</mu>
+                <mu2>0.01</mu2>
+              </ode>
+            </friction>
+          </surface>
+        </collision>
+        <visual name="rl_wheel_link_visual">
+          <pose>0 0 0 0 0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/robot/HW/URDF/tracer/meshes/castor.dae</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+      <joint name="rr_castor_wheel" type="revolute">
+        <pose relative_to="base_link">-0.18955 -0.17000000000000001 -0.0380886 -1.5700000000000001 0 0</pose>
+        <parent>base_link</parent>
+        <child>rr_castor_link</child>
+        <axis>
+          <xyz>0 1 0</xyz>
+          <limit>
+            <lower>-inf</lower>
+            <upper>inf</upper>
+          </limit>
+          <dynamics>
+            <spring_reference>0</spring_reference>
+            <spring_stiffness>0</spring_stiffness>
+          </dynamics>
+        </axis>
+      </joint>
+      <link name="rr_castor_link">
+        <pose relative_to="rr_castor_wheel">0 0 0 0 0 0</pose>
+        <inertial>
+          <pose>0.0086244900000000003 0.032734559000000003 -0.001 0 0 0</pose>
+          <mass>0.125</mass>
+          <inertia>
+            <ixx>0.0001484066702</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>0.00017242190104200001</iyy>
+            <iyz>0</iyz>
+            <izz>0.00017382857124199999</izz>
+          </inertia>
+        </inertial>
+        <visual name="rr_castor_link_visual">
+          <pose>0 0 0 0 0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/robot/HW/URDF/tracer/meshes/castor_joint.dae</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+      <joint name="rr_wheel" type="revolute">
+        <pose relative_to="rr_castor_link">-0.021808399999999999 0.067000000000000004 0 0 0 0</pose>
+        <parent>rr_castor_link</parent>
+        <child>rr_wheel_link</child>
+        <axis>
+          <xyz>0 0 1</xyz>
+          <limit>
+            <lower>-inf</lower>
+            <upper>inf</upper>
+          </limit>
+          <dynamics>
+            <damping>0</damping>
+            <friction>0</friction>
+            <spring_reference>0</spring_reference>
+            <spring_stiffness>0</spring_stiffness>
+          </dynamics>
+        </axis>
+      </joint>
+      <link name="rr_wheel_link">
+        <pose relative_to="rr_wheel">0 0 0 0 0 0</pose>
+        <inertial>
+          <pose>2.2999999999999999e-07 -6.5499999999899995e-07 0 0 0 0</pose>
+          <mass>0.125</mass>
+          <inertia>
+            <ixx>7.3205729166700003e-05</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>7.3205729166700003e-05</iyy>
+            <iyz>0</iyz>
+            <izz>8.7890624999999997e-05</izz>
+          </inertia>
+        </inertial>
+        <collision name="rr_wheel_link_collision">
+          <pose>0 0 0 0 0 0</pose>
+          <geometry>
+            <sphere>
+              <radius>0.036499999999999998</radius>
+            </sphere>
+          </geometry>
+          <surface>
+            <contact>
+              <ode />
+            </contact>
+            <friction>
+              <ode>
+                <mu>0.01</mu>
+                <mu2>0.01</mu2>
+              </ode>
+            </friction>
+          </surface>
+        </collision>
+        <visual name="rr_wheel_link_visual">
+          <pose>0 0 0 0 0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/robot/HW/URDF/tracer/meshes/castor.dae</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+      <joint name="piper_joint1" type="revolute">
+        <pose relative_to="base_link">0.0067516150909999991 -1.2421929881687281e-15 0.93811 -9.9116705936300002e-18 -6.9388939039100002e-18 -4.1061244550799998e-16</pose>
+        <parent>base_link</parent>
+        <child>piper_link1</child>
+        <axis>
+          <xyz>0 0 1</xyz>
+          <limit>
+            <lower>-2.6179937999999998</lower>
+            <upper>2.6179937999999998</upper>
+            <effort>100</effort>
+            <velocity>5</velocity>
+          </limit>
+          <dynamics>
+            <spring_reference>0</spring_reference>
+            <spring_stiffness>0</spring_stiffness>
+          </dynamics>
+        </axis>
+      </joint>
+      <link name="piper_link1">
+        <pose relative_to="piper_joint1">0 0 0 0 0 0</pose>
+        <inertial>
+          <pose>0.00032000000000000003 -0.00040999999999999999 -0.00348 0 0 0</pose>
+          <mass>0.70999999999999996</mass>
+          <inertia>
+            <ixx>0.00050027000000000003</ixx>
+            <ixy>7.8000000000000005e-07</ixy>
+            <ixz>6.2600000000000002e-06</ixz>
+            <iyy>0.00040879000000000002</iyy>
+            <iyz>4.6199999999999998e-06</iyz>
+            <izz>0.00045802000000000001</izz>
+          </inertia>
+        </inertial>
+        <collision name="piper_link1_collision">
+          <pose>0 0 0 0 0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/robot/HW/URDF/piper/meshes/link1.stl</uri>
+            </mesh>
+          </geometry>
+        </collision>
+        <visual name="piper_link1_visual">
+          <pose>0 0 0 0 0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/robot/HW/URDF/piper/meshes/dae/link1.dae</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+      <joint name="piper_joint2" type="revolute">
+        <pose relative_to="piper_link1">0 0 0 1.5707963 -0.13578660000000015 -3.1415926000000001</pose>
+        <parent>piper_link1</parent>
+        <child>piper_link2</child>
+        <axis>
+          <xyz>0 0 1</xyz>
+          <limit>
+            <lower>0</lower>
+            <upper>3.1415926000000001</upper>
+            <effort>100</effort>
+            <velocity>5</velocity>
+          </limit>
+          <dynamics>
+            <spring_reference>0</spring_reference>
+            <spring_stiffness>0</spring_stiffness>
+          </dynamics>
+        </axis>
+      </joint>
+      <link name="piper_link2">
+        <pose relative_to="piper_joint2">0 0 0 0 0 0</pose>
+        <inertial>
+          <pose>0.21851999999999999 -0.0086099999999999996 0.0012600000000000001 0 0 0</pose>
+          <mass>1.1599999999999999</mass>
+          <inertia>
+            <ixx>0.00111915</ixx>
+            <ixy>0.00182916</ixy>
+            <ixz>0.00019233</ixz>
+            <iyy>0.067632510000000007</iyy>
+            <iyz>7.6699999999999994e-06</iyz>
+            <izz>0.067558999999999994</izz>
+          </inertia>
+        </inertial>
+        <collision name="piper_link2_collision">
+          <pose>0 0 0 0 0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/robot/HW/URDF/piper/meshes/link2.stl</uri>
+            </mesh>
+          </geometry>
+        </collision>
+        <visual name="piper_link2_visual">
+          <pose>0 0 0 0 0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/robot/HW/URDF/piper/meshes/dae/link2.dae</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+      <joint name="piper_joint3" type="revolute">
+        <pose relative_to="piper_link2">0.28503000000000001 0 0 0 0 -1.7938494</pose>
+        <parent>piper_link2</parent>
+        <child>piper_link3</child>
+        <axis>
+          <xyz>0 0 1</xyz>
+          <limit>
+            <lower>-2.9670597000000001</lower>
+            <upper>0</upper>
+            <effort>100</effort>
+            <velocity>5</velocity>
+          </limit>
+          <dynamics>
+            <spring_reference>0</spring_reference>
+            <spring_stiffness>0</spring_stiffness>
+          </dynamics>
+        </axis>
+      </joint>
+      <link name="piper_link3">
+        <pose relative_to="piper_joint3">0 0 0 0 0 0</pose>
+        <inertial>
+          <pose>-0.019990000000000001 -0.14807999999999999 -0.00052999999999999998 0 0 0</pose>
+          <mass>0.5</mass>
+          <inertia>
+            <ixx>0.01347608</ixx>
+            <ixy>0.00161034</ixy>
+            <ixz>6.6000000000000003e-07</ixz>
+            <iyy>0.00046377000000000001</iyy>
+            <iyz>1.6199999999999999e-06</iyz>
+            <izz>0.01363321</izz>
+          </inertia>
+        </inertial>
+        <collision name="piper_link3_collision">
+          <pose>0 0 0 0 0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/robot/HW/URDF/piper/meshes/link3.stl</uri>
+            </mesh>
+          </geometry>
+        </collision>
+        <visual name="piper_link3_visual">
+          <pose>0 0 0 0 0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/robot/HW/URDF/piper/meshes/dae/link3.dae</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+      <joint name="piper_joint4" type="revolute">
+        <pose relative_to="piper_link3">-0.02198 -0.25074999999999997 0 1.5707963 0 0</pose>
+        <parent>piper_link3</parent>
+        <child>piper_link4</child>
+        <axis>
+          <xyz>0 0 1</xyz>
+          <limit>
+            <lower>-1.7453292</lower>
+            <upper>1.7453292</upper>
+            <effort>100</effort>
+            <velocity>5</velocity>
+          </limit>
+          <dynamics>
+            <spring_reference>0</spring_reference>
+            <spring_stiffness>0</spring_stiffness>
+          </dynamics>
+        </axis>
+      </joint>
+      <link name="piper_link4">
+        <pose relative_to="piper_joint4">0 0 0 0 0 0</pose>
+        <inertial>
+          <pose>0.00012999999999999999 -0.00076000000000000004 -0.0039399999999999999 0 0 0</pose>
+          <mass>0.38</mass>
+          <inertia>
+            <ixx>0.00017844000000000001</ixx>
+            <ixy>6.1999999999999999e-07</ixy>
+            <ixz>6.7000000000000004e-07</ixz>
+            <iyy>0.00018913999999999999</iyy>
+            <iyz>4.0799999999999999e-06</iyz>
+            <izz>0.00014613000000000001</izz>
+          </inertia>
+        </inertial>
+        <collision name="piper_link4_collision">
+          <pose>0 0 0 0 0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/robot/HW/URDF/piper/meshes/link4.stl</uri>
+            </mesh>
+          </geometry>
+        </collision>
+        <visual name="piper_link4_visual">
+          <pose>0 0 0 0 0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/robot/HW/URDF/piper/meshes/dae/link4.dae</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+      <joint name="piper_joint5" type="revolute">
+        <pose relative_to="piper_link4">0 0 0 -1.5707963 0 0</pose>
+        <parent>piper_link4</parent>
+        <child>piper_link5</child>
+        <axis>
+          <xyz>0 0 1</xyz>
+          <limit>
+            <lower>-1.2217304</lower>
+            <upper>1.2217304</upper>
+            <effort>100</effort>
+            <velocity>5</velocity>
+          </limit>
+          <dynamics>
+            <spring_reference>0</spring_reference>
+            <spring_stiffness>0</spring_stiffness>
+          </dynamics>
+        </axis>
+      </joint>
+      <link name="piper_link5">
+        <pose relative_to="piper_joint5">0 0 0 0 0 0</pose>
+        <inertial>
+          <pose>0.00018000000000000001 -0.061039999999999997 -0.0022699999999999999 0 0 0</pose>
+          <mass>0.38300000000000001</mass>
+          <inertia>
+            <ixx>0.0017231799999999999</ixx>
+            <ixy>2.5900000000000002e-06</ixy>
+            <ixz>9.9999999999999995e-08</ixz>
+            <iyy>0.00017935999999999999</iyy>
+            <iyz>9.9000000000000001e-06</iyz>
+            <izz>0.0017117199999999999</izz>
+          </inertia>
+        </inertial>
+        <collision name="piper_link5_collision">
+          <pose>0 0 0 0 0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/robot/HW/URDF/piper/meshes/link5.stl</uri>
+            </mesh>
+          </geometry>
+        </collision>
+        <visual name="piper_link5_visual">
+          <pose>0 0 0 0 0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/robot/HW/URDF/piper/meshes/dae/link5.dae</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+      <joint name="piper_joint6" type="revolute">
+        <pose relative_to="piper_link5">8.8258999999999996e-05 -0.090999999999999998 0 1.5707963 0 0</pose>
+        <parent>piper_link5</parent>
+        <child>piper_link6</child>
+        <axis>
+          <xyz>0 0 1</xyz>
+          <limit>
+            <lower>-2.0943950999999998</lower>
+            <upper>2.0943950999999998</upper>
+            <effort>100</effort>
+            <velocity>5</velocity>
+          </limit>
+          <dynamics>
+            <spring_reference>0</spring_reference>
+            <spring_stiffness>0</spring_stiffness>
+          </dynamics>
+        </axis>
+      </joint>
+      <link name="piper_link6">
+        <pose relative_to="piper_joint6">0 0 0 0 0 0</pose>
+        <inertial>
+          <pose>-3.0000000000000001e-05 6.0000000000000002e-05 -0.002 0 0 0</pose>
+          <mass>0.0070000000000000001</mass>
+          <inertia>
+            <ixx>0.0015211199999999999</ixx>
+            <ixy>2.0200000000000001e-06</ixy>
+            <ixz>2.61e-06</ixz>
+            <iyy>0.0013862600000000001</iyy>
+            <iyz>2e-08</iyz>
+            <izz>0.00031152000000000003</izz>
+          </inertia>
+        </inertial>
+        <collision name="piper_link6_collision">
+          <pose>0 0 0 0 0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/robot/HW/URDF/piper/meshes/link6.stl</uri>
+            </mesh>
+          </geometry>
+        </collision>
+        <visual name="piper_link6_visual">
+          <pose>0 0 0 0 0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/robot/HW/URDF/piper/meshes/dae/link6.dae</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+      <joint name="piper_flange_joint" type="fixed">
+        <pose relative_to="piper_link6">0 0 0 0 0 0</pose>
+        <parent>piper_link6</parent>
+        <child>piper_flange_link</child>
+        <axis>
+          <dynamics>
+            <spring_reference>0</spring_reference>
+            <spring_stiffness>0</spring_stiffness>
+          </dynamics>
+          <xyz>0 0 1</xyz>
+          <limit>
+            <lower>-inf</lower>
+            <upper>inf</upper>
+          </limit>
+        </axis>
+        <physics>
+          <ode>
+            <limit>
+              <cfm>0</cfm>
+              <erp>0.20000000000000001</erp>
+            </limit>
+          </ode>
+        </physics>
+      </joint>
+      <link name="piper_flange_link">
+        <pose relative_to="piper_flange_joint">0 0 0 0 0 0</pose>
+        <inertial>
+          <pose>0.001151691 0.00078242800000000005 0.0047980510000000002 0 0 0</pose>
+          <mass>0.040000000000000001</mass>
+          <inertia>
+            <ixx>9.9353889999999997e-06</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>1.0508003e-05</iyy>
+            <iyz>0</iyz>
+            <izz>1.9652872999999999e-05</izz>
+          </inertia>
+        </inertial>
+        <collision name="piper_flange_link_collision">
+          <pose>0 0 0 0 0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/robot/HW/URDF/piper/meshes/flange.stl</uri>
+            </mesh>
+          </geometry>
+        </collision>
+        <visual name="piper_flange_link_visual">
+          <pose>0 0 0 0 0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/robot/HW/URDF/piper/meshes/dae/flange.dae</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+      <joint name="piper_gripper_base_joint" type="fixed">
+        <pose relative_to="piper_flange_link">0 0 0.0044999999999999997 0 0 0</pose>
+        <parent>piper_flange_link</parent>
+        <child>piper_gripper_base</child>
+        <axis>
+          <dynamics>
+            <spring_reference>0</spring_reference>
+            <spring_stiffness>0</spring_stiffness>
+          </dynamics>
+          <xyz>0 0 1</xyz>
+          <limit>
+            <lower>-inf</lower>
+            <upper>inf</upper>
+          </limit>
+        </axis>
+        <physics>
+          <ode>
+            <limit>
+              <cfm>0</cfm>
+              <erp>0.20000000000000001</erp>
+            </limit>
+          </ode>
+        </physics>
+      </joint>
+      <link name="piper_gripper_base">
+        <pose relative_to="piper_gripper_base_joint">0 0 0 0 0 0</pose>
+        <inertial>
+          <pose>-0.01065301567299989 -0.00036286557715009809 0.029578286117167441 0 0 0</pose>
+          <mass>0.54006523810710005</mass>
+          <inertia>
+            <ixx>0.001011589911851692</ixx>
+            <ixy>-1.0451729849064981e-05</ixy>
+            <ixz>-7.4825409375472082e-05</ixz>
+            <iyy>0.001051118155929119</iyy>
+            <iyz>-2.820976876746315e-06</iyz>
+            <izz>0.00075978709277127324</izz>
+          </inertia>
+        </inertial>
+        <collision name="piper_gripper_base_collision">
+          <pose>0 0 0 0 0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/robot/HW/URDF/piper/meshes/gripper_base.stl</uri>
+            </mesh>
+          </geometry>
+        </collision>
+        <collision name="piper_gripper_base_fixed_joint_lump__wrist_camera_mount_link_collision_1">
+          <pose>-0.04569541541320532 -0.001895115750006485 0.00066988208746943112 -1.570799564254824 -1.2662970102157158e-05 1.6128249746224552</pose>
+          <geometry>
+            <box>
+              <size>0.059999999999999998 0.012999999999999999 0.061499999999999999</size>
+            </box>
+          </geometry>
+        </collision>
+        <collision name="piper_gripper_base_fixed_joint_lump__wrist_camera_cad_link_collision_2">
+          <pose>-0.066429305458514054 -0.002715296084147742 0.019992815408228479 -3.2374599271229942e-06 -1.2662970102193285e-05 1.6128249746224552</pose>
+          <geometry>
+            <box>
+              <size>0.089895801058999997 0.024999957719500001 0.025646000316399999</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="piper_gripper_base_visual">
+          <pose>0 0 0 0 0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/robot/HW/URDF/piper/meshes/dae/gripper_base.dae</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <visual name="piper_gripper_base_fixed_joint_lump__wrist_camera_mount_link_visual_1">
+          <pose>1.4166402004356369e-05 2.7045737653415631e-05 0.0071700302007058903 -1.570799564254824 -1.2662970102157158e-05 1.6128249746224552</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/robot/HW/URDF/wrist_camera_description/meshes/wrist_camera_mount_link.stl</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <visual name="piper_gripper_base_fixed_joint_lump__wrist_camera_cad_link_visual_2">
+          <pose>-0.066427176901003165 -0.0027673569241174691 0.032219814907481083 -3.2374599271229942e-06 -1.2662970102193285e-05 1.6128249746224552</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/robot/HW/URDF/wrist_camera_description/meshes/wrist_camera_cad_link.stl</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <sensor name="wrist_d435f_depth" type="depth_camera">
+          <topic>/robocup/wrist_camera/depth/image</topic>
+          <always_on>true</always_on>
+          <update_rate>30</update_rate>
+          <camera>
+            <horizontal_fov>1.5184364492350666</horizontal_fov>
+            <image>
+              <width>1280</width>
+              <height>720</height>
+              <format>R8G8B8</format>
+            </image>
+            <clip>
+              <near>0.20000000000000001</near>
+              <far>3</far>
+            </clip>
+          </camera>
+          <pose>-0.066427200000000006 -0.00276736 0.0322198 -3.1415926535893126 -1.5707926536057681 -3.0995513535897627</pose>
+          <gz_frame_id>wrist_camera_optical_frame</gz_frame_id>
+          <optical_frame_id>wrist_camera_optical_frame</optical_frame_id>
+        </sensor>
+        <sensor name="wrist_d435f_color" type="camera">
+          <topic>/robocup/wrist_camera/color/image</topic>
+          <always_on>true</always_on>
+          <update_rate>30</update_rate>
+          <camera>
+            <horizontal_fov>1.2042771838760873</horizontal_fov>
+            <image>
+              <width>1920</width>
+              <height>1080</height>
+              <format>R8G8B8</format>
+            </image>
+            <clip>
+              <near>0.01</near>
+              <far>100</far>
+            </clip>
+          </camera>
+          <pose>-0.066427200000000006 -0.00276736 0.0322198 -3.1415926535893126 -1.5707926536057681 -3.0995513535897627</pose>
+          <gz_frame_id>wrist_camera_optical_frame</gz_frame_id>
+          <optical_frame_id>wrist_camera_optical_frame</optical_frame_id>
+        </sensor>
+      </link>
+      <joint name="piper_gripper_joint1" type="prismatic">
+        <pose relative_to="piper_gripper_base">0 0 0.13800000000000001 1.5707963 0 0</pose>
+        <parent>piper_gripper_base</parent>
+        <child>piper_gripper_link1</child>
+        <axis>
+          <xyz>0 0 1</xyz>
+          <limit>
+            <lower>0</lower>
+            <upper>0.050000000000000003</upper>
+            <effort>10</effort>
+            <velocity>3</velocity>
+          </limit>
+          <dynamics>
+            <spring_reference>0</spring_reference>
+            <spring_stiffness>0</spring_stiffness>
+          </dynamics>
+        </axis>
+      </joint>
+      <link name="piper_gripper_link1">
+        <pose relative_to="piper_gripper_joint1">0 0 0 0 0 0</pose>
+        <inertial>
+          <pose>0.00065123185041968004 -0.049192986913198899 0.0097225876918402496 0 0 0</pose>
+          <mass>0.025000000000000001</mass>
+          <inertia>
+            <ixx>7.3709999999999997e-05</ixx>
+            <ixy>-1.13e-06</ixy>
+            <ixz>2.1e-07</ixz>
+            <iyy>7.8099999999999998e-06</iyy>
+            <iyz>-1.3720000000000001e-05</iyz>
+            <izz>7.47e-05</izz>
+          </inertia>
+        </inertial>
+        <collision name="piper_gripper_link1_collision">
+          <pose>0 0 0 0 0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/robot/HW/URDF/piper/meshes/gripper_link1.stl</uri>
+            </mesh>
+          </geometry>
+        </collision>
+        <visual name="piper_gripper_link1_visual">
+          <pose>0 0 0 0 0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/robot/HW/URDF/piper/meshes/dae/gripper_link1.dae</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+      <joint name="piper_gripper_joint2" type="prismatic">
+        <pose relative_to="piper_gripper_base">0 0 0.13800000000000001 1.5707963 3.5780645337211141e-24 -3.1415926000000001</pose>
+        <parent>piper_gripper_base</parent>
+        <child>piper_gripper_link2</child>
+        <axis>
+          <xyz>0 0 -1</xyz>
+          <limit>
+            <lower>-0.050000000000000003</lower>
+            <upper>0</upper>
+            <effort>10</effort>
+            <velocity>3</velocity>
+          </limit>
+          <dynamics>
+            <spring_reference>0</spring_reference>
+            <spring_stiffness>0</spring_stiffness>
+          </dynamics>
+        </axis>
+      </joint>
+      <link name="piper_gripper_link2">
+        <pose relative_to="piper_gripper_joint2">0 0 0 0 0 0</pose>
+        <inertial>
+          <pose>0.00065123185041968004 -0.049192986913198899 0.0097225876918402496 0 0 0</pose>
+          <mass>0.025000000000000001</mass>
+          <inertia>
+            <ixx>7.3709999999999997e-05</ixx>
+            <ixy>-1.13e-06</ixy>
+            <ixz>2.1e-07</ixz>
+            <iyy>7.8099999999999998e-06</iyy>
+            <iyz>-1.3720000000000001e-05</iyz>
+            <izz>7.47e-05</izz>
+          </inertia>
+        </inertial>
+        <collision name="piper_gripper_link2_collision">
+          <pose>0 0 0 0 0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/robot/HW/URDF/piper/meshes/gripper_link2.stl</uri>
+            </mesh>
+          </geometry>
+        </collision>
+        <visual name="piper_gripper_link2_visual">
+          <pose>0 0 0 0 0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/robot/HW/URDF/piper/meshes/dae/gripper_link2.dae</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+      <frame name="inertial_joint" attached_to="base_link">
+        <pose>0 0 0 0 0 0</pose>
+      </frame>
+      <frame name="inertial_link" attached_to="inertial_joint">
+        <pose>0 0 0 0 0 0</pose>
+      </frame>
+      <frame name="cad_2D_LiDARMount_1_joint" attached_to="rack_base_link">
+        <pose>0.00017499953660000001 -9.2081897659999995e-12 0.29499999999999998 3.1415926535895871 1.9428902930898398e-16 -1.57079632679</pose>
+      </frame>
+      <frame name="cad_2D_LiDARMount_1" attached_to="cad_2D_LiDARMount_1_joint">
+        <pose>0 0 0 0 0 0</pose>
+      </frame>
+      <frame name="cad_3D_LiDAR_Camera_mount_1_joint" attached_to="rack_base_link">
+        <pose>-0.17999999999999999 -2.6112445539999999e-15 1.23 2.8124884692630977e-42 1.2510840918700012e-29 1.57079632679</pose>
+      </frame>
+      <frame name="cad_3D_LiDAR_Camera_mount_1" attached_to="cad_3D_LiDAR_Camera_mount_1_joint">
+        <pose>0 0 0 0 0 0</pose>
+      </frame>
+      <frame name="cad_D435f_Solid_v1_1_joint" attached_to="rack_base_link">
+        <pose>-0.12495000000000001 -2.6112445539999999e-15 1.27 1.57079632679 -5.5511151231257827e-17 1.57079632679</pose>
+      </frame>
+      <frame name="cad_D435f_Solid_v1_1" attached_to="cad_D435f_Solid_v1_1_joint">
+        <pose>0 0 0 0 0 0</pose>
+      </frame>
+      <frame name="rack_to_piper_base" attached_to="cad_Manipulator_mount_1">
+        <pose>0 0 0.0038 0 0 0</pose>
+      </frame>
+      <frame name="piper_base_link" attached_to="rack_to_piper_base">
+        <pose>0 0 0 0 0 0</pose>
+      </frame>
+      <frame name="wrist_camera_optical_joint" attached_to="wrist_camera_link">
+        <pose>0 0 0 -1.5707963267948959 -1.6653345369377348e-16 -1.5707963267948959</pose>
+      </frame>
+      <frame name="wrist_camera_optical_frame" attached_to="wrist_camera_optical_joint">
+        <pose>0 0 0 0 0 0</pose>
+      </frame>
+      <frame name="wrist_camera_body_frame" attached_to="wrist_camera_cad_link">
+        <pose>0 0 0 -1.5707963267948957 -1.5707963267948966 0</pose>
+      </frame>
+      <frame name="wrist_camera_link" attached_to="wrist_camera_body_frame">
+        <pose>0 0 0 0 0 0</pose>
+      </frame>
+      <frame name="wrist_mount_to_camera" attached_to="wrist_camera_mount_link">
+        <pose>0 -0.025049999999999999 0.066500000000000004 1.5707963267948959 0 0</pose>
+      </frame>
+      <frame name="wrist_camera_cad_link" attached_to="wrist_mount_to_camera">
+        <pose>0 0 0 0 0 0</pose>
+      </frame>
+      <frame name="piper_to_wrist_camera_mount" attached_to="piper_gripper_base">
+        <pose>1.4166402004356369e-05 2.7045737653415631e-05 0.0071700302007058903 -1.5707995642548229 -1.2662970102167642e-05 1.612824974622455</pose>
+      </frame>
+      <frame name="wrist_camera_mount_link" attached_to="piper_to_wrist_camera_mount">
+        <pose>0 0 0 0 0 0</pose>
+      </frame>
+      <frame name="cad_Manipulator_mount_1_joint" attached_to="rack_base_link">
+        <pose>0.0067516150909999999 -1.2434497879999999e-15 0.79520000000000002 -9.9116705936300002e-18 -6.9388939039100002e-18 -4.1061244550799998e-16</pose>
+      </frame>
+      <frame name="cad_Manipulator_mount_1" attached_to="cad_Manipulator_mount_1_joint">
+        <pose>0 0 0 0 0 0</pose>
+      </frame>
+      <frame name="cad_YDLIDAR_G2_base_1_Base_1_joint" attached_to="rack_base_link">
+        <pose>0.00017499953660000001 -9.2082252929999998e-12 0.29499999999999998 5.5466782398400026e-32 9.6071285246299987e-32 -1.0471975512</pose>
+      </frame>
+      <frame name="cad_YDLIDAR_G2_base_1_Base_1" attached_to="cad_YDLIDAR_G2_base_1_Base_1_joint">
+        <pose>0 0 0 0 0 0</pose>
+      </frame>
+      <frame name="cad_YDLIDAR_G2_base_1_joint" attached_to="rack_base_link">
+        <pose>0.15271129419999999 0.13500000000000001 0.59777222610000003 0 0 0</pose>
+      </frame>
+      <frame name="cad_YDLIDAR_G2_base_1" attached_to="cad_YDLIDAR_G2_base_1_joint">
+        <pose>0 0 0 0 0 0</pose>
+      </frame>
+      <frame name="cad_YDLIDAR_G2_top_1_TOP_1_joint" attached_to="rack_base_link">
+        <pose>0.00017499953660000001 -9.2082785840000001e-12 0.3266 2.6308563266000001e-32 -4.0772257666000001e-33 0.153753971696</pose>
+      </frame>
+      <frame name="cad_YDLIDAR_G2_top_1_TOP_1" attached_to="cad_YDLIDAR_G2_top_1_TOP_1_joint">
+        <pose>0 0 0 0 0 0</pose>
+      </frame>
+      <frame name="cad_YDLIDAR_G2_top_1_joint" attached_to="rack_base_link">
+        <pose>0.15271129419999999 0.13500000000000001 0.4477722261 0 0 0</pose>
+      </frame>
+      <frame name="cad_YDLIDAR_G2_top_1" attached_to="cad_YDLIDAR_G2_top_1_joint">
+        <pose>0 0 0 0 0 0</pose>
+      </frame>
+      <frame name="cad____1_1_OUT_SHELL_1_joint" attached_to="rack_base_link">
+        <pose>-0.17999999999999999 -2.5757174169999999e-15 1.2038068559999999 -1.57079632679 1.2865616251663514e-33 6.1232339957400004e-17</pose>
+      </frame>
+      <frame name="cad____1_1_OUT_SHELL_1" attached_to="cad____1_1_OUT_SHELL_1_joint">
+        <pose>0 0 0 0 0 0</pose>
+      </frame>
+      <frame name="cad_bracket_10_joint" attached_to="rack_base_link">
+        <pose>0.094340867980000007 -0.22298045350000001 0.28999999999999998 6.1232339957399893e-17 1.3420877339200016e-15 1.57079632679</pose>
+      </frame>
+      <frame name="cad_bracket_10" attached_to="cad_bracket_10_joint">
+        <pose>0 0 0 0 0 0</pose>
+      </frame>
+      <frame name="cad_bracket_11_joint" attached_to="rack_base_link">
+        <pose>-0.145659132 -0.22298045350000001 0.28999999999999998 6.1232339957399991e-17 6.1232339957400053e-17 1.57079632679</pose>
+      </frame>
+      <frame name="cad_bracket_11" attached_to="cad_bracket_11_joint">
+        <pose>0 0 0 0 0 0</pose>
+      </frame>
+      <frame name="cad_bracket_12_joint" attached_to="rack_base_link">
+        <pose>0.025659132019999999 0.2233304535 0.28999999999999998 -6.1232339957400065e-17 2.2952630990700028e-15 -1.57079632679</pose>
+      </frame>
+      <frame name="cad_bracket_12" attached_to="cad_bracket_12_joint">
+        <pose>0 0 0 0 0 0</pose>
+      </frame>
+      <frame name="cad_bracket_13_joint" attached_to="rack_base_link">
+        <pose>-0.145659132 0.2066695465 0.28999999999999998 2.8187954981999983e-16 6.1232339957400102e-17 1.57079632679</pose>
+      </frame>
+      <frame name="cad_bracket_13" attached_to="cad_bracket_13_joint">
+        <pose>0 0 0 0 0 0</pose>
+      </frame>
+      <frame name="cad_bracket_14_joint" attached_to="rack_base_link">
+        <pose>0.025659132019999999 -0.2066695465 0.28999999999999998 -6.1232339957399942e-17 -1.3420877339200016e-15 -1.57079632679</pose>
+      </frame>
+      <frame name="cad_bracket_14" attached_to="cad_bracket_14_joint">
+        <pose>0 0 0 0 0 0</pose>
+      </frame>
+      <frame name="cad_bracket_15_joint" attached_to="rack_base_link">
+        <pose>0.051669546470000001 0.19500000000000001 0.73565913199999999 1.57079632679 -7.2164496600600041e-16 2.636779683479999e-15</pose>
+      </frame>
+      <frame name="cad_bracket_15" attached_to="cad_bracket_15_joint">
+        <pose>0 0 0 0 0 0</pose>
+      </frame>
+      <frame name="cad_bracket_16_joint" attached_to="rack_base_link">
+        <pose>-0.18833045349999999 0.19500000000000001 0.73565913199999999 1.57079632679 -3.8857805861899988e-16 -3.8857805861899998e-16</pose>
+      </frame>
+      <frame name="cad_bracket_16" attached_to="cad_bracket_16_joint">
+        <pose>0 0 0 0 0 0</pose>
+      </frame>
+      <frame name="cad_bracket_17_joint" attached_to="rack_base_link">
+        <pose>0.051669546470000001 -0.180659132 0.75 -3.1415926535895871 -1.4443407890999997e-29 1.91513471748e-15</pose>
+      </frame>
+      <frame name="cad_bracket_17" attached_to="cad_bracket_17_joint">
+        <pose>0 0 0 0 0 0</pose>
+      </frame>
+      <frame name="cad_bracket_18_joint" attached_to="rack_base_link">
+        <pose>-0.18833045349999999 -0.180659132 0.75 3.1415926535895871 -1.14802924234e-29 -3.2457918805999589e-45</pose>
+      </frame>
+      <frame name="cad_bracket_18" attached_to="cad_bracket_18_joint">
+        <pose>0 0 0 0 0 0</pose>
+      </frame>
+      <frame name="cad_bracket_1_joint" attached_to="rack_base_link">
+        <pose>0.080000000000000002 0.180659132 0.27780545350000002 1.2767564783199999e-15 1.5707963267948966 0</pose>
+      </frame>
+      <frame name="cad_bracket_1" attached_to="cad_bracket_1_joint">
+        <pose>0 0 0 0 0 0</pose>
+      </frame>
+      <frame name="cad_bracket_21_joint" attached_to="rack_base_link">
+        <pose>-0.18833045349999999 0.11065913199999999 0.79000000000000004 1.26957301934e-29 -1.4791141972700001e-31 -1.87784347738e-60</pose>
+      </frame>
+      <frame name="cad_bracket_21" attached_to="cad_bracket_21_joint">
+        <pose>0 0 0 0 0 0</pose>
+      </frame>
+      <frame name="cad_bracket_22_joint" attached_to="rack_base_link">
+        <pose>-0.18833045349999999 -0.125 0.80434086800000004 -1.57079632679 3.2293993307500002e-29 -3.2293993307500002e-29</pose>
+      </frame>
+      <frame name="cad_bracket_22" attached_to="cad_bracket_22_joint">
+        <pose>0 0 0 0 0 0</pose>
+      </frame>
+      <frame name="cad_bracket_23_joint" attached_to="rack_base_link">
+        <pose>-0.18833045349999999 -0.11065913199999999 1.25 3.1415926535895871 2.8125246238699999e-42 -7.2445432630613699e-71</pose>
+      </frame>
+      <frame name="cad_bracket_23" attached_to="cad_bracket_23_joint">
+        <pose>0 0 0 0 0 0</pose>
+      </frame>
+      <frame name="cad_bracket_24_joint" attached_to="rack_base_link">
+        <pose>-0.18833045349999999 0.125 1.2356591320000001 1.57079632679 2.8125246238699996e-42 7.4044736707187769e-59</pose>
+      </frame>
+      <frame name="cad_bracket_24" attached_to="cad_bracket_24_joint">
+        <pose>0 0 0 0 0 0</pose>
+      </frame>
+      <frame name="cad_bracket_2_joint" attached_to="rack_base_link">
+        <pose>0.025659132019999999 0.19500000000000001 0.2779804535 1.57079632679 1.5707963118937354 0</pose>
+      </frame>
+      <frame name="cad_bracket_2" attached_to="cad_bracket_2_joint">
+        <pose>0 0 0 0 0 0</pose>
+      </frame>
+      <frame name="cad_bracket_3_joint" attached_to="rack_base_link">
+        <pose>-0.025659132019999999 0.19500000000000001 0.26166954650000002 1.57079632679 -1.5707963118937354 0</pose>
+      </frame>
+      <frame name="cad_bracket_3" attached_to="cad_bracket_3_joint">
+        <pose>0 0 0 0 0 0</pose>
+      </frame>
+      <frame name="cad_bracket_4_joint" attached_to="rack_base_link">
+        <pose>-0.080000000000000002 0.180659132 0.26166954650000002 3.5357229073899984e-16 -1.5707963267948966 0</pose>
+      </frame>
+      <frame name="cad_bracket_4" attached_to="cad_bracket_4_joint">
+        <pose>0 0 0 0 0 0</pose>
+      </frame>
+      <frame name="cad_bracket_5_joint" attached_to="rack_base_link">
+        <pose>0.080000000000000002 -0.180659132 0.26166954650000002 -3.1415926535895871 -1.5707963267948966 0</pose>
+      </frame>
+      <frame name="cad_bracket_5" attached_to="cad_bracket_5_joint">
+        <pose>0 0 0 0 0 0</pose>
+      </frame>
+      <frame name="cad_bracket_6_joint" attached_to="rack_base_link">
+        <pose>0.025659132019999999 -0.19500000000000001 0.26166954650000002 -1.57079632679 -1.5707963118937354 0</pose>
+      </frame>
+      <frame name="cad_bracket_6" attached_to="cad_bracket_6_joint">
+        <pose>0 0 0 0 0 0</pose>
+      </frame>
+      <frame name="cad_bracket_7_joint" attached_to="rack_base_link">
+        <pose>-0.040000000000000001 -0.180659132 0.26166954650000002 -3.1415926535895871 -1.5707963267948966 0</pose>
+      </frame>
+      <frame name="cad_bracket_7" attached_to="cad_bracket_7_joint">
+        <pose>0 0 0 0 0 0</pose>
+      </frame>
+      <frame name="cad_bracket_8_joint" attached_to="rack_base_link">
+        <pose>-0.080000000000000002 -0.180659132 0.2779804535 -3.1415926535895871 1.5707963267948966 0</pose>
+      </frame>
+      <frame name="cad_bracket_8" attached_to="cad_bracket_8_joint">
+        <pose>0 0 0 0 0 0</pose>
+      </frame>
+      <frame name="cad_bracket_9_joint" attached_to="rack_base_link">
+        <pose>0.094340867980000007 0.2066695465 0.28999999999999998 6.1232339957400053e-17 -2.2952630990700028e-15 1.57079632679</pose>
+      </frame>
+      <frame name="cad_bracket_9" attached_to="cad_bracket_9_joint">
+        <pose>0 0 0 0 0 0</pose>
+      </frame>
+      <frame name="cad_component_51_joint" attached_to="rack_base_link">
+        <pose>0.15271129419999999 0.13500000000000001 1.2477722259999999 0 0 0</pose>
+      </frame>
+      <frame name="cad_component_51" attached_to="cad_component_51_joint">
+        <pose>0 0 0 0 0 0</pose>
+      </frame>
+      <frame name="cad_mid_360s_axis_1_joint" attached_to="rack_base_link">
+        <pose>-0.17999999999999999 -2.5757174169999999e-15 1.1830000000000001 -3.1415926535895871 5.6248120357998157e-42 6.1232339957400004e-17</pose>
+      </frame>
+      <frame name="cad_mid_360s_axis_1" attached_to="cad_mid_360s_axis_1_joint">
+        <pose>0 0 0 0 0 0</pose>
+      </frame>
+      <frame name="cad_profiles_250mm_1_joint" attached_to="rack_base_link">
+        <pose>0.15271129419999999 0.18722777390000001 0.19 1.57079632679 0 0</pose>
+      </frame>
+      <frame name="cad_profiles_250mm_1" attached_to="cad_profiles_250mm_1_joint">
+        <pose>0 0 0 0 0 0</pose>
+      </frame>
+      <frame name="cad_profiles_250mm_2_joint" attached_to="rack_base_link">
+        <pose>0.15271129419999999 -0.24277222609999999 0.19 1.57079632679 0 0</pose>
+      </frame>
+      <frame name="cad_profiles_250mm_2" attached_to="cad_profiles_250mm_2_joint">
+        <pose>0 0 0 0 0 0</pose>
+      </frame>
+      <frame name="cad_profiles_250mm_3_joint" attached_to="rack_base_link">
+        <pose>-0.2072887058 -0.24277222609999999 0.19 1.57079632679 -5.60570269243e-47 -7.776680256911752e-64</pose>
+      </frame>
+      <frame name="cad_profiles_250mm_3" attached_to="cad_profiles_250mm_3_joint">
+        <pose>0 0 0 0 0 0</pose>
+      </frame>
+      <frame name="cad_profiles_250mm_4_joint" attached_to="rack_base_link">
+        <pose>-0.2072887058 0.24277222609999999 0.14000000000000001 -1.57079632679 -1.10933564797e-31 1.10933564797e-31</pose>
+      </frame>
+      <frame name="cad_profiles_250mm_4" attached_to="cad_profiles_250mm_4_joint">
+        <pose>0 0 0 0 0 0</pose>
+      </frame>
+      <frame name="cad_profiles_250mm_5_joint" attached_to="rack_base_link">
+        <pose>-0.2072887058 0.025000000000000001 1.297772226 -1.25108409187e-29 2.8125246238699999e-42 -3.5187048149300001e-71</pose>
+      </frame>
+      <frame name="cad_profiles_250mm_5" attached_to="cad_profiles_250mm_5_joint">
+        <pose>0 0 0 0 0 0</pose>
+      </frame>
+      <frame name="cad_profiles_320mm_1_joint" attached_to="rack_base_link">
+        <pose>-0.059999999999999998 -0.2422887058 0.047772226100000002 -3.4137787884100001e-17 6.0715321659200104e-18 1.57079632679</pose>
+      </frame>
+      <frame name="cad_profiles_320mm_1" attached_to="cad_profiles_320mm_1_joint">
+        <pose>0 0 0 0 0 0</pose>
+      </frame>
+      <frame name="cad_profiles_320mm_2_joint" attached_to="rack_base_link">
+        <pose>-0.059999999999999998 0.18771129419999999 0.047772226100000002 0 0 1.57079632679</pose>
+      </frame>
+      <frame name="cad_profiles_320mm_2" attached_to="cad_profiles_320mm_2_joint">
+        <pose>0 0 0 0 0 0</pose>
+      </frame>
+      <frame name="cad_profiles_320mm_3_joint" attached_to="rack_base_link">
+        <pose>-0.059999999999999998 -0.2422887058 0.29777222609999998 6.1232339957399991e-17 6.1232339957400053e-17 1.57079632679</pose>
+      </frame>
+      <frame name="cad_profiles_320mm_3" attached_to="cad_profiles_320mm_3_joint">
+        <pose>0 0 0 0 0 0</pose>
+      </frame>
+      <frame name="cad_profiles_320mm_4_joint" attached_to="rack_base_link">
+        <pose>-0.059999999999999998 0.18771129419999999 0.29777222609999998 6.1232339957399991e-17 6.1232339957400053e-17 1.57079632679</pose>
+      </frame>
+      <frame name="cad_profiles_320mm_4" attached_to="cad_profiles_320mm_4_joint">
+        <pose>0 0 0 0 0 0</pose>
+      </frame>
+      <frame name="cad_profiles_390mm_1_joint" attached_to="rack_base_link">
+        <pose>0.032711294160000001 0.095000000000000001 0.29777222609999998 1.10933564797e-31 1.41635147517e-46 -1.2767564783199999e-15</pose>
+      </frame>
+      <frame name="cad_profiles_390mm_1" attached_to="cad_profiles_390mm_1_joint">
+        <pose>0 0 0 0 0 0</pose>
+      </frame>
+      <frame name="cad_profiles_390mm_2_joint" attached_to="rack_base_link">
+        <pose>-0.087288705839999994 0.095000000000000001 0.29777222609999998 2.4612511596999998e-62 -1.10933564797e-31 1.36517682503e-93</pose>
+      </frame>
+      <frame name="cad_profiles_390mm_2" attached_to="cad_profiles_390mm_2_joint">
+        <pose>0 0 0 0 0 0</pose>
+      </frame>
+      <frame name="cad_profiles_390mm_3_joint" attached_to="rack_base_link">
+        <pose>-0.2072887058 0.095000000000000001 0.79777222609999998 8.6281661508499997e-32 -1.10933564797e-31 -3.8857805861899998e-16</pose>
+      </frame>
+      <frame name="cad_profiles_390mm_3" attached_to="cad_profiles_390mm_3_joint">
+        <pose>0 0 0 0 0 0</pose>
+      </frame>
+      <frame name="cad_profiles_390mm_4_joint" attached_to="rack_base_link">
+        <pose>0.032711294160000001 0.095000000000000001 0.79777222609999998 -1.28085539397e-15 -1.32993122724e-29 2.6367796834799998e-15</pose>
+      </frame>
+      <frame name="cad_profiles_390mm_4" attached_to="cad_profiles_390mm_4_joint">
+        <pose>0 0 0 0 0 0</pose>
+      </frame>
+      <frame name="cad_profiles_470mm_1_joint" attached_to="rack_base_link">
+        <pose>0.15271129419999999 0.13500000000000001 0.047772226100000002 0 0 0</pose>
+      </frame>
+      <frame name="cad_profiles_470mm_1" attached_to="cad_profiles_470mm_1_joint">
+        <pose>0 0 0 0 0 0</pose>
+      </frame>
+      <frame name="cad_profiles_470mm_2_joint" attached_to="rack_base_link">
+        <pose>-0.2072887058 0.13500000000000001 0.047772226100000002 0 0 1.10933564797e-31</pose>
+      </frame>
+      <frame name="cad_profiles_470mm_2" attached_to="cad_profiles_470mm_2_joint">
+        <pose>0 0 0 0 0 0</pose>
+      </frame>
+      <frame name="cad_profiles_500mm_1_joint" attached_to="rack_base_link">
+        <pose>-0.2072887058 -0.24277222609999999 0.68999999999999995 1.57079632679 3.2957990552778559e-44 3.8212323258400002e-30</pose>
+      </frame>
+      <frame name="cad_profiles_500mm_1" attached_to="cad_profiles_500mm_1_joint">
+        <pose>0 0 0 0 0 0</pose>
+      </frame>
+      <frame name="cad_profiles_500mm_2_joint" attached_to="rack_base_link">
+        <pose>-0.2072887058 0.18722777390000001 0.68999999999999995 1.57079632679 -1.10933564797e-31 -2.0369672746703671e-48</pose>
+      </frame>
+      <frame name="cad_profiles_500mm_2" attached_to="cad_profiles_500mm_2_joint">
+        <pose>0 0 0 0 0 0</pose>
+      </frame>
+      <frame name="cad_profiles_500mm_3_joint" attached_to="rack_base_link">
+        <pose>0.032711294160000001 -0.24277222609999999 0.68999999999999995 1.57079632679 -1.1528943357133869e-29 3.3584246494899997e-15</pose>
+      </frame>
+      <frame name="cad_profiles_500mm_3" attached_to="cad_profiles_500mm_3_joint">
+        <pose>0 0 0 0 0 0</pose>
+      </frame>
+      <frame name="cad_profiles_500mm_4_joint" attached_to="rack_base_link">
+        <pose>0.032711294160000001 0.18722777390000001 0.68999999999999995 1.57079632679 -1.2015914116214002e-29 9.7144514654699994e-16</pose>
+      </frame>
+      <frame name="cad_profiles_500mm_4" attached_to="cad_profiles_500mm_4_joint">
+        <pose>0 0 0 0 0 0</pose>
+      </frame>
+      <frame name="cad_profiles_500mm_5_joint" attached_to="rack_base_link">
+        <pose>-0.2072887058 -0.17277222610000001 1.1899999999999999 1.57079632679 2.8119411722271037e-42 -3.2293993307500002e-29</pose>
+      </frame>
+      <frame name="cad_profiles_500mm_5" attached_to="cad_profiles_500mm_5_joint">
+        <pose>0 0 0 0 0 0</pose>
+      </frame>
+      <frame name="cad_profiles_500mm_6_joint" attached_to="rack_base_link">
+        <pose>-0.2072887058 0.1172277739 1.1899999999999999 1.57079632679 -1.4791141972700054e-31 -1.8236245457399997e-29</pose>
+      </frame>
+      <frame name="cad_profiles_500mm_6" attached_to="cad_profiles_500mm_6_joint">
+        <pose>0 0 0 0 0 0</pose>
+      </frame>
+      <frame name="camera_cad_frame_joint" attached_to="camera_link">
+        <pose>0 0 0 1.5707963270000003 -5.5511151231257827e-17 1.5707963270000003</pose>
+      </frame>
+      <frame name="camera_cad_frame" attached_to="camera_cad_frame_joint">
+        <pose>0 0 0 0 0 0</pose>
+      </frame>
+      <frame name="camera_optical_joint" attached_to="camera_link">
+        <pose>0 0 0 -1.5707963270000003 -5.5511151231257827e-17 -1.5707963270000003</pose>
+      </frame>
+      <frame name="camera_optical_frame" attached_to="camera_optical_joint">
+        <pose>0 0 0 0 0 0</pose>
+      </frame>
+      <frame name="camera_link_joint" attached_to="rack_base_link">
+        <pose>-0.12495000000000001 -2.6112445539999999e-15 1.27 0 0 0</pose>
+      </frame>
+      <frame name="camera_link" attached_to="camera_link_joint">
+        <pose>0 0 0 0 0 0</pose>
+      </frame>
+      <frame name="laser_frame_joint" attached_to="g2_link">
+        <pose>0 0 0 2.6308563270000002e-32 -4.0772257670000024e-33 0.15375397169999999</pose>
+      </frame>
+      <frame name="laser_frame" attached_to="laser_frame_joint">
+        <pose>0 0 0 0 0 0</pose>
+      </frame>
+      <frame name="g2_link_joint" attached_to="rack_base_link">
+        <pose>0.00017499953660000001 -9.2082785840000001e-12 0.3266 0 0 0</pose>
+      </frame>
+      <frame name="g2_link" attached_to="g2_link_joint">
+        <pose>0 0 0 0 0 0</pose>
+      </frame>
+      <frame name="livox_frame_joint" attached_to="mid360_link">
+        <pose>0 0 0 -3.141592653179587 5.7397185098744507e-42 6.1232339960000003e-17</pose>
+      </frame>
+      <frame name="livox_frame" attached_to="livox_frame_joint">
+        <pose>0 0 0 0 0 0</pose>
+      </frame>
+      <frame name="mid360_link_joint" attached_to="rack_base_link">
+        <pose>-0.17999999999999999 -2.5757174169999999e-15 1.1830000000000001 0 0 0</pose>
+      </frame>
+      <frame name="mid360_link" attached_to="mid360_link_joint">
+        <pose>0 0 0 0 0 0</pose>
+      </frame>
+      <frame name="tracer_to_rack" attached_to="base_link">
+        <pose>0 0 0.016109999999999999 0 0 0</pose>
+      </frame>
+      <frame name="rack_base_link" attached_to="tracer_to_rack">
+        <pose>0 0 0 0 0 0</pose>
+      </frame>
+      <pose>0 0 0.145 0 0 0</pose>
+      <plugin filename="gz-sim-joint-position-controller-system" name="gz::sim::systems::JointPositionController">
+        <joint_name>piper_joint1</joint_name>
+        <use_velocity_commands>true</use_velocity_commands>
+        <cmd_max>0.5</cmd_max>
+      </plugin>
+      <plugin filename="gz-sim-joint-position-controller-system" name="gz::sim::systems::JointPositionController">
+        <joint_name>piper_joint2</joint_name>
+        <use_velocity_commands>true</use_velocity_commands>
+        <cmd_max>0.5</cmd_max>
+      </plugin>
+      <plugin filename="gz-sim-joint-position-controller-system" name="gz::sim::systems::JointPositionController">
+        <joint_name>piper_joint3</joint_name>
+        <use_velocity_commands>true</use_velocity_commands>
+        <cmd_max>0.5</cmd_max>
+      </plugin>
+      <plugin filename="gz-sim-joint-position-controller-system" name="gz::sim::systems::JointPositionController">
+        <joint_name>piper_joint4</joint_name>
+        <use_velocity_commands>true</use_velocity_commands>
+        <cmd_max>0.5</cmd_max>
+      </plugin>
+      <plugin filename="gz-sim-joint-position-controller-system" name="gz::sim::systems::JointPositionController">
+        <joint_name>piper_joint5</joint_name>
+        <use_velocity_commands>true</use_velocity_commands>
+        <cmd_max>0.5</cmd_max>
+      </plugin>
+      <plugin filename="gz-sim-joint-position-controller-system" name="gz::sim::systems::JointPositionController">
+        <joint_name>piper_joint6</joint_name>
+        <use_velocity_commands>true</use_velocity_commands>
+        <cmd_max>0.5</cmd_max>
+      </plugin>
+      <plugin filename="gz-sim-joint-position-controller-system" name="gz::sim::systems::JointPositionController">
+        <joint_name>piper_gripper_joint1</joint_name>
+        <use_velocity_commands>true</use_velocity_commands>
+        <cmd_max>0.02</cmd_max>
+      </plugin>
+      <plugin filename="gz-sim-joint-position-controller-system" name="gz::sim::systems::JointPositionController">
+        <joint_name>piper_gripper_joint2</joint_name>
+        <use_velocity_commands>true</use_velocity_commands>
+        <cmd_max>0.02</cmd_max>
+      </plugin>
+      <plugin filename="gz-sim-joint-state-publisher-system" name="gz::sim::systems::JointStatePublisher">
+        <topic>/robocup/joint_states</topic>
+      </plugin>
+      <plugin filename="gz-sim-diff-drive-system" name="gz::sim::systems::DiffDrive">
+        <left_joint>left_wheel</left_joint>
+        <right_joint>right_wheel</right_joint>
+        <wheel_separation>0.34</wheel_separation>
+        <wheel_radius>0.0605</wheel_radius>
+        <topic>/robocup/cmd_vel</topic>
+        <odom_topic>/robocup/odometry</odom_topic>
+        <odom_publish_frequency>10</odom_publish_frequency>
+        <max_linear_velocity>1.6</max_linear_velocity>
+        <min_linear_velocity>-1.6</min_linear_velocity>
+        <max_linear_acceleration>1.0</max_linear_acceleration>
+        <min_linear_acceleration>-1.0</min_linear_acceleration>
+        <max_angular_acceleration>2.0</max_angular_acceleration>
+        <min_angular_acceleration>-2.0</min_angular_acceleration>
+        <frame_id>odom</frame_id>
+        <child_frame_id>base_link</child_frame_id>
+        <tf_topic>/model/robocup/tf</tf_topic>
+      </plugin>
+    </model>
+    <model name="ground">
+      <static>true</static>
+      <link name="ground">
+        <collision name="ground_collision">
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>100 100</size>
+            </plane>
+          </geometry>
+        </collision>
+        <visual name="ground_visual">
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>100 100</size>
+            </plane>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="sensor_test_wall">
+      <static>true</static>
+      <pose>2 0 1 0 0 0</pose>
+      <link name="wall">
+        <visual name="wall_visual">
+          <geometry>
+            <box>
+              <size>0.2 4 2</size>
+            </box>
+          </geometry>
+        </visual>
+        <collision name="wall_collision">
+          <geometry>
+            <box>
+              <size>0.2 4 2</size>
+            </box>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="wall_north">
+      <static>true</static>
+      <pose>0 3.05 0.5 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>6.2 0.1 1.0</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.75 0.75 0.75 1</ambient>
+            <diffuse>0.75 0.75 0.75 1</diffuse>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <box>
+              <size>6.2 0.1 1.0</size>
+            </box>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="wall_south">
+      <static>true</static>
+      <pose>0 -3.05 0.5 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>6.2 0.1 1.0</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.75 0.75 0.75 1</ambient>
+            <diffuse>0.75 0.75 0.75 1</diffuse>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <box>
+              <size>6.2 0.1 1.0</size>
+            </box>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="wall_east">
+      <static>true</static>
+      <pose>3.05 0 0.5 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>0.1 6.0 1.0</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.75 0.75 0.75 1</ambient>
+            <diffuse>0.75 0.75 0.75 1</diffuse>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <box>
+              <size>0.1 6.0 1.0</size>
+            </box>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="wall_west">
+      <static>true</static>
+      <pose>-3.05 0 0.5 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>0.1 6.0 1.0</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.75 0.75 0.75 1</ambient>
+            <diffuse>0.75 0.75 0.75 1</diffuse>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <box>
+              <size>0.1 6.0 1.0</size>
+            </box>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="wall_partition">
+      <static>true</static>
+      <pose>-1.5 2.25 0.5 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>0.1 1.5 1.0</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.75 0.75 0.75 1</ambient>
+            <diffuse>0.75 0.75 0.75 1</diffuse>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <box>
+              <size>0.1 1.5 1.0</size>
+            </box>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="table_top">
+      <static>true</static>
+      <pose>1.8 -1.0 0.705 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>1.6 0.8 0.03</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.55 0.35 0.2 1</ambient>
+            <diffuse>0.55 0.35 0.2 1</diffuse>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <box>
+              <size>1.6 0.8 0.03</size>
+            </box>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="table_leg0">
+      <static>true</static>
+      <pose>2.525 -0.675 0.345 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>0.05 0.05 0.69</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.3 0.3 0.3 1</ambient>
+            <diffuse>0.3 0.3 0.3 1</diffuse>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <box>
+              <size>0.05 0.05 0.69</size>
+            </box>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="table_leg1">
+      <static>true</static>
+      <pose>2.525 -1.325 0.345 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>0.05 0.05 0.69</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.3 0.3 0.3 1</ambient>
+            <diffuse>0.3 0.3 0.3 1</diffuse>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <box>
+              <size>0.05 0.05 0.69</size>
+            </box>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="table_leg2">
+      <static>true</static>
+      <pose>1.0750000000000002 -0.675 0.345 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>0.05 0.05 0.69</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.3 0.3 0.3 1</ambient>
+            <diffuse>0.3 0.3 0.3 1</diffuse>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <box>
+              <size>0.05 0.05 0.69</size>
+            </box>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="table_leg3">
+      <static>true</static>
+      <pose>1.0750000000000002 -1.325 0.345 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>0.05 0.05 0.69</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.3 0.3 0.3 1</ambient>
+            <diffuse>0.3 0.3 0.3 1</diffuse>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <box>
+              <size>0.05 0.05 0.69</size>
+            </box>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <light name="sun" type="directional">
+      <pose>0 0 5 0 0 0</pose>
+      <direction>-0.5 -0.5 -1</direction>
+      <diffuse>0.8 0.8 0.8 1</diffuse>
+    </light>
+    <scene>
+      <ambient>0.6 0.6 0.6 1</ambient>
+    </scene>
+    <gui fullscreen="false">
+      <plugin filename="MinimalScene" name="3D View">
+        <engine>ogre2</engine>
+        <scene>scene</scene>
+        <camera_pose>2.2 2.2 1.9 0 0.32 -2.35619</camera_pose>
+      </plugin>
+      <plugin filename="GzSceneManager" name="GzSceneManager" />
+      <plugin filename="InteractiveViewControl" name="InteractiveViewControl" />
+      <plugin filename="SelectEntities" name="SelectEntities" />
+      <plugin filename="CameraTracking" name="CameraTracking" />
+      <plugin filename="WorldControl" name="WorldControl" />
+      <plugin filename="WorldStats" name="WorldStats" />
+      <plugin filename="EntityTree" name="EntityTree" />
+      <plugin filename="TransformControl" name="TransformControl" />
+      <plugin filename="JointPositionController" name="JointPositionController" />
+    </gui>
+    <model name="calibration_board">
+      <static>true</static>
+      <pose>1.8750499999999999 -4.102097017621987e-10 1.431109999589793 1.570796326589793 0.0 -1.570796327</pose>
+      <link name="board">
+        <collision name="calibration_plate_collision_head-mid">
+          <pose>0.0 0.0 -0.005 0.0 0.0 0.0</pose>
+          <geometry>
+            <box>
+              <size>.8 .8 .01</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="calibration_plate_visual_head-mid">
+          <pose>0.0 0.0 -0.005 0.0 0.0 0.0</pose>
+          <geometry>
+            <box>
+              <size>.8 .8 .01</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>.8 .8 .8 1</ambient>
+            <diffuse>.8 .8 .8 1</diffuse>
+          </material>
+        </visual>
+        <visual name="calibration_apriltag_head-mid">
+          <pose>0.0 0.0 0.0001 0.0 0.0 0.0</pose>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>.1 .1</size>
+            </plane>
+          </geometry>
+          <material>
+            <ambient>1 1 1 1</ambient>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr>
+              <metal>
+                <albedo_map>/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/cli/board/apriltag_36h11_id0.png</albedo_map>
+                <metalness>0</metalness>
+                <roughness>1</roughness>
+              </metal>
+            </pbr>
+          </material>
+        </visual>
+      </link>
+    </model>
+  </world>
+</sdf>

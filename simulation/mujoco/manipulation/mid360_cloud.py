@@ -12,7 +12,7 @@ import xml.etree.ElementTree as ET
 import numpy as np
 
 ROOT = Path(__file__).resolve().parents[1]
-URDF = ROOT.parent/'robot_description/robocup.urdf'  # 팀 공용 URDF와 HW 메시를 직접 참조한다.
+URDF = ROOT.parent/'robot_description/robocup.urdf'  # 성공 실행과 동일한 공용 nominal 모델이다.
 
 # A fixed axis adapter for the RGB-D-trained baseline, not a new viewpoint.
 # Lidar X forward/Y left/Z up -> network X right/Y down/Z forward.

@@ -1,0 +1,13 @@
+{
+  "status": "passed_provisional_limits",
+  "result_sha256": "7942815e9a9dcbcc184cd21bf638100f75cf68ece5f0d7abfd1650a2795ca178",
+  "dataset_sha256": "bf79a9b91afa14c6ca71b99b953dfad6f20698b5271c1cc4c1d47bffea1b6e86",
+  "refitted": false,
+  "max_holdout_translation_mm": 0.33875546816703234,
+  "max_holdout_rotation_deg": 0.2943834086078315,
+  "limits": {
+    "max_mm": 5.0,
+    "max_deg": 1.0
+  },
+  "hardware_deployment_approved": false
+}

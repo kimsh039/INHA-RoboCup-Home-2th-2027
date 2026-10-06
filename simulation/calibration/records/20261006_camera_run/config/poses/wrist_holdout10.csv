@@ -1,0 +1,11 @@
+sample_id,joint1_rad,joint2_rad,joint3_rad,joint4_rad,joint5_rad,joint6_rad,split,kind
+001,0.05,0,0,0.05,0.05,0,holdout,command_target_not_measurement
+002,-0.05,0,0,0.05,0.05,0,holdout,command_target_not_measurement
+003,0.05,0,0,-0.05,-0.05,0,holdout,command_target_not_measurement
+004,-0.05,0,0,-0.05,0.05,0,holdout,command_target_not_measurement
+005,0.07,0,0,0.03,-0.07,0,holdout,command_target_not_measurement
+006,0.03,0,0,-0.07,0.06,0,holdout,command_target_not_measurement
+007,-0.03,0,0,0.07,-0.06,0,holdout,command_target_not_measurement
+008,0.08,0,0,0.04,0.03,0,holdout,command_target_not_measurement
+009,-0.08,0,0,-0.04,-0.03,0,holdout,command_target_not_measurement
+010,0.02,0,0,-0.08,0.07,0,holdout,command_target_not_measurement

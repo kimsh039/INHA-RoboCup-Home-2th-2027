@@ -9,9 +9,9 @@ from manipulation.mid360_cloud import apply_transform,validate_scene_metadata,va
 class WristCameraTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.m,cls.d=load_model();cls.folded=cls.d.qpos.copy()
+        cls.m,cls.d=load_model();cls.initial=cls.d.qpos.copy()
         cls.plan=top_down_pose(cls.m,cls.d)
-        np.testing.assert_array_equal(cls.d.qpos,cls.folded)
+        np.testing.assert_array_equal(cls.d.qpos,cls.initial)
         apply_observation(cls.m,cls.d,cls.plan)
         cls.points,cls.camera,cls.network,cls.meta=scan_cube(cls.m,cls.d,config(),64)
 
@@ -41,10 +41,10 @@ class WristCameraTest(unittest.TestCase):
             self.assertEqual(g[0],self.m.geom('cube_geom').id)
             self.assertAlmostEqual(hit,distance,places=6)
 
-    def test_folded_camera_cannot_be_silently_aimed(self):
+    def test_initial_camera_cannot_be_silently_aimed(self):
         import mujoco
-        scratch=mujoco.MjData(self.m);scratch.qpos[:]=self.folded;mujoco.mj_forward(self.m,scratch)
-        with self.assertRaisesRegex(ValueError,'OUTSIDE_FOV'):
+        scratch=mujoco.MjData(self.m);scratch.qpos[:]=self.initial;mujoco.mj_forward(self.m,scratch)
+        with self.assertRaisesRegex(ValueError,'OUTSIDE_FOV|BEHIND_CAMERA'):
             scan_cube(self.m,scratch,config(),16)
 
     def test_stale_scene_rejected(self):

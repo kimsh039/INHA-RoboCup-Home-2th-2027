@@ -12,6 +12,7 @@ from scripts.generate_mid360_cloud import apply_snapshot
 def main():
     meta=json.loads((ROOT/'data/pointclouds/cube_wrist_camera/metadata.json').read_text())
     validate_scene_metadata(meta)
+    report={"result":"NOT_RUN","scope":"MoveIt checked path and MuJoCo measured observation"}
     rclpy.init();node=Demo()
     try:
         end=time.monotonic()+15
@@ -41,9 +42,14 @@ def main():
         actual=body_transform(m,d,'wrist_camera_optical_frame');target=np.array(meta['T_world_camera'])
         if np.linalg.norm(actual[:3,3]-target[:3,3])>.005 or np.linalg.norm(actual[:3,2]-[0,0,-1])>.02:
             raise RuntimeError('WRIST_OBSERVATION_NOT_REACHED')
+        report.update(result='WRIST_OBSERVATION_READY',actual_T_world_camera=actual.tolist(),target_T_world_camera=target.tolist(),position_error_m=float(np.linalg.norm(actual[:3,3]-target[:3,3])),down_axis_error=float(np.linalg.norm(actual[:3,2]-[0,0,-1])),measured_status=node.status,trajectory_points=len(trajectory.joint_trajectory.points))
         node.stage('WRIST_OBSERVATION_READY')
         print('Observation reached. Now generate_wrist_camera_cloud.py --live; upload the resulting new ZIP.',flush=True)
+    except Exception as error:
+        report.update(result='FAIL',failure=str(error),measured_status=node.status)
+        raise
     finally:
+        (ROOT/'reports/live_observation.json').write_text(json.dumps(report,indent=2)+'\n')
         node.destroy_node();rclpy.shutdown()
 
 

@@ -6,7 +6,7 @@
 
 | 파일 | 형식·용도 |
 | --- | --- |
-| `pointclouds/cube_wrist_camera/points.npy` | float32 N×3, object frame, 미터, 25,296개 보이는 윗면 점 |
+| `pointclouds/cube_wrist_camera/points.npy` | float32 N×3, object frame, 미터, 23,070개 보이는 윗면 점 |
 | `points_camera.npy`, `points_network.npy` | camera optical frame XYZ, 이 예제의 network 변환은 항등 |
 | `metadata.json` | 센서 사양, 카메라·베이스·물체 변환, 관측 자세, SHA256 |
 | `cube_wrist_camera_input.zip` | 위 네 파일의 Colab 업로드 패키지 |

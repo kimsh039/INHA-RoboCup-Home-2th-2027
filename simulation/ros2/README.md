@@ -1,7 +1,7 @@
 # ROS 2 시뮬레이션
 
 저장소 루트에서 ROS 2 Humble 환경을 활성화하고 실행합니다.
-최종 `robot_description/robocup.urdf`를 읽으며 손목 카메라는 항상 포함됩니다.
+일반 `sim.launch.py`는 CAD 기준 원본 `robot_description/robocup.urdf`를 읽으며 손목 D435는 항상 포함됩니다. **현재 최종 보정 모델은 `robocup.calibrated.urdf`**이며, 2026-10-06 Base–2D/Mid360 보정을 반영·업로드했습니다. 적용은 [보정 URDF 적용하기](../robot_description/README.md#보정-urdf-적용하기), 날짜·커밋은 [모델 변경 이력](../robot_description/README.md#모델-변경보정업로드-이력)을 참고하세요.
 `gazebo/start_sim.sh`와 동시에 실행하지 마세요.
 
 ```bash
@@ -50,3 +50,9 @@ SLAM/Nav2 노드는 이 런치가 실행하지 않습니다. 실행 방법은 [S
 Gazebo 서버와 창은 별도 프로세스입니다. 창을 닫아도 시뮬레이션은 계속되며 런치 터미널의 Ctrl+C로 종료합니다.
 
 최종 URDF 정리 후 Gazebo 센서는 기존 개발 PC에서 재검증했습니다. 당시 개발 PC에는 ROS 2가 없어 ROS 런치는 구문 검사까지만 했습니다. 별도 Jetson에는 ROS Humble을 준비했지만 Gazebo·bridge를 설치하거나 이 시뮬레이션 launch를 실행하지 않았습니다.
+
+## 보정 TF 실행 — 측정·적용·정확도 평가
+
+**2D/3D LiDAR 보정을 쓰려면 `robocup.calibrated.urdf`를 읽는 `calibration_runtime.launch.py`를 실행합니다.** [보정 URDF 적용하기](../robot_description/README.md#보정-urdf-적용하기)에 Ubuntu/Mac 전체 명령, RViz 표시, TF 수치 읽기, 기존 TF와 중복하지 않는 방법을 적었습니다. 일반 `sim.launch.py`와 Gazebo world 생성기는 기본으로 `robocup.urdf`를 읽으므로 이 파일 선택을 자동으로 대신하지 않습니다.
+
+전체 진행 상태와 계산·평가 결과는 [Calibration 개요](../calibration/README.md)를 참고하세요. Mid360 측정·로봇 이동·독립 정확도 평가는 [Ubuntu 상세 실행 가이드](../calibration/BASE_MID360.md)에서 진행합니다.
