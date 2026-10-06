@@ -6,6 +6,7 @@ replaced (see set_wheel_contacts), drive/arm/joint-state plugins are added and t
 robot is placed in an empty world or the 6 x 6 m test room.
 """
 import argparse
+import math
 import subprocess
 import tempfile
 import xml.etree.ElementTree as E
@@ -33,6 +34,10 @@ DIFF_DRIVE = dict(
 ARM_CMD_MAX = '0.5'                      # rad/s, Piper joints
 GRIPPER_CMD_MAX = '0.02'                 # m/s, gripper fingers
 JOINT_STATES_TOPIC = '/robocup/joint_states'
+# Mid-360S scan grid, replacing the URDF's 1000 x 20. Gazebo repeats one fixed grid every frame,
+# while the real non-repetitive pattern fills its FOV over time; 20 rings left only 2-3 lines on a
+# table top. 60 rings (1.0 deg apart) x 340 keeps the datasheet's 200,000 points/s at 10 Hz.
+MID360_SCAN = dict(horizontal=340, vertical=60)
 
 WALL_GREY = '0.75 0.75 0.75 1'
 # Test room: inner 6 x 6 m centred on the spawn point; walls 0.1 m thick, 1.0 m high.
@@ -77,6 +82,17 @@ def load_robot_urdf():
     for mesh in urdf.findall('.//mesh'):
         mesh.set('filename', str((DESCRIPTION / mesh.get('filename')).resolve()))
     return urdf
+
+
+def set_mid360_scan(urdf):
+    """Denser vertical sampling for the sim Mid-360S (see MID360_SCAN); FOV and range unchanged."""
+    scan = urdf.find(".//sensor[@name='livox_mid360s']/lidar/scan")
+    for axis, samples in MID360_SCAN.items():
+        element = scan.find(axis)
+        element.find('samples').text = str(samples)
+    horizontal = scan.find('horizontal')
+    # Full circle without a duplicate ray at +pi.
+    horizontal.find('max_angle').text = repr(math.pi - 2*math.pi/MID360_SCAN['horizontal'])
 
 
 def set_wheel_contacts(urdf):
@@ -225,6 +241,7 @@ def main():
             sensor.find('camera/image/height').text = '480'
             if name == 'd435f_depth':
                 sensor.find('camera/clip/far').text = '5'
+    set_mid360_scan(urdf)
     set_wheel_contacts(urdf)
     model = urdf_to_model(urdf)
     add_robot_plugins(model)
