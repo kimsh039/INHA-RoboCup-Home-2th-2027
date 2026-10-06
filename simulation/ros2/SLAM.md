@@ -36,6 +36,8 @@ ros2 run teleop_twist_keyboard teleop_twist_keyboard --ros-args -p speed:=0.2 -p
 
 터미널 4를 선택한 상태에서 영문 입력으로 키를 누르며 방 안을 돌아다니면 RViz에 지도가 채워집니다.
 
+지도는 로봇이 **0.25 m 이상 이동할 때마다** 새 스캔으로 갱신됩니다. Humble의 slam_toolbox는 이동 거리만 보므로 **제자리 회전만으로는 지도가 바뀌지 않습니다** (회전 기준은 Jazzy부터 지원). 처음에는 앞뒤로 0.5 m 정도 움직여 지도를 채운 뒤 Nav2 목표를 보내세요.
+
 ## 지도 저장
 
 ```bash

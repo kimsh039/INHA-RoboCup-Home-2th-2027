@@ -1,0 +1,3 @@
+newmtl green_apple_material
+Kd 1 1 1
+map_Kd green_apple.jpg

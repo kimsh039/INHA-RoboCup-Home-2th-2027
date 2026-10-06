@@ -44,7 +44,9 @@ slam_toolbox:
     # General Parameters
     use_scan_matching: true
     use_scan_barycenter: true
-    minimum_travel_distance: 0.5
+    # Humble's slam_toolbox only adds a scan after this much travel: turning in place never adds one
+    # (minimum_travel_heading is not checked until Jazzy). 0.25 m keeps the map filling on short moves.
+    minimum_travel_distance: 0.25
     minimum_travel_heading: 0.5
     scan_buffer_size: 10
     scan_buffer_maximum_scan_distance: 10.0
@@ -77,5 +79,5 @@ slam_toolbox:
     minimum_angle_penalty: 0.9
     minimum_distance_penalty: 0.5
     use_response_expansion: true
-    min_pass_through: 2
+    min_pass_through: 1 # noise-free sim lidar: one ray through a cell is enough to mark it free
     occupancy_threshold: 0.1

@@ -1,0 +1,22 @@
+# Gazebo room world: objects on the two tables, seen by the full-resolution head camera.
+# The table objects are 30-90 px wide at 2-3 m, so YOLO runs at 1280 px; use yolo11m on a GPU.
+# Pretrained COCO results on the sim objects: mug -> cup (reliable), apple / green apple -> apple,
+# banana -> frisbee, plate -> not found.
+head_detection_node:
+  ros__parameters:
+    task: detect
+    confidence: 0.4
+    target_class: cup
+    imgsz: 1280
+    tracker_type: CSRT
+    confirm_frames: 3
+    redetect_interval: 5
+    roi_margin: 6.0 # ROI = box x margin; small crops upscaled to 1280 px fail YOLO verification
+    match_iou: 0.25
+    max_unconfirmed: 2
+    max_verification_age: 0.8
+    max_frame_gap: 1.0
+    input_topic: /head_camera/color/image_raw
+    max_input_age: 1.0
+    # Wall-clock watchdog: Gazebo runs slower than real time here, so frames can pause for >1 s.
+    input_timeout: 3.0

@@ -1,0 +1,3 @@
+newmtl peach_material
+Kd 1 1 1
+map_Kd peach.jpg
