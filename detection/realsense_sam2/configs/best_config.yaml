@@ -1,0 +1,26 @@
+model:
+  name: sam2.1_hiera_small
+  checkpoint: third_party/sam2/checkpoints/sam2.1_hiera_small.pt
+  config: configs/sam2.1/sam2.1_hiera_s.yaml
+
+camera:
+  width: 640
+  height: 480
+  fps: 30
+
+sam:
+  points_per_side: 12
+  points_per_batch: 64
+  pred_iou_thresh: 0.85
+  stability_score_thresh: 0.95
+  box_nms_thresh: 0.7
+  min_mask_region_area: 200
+  use_m2m: false
+
+inference:
+  precision: bfloat16
+
+depth:
+  min_depth_m: 0.25
+  max_depth_m: 4.0
+  min_valid_ratio: 0.30
