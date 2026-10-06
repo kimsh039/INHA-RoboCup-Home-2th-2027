@@ -1,8 +1,8 @@
 # 최종 로봇 URDF
 
-[robocup.urdf](robocup.urdf)는 명목 CAD 모델이고, [robocup.calibrated.urdf](robocup.calibrated.urdf)는 2D·3D LiDAR 보정을 적용한 ROS용 모델입니다. 아래 [보정 URDF 적용하기](#보정-urdf-적용하기)에서 실행 명령을 확인합니다. 예전 모델은 Git 이력에서 확인할 수 있습니다.
+**현재 최종 보정 모델: [robocup.calibrated.urdf](robocup.calibrated.urdf) — 2026-10-06 반영·업로드.** Base–2D LiDAR와 Base–Mid360 보정값을 최신 랙·PiPER 구조에 적용했습니다. [robocup.urdf](robocup.urdf)는 CAD 기준 원본이며, 현재 Gazebo world 생성기와 일반 `sim.launch.py`가 읽는 입력입니다. 아래 [보정 URDF 적용하기](#보정-urdf-적용하기)에서 최종 모델을 선택하는 실행 명령을 확인합니다. 예전 모델은 Git 이력에 보관합니다.
 94개 링크, 93개 조인트이며 단일 루트는 `base_link`입니다.
-일반 URDF 구조에 Gazebo 센서 확장을 포함해 RViz와 Gazebo에서 같은 파일을 사용합니다.
+두 모델 모두 일반 URDF 구조에 Gazebo 센서 확장을 포함합니다. 현재 Gazebo 측정 장면은 CAD 원본에서 만들고, ROS에 보정값을 적용할 때는 최종 보정 모델을 선택합니다.
 그리퍼 두 관절은 별도로 정의하며 제어 도구가 대칭 목표값을 보냅니다.
 
 - Tracer → 랙: fixed, xyz `(0, 0, 0.01611)` m.
@@ -18,7 +18,7 @@
 Gazebo·ROS의 관절값과 수동 제어 명령은 이 새 영점을 기준으로 하며 `home`은 사진 속 기본 자세로 복귀합니다.
 
 메시는 `../../HW/URDF/` 아래를 상대 경로로 참조합니다. 메시 폴더는 삭제하지 마세요.
-좌표·관성·센서 설정을 바꿀 때는 이 최종 파일을 수정한 뒤 Gazebo를 다시 실행합니다.
+CAD 형상·장착 좌표·관성·Gazebo 센서 설정 변경은 원본 `robocup.urdf`에 반영하고 world를 다시 생성합니다. 이후 보정 결과 JSON을 새 원본에 누적 적용해 `robocup.calibrated.urdf`를 갱신하고, 변경 날짜·센서·근거를 아래 이력에 기록합니다. 장착 위치가 달라졌다면 이전 보정값의 유효성도 별도로 평가합니다.
 실물 체결 좌표·물성·광학 보정은 별도 검증이 필요합니다.
 
 2026-10-06: Fusion `final_assembly`의 변경된 프로파일·브래킷 형상과 `Assembly`의 Piper 베이스 장착 위치를 반영했습니다. 기존 매니퓰레이터 판형 마운트는 제거됐습니다. 센서 마운트·센서 링크·Gazebo 센서 확장, Piper 내부 관절·영점·가동 범위, 손목 카메라 연결 및 제어 스크립트는 유지했습니다. 새 알루미늄 랙의 질량·무게중심·관성·경계 박스 충돌 형상을 재계산했으며, [변경 근거](../../HW/URDF/sensor_rack_description/rack_revision_20261006.json)를 보관합니다. 아래 Gazebo 실행 검증은 이번 형상 변경 전의 기록이며 새 모델의 실구동을 뜻하지 않습니다.
@@ -28,6 +28,25 @@ Gazebo·ROS의 관절값과 수동 제어 명령은 이 새 영점을 기준으�
 최종 확정 후 별도 Gazebo 서버에서 G2 10 Hz/500 rays, Mid-360S 10 Hz/20,000 rays·points,
 헤드·손목 RGB/depth 약 30 Hz 메시지와 프레임을 확인했고 정면 검사 벽 거리 검사를 통과했습니다.
 ROS 런치는 당시 Gazebo 개발 PC에 ROS가 없어 구문 확인까지만 했습니다. 별도 Jetson 실기 setup은 [Jetson 문서](../../setup/jetson/README.md)에 기록했으며 이 시뮬레이션 실행 검증과 구분합니다.
+
+## 모델 변경·보정·업로드 이력
+
+날짜는 한국 시간 기준입니다. **측정·계산 날짜와 Git에 반영한 날짜를 구분**합니다. 아래 결과는 Gazebo에서 얻은 보정값이며 실물 센서 보정 완료를 뜻하지 않습니다.
+
+| 측정·작업 날짜 | 무엇을 변경했나 | 최종 모델 반영·업로드 | 결과·근거 |
+|---|---|---|---|
+| 2026-10-05 | Base–2D LiDAR의 `x`, `y`, `yaw` 추정. `base_link ← laser_frame`: x=0.000123610m, y=0.000520516m, yaw=8.844783°. z=0.34271m와 roll/pitch는 고정 입력 | 2026-10-06, [`b871b5b`](https://github.com/kimsh039/INHA-RoboCup-Home-2th-2027/commit/b871b5b)에서 `robocup.calibrated.urdf`에 적용·업로드 | [보정 JSON](../calibration/records/20261005_base_2dlidar/calibration/calibration.json), [별도 자세 001/002 평가](../calibration/records/20261005_base_2dlidar/validation/validation_report.md) |
+| 2026-10-06 | Base–Mid360 위치·방향 추정. `base_link ← livox_frame`: xyz≈(-0.179962, 0.000156, 1.198867)m, roll≈180° | 2026-10-06, [`b871b5b`](https://github.com/kimsh039/INHA-RoboCup-Home-2th-2027/commit/b871b5b)에서 2D 보정과 함께 누적 적용·업로드 | [보정 JSON](../calibration/records/20261006_base_mid360/results/auto_room_20261006_031114/base_mid360.json), [측정 자료](../calibration/records/20261006_base_mid360/README.md) |
+| 2026-10-06 | 프로파일 랙 형상·물성과 PiPER 베이스 장착 위치 변경. 새 CAD 원본에 기존 2D·Mid360 보정값을 다시 적용 | CAD 변경 [`1509ede`](https://github.com/kimsh039/INHA-RoboCup-Home-2th-2027/commit/1509ede) → 보정 누적 [`b871b5b`](https://github.com/kimsh039/INHA-RoboCup-Home-2th-2027/commit/b871b5b) | [랙 변경 기록](../../HW/URDF/sensor_rack_description/rack_revision_20261006.json). CAD 갱신과 센서 재측정은 별개 작업 |
+| 2026-10-06 | Mid360 보정값을 고정한 채 별도 자세 A/B 자료를 검사. 평면 오차의 임시 기준 10mm/1° 통과 | 2026-10-06, 기존 보정값을 유지하고 A/B 원자료·평가 보고서를 추가 업로드 | [독립 정확도 평가 기록](../calibration/records/20261006_base_mid360/validation_20261006_201607/README.md) |
+| 2026-10-06 | Ubuntu/Mac 적용 명령, RViz 표시, TF 확인 방법을 README에 추가 | [`41ed5fc`](https://github.com/kimsh039/INHA-RoboCup-Home-2th-2027/commit/41ed5fc) | 아래 [보정 URDF 적용하기](#보정-urdf-적용하기) |
+
+### 현재 보정 결과를 어떻게 해석하나
+
+- **2D LiDAR:** 별도 자세 001/002에서 선택한 외벽 점의 RMS는 6.737/6.846mm, P95는 14.736/14.621mm입니다. 당시 임시 기준을 통과했습니다. z/roll/pitch를 새로 보정한 결과는 아닙니다.
+- **Mid360:** A/B의 최대 평면 위치 오차는 3.594/3.167mm, 최대 각도 오차는 0.2100/0.1892°입니다. Gazebo 장착 기준값 대비 위치 오차는 0.291mm, 회전 오차는 0.00404°입니다. 이는 평면과 변환에 대한 평가이며 개별 점의 거리 오차와 구분합니다.
+- **원본 상태 기록:** Mid360 계산 JSON의 `computed_validation_pending`은 계산 당시 상태로 보존합니다. 후속 A/B 판정은 [별도 보고서](../calibration/records/20261006_base_mid360/validation_20261006_201607/results/audit_20261006_202216/accuracy_report.md)에 기록했습니다.
+- **아직 별도 보정이 필요한 항목:** Head D435, Wrist D435, 카메라와 LiDAR 사이의 외부 변환, TCP 등. 최종 파일 이름은 전체 센서·실물 보정 완료를 의미하지 않습니다.
 
 ## 보정 URDF 적용하기
 

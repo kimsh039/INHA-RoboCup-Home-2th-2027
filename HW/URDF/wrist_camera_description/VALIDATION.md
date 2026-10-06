@@ -1,6 +1,6 @@
 # 손목 카메라 통합 검증 기록
 
-> 아래는 통합 전후의 역사적 생성·Gazebo 검증 기록입니다. 당시 build.py와 선택형 URDF는 이후 정리됐습니다. 현재 최종 모델은 [robocup.urdf](../../../simulation/robot_description/robocup.urdf) 하나이며 2026-10-06 랙 변경 후 94 links / 93 joints입니다. 아래 질량·실행 검증은 해당 변경 전의 기록입니다. 현재 실기 선택은 Head·Wrist 모두 D435이며, 이 기록은 두 D435의 실기 검증 결과가 아닙니다.
+> 아래는 통합 전후의 역사적 생성·Gazebo 검증 기록입니다. 당시 build.py와 선택형 URDF는 이후 정리됐습니다. 현재 최종 보정 모델은 [robocup.calibrated.urdf](../../../simulation/robot_description/robocup.calibrated.urdf)이며, [robocup.urdf](../../../simulation/robot_description/robocup.urdf)는 CAD 기준 원본입니다. 두 모델은 2026-10-06 랙 변경 후 94 links / 93 joints이며, 같은 날짜에 반영·업로드한 2D/Mid360 보정은 [모델 이력](../../../simulation/robot_description/README.md#모델-변경보정업로드-이력)에 기록합니다. 아래 질량·실행 검증은 해당 변경 전의 기록입니다. 현재 실기 선택은 Head·Wrist 모두 D435이며, 이 기록은 두 D435의 실기 검증 결과가 아닙니다.
 
 2026-10-03, Windows에서 생성 파일을 읽어 확인했다.
 

@@ -21,6 +21,19 @@ TRACER × PiPER · Calibration · Detection · Simulation
 > [!IMPORTANT]
 > **Jetson 설정 기준: 2026-10-03.** YOLO와 SAM의 실제 GPU 샘플 추론, ROS 통신, 네 워크스페이스의 핵심 빌드를 확인했습니다. 카메라용 apt 일부와 실기 입력은 남아 있으며, 실제 보정·물체 학습·자율 주행·파지를 완료한 상태는 아닙니다.
 
+## 현재 최종 모델과 보정 기록
+
+**최종 보정 모델은 [robocup.calibrated.urdf](simulation/robot_description/robocup.calibrated.urdf)입니다.** [robocup.urdf](simulation/robot_description/robocup.urdf)는 CAD 기준 원본으로 유지합니다. 최종 보정 모델에는 2026-10-06의 랙·PiPER 구조 변경과 아래 두 LiDAR 보정값이 들어 있습니다.
+
+| 보정 항목 | 측정·계산 날짜 | URDF 반영·Git 업로드 | 정확도 평가 기록 |
+|---|---|---|---|
+| Base–2D LiDAR (`laser_frame`) x/y/yaw | 2026-10-05 | 2026-10-06, [`b871b5b`](https://github.com/kimsh039/INHA-RoboCup-Home-2th-2027/commit/b871b5b) | [별도 자세 001/002](simulation/calibration/records/20261005_base_2dlidar/validation/validation_report.md) |
+| Base–Mid360 (`livox_frame`) 위치·방향 | 2026-10-06 | 2026-10-06, [`b871b5b`](https://github.com/kimsh039/INHA-RoboCup-Home-2th-2027/commit/b871b5b) | [별도 자세 A/B, 2026-10-06 추가 업로드](simulation/calibration/records/20261006_base_mid360/validation_20261006_201607/README.md) |
+
+[전체 변경 이력·보정 수치](simulation/robot_description/README.md#모델-변경보정업로드-이력) · [최종 모델 적용 명령 — Ubuntu/Mac](simulation/robot_description/README.md#보정-urdf-적용하기)
+
+Gazebo 기반 보정 결과입니다. Head/Wrist D435와 실물 센서는 별도 보정이 필요합니다. 일반 Gazebo 생성기와 `sim.launch.py`는 현재 CAD 원본을 기본으로 읽으므로, 위 적용 명령에서 보정 모델을 선택합니다.
+
 ## 처음 합류했다면
 
 | 알고 싶은 것 | 읽을 문서 |

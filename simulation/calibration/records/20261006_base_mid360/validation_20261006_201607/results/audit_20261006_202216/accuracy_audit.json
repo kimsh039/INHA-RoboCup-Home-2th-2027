@@ -1,0 +1,178 @@
+{
+  "result": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/base_mid360_01/results/auto_room_20261006_031114/base_mid360.json",
+  "result_sha256": "53fd478d044b8db6b66723e1a517245cf57ca638ae2ffb6d270a0b394459796c",
+  "ground_truth_comparison": {
+    "translation_mm": 0.291478157883629,
+    "rotation_deg": 0.004044503224440999,
+    "source": "captured evaluation SDF base_link/livox_mid360s sensor pose; comparison after fitting only",
+    "truth_translation_xyz_m": [
+      -0.18,
+      0.0,
+      1.19911
+    ]
+  },
+  "urdf_application": {
+    "translation_difference_mm": 0.0,
+    "rotation_difference_deg": 1.6502051317870226e-14,
+    "source": "latest structure robocup.calibrated.urdf fixed chain; static composition only, no live ROS TF assertion"
+  },
+  "train_world_sha256": "c6ea615e723abd8f1519a2f520a0e01099d65a2a31b6c2df79281f173265ac90",
+  "evaluation_world_sha256": "c6ea615e723abd8f1519a2f520a0e01099d65a2a31b6c2df79281f173265ac90",
+  "validation": [
+    {
+      "id": "A",
+      "checks": {
+        "report_result_hash_matches": true,
+        "extraction_reference_hash_matches": true,
+        "validation_pairs_hash_matches": true,
+        "raw_cloud_hash_matches_xyz": true,
+        "raw_cloud_hash_matches_extraction": true,
+        "xyz_hash_matches_extraction": true,
+        "target_hash_matches_extraction": true,
+        "distinct_from_train": true,
+        "fixed_extrinsic": true,
+        "stamp_bracketed": true,
+        "stationary": true,
+        "report_angles_recomputed_match": true,
+        "report_offsets_recomputed_match": true,
+        "all_five_planes_supported": true
+      },
+      "all_checks_passed": true,
+      "provisional_limits_passed": true,
+      "actual_pose_xyz_m": [
+        0.999185390284043,
+        0.49952860222501594,
+        0.14249843046396635
+      ],
+      "actual_yaw_deg": 29.996567395394475,
+      "pose_change_translation_mm": 0.0,
+      "pose_change_rotation_deg": 0.0,
+      "pose_before_cloud_after_ns": [
+        95405000000,
+        95505000000,
+        95639000000
+      ],
+      "planes": [
+        {
+          "plane_id": "floor",
+          "normal_error_deg": 0.0034363966089407815,
+          "offset_error_mm": 0.36213023069286976,
+          "support_points": 7605
+        },
+        {
+          "plane_id": "front",
+          "normal_error_deg": 0.07683877487268849,
+          "offset_error_mm": 1.3171999311212268,
+          "support_points": 1701
+        },
+        {
+          "plane_id": "side",
+          "normal_error_deg": 0.04150978298481493,
+          "offset_error_mm": 0.4812934937539204,
+          "support_points": 1121
+        },
+        {
+          "plane_id": "back",
+          "normal_error_deg": 0.029773260921950512,
+          "offset_error_mm": -0.5523367269733015,
+          "support_points": 869
+        },
+        {
+          "plane_id": "other_side",
+          "normal_error_deg": 0.21002703929546074,
+          "offset_error_mm": -3.59352886263542,
+          "support_points": 912
+        }
+      ],
+      "max_normal_error_deg": 0.21002703929546074,
+      "max_abs_offset_mm": 3.59352886263542,
+      "assigned_points": 12208,
+      "finite_points": 17294,
+      "assigned_fraction": 0.7059095640106395,
+      "unassigned_points": 5086,
+      "selected_point_nearest_plane_rms_mm": 8.63739008268186,
+      "selected_point_nearest_plane_p95_mm": 19.97053680965761
+    },
+    {
+      "id": "B",
+      "checks": {
+        "report_result_hash_matches": true,
+        "extraction_reference_hash_matches": true,
+        "validation_pairs_hash_matches": true,
+        "raw_cloud_hash_matches_xyz": true,
+        "raw_cloud_hash_matches_extraction": true,
+        "xyz_hash_matches_extraction": true,
+        "target_hash_matches_extraction": true,
+        "distinct_from_train": true,
+        "fixed_extrinsic": true,
+        "stamp_bracketed": true,
+        "stationary": true,
+        "report_angles_recomputed_match": true,
+        "report_offsets_recomputed_match": true,
+        "all_five_planes_supported": true
+      },
+      "all_checks_passed": true,
+      "provisional_limits_passed": true,
+      "actual_pose_xyz_m": [
+        -0.5006657392847571,
+        1.0006631454734862,
+        0.14249840413617684
+      ],
+      "actual_yaw_deg": -45.00343219684387,
+      "pose_change_translation_mm": 0.0,
+      "pose_change_rotation_deg": 0.0,
+      "pose_before_cloud_after_ns": [
+        121227000000,
+        121326000000,
+        121444000000
+      ],
+      "planes": [
+        {
+          "plane_id": "floor",
+          "normal_error_deg": 0.0069272989783163395,
+          "offset_error_mm": 0.39979160037306727,
+          "support_points": 7011
+        },
+        {
+          "plane_id": "front",
+          "normal_error_deg": 0.1892184005751545,
+          "offset_error_mm": 3.166744514695008,
+          "support_points": 892
+        },
+        {
+          "plane_id": "side",
+          "normal_error_deg": 0.11882682785148498,
+          "offset_error_mm": 1.433444585192678,
+          "support_points": 1550
+        },
+        {
+          "plane_id": "back",
+          "normal_error_deg": 0.015442927696942011,
+          "offset_error_mm": 0.3477005195189342,
+          "support_points": 1325
+        },
+        {
+          "plane_id": "other_side",
+          "normal_error_deg": 0.02579345330037108,
+          "offset_error_mm": 0.005528583852942859,
+          "support_points": 813
+        }
+      ],
+      "max_normal_error_deg": 0.1892184005751545,
+      "max_abs_offset_mm": 3.166744514695008,
+      "assigned_points": 11591,
+      "finite_points": 17294,
+      "assigned_fraction": 0.6702324505608882,
+      "unassigned_points": 5703,
+      "selected_point_nearest_plane_rms_mm": 8.961483391309965,
+      "selected_point_nearest_plane_p95_mm": 21.76191732305555
+    }
+  ],
+  "status": "passed_provisional_limits",
+  "limitations": [
+    "Plane offset is a fitted-surface error, not every individual point error.",
+    "Point distance diagnostics select returns within the same 50mm room-plane gate; non-room points are excluded.",
+    "Ground truth is simulator mounting truth, not a hardware accuracy claim.",
+    "No ROS/Gazebo launch, robot movement or refitting was performed during this audit."
+  ]
+}

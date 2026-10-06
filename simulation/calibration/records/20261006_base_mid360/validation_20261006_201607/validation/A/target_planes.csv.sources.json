@@ -1,0 +1,7 @@
+{
+  "world_sha256": "c6ea615e723abd8f1519a2f520a0e01099d65a2a31b6c2df79281f173265ac90",
+  "pose_sha256": "6bbfa2e48eb9e3f74367dd774f1369c13184e83d9211f4ed2c48aca80dfadbe2",
+  "floor_world_z_m": 0,
+  "floor_verified_by_user": true,
+  "uses_sensor_mount_truth": false
+}

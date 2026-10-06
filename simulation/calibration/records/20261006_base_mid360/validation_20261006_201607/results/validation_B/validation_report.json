@@ -1,0 +1,24 @@
+{
+  "status": "passed_provisional_limits",
+  "result_sha256": "53fd478d044b8db6b66723e1a517245cf57ca638ae2ffb6d270a0b394459796c",
+  "validation_sha256": "7fcf3ae1c341c08a038bd322e1c27b9b2b8815a00245aa83e1913419dbd89f6c",
+  "refitted": false,
+  "normal_errors_deg": [
+    0.006927299030929157,
+    0.1892184005751545,
+    0.11882682785148498,
+    0.015442927696942011,
+    0.02579345330037108
+  ],
+  "offset_errors_mm": [
+    0.39979160037306727,
+    3.166744514695008,
+    1.433444585192678,
+    0.3477005195189342,
+    0.005528583852942859
+  ],
+  "limits": {
+    "max_angle_deg": 1.0,
+    "max_offset_mm": 10.0
+  }
+}

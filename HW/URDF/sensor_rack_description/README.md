@@ -1,7 +1,7 @@
 # 보관 자료 안내
 
 최종 모델 확정으로 독립 랙 URDF·ROS 패키지 실행 파일은 삭제했습니다. 메시·CAD 검증 보고서는 유지합니다.
-최종 파일은 [robocup.urdf](../../../simulation/robot_description/robocup.urdf)이며 실행은 [Gazebo 안내](../../../simulation/gazebo/README.md)를 사용하세요.
+현재 최종 보정 파일은 [robocup.calibrated.urdf](../../../simulation/robot_description/robocup.calibrated.urdf)입니다. 2026-10-06 랙 변경 후 2D/Mid360 보정값을 누적해 업로드했으며 [모델 이력·적용 방법](../../../simulation/robot_description/README.md)을 참고하세요. Gazebo는 CAD 원본 [robocup.urdf](../../../simulation/robot_description/robocup.urdf)에서 생성하며 [Gazebo 안내](../../../simulation/gazebo/README.md)를 사용합니다.
 아래는 최초 랙 내보내기 당시 좌표·물성 기록입니다. `export_report.json`과 `validation_report.json`도 최초 내보내기 기록입니다.
 
 ## 2026-10-06 프로파일 변경

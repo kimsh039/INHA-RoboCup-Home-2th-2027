@@ -1,7 +1,7 @@
 # ROS 2 시뮬레이션
 
 저장소 루트에서 ROS 2 Humble 환경을 활성화하고 실행합니다.
-최종 `robot_description/robocup.urdf`를 읽으며 손목 카메라는 항상 포함됩니다.
+일반 `sim.launch.py`는 CAD 기준 원본 `robot_description/robocup.urdf`를 읽으며 손목 D435는 항상 포함됩니다. **현재 최종 보정 모델은 `robocup.calibrated.urdf`**이며, 2026-10-06 Base–2D/Mid360 보정을 반영·업로드했습니다. 적용은 [보정 URDF 적용하기](../robot_description/README.md#보정-urdf-적용하기), 날짜·커밋은 [모델 변경 이력](../robot_description/README.md#모델-변경보정업로드-이력)을 참고하세요.
 `gazebo/start_sim.sh`와 동시에 실행하지 마세요.
 
 ```bash

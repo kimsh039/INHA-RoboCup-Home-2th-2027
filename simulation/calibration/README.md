@@ -10,7 +10,7 @@
 | 보정 JSON과 적용 URDF가 이미 있음 | 7에서 적용 파일 선택 → 8~11 |
 | 새 Git URDF로 Gazebo를 다시 생성함 | 새 세션에 새 world를 보관하고 새 관측 수집. 이전 측정 world를 덮어쓰지 않음 |
 
-**이번 Git 업데이트에 보관한 기존 결과:** `records/20261006_base_mid360/results/auto_room_20261006_031114/base_mid360.json`. 위치 약 `(-0.179962, 0.000156, 1.198867)m`, roll 약 180°. 상태는 **computed_validation_pending**이며 이번 문서 작업에서 새 검증을 실행하지 않았다.
+**현재 저장된 보정·후속 평가:** [2026-10-06 Mid360 보정 JSON](records/20261006_base_mid360/results/auto_room_20261006_031114/base_mid360.json)의 위치는 약 `(-0.179962, 0.000156, 1.198867)m`, roll 약 180°다. 같은 날짜에 `robocup.calibrated.urdf`에 반영·업로드했고, 기존 고정값으로 별도 자세 A/B를 검사한 결과는 임시 10mm/1° 기준을 통과했다. [평가 보고서·A/B 원자료](records/20261006_base_mid360/validation_20261006_201607/README.md)와 [모델 업로드 이력](../robot_description/README.md#모델-변경보정업로드-이력)을 참고한다. 계산 JSON의 **computed_validation_pending**은 계산 당시 기록으로 유지하며 후속 판정을 별도 보고서에 보관한다. 이번 문서 수정에서는 추가 측정·검증을 실행하지 않았다.
 
 ## 1. 파일과 터미널 준비
 

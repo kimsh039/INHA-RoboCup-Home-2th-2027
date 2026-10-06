@@ -2,7 +2,7 @@
 
 > **Gazebo·MuJoCo 개발 PC용 안내입니다.** 현재 Jetson의 실기 setup과 카메라 구성은 [프로젝트 README](../README.md)와 [Jetson 운영 문서](../setup/jetson/README.md)를 참고하세요. Jetson에는 Gazebo 및 robot-* 단축 명령을 설치하지 않았습니다.
 
-명목 URDF는 [robot_description/robocup.urdf](robot_description/robocup.urdf)이며, 2D/3D LiDAR 보정 모델은 [robot_description/robocup.calibrated.urdf](robot_description/robocup.calibrated.urdf)입니다.
+**현재 최종 보정 모델은 [robot_description/robocup.calibrated.urdf](robot_description/robocup.calibrated.urdf)입니다.** 2026-10-05 Base–2D LiDAR, 2026-10-06 Base–Mid360 보정 결과를 최신 랙·PiPER 구조에 적용해 2026-10-06 Git에 업로드했습니다. [보정·변경·업로드 이력](robot_description/README.md#모델-변경보정업로드-이력)에 날짜·커밋·평가 보고서를 기록합니다. [robot_description/robocup.urdf](robot_description/robocup.urdf)는 CAD 기준 원본이며 Gazebo 생성기의 기본 입력으로 유지합니다.
 Tracer, 프로파일 랙, Piper·그리퍼, G2, Mid-360S, 헤드 D435f와 손목 D435f·마운트를 포함합니다.
 원본 메시·CAD·물성 자료는 `../HW/URDF/`에 유지하며 예전 독립·중간 URDF와 조립 생성기는 삭제했습니다.
 URDF의 상대 메시 경로가 유효하도록 저장소 전체를 사용하세요.
