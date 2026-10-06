@@ -1,0 +1,81 @@
+{
+  "train_count": 25,
+  "holdout_count": 10,
+  "held_out": {
+    "status": "passed_provisional_limits",
+    "result_sha256": "3e29ded5bc3506d0004eebe230515793d76280b2f584d83e962343ae82d56e16",
+    "validation_sha256": "c1cdebaea8bc0fa3c3a4e5e5caf2417e377a398972c7b9de2febeb72c39f4791",
+    "refitted": false,
+    "normal_errors_deg": [
+      0.22133302149351455,
+      0.5997624805294133,
+      0.4504138949028818,
+      0.47514242502279014,
+      0.35609238604452287,
+      0.26138916769201137,
+      0.25535875253390755,
+      0.813743301526236,
+      0.27074841398645944,
+      0.1449672012493949
+    ],
+    "offset_errors_mm": [
+      -0.0031459455158699967,
+      2.7738803054628836,
+      -4.247496340927137,
+      -2.2014848940221654,
+      3.5083950807133224,
+      0.8872846271397172,
+      -1.442208538588119,
+      -2.3335581336814126,
+      -4.006756764126873,
+      -0.4877298183401102
+    ],
+    "limits": {
+      "max_angle_deg": 1.0,
+      "max_offset_mm": 10.0
+    }
+  },
+  "ground_truth_error": {
+    "translation_mm": 11.720000061470623,
+    "rotation_deg": 0.1692352710111643
+  },
+  "T_head_mid360_ground_truth": [
+    [
+      0.0,
+      0.9999999999964793,
+      2.65358979335273e-06,
+      0.0
+    ],
+    [
+      0.0,
+      -2.65358979335273e-06,
+      0.9999999999964793,
+      0.08700000000000019
+    ],
+    [
+      1.0,
+      0.0,
+      0.0,
+      -0.05504999999999999
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "result": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/results/automated_01/head_mid360.json",
+  "validation": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/results/automated_01/head_mid360_validation.json",
+  "source_scene": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/config/head_mid.world.sdf",
+  "pose_overlap": {
+    "count": 35,
+    "duplicates": [],
+    "minimum_board_orientation_separation_deg": 7.7418348160438955,
+    "minimum_train_holdout_orientation_separation_deg": 7.7418348160438955,
+    "max_reprojection_px": 0.09572114592787309,
+    "max_image_joint_skew_s": 0.001999999999995339,
+    "train_count": 25,
+    "holdout_count": 10
+  }
+}

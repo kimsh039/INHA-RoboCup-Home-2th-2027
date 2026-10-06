@@ -1,0 +1,13 @@
+{
+  "plane_id": "board022",
+  "nx": -0.1855422740451455,
+  "ny": 0.4127053408743673,
+  "nz": -0.8917669909544356,
+  "d": 1.1758786059315145,
+  "frame": "camera_optical_frame",
+  "unit": "m",
+  "sample_id": 21,
+  "image_sim_time": 40.665,
+  "dataset_sha256": "4756fb79e3b134912af63d61a5864549b6bc6a38ae060500c0fc5df83ec21f1e",
+  "tag_to_plane_sha256": "340b17769c060ff9fe37e06e8fc9d04db365c5690bdd8288c0de14798b7c05ec"
+}

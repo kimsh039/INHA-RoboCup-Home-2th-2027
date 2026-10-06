@@ -1,0 +1,147 @@
+{
+  "head": {
+    "train_count": 25,
+    "holdout_count": 10,
+    "held_out": {
+      "status": "passed_provisional_limits",
+      "result_sha256": "3e29ded5bc3506d0004eebe230515793d76280b2f584d83e962343ae82d56e16",
+      "validation_sha256": "c1cdebaea8bc0fa3c3a4e5e5caf2417e377a398972c7b9de2febeb72c39f4791",
+      "refitted": false,
+      "normal_errors_deg": [
+        0.22133302149351455,
+        0.5997624805294133,
+        0.4504138949028818,
+        0.47514242502279014,
+        0.35609238604452287,
+        0.26138916769201137,
+        0.25535875253390755,
+        0.813743301526236,
+        0.27074841398645944,
+        0.1449672012493949
+      ],
+      "offset_errors_mm": [
+        -0.0031459455158699967,
+        2.7738803054628836,
+        -4.247496340927137,
+        -2.2014848940221654,
+        3.5083950807133224,
+        0.8872846271397172,
+        -1.442208538588119,
+        -2.3335581336814126,
+        -4.006756764126873,
+        -0.4877298183401102
+      ],
+      "limits": {
+        "max_angle_deg": 1.0,
+        "max_offset_mm": 10.0
+      }
+    },
+    "ground_truth_error": {
+      "translation_mm": 11.720000061470623,
+      "rotation_deg": 0.1692352710111643
+    },
+    "T_head_mid360_ground_truth": [
+      [
+        0.0,
+        0.9999999999964793,
+        2.65358979335273e-06,
+        0.0
+      ],
+      [
+        0.0,
+        -2.65358979335273e-06,
+        0.9999999999964793,
+        0.08700000000000019
+      ],
+      [
+        1.0,
+        0.0,
+        0.0,
+        -0.05504999999999999
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "result": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/results/automated_01/head_mid360.json",
+    "validation": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/results/automated_01/head_mid360_validation.json",
+    "source_scene": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/config/head_mid.world.sdf",
+    "pose_overlap": {
+      "count": 35,
+      "duplicates": [],
+      "minimum_board_orientation_separation_deg": 7.7418348160438955,
+      "minimum_train_holdout_orientation_separation_deg": 7.7418348160438955,
+      "max_reprojection_px": 0.09572114592787309,
+      "max_image_joint_skew_s": 0.001999999999995339,
+      "train_count": 25,
+      "holdout_count": 10
+    }
+  },
+  "wrist": {
+    "train_count": 25,
+    "holdout_count": 10,
+    "held_out": {
+      "status": "passed_provisional_limits",
+      "result_sha256": "7942815e9a9dcbcc184cd21bf638100f75cf68ece5f0d7abfd1650a2795ca178",
+      "dataset_sha256": "bf79a9b91afa14c6ca71b99b953dfad6f20698b5271c1cc4c1d47bffea1b6e86",
+      "refitted": false,
+      "max_holdout_translation_mm": 0.33875546816703234,
+      "max_holdout_rotation_deg": 0.2943834086078315,
+      "limits": {
+        "max_mm": 5.0,
+        "max_deg": 1.0
+      },
+      "hardware_deployment_approved": false
+    },
+    "ground_truth_error": {
+      "translation_mm": 0.5982197677990355,
+      "rotation_deg": 0.19457313056486647
+    },
+    "T_flange_wrist_ground_truth": [
+      [
+        0.04202891663249223,
+        0.99911639469745,
+        -3.669943479112092e-06,
+        -0.0664272
+      ],
+      [
+        -0.9991163947041901,
+        0.0420289166322087,
+        -1.5438015965596463e-07,
+        -0.00276736
+      ],
+      [
+        -3.469446951953614e-18,
+        3.673189128416965e-06,
+        0.9999999999932538,
+        0.0367198
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "pose_overlap": {
+      "count": 35,
+      "duplicates": [],
+      "minimum_joint_distance_rad": 0.017320508075688114,
+      "minimum_flange_rotation_deg": 1.0445407087976157,
+      "closest_train_holdout": {
+        "a": 23,
+        "b": 29,
+        "cross_split": true,
+        "joint_distance_rad": 0.046904157598236434,
+        "flange_translation_mm": 3.0556457875936514,
+        "flange_rotation_deg": 2.707335267791086
+      }
+    },
+    "result": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/results/flange_wrist.json",
+    "validation": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/wrist_handeye_02/results/handeye_validation_01.json",
+    "source_scene": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/cli/world/wrist.world.sdf"
+  }
+}

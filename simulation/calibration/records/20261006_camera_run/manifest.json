@@ -1,0 +1,147 @@
+{
+  "record_id": "20261006_camera_run",
+  "measurement_date_kst": "2026-10-06",
+  "publication_date_kst": "2026-10-06",
+  "simulation": true,
+  "camera_model": "D435",
+  "current_urdf_applied": false,
+  "new_measurement_or_evaluation_during_publication": false,
+  "source_files_preserved_byte_for_byte": true,
+  "files": [
+    {
+      "archived_path": "REPORT.md",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/results/automated_calibration_20261006/REPORT.md",
+      "bytes": 6375,
+      "sha256": "153d6837031cf7319317edd6d84b059764ae625a6f17724d3218d9b9d2c86503"
+    },
+    {
+      "archived_path": "summary.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/results/automated_calibration_20261006/summary.json",
+      "bytes": 4608,
+      "sha256": "f98cffdbcf60825490fa0cfcfeb05e53509fb5cb99f146984a750314e41af287"
+    },
+    {
+      "archived_path": "head_summary.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/results/automated_calibration_20261006/head_summary.json",
+      "bytes": 2339,
+      "sha256": "38ff9571ed22ca220f6b794f54f9f0dc451a3911361720f1c9e76424c993ffd3"
+    },
+    {
+      "archived_path": "wrist_summary.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/results/automated_calibration_20261006/wrist_summary.json",
+      "bytes": 1955,
+      "sha256": "47b64749ba34377d2ba8e79379ff98e76c45c26e5605bd8bc5c2ea2ccb6444a5"
+    },
+    {
+      "archived_path": "angle_overlap_plan.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/results/automated_calibration_20261006/angle_overlap_plan.json",
+      "bytes": 17871,
+      "sha256": "d837c2de96e37f2fd7e74176aa905e766a41ca20f18764627a4315a4341f1c62"
+    },
+    {
+      "archived_path": "commands.jsonl",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/results/automated_calibration_20261006/commands.jsonl",
+      "bytes": 131739,
+      "sha256": "bc2df31a17381b82a997013b5177dfd530b5927ae60b94ce306f46f0671555be"
+    },
+    {
+      "archived_path": "progress.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/results/automated_calibration_20261006/progress.json",
+      "bytes": 4594,
+      "sha256": "db32e9149588af4838661fb05162d0f63e921f298bec8ed29d9d582af9b0dba2"
+    },
+    {
+      "archived_path": "source/capture_pose.py",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/capture_pose.py",
+      "bytes": 8624,
+      "sha256": "666066f40a630e26b07030dc622a63f596d2fde1b8badcf771e65f7f670b402d"
+    },
+    {
+      "archived_path": "source/gazebo_capture_stream.py",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/gazebo_capture_stream.py",
+      "bytes": 4414,
+      "sha256": "8054fecf5375df753d0757912a11e7ef15c6bace5317ab8db86f9ec9c887f51c"
+    },
+    {
+      "archived_path": "source/kinematics.py",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/kinematics.py",
+      "bytes": 1554,
+      "sha256": "a42d406431cbef893d2c53af755f33ac02e5d599ca8e93384b8e6425288048b9"
+    },
+    {
+      "archived_path": "source/solve_handeye.py",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/solve_handeye.py",
+      "bytes": 4033,
+      "sha256": "fb6b045c39af08c844cb12de53fd35dcd5fa2df44eb5a3ae40ad4efd19e5349c"
+    },
+    {
+      "archived_path": "source/calibration_workflow.py",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_workflow.py",
+      "bytes": 25744,
+      "sha256": "7e8a1b68a06fdc7c3040ed05d04d1543fc903c0f897e30f99e8b9ed2abdd19ed"
+    },
+    {
+      "archived_path": "source/calibration_auto_planes.py",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_auto_planes.py",
+      "bytes": 15382,
+      "sha256": "3003b2d54a200f366b844feda459503173c33a81341f01931c35ad364637fb3d"
+    },
+    {
+      "archived_path": "source/move_pose.py",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/move_pose.py",
+      "bytes": 967,
+      "sha256": "54061ba530e794d9eb11fd8268dd76a4dd45efabbebf2c537adc74693314ed96"
+    },
+    {
+      "archived_path": "source/build_calibration_scene.py",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/build_calibration_scene.py",
+      "bytes": 4192,
+      "sha256": "38fe86a32a35e0f5ea80bd4ef2d7c8a8082d9c871f48f0515648e9482d3919fb"
+    },
+    {
+      "archived_path": "source/requirements.txt",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/requirements.txt",
+      "bytes": 91,
+      "sha256": "5c3b98824af93967dcb14aec170109e2bcd2bc63a8a9a6ae09f599e494749f4f"
+    },
+    {
+      "archived_path": "source/run.py",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/results/automated_calibration_20261006/run.py",
+      "bytes": 17034,
+      "sha256": "8be141cecc33b82c283fb656482d788fdf3eedfd8a28e3021d2f62b94b03962b"
+    },
+    {
+      "archived_path": "config/measurement_model.urdf",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/robot/simulation/robot_description/robocup.urdf",
+      "bytes": 54813,
+      "sha256": "193207635a76bde7c430a4dc75940d919cd654fc6cda4b15ae1b36968c8eb01b"
+    },
+    {
+      "archived_path": "config/poses/wrist_train.csv",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/cli/poses/wrist_train.csv",
+      "bytes": 1569,
+      "sha256": "61714cabb73e499584f1bf1c62ae3fdf704550ab69b2ab19157fc578da4552af"
+    },
+    {
+      "archived_path": "config/poses/wrist_holdout10.csv",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/cli/poses/wrist_holdout10.csv",
+      "bytes": 751,
+      "sha256": "63ea3a54fc6e3b187e126e7a82146ad7ea08ec5a9e53e532e2895b154ba53ac5"
+    },
+    {
+      "archived_path": "config/board/apriltag_36h11_id0.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/cli/board/apriltag_36h11_id0.png",
+      "bytes": 9116,
+      "sha256": "5fb27dc69b7e10a68b18b7be020a3b6045883c2b34e1cb3a8b5d36783f707310"
+    }
+  ],
+  "excluded": [
+    "xyz.html (derived viewer)",
+    "incomplete captures",
+    "console logs",
+    "virtual environments"
+  ],
+  "related_run_record": "../20261006_camera_run/README.md",
+  "measurement_model": "../20261006_camera_run/config/measurement_model.urdf",
+  "source_repository_commit_field": "Legacy collector constant; model/scene/source hashes are the archived provenance."
+}

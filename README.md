@@ -29,6 +29,8 @@ TRACER × PiPER · Calibration · Detection · Simulation
 |---|---|---|---|
 | Base–2D LiDAR (`laser_frame`) x/y/yaw | 2026-10-05 | 2026-10-06, [`b871b5b`](https://github.com/kimsh039/INHA-RoboCup-Home-2th-2027/commit/b871b5b) | [별도 자세 001/002](simulation/calibration/records/20261005_base_2dlidar/validation/validation_report.md) |
 | Base–Mid360 (`livox_frame`) 위치·방향 | 2026-10-06 | 2026-10-06, [`b871b5b`](https://github.com/kimsh039/INHA-RoboCup-Home-2th-2027/commit/b871b5b) | [별도 자세 A/B, 2026-10-06 추가 업로드](simulation/calibration/records/20261006_base_mid360/validation_20261006_201607/README.md) |
+| Head D435–Mid360 외부 변환 | 2026-10-06 | 2026-10-06 결과 JSON·원자료·평가 업로드; URDF 미반영 | [25개 학습 / 10개 평가, GT 위치 오차 11.720mm](simulation/calibration/records/20261006_head_mid360/README.md) |
+| Link6–Wrist D435 hand-eye | 2026-10-06 | 2026-10-06 결과 JSON·원자료·평가 업로드; URDF 미반영 | [25개 학습 / 10개 평가, GT 위치 오차 0.598mm](simulation/calibration/records/20261006_wrist_d435/README.md) |
 
 [전체 변경 이력·보정 수치](simulation/robot_description/README.md#모델-변경보정업로드-이력) · [최종 모델 적용 명령 — Ubuntu/Mac](simulation/robot_description/README.md#보정-urdf-적용하기)
 

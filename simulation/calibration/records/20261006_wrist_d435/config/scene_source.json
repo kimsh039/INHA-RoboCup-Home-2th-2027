@@ -1,0 +1,7 @@
+{
+  "scene": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/cli/world/wrist.world.sdf",
+  "sha256": "742d1a3e37ce304e3466fe2412c1e4d27fc83be766f640223c36ba40348afb39",
+  "urdf": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/robot/simulation/robot_description/robocup.urdf",
+  "urdf_sha256": "193207635a76bde7c430a4dc75940d919cd654fc6cda4b15ae1b36968c8eb01b",
+  "partition": "robocup_auto_20261006"
+}

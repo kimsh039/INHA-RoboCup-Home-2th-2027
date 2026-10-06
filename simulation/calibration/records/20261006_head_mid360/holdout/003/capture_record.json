@@ -1,0 +1,64 @@
+{
+  "requested_pose": {
+    "split": "holdout",
+    "sample_id": "003",
+    "roll_deg": 18,
+    "pitch_deg": -6,
+    "depth_command_m": 1.12,
+    "existing_user_observation": false
+  },
+  "T_world_board_command": [
+    [
+      -0.10452846347163346,
+      -0.3073241667450896,
+      -0.9458465292311939,
+      0.995049999999089
+    ],
+    [
+      -0.9945218953468341,
+      0.0323010716086357,
+      0.0994124763230169,
+      -0.04298079769855589
+    ],
+    [
+      2.1439210134260702e-11,
+      0.9510565163581868,
+      -0.30901699418095097,
+      1.4696493753910598
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "set_pose_request": "name: \"calibration_board\" position { x: 0.99504999999908905 y: -0.042980797698555888 z: 1.4696493753910598 } orientation { x: -0.54133803189427809 y: 0.60121679310819753 z: 0.43680956882892541 w: -0.39330510229211735 }",
+  "image_id": 27,
+  "image_sim_time": 52.668,
+  "cloud": {
+    "stamp": {
+      "sec": "52",
+      "nsec": 870000000
+    },
+    "frame": [
+      {
+        "key": "frame_id",
+        "value": [
+          "livox_frame"
+        ]
+      },
+      {
+        "key": "seq",
+        "value": [
+          "28"
+        ]
+      }
+    ],
+    "sha256": "755c57de8d2ac2923f02e29bb550285fae045f87b757a501f39751465803eac0"
+  },
+  "board_stationary_during_pair_capture": true,
+  "partition": "robocup_auto_20261006",
+  "world_sha256": "caea3823d0fa812cc0ac38ed051468cd9deb5502a646ab26d76988e8c659d7f2",
+  "ground_truth_not_used_in_solver": true
+}

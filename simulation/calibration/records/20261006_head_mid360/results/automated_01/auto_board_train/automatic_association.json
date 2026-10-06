@@ -1,0 +1,536 @@
+{
+  "manual_roi": false,
+  "method": "whole-cloud plane extraction, persistent-background rejection, multi-pose normal/distance correspondence",
+  "same_visible_board_face_required": true,
+  "sensors_must_remain_stationary": true,
+  "assignments": [
+    {
+      "plane_id": "board001",
+      "cloud": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/001/xyz.npz",
+      "head_plane": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/001/head_plane.json",
+      "selected_plane": {
+        "normal": [
+          -0.9999979757604563,
+          -2.257433494578555e-05,
+          -0.0020119556131899105
+        ],
+        "d": 2.0609500573423913,
+        "points": 350,
+        "rms_m": 0.0007249398458002615,
+        "centroid_m": [
+          2.060908108438764,
+          0.003466205268289611,
+          0.022884415409394673
+        ]
+      },
+      "candidate_count": 4
+    },
+    {
+      "plane_id": "board002",
+      "cloud": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/002/xyz.npz",
+      "head_plane": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/002/head_plane.json",
+      "selected_plane": {
+        "normal": [
+          -0.8331019380902597,
+          -0.3740652114868324,
+          -0.4074510747385075
+        ],
+        "d": 0.9711879552234808,
+        "points": 793,
+        "rms_m": 0.001440093773183541,
+        "centroid_m": [
+          1.1316760097445937,
+          -0.004118106415606517,
+          0.07344910939673871
+        ]
+      },
+      "candidate_count": 5
+    },
+    {
+      "plane_id": "board003",
+      "cloud": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/003/xyz.npz",
+      "head_plane": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/003/head_plane.json",
+      "selected_plane": {
+        "normal": [
+          -0.8921126413625831,
+          -0.1950770051292799,
+          -0.40752913661585766
+        ],
+        "d": 1.1039792730868032,
+        "points": 564,
+        "rms_m": 0.001803253326309356,
+        "centroid_m": [
+          1.2081545432831378,
+          0.05998829190508035,
+          0.03549929238618054
+        ]
+      },
+      "candidate_count": 5
+    },
+    {
+      "plane_id": "board004",
+      "cloud": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/004/xyz.npz",
+      "head_plane": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/004/head_plane.json",
+      "selected_plane": {
+        "normal": [
+          -0.9125645198995846,
+          8.635647875210317e-05,
+          -0.4089327445473144
+        ],
+        "d": 0.9560988007018651,
+        "points": 821,
+        "rms_m": 0.0011682251083873236,
+        "centroid_m": [
+          1.0226555486979931,
+          -0.05001132254390975,
+          0.05589014913741586
+        ]
+      },
+      "candidate_count": 4
+    },
+    {
+      "plane_id": "board005",
+      "cloud": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/005/xyz.npz",
+      "head_plane": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/005/head_plane.json",
+      "selected_plane": {
+        "normal": [
+          -0.8927128426135158,
+          0.1894417031572048,
+          -0.4088711554240451
+        ],
+        "d": 1.0541449426112017,
+        "points": 758,
+        "rms_m": 0.0011116898462082885,
+        "centroid_m": [
+          1.1614862435096802,
+          0.07521400895631579,
+          0.0770901200806324
+        ]
+      },
+      "candidate_count": 5
+    },
+    {
+      "plane_id": "board006",
+      "cloud": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/006/xyz.npz",
+      "head_plane": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/006/head_plane.json",
+      "selected_plane": {
+        "normal": [
+          -0.8341780536436555,
+          0.3702449545310319,
+          -0.40873664927872155
+        ],
+        "d": 1.1026518041426527,
+        "points": 699,
+        "rms_m": 0.001659030665352957,
+        "centroid_m": [
+          1.2737277967905964,
+          -0.011463472835958954,
+          0.08781139843581572
+        ]
+      },
+      "candidate_count": 6
+    },
+    {
+      "plane_id": "board007",
+      "cloud": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/007/xyz.npz",
+      "head_plane": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/007/head_plane.json",
+      "selected_plane": {
+        "normal": [
+          -0.8927893056910168,
+          -0.39796635673786696,
+          -0.21106879103396836
+        ],
+        "d": 0.9828850485781649,
+        "points": 811,
+        "rms_m": 0.0013018093000089176,
+        "centroid_m": [
+          1.0839902462045008,
+          -0.0053158039548064145,
+          0.08161159374655837
+        ]
+      },
+      "candidate_count": 6
+    },
+    {
+      "plane_id": "board008",
+      "cloud": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/008/xyz.npz",
+      "head_plane": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/008/head_plane.json",
+      "selected_plane": {
+        "normal": [
+          -0.9540276798043046,
+          -0.21624692587914038,
+          -0.20752940325418098
+        ],
+        "d": 1.1835477839124862,
+        "points": 693,
+        "rms_m": 0.003234915567920603,
+        "centroid_m": [
+          1.2341405889516612,
+          -0.025595819748012463,
+          0.05627404326978872
+        ]
+      },
+      "candidate_count": 6
+    },
+    {
+      "plane_id": "board009",
+      "cloud": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/009/xyz.npz",
+      "head_plane": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/009/head_plane.json",
+      "selected_plane": {
+        "normal": [
+          -0.9776333892250575,
+          -0.00150675939890757,
+          -0.2103109268403357
+        ],
+        "d": 1.0139043994104673,
+        "points": 903,
+        "rms_m": 0.001003284319993137,
+        "centroid_m": [
+          1.0205288307611333,
+          -0.0015850094308713144,
+          0.07704653420948639
+        ]
+      },
+      "candidate_count": 5
+    },
+    {
+      "plane_id": "board010",
+      "cloud": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/010/xyz.npz",
+      "head_plane": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/010/head_plane.json",
+      "selected_plane": {
+        "normal": [
+          -0.955911673071739,
+          0.20027453521972466,
+          -0.21476262204516
+        ],
+        "d": 1.1269237276241642,
+        "points": 855,
+        "rms_m": 0.0017694427461065138,
+        "centroid_m": [
+          1.1501407182704635,
+          -0.04081210903853692,
+          0.08994657916414459
+        ]
+      },
+      "candidate_count": 4
+    },
+    {
+      "plane_id": "board011",
+      "cloud": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/011/xyz.npz",
+      "head_plane": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/011/head_plane.json",
+      "selected_plane": {
+        "normal": [
+          -0.8929434392643535,
+          0.39805573092967084,
+          -0.21024663932817897
+        ],
+        "d": 1.1491668406867845,
+        "points": 710,
+        "rms_m": 0.0014336457178018855,
+        "centroid_m": [
+          1.2525767645365755,
+          -0.029557971094869625,
+          0.08999390853700084
+        ]
+      },
+      "candidate_count": 5
+    },
+    {
+      "plane_id": "board012",
+      "cloud": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/012/xyz.npz",
+      "head_plane": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/012/head_plane.json",
+      "selected_plane": {
+        "normal": [
+          -0.9127482284402618,
+          -0.4084879621013243,
+          -0.005315665289535
+        ],
+        "d": 1.023188241572777,
+        "points": 832,
+        "rms_m": 0.001301278961215874,
+        "centroid_m": [
+          1.084457316650794,
+          0.0806471839659563,
+          0.07681882341701286
+        ]
+      },
+      "candidate_count": 6
+    },
+    {
+      "plane_id": "board013",
+      "cloud": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/013/xyz.npz",
+      "head_plane": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/013/head_plane.json",
+      "selected_plane": {
+        "normal": [
+          -0.9780563458918915,
+          -0.20831025943876572,
+          -0.003552474230013151
+        ],
+        "d": 1.1866765050792885,
+        "points": 658,
+        "rms_m": 0.0007753983386466606,
+        "centroid_m": [
+          1.214298637079975,
+          -0.005466266619808302,
+          0.04579813463619052
+        ]
+      },
+      "candidate_count": 5
+    },
+    {
+      "plane_id": "board014",
+      "cloud": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/014/xyz.npz",
+      "head_plane": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/014/head_plane.json",
+      "selected_plane": {
+        "normal": [
+          -0.9777392838170482,
+          0.20982063942971935,
+          -0.0010918563227488513
+        ],
+        "d": 1.3154975271140503,
+        "points": 550,
+        "rms_m": 0.0015523015233481396,
+        "centroid_m": [
+          1.3404517329822887,
+          -0.022956459731106986,
+          0.06271031762727282
+        ]
+      },
+      "candidate_count": 6
+    },
+    {
+      "plane_id": "board015",
+      "cloud": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/015/xyz.npz",
+      "head_plane": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/015/head_plane.json",
+      "selected_plane": {
+        "normal": [
+          -0.9163312119465428,
+          0.40038388271182657,
+          -0.005464108086605654
+        ],
+        "d": 1.0253417980566644,
+        "points": 832,
+        "rms_m": 0.0020454733020176226,
+        "centroid_m": [
+          1.1403099103615835,
+          0.05013992629196961,
+          0.09433456657055873
+        ]
+      },
+      "candidate_count": 6
+    },
+    {
+      "plane_id": "board016",
+      "cloud": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/016/xyz.npz",
+      "head_plane": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/016/head_plane.json",
+      "selected_plane": {
+        "normal": [
+          -0.8918326514981264,
+          -0.4035906037358955,
+          0.20432607835985253
+        ],
+        "d": 1.1308876273832376,
+        "points": 643,
+        "rms_m": 0.0021182951836852286,
+        "centroid_m": [
+          1.2886337857594943,
+          -0.001956621220111292,
+          0.08598209676531203
+        ]
+      },
+      "candidate_count": 5
+    },
+    {
+      "plane_id": "board017",
+      "cloud": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/017/xyz.npz",
+      "head_plane": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/017/head_plane.json",
+      "selected_plane": {
+        "normal": [
+          -0.9580253476139362,
+          -0.20004719880835126,
+          0.20534982731458207
+        ],
+        "d": 1.0293465620807472,
+        "points": 750,
+        "rms_m": 0.0012957674688559514,
+        "centroid_m": [
+          1.0827170343399048,
+          0.013666490839331042,
+          0.05190042991315325
+        ]
+      },
+      "candidate_count": 6
+    },
+    {
+      "plane_id": "board018",
+      "cloud": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/018/xyz.npz",
+      "head_plane": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/018/head_plane.json",
+      "selected_plane": {
+        "normal": [
+          -0.9790127051361758,
+          0.0002650278851424326,
+          0.20379905039564702
+        ],
+        "d": 1.1835048597104751,
+        "points": 668,
+        "rms_m": 0.0010878956572390383,
+        "centroid_m": [
+          1.2188225657997016,
+          0.03262851353014695,
+          0.04773952591673521
+        ]
+      },
+      "candidate_count": 5
+    },
+    {
+      "plane_id": "board019",
+      "cloud": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/019/xyz.npz",
+      "head_plane": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/019/head_plane.json",
+      "selected_plane": {
+        "normal": [
+          -0.9576669707139839,
+          0.2043714120450407,
+          0.20274688442049627
+        ],
+        "d": 1.2617766916674877,
+        "points": 575,
+        "rms_m": 0.0011237030892738786,
+        "centroid_m": [
+          1.3427078927081564,
+          0.06803107820999488,
+          0.050243440280142035
+        ]
+      },
+      "candidate_count": 5
+    },
+    {
+      "plane_id": "board020",
+      "cloud": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/020/xyz.npz",
+      "head_plane": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/020/head_plane.json",
+      "selected_plane": {
+        "normal": [
+          -0.8925298441666213,
+          0.40301433053502633,
+          0.2024102928591113
+        ],
+        "d": 1.0125807691279807,
+        "points": 825,
+        "rms_m": 0.001800910996686622,
+        "centroid_m": [
+          1.1118699497887583,
+          -0.09142385832387045,
+          0.08221651534013676
+        ]
+      },
+      "candidate_count": 6
+    },
+    {
+      "plane_id": "board021",
+      "cloud": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/021/xyz.npz",
+      "head_plane": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/021/head_plane.json",
+      "selected_plane": {
+        "normal": [
+          -0.8326002904560321,
+          -0.38172838205706444,
+          0.40132306022035047
+        ],
+        "d": 1.0460975950656086,
+        "points": 655,
+        "rms_m": 0.002846718164712886,
+        "centroid_m": [
+          1.2210973890683123,
+          0.1539388425036685,
+          0.07313626836274416
+        ]
+      },
+      "candidate_count": 5
+    },
+    {
+      "plane_id": "board022",
+      "cloud": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/022/xyz.npz",
+      "head_plane": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/022/head_plane.json",
+      "selected_plane": {
+        "normal": [
+          -0.8950754053293555,
+          -0.19075363116264127,
+          0.4030546749173823
+        ],
+        "d": 1.2535041637665945,
+        "points": 518,
+        "rms_m": 0.0011989443240218976,
+        "centroid_m": [
+          1.3959311115695703,
+          0.07757538226903578,
+          0.02668925150725487
+        ]
+      },
+      "candidate_count": 6
+    },
+    {
+      "plane_id": "board023",
+      "cloud": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/023/xyz.npz",
+      "head_plane": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/023/head_plane.json",
+      "selected_plane": {
+        "normal": [
+          -0.9153034805557195,
+          -1.9013258091282736e-05,
+          0.4027648670391712
+        ],
+        "d": 1.097044277081233,
+        "points": 585,
+        "rms_m": 0.0010204683559254931,
+        "centroid_m": [
+          1.2100191279354258,
+          -0.020400002812792268,
+          0.026045107816019628
+        ]
+      },
+      "candidate_count": 5
+    },
+    {
+      "plane_id": "board024",
+      "cloud": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/024/xyz.npz",
+      "head_plane": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/024/head_plane.json",
+      "selected_plane": {
+        "normal": [
+          -0.8950259788030512,
+          0.19595212360206388,
+          0.40066352781789494
+        ],
+        "d": 1.1656905477374102,
+        "points": 562,
+        "rms_m": 0.0019640061870681586,
+        "centroid_m": [
+          1.3043209208288227,
+          -0.08264028913169999,
+          0.04468612690718043
+        ]
+      },
+      "candidate_count": 5
+    },
+    {
+      "plane_id": "board025",
+      "cloud": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/025/xyz.npz",
+      "head_plane": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/025/head_plane.json",
+      "selected_plane": {
+        "normal": [
+          -0.8369032608037521,
+          0.3717339879486171,
+          0.40175461946300534
+        ],
+        "d": 0.8868658206158229,
+        "points": 785,
+        "rms_m": 0.001424551955540211,
+        "centroid_m": [
+          1.0804776247139949,
+          -0.02811087412998517,
+          0.06929402358853703
+        ]
+      },
+      "candidate_count": 5
+    }
+  ],
+  "calibration_complete": false,
+  "reference_sha256": null,
+  "reference_refitted": false
+}

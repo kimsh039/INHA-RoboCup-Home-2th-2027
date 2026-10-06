@@ -1,0 +1,13 @@
+{
+  "plane_id": "holdout_board001",
+  "nx": 0.09761436280199329,
+  "ny": -0.3122392506465957,
+  "nz": -0.944975177732417,
+  "d": 1.027040487321759,
+  "frame": "camera_optical_frame",
+  "unit": "m",
+  "sample_id": 25,
+  "image_sim_time": 48.734,
+  "dataset_sha256": "096100ca6056d558b7fb2cac759f019aa2b1c455087e9bf366e12c225133a6fb",
+  "tag_to_plane_sha256": "340b17769c060ff9fe37e06e8fc9d04db365c5690bdd8288c0de14798b7c05ec"
+}

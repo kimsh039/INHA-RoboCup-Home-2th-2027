@@ -1,0 +1,28 @@
+{
+  "requested_pose": {
+    "split": "train",
+    "sample_id": "020",
+    "joint_targets_rad": [
+      0.05,
+      0.0,
+      0.0,
+      0.0,
+      0.1,
+      0.0
+    ],
+    "table": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/cli/poses/wrist_train.csv"
+  },
+  "image_id": 19,
+  "measured_joint_positions": {
+    "piper_joint1": 0.049999999999999996,
+    "piper_joint2": -1.757557378366386e-14,
+    "piper_joint3": 7.394109724957019e-14,
+    "piper_joint4": 2.861648027070476e-14,
+    "piper_joint5": 0.10000000000016379,
+    "piper_joint6": 4.557595438877843e-15
+  },
+  "max_joint_command_error_rad": 1.6378565170782622e-13,
+  "image_sim_time": 138.988,
+  "time_skew_s": 0.0,
+  "partition": "robocup_auto_20261006"
+}

@@ -1,0 +1,14 @@
+{
+  "count": 35,
+  "duplicates": [],
+  "minimum_joint_distance_rad": 0.017320508075688114,
+  "minimum_flange_rotation_deg": 1.0445407087976157,
+  "closest_train_holdout": {
+    "a": 23,
+    "b": 29,
+    "cross_split": true,
+    "joint_distance_rad": 0.046904157598236434,
+    "flange_translation_mm": 3.0556457875936514,
+    "flange_rotation_deg": 2.707335267791086
+  }
+}

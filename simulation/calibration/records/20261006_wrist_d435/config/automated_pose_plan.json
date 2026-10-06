@@ -1,0 +1,457 @@
+[
+  {
+    "split": "train",
+    "sample_id": "001",
+    "joint_targets_rad": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "table": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/cli/poses/wrist_train.csv"
+  },
+  {
+    "split": "train",
+    "sample_id": "002",
+    "joint_targets_rad": [
+      0.1,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "table": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/cli/poses/wrist_train.csv"
+  },
+  {
+    "split": "train",
+    "sample_id": "003",
+    "joint_targets_rad": [
+      -0.1,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "table": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/cli/poses/wrist_train.csv"
+  },
+  {
+    "split": "train",
+    "sample_id": "004",
+    "joint_targets_rad": [
+      0.0,
+      0.0,
+      0.0,
+      0.1,
+      0.0,
+      0.0
+    ],
+    "table": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/cli/poses/wrist_train.csv"
+  },
+  {
+    "split": "train",
+    "sample_id": "005",
+    "joint_targets_rad": [
+      0.0,
+      0.0,
+      0.0,
+      -0.1,
+      0.0,
+      0.0
+    ],
+    "table": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/cli/poses/wrist_train.csv"
+  },
+  {
+    "split": "train",
+    "sample_id": "006",
+    "joint_targets_rad": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.1,
+      0.0
+    ],
+    "table": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/cli/poses/wrist_train.csv"
+  },
+  {
+    "split": "train",
+    "sample_id": "007",
+    "joint_targets_rad": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      -0.1,
+      0.0
+    ],
+    "table": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/cli/poses/wrist_train.csv"
+  },
+  {
+    "split": "train",
+    "sample_id": "008",
+    "joint_targets_rad": [
+      0.1,
+      0.0,
+      0.0,
+      0.0,
+      0.1,
+      0.0
+    ],
+    "table": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/cli/poses/wrist_train.csv"
+  },
+  {
+    "split": "train",
+    "sample_id": "009",
+    "joint_targets_rad": [
+      -0.1,
+      0.0,
+      0.0,
+      0.0,
+      -0.1,
+      0.0
+    ],
+    "table": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/cli/poses/wrist_train.csv"
+  },
+  {
+    "split": "train",
+    "sample_id": "010",
+    "joint_targets_rad": [
+      0.0,
+      0.0,
+      0.0,
+      0.1,
+      0.1,
+      0.0
+    ],
+    "table": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/cli/poses/wrist_train.csv"
+  },
+  {
+    "split": "train",
+    "sample_id": "011",
+    "joint_targets_rad": [
+      0.0,
+      0.0,
+      0.0,
+      -0.1,
+      -0.1,
+      0.0
+    ],
+    "table": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/cli/poses/wrist_train.csv"
+  },
+  {
+    "split": "train",
+    "sample_id": "012",
+    "joint_targets_rad": [
+      0.1,
+      0.0,
+      0.0,
+      0.1,
+      0.0,
+      0.0
+    ],
+    "table": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/cli/poses/wrist_train.csv"
+  },
+  {
+    "split": "train",
+    "sample_id": "013",
+    "joint_targets_rad": [
+      -0.1,
+      0.0,
+      0.0,
+      -0.1,
+      0.0,
+      0.0
+    ],
+    "table": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/cli/poses/wrist_train.csv"
+  },
+  {
+    "split": "train",
+    "sample_id": "014",
+    "joint_targets_rad": [
+      0.1,
+      0.0,
+      0.0,
+      -0.1,
+      0.1,
+      0.0
+    ],
+    "table": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/cli/poses/wrist_train.csv"
+  },
+  {
+    "split": "train",
+    "sample_id": "015",
+    "joint_targets_rad": [
+      -0.1,
+      0.0,
+      0.0,
+      0.1,
+      -0.1,
+      0.0
+    ],
+    "table": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/cli/poses/wrist_train.csv"
+  },
+  {
+    "split": "train",
+    "sample_id": "016",
+    "joint_targets_rad": [
+      0.1,
+      0.0,
+      0.0,
+      0.1,
+      0.1,
+      0.0
+    ],
+    "table": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/cli/poses/wrist_train.csv"
+  },
+  {
+    "split": "train",
+    "sample_id": "017",
+    "joint_targets_rad": [
+      -0.1,
+      0.0,
+      0.0,
+      -0.1,
+      -0.1,
+      0.0
+    ],
+    "table": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/cli/poses/wrist_train.csv"
+  },
+  {
+    "split": "train",
+    "sample_id": "018",
+    "joint_targets_rad": [
+      0.1,
+      0.0,
+      0.0,
+      -0.1,
+      -0.1,
+      0.0
+    ],
+    "table": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/cli/poses/wrist_train.csv"
+  },
+  {
+    "split": "train",
+    "sample_id": "019",
+    "joint_targets_rad": [
+      -0.1,
+      0.0,
+      0.0,
+      0.1,
+      0.1,
+      0.0
+    ],
+    "table": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/cli/poses/wrist_train.csv"
+  },
+  {
+    "split": "train",
+    "sample_id": "020",
+    "joint_targets_rad": [
+      0.05,
+      0.0,
+      0.0,
+      0.0,
+      0.1,
+      0.0
+    ],
+    "table": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/cli/poses/wrist_train.csv"
+  },
+  {
+    "split": "train",
+    "sample_id": "021",
+    "joint_targets_rad": [
+      -0.05,
+      0.0,
+      0.0,
+      0.0,
+      -0.1,
+      0.0
+    ],
+    "table": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/cli/poses/wrist_train.csv"
+  },
+  {
+    "split": "train",
+    "sample_id": "022",
+    "joint_targets_rad": [
+      0.0,
+      0.0,
+      0.0,
+      0.05,
+      0.1,
+      0.0
+    ],
+    "table": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/cli/poses/wrist_train.csv"
+  },
+  {
+    "split": "train",
+    "sample_id": "023",
+    "joint_targets_rad": [
+      0.0,
+      0.0,
+      0.0,
+      -0.05,
+      -0.1,
+      0.0
+    ],
+    "table": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/cli/poses/wrist_train.csv"
+  },
+  {
+    "split": "train",
+    "sample_id": "024",
+    "joint_targets_rad": [
+      0.1,
+      0.0,
+      0.0,
+      0.05,
+      -0.1,
+      0.0
+    ],
+    "table": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/cli/poses/wrist_train.csv"
+  },
+  {
+    "split": "train",
+    "sample_id": "025",
+    "joint_targets_rad": [
+      -0.1,
+      0.0,
+      0.0,
+      -0.05,
+      0.1,
+      0.0
+    ],
+    "table": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/cli/poses/wrist_train.csv"
+  },
+  {
+    "split": "holdout",
+    "sample_id": "001",
+    "joint_targets_rad": [
+      0.05,
+      0.0,
+      0.0,
+      0.05,
+      0.05,
+      0.0
+    ],
+    "table": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/cli/poses/wrist_holdout10.csv"
+  },
+  {
+    "split": "holdout",
+    "sample_id": "002",
+    "joint_targets_rad": [
+      -0.05,
+      0.0,
+      0.0,
+      0.05,
+      0.05,
+      0.0
+    ],
+    "table": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/cli/poses/wrist_holdout10.csv"
+  },
+  {
+    "split": "holdout",
+    "sample_id": "003",
+    "joint_targets_rad": [
+      0.05,
+      0.0,
+      0.0,
+      -0.05,
+      -0.05,
+      0.0
+    ],
+    "table": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/cli/poses/wrist_holdout10.csv"
+  },
+  {
+    "split": "holdout",
+    "sample_id": "004",
+    "joint_targets_rad": [
+      -0.05,
+      0.0,
+      0.0,
+      -0.05,
+      0.05,
+      0.0
+    ],
+    "table": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/cli/poses/wrist_holdout10.csv"
+  },
+  {
+    "split": "holdout",
+    "sample_id": "005",
+    "joint_targets_rad": [
+      0.07,
+      0.0,
+      0.0,
+      0.03,
+      -0.07,
+      0.0
+    ],
+    "table": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/cli/poses/wrist_holdout10.csv"
+  },
+  {
+    "split": "holdout",
+    "sample_id": "006",
+    "joint_targets_rad": [
+      0.03,
+      0.0,
+      0.0,
+      -0.07,
+      0.06,
+      0.0
+    ],
+    "table": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/cli/poses/wrist_holdout10.csv"
+  },
+  {
+    "split": "holdout",
+    "sample_id": "007",
+    "joint_targets_rad": [
+      -0.03,
+      0.0,
+      0.0,
+      0.07,
+      -0.06,
+      0.0
+    ],
+    "table": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/cli/poses/wrist_holdout10.csv"
+  },
+  {
+    "split": "holdout",
+    "sample_id": "008",
+    "joint_targets_rad": [
+      0.08,
+      0.0,
+      0.0,
+      0.04,
+      0.03,
+      0.0
+    ],
+    "table": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/cli/poses/wrist_holdout10.csv"
+  },
+  {
+    "split": "holdout",
+    "sample_id": "009",
+    "joint_targets_rad": [
+      -0.08,
+      0.0,
+      0.0,
+      -0.04,
+      -0.03,
+      0.0
+    ],
+    "table": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/cli/poses/wrist_holdout10.csv"
+  },
+  {
+    "split": "holdout",
+    "sample_id": "010",
+    "joint_targets_rad": [
+      0.02,
+      0.0,
+      0.0,
+      -0.08,
+      0.07,
+      0.0
+    ],
+    "table": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/cli/poses/wrist_holdout10.csv"
+  }
+]

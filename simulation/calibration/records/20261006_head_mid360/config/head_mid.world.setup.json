@@ -1,0 +1,11 @@
+{
+  "setup_only": true,
+  "mode": "head-mid",
+  "tag_family": "AprilTag 36h11",
+  "tag_id": 0,
+  "tag_black_edge_m": 0.08,
+  "source_world": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/cli/world/wrist.world.sdf",
+  "camera_mount_cad_used_only_for_fixture_placement": true,
+  "solver_must_use_image_pnp_and_measured_joints_or_cloud": true,
+  "live_scene_visibility_and_collision_validated": false
+}

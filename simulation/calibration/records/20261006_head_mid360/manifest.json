@@ -1,0 +1,1583 @@
+{
+  "record_id": "20261006_head_mid360",
+  "measurement_date_kst": "2026-10-06",
+  "publication_date_kst": "2026-10-06",
+  "simulation": true,
+  "camera_model": "D435",
+  "current_urdf_applied": false,
+  "new_measurement_or_evaluation_during_publication": false,
+  "source_files_preserved_byte_for_byte": true,
+  "files": [
+    {
+      "archived_path": "config/automated_pose_plan.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/config/automated_pose_plan.json",
+      "bytes": 5766,
+      "sha256": "a7ce498a6f3268e22e9141d87c524268a22ef1a5c1f2809a1f936822b6090c96"
+    },
+    {
+      "archived_path": "config/head_mid.world.sdf",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/config/head_mid.world.sdf",
+      "bytes": 104007,
+      "sha256": "caea3823d0fa812cc0ac38ed051468cd9deb5502a646ab26d76988e8c659d7f2"
+    },
+    {
+      "archived_path": "config/head_mid.world.setup.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/config/head_mid.world.setup.json",
+      "bytes": 437,
+      "sha256": "60456d5f3c57d2193e173ae5cacdacfeeb7a13caf33f52b2f734ff666c0153b5"
+    },
+    {
+      "archived_path": "config/head_mid.world.tag_to_plane.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/config/head_mid.world.tag_to_plane.json",
+      "bytes": 359,
+      "sha256": "340b17769c060ff9fe37e06e8fc9d04db365c5690bdd8288c0de14798b7c05ec"
+    },
+    {
+      "archived_path": "config/tag_to_plane.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/config/tag_to_plane.json",
+      "bytes": 359,
+      "sha256": "340b17769c060ff9fe37e06e8fc9d04db365c5690bdd8288c0de14798b7c05ec"
+    },
+    {
+      "archived_path": "head_samples.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/head_samples.json",
+      "bytes": 119865,
+      "sha256": "b44e442939f4ade683c229081156b6c24e264da3229dd0c9a816a2945c640727"
+    },
+    {
+      "archived_path": "holdout/001/capture_id.txt",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/holdout/001/capture_id.txt",
+      "bytes": 3,
+      "sha256": "64aeb9975f234becd55bb4635e6e2f2da7a6b7bf0a896f0c07763bdfbfb31420"
+    },
+    {
+      "archived_path": "holdout/001/capture_record.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/holdout/001/capture_record.json",
+      "bytes": 1510,
+      "sha256": "63228f92fe0568ff19292fde4257ced27d45a32276cd27aebda20dfc839d40d9"
+    },
+    {
+      "archived_path": "holdout/001/head_plane.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/holdout/001/head_plane.json",
+      "bytes": 427,
+      "sha256": "a8a1ea13871f81db266d66a81bf233801adbb95f432bf2536db81987cca20800"
+    },
+    {
+      "archived_path": "holdout/001/points_raw.json.gz",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/holdout/001/points_raw.json.gz",
+      "bytes": 225451,
+      "sha256": "fff76645adc883856b9c1df0f49a043b9ec58f8260c31437855906519142b1ea"
+    },
+    {
+      "archived_path": "holdout/001/xyz.npz",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/holdout/001/xyz.npz",
+      "bytes": 208145,
+      "sha256": "5a6a7d9d05f5e790996986f7b2b61ac60b9bbb8690ff11c95dcf1e2e3d27853f"
+    },
+    {
+      "archived_path": "holdout/002/capture_id.txt",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/holdout/002/capture_id.txt",
+      "bytes": 3,
+      "sha256": "20d2add851bf39edcc6b5e830930f962db7e19dffa2cab8610eed551eda6c302"
+    },
+    {
+      "archived_path": "holdout/002/capture_record.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/holdout/002/capture_record.json",
+      "bytes": 1505,
+      "sha256": "17e331ae534b6419d3bda0e438f4b2aac4afae1c84def93321c85530bb15a850"
+    },
+    {
+      "archived_path": "holdout/002/head_plane.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/holdout/002/head_plane.json",
+      "bytes": 428,
+      "sha256": "e9bc4621483fb1c5fa241c6f53380a0555c42688e2911dd36ddd3274dfd05881"
+    },
+    {
+      "archived_path": "holdout/002/points_raw.json.gz",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/holdout/002/points_raw.json.gz",
+      "bytes": 225565,
+      "sha256": "9f33f3fd3d5f8daec4a7e6efdf678fb2d3c3ee0d963ca94b494611c92176dfd2"
+    },
+    {
+      "archived_path": "holdout/002/xyz.npz",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/holdout/002/xyz.npz",
+      "bytes": 208036,
+      "sha256": "915e7f2a057550f1042c97db24ae526f5d86c9c0ea6789acb4b729d911d0608f"
+    },
+    {
+      "archived_path": "holdout/003/capture_id.txt",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/holdout/003/capture_id.txt",
+      "bytes": 3,
+      "sha256": "932ab0a0e4191d32c0af7b3f565b7b180dbe9869378abc5816f9add54b806e7f"
+    },
+    {
+      "archived_path": "holdout/003/capture_record.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/holdout/003/capture_record.json",
+      "bytes": 1509,
+      "sha256": "7cc3618adbc2d61f39ae8d7f249eadce9d7943f62b0da8baeb99057650f18961"
+    },
+    {
+      "archived_path": "holdout/003/head_plane.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/holdout/003/head_plane.json",
+      "bytes": 429,
+      "sha256": "b74e9e0c1d2619c1a7ac05d825367ba19f7f4aad4e16ed9b6b37f0ed170344ab"
+    },
+    {
+      "archived_path": "holdout/003/points_raw.json.gz",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/holdout/003/points_raw.json.gz",
+      "bytes": 225262,
+      "sha256": "755c57de8d2ac2923f02e29bb550285fae045f87b757a501f39751465803eac0"
+    },
+    {
+      "archived_path": "holdout/003/xyz.npz",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/holdout/003/xyz.npz",
+      "bytes": 207835,
+      "sha256": "79e8461dc71520a002ba8b7179679839b7b772236fc8915799963cdcef034755"
+    },
+    {
+      "archived_path": "holdout/004/capture_id.txt",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/holdout/004/capture_id.txt",
+      "bytes": 3,
+      "sha256": "9961d158a7e0e2f990765971a9e490af826c0743b7d603020f34cc8944319fcb"
+    },
+    {
+      "archived_path": "holdout/004/capture_record.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/holdout/004/capture_record.json",
+      "bytes": 1510,
+      "sha256": "6d5c59e073a6d9ea39e598a5657092e0875e56d449f683446a91ec1dac98721b"
+    },
+    {
+      "archived_path": "holdout/004/head_plane.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/holdout/004/head_plane.json",
+      "bytes": 429,
+      "sha256": "b90e0b1409f9654ddf6770ee6e87c309e9605ef26563403f93b1af8c8903a6ab"
+    },
+    {
+      "archived_path": "holdout/004/points_raw.json.gz",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/holdout/004/points_raw.json.gz",
+      "bytes": 225623,
+      "sha256": "f4536ef1db7d7eea8cc602a4970abc4d2497be3c65d53ad15c38a271865c7883"
+    },
+    {
+      "archived_path": "holdout/004/xyz.npz",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/holdout/004/xyz.npz",
+      "bytes": 208025,
+      "sha256": "4c8ae178cc6bf88e7d06fef9e76c898849a67f951eb3ecbe0771d557a17d4c24"
+    },
+    {
+      "archived_path": "holdout/005/capture_id.txt",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/holdout/005/capture_id.txt",
+      "bytes": 3,
+      "sha256": "3840bc236ee03aacbb1ef7d5108ddfa347c59f10b68d4174affbb53140f31273"
+    },
+    {
+      "archived_path": "holdout/005/capture_record.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/holdout/005/capture_record.json",
+      "bytes": 1505,
+      "sha256": "994f1ae2b40a6ffe9a4e178dc57443054db418b9c89c78b715de1940845eddd6"
+    },
+    {
+      "archived_path": "holdout/005/head_plane.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/holdout/005/head_plane.json",
+      "bytes": 426,
+      "sha256": "d01b0ded1ddfe2cc824148169609ccb7ee1bfc6a84a87cd801ed267b7e943faa"
+    },
+    {
+      "archived_path": "holdout/005/points_raw.json.gz",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/holdout/005/points_raw.json.gz",
+      "bytes": 225544,
+      "sha256": "648f65a502a16c74c90ebf770160ee8985dbabbf10f40c91d354632f64cc4c38"
+    },
+    {
+      "archived_path": "holdout/005/xyz.npz",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/holdout/005/xyz.npz",
+      "bytes": 207968,
+      "sha256": "32960dfc8ffe58d6af091677744b3dbbeb6e9934f96a51fa6a28144d2bcc4dd7"
+    },
+    {
+      "archived_path": "holdout/006/capture_id.txt",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/holdout/006/capture_id.txt",
+      "bytes": 3,
+      "sha256": "f4ccd05b3271c386ee55d9876c7450012a3b361e5065c09dc22075e38b3cc35c"
+    },
+    {
+      "archived_path": "holdout/006/capture_record.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/holdout/006/capture_record.json",
+      "bytes": 1506,
+      "sha256": "b2c1734c335e8f61634550527ad694e65f3bc6915e95b7c9b4ec97f9b9d333b4"
+    },
+    {
+      "archived_path": "holdout/006/head_plane.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/holdout/006/head_plane.json",
+      "bytes": 431,
+      "sha256": "6ae67e5354131a85911f10b4b36b9310629ab05239e37294c0e0d436f6ae1cdc"
+    },
+    {
+      "archived_path": "holdout/006/points_raw.json.gz",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/holdout/006/points_raw.json.gz",
+      "bytes": 225650,
+      "sha256": "151937439747405a9a493cf29e24eca34ebda36a281819bff7ed11474aa06aff"
+    },
+    {
+      "archived_path": "holdout/006/xyz.npz",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/holdout/006/xyz.npz",
+      "bytes": 208033,
+      "sha256": "fe05f18a661d28c5fc67160356fe2ee210b1bbb6c7262a15462f297d875e2d44"
+    },
+    {
+      "archived_path": "holdout/007/capture_id.txt",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/holdout/007/capture_id.txt",
+      "bytes": 3,
+      "sha256": "32c2643e0dc65524c9f1f6f9f00937322fd68d59986bc381d9ff2285d23e353d"
+    },
+    {
+      "archived_path": "holdout/007/capture_record.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/holdout/007/capture_record.json",
+      "bytes": 1512,
+      "sha256": "a1c0afd0bfd2ac7e984ff3160a1121ee43eac4a90f0ef9443d31a56313e22204"
+    },
+    {
+      "archived_path": "holdout/007/head_plane.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/holdout/007/head_plane.json",
+      "bytes": 429,
+      "sha256": "e3a88673828dbbdebe5d6b65d1b214bf0bfc8dbec6b116f137c97e3c84dbf125"
+    },
+    {
+      "archived_path": "holdout/007/points_raw.json.gz",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/holdout/007/points_raw.json.gz",
+      "bytes": 225372,
+      "sha256": "bbcdaa3a80297c35677303dd883cf4d3115040b40b32ffabd8a04283447932d9"
+    },
+    {
+      "archived_path": "holdout/007/xyz.npz",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/holdout/007/xyz.npz",
+      "bytes": 207962,
+      "sha256": "68da2b7107b62f49f445a1d3ee489822efb06e323a1ba5a7932f962a7b65e733"
+    },
+    {
+      "archived_path": "holdout/008/capture_id.txt",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/holdout/008/capture_id.txt",
+      "bytes": 3,
+      "sha256": "2115cdb6bfcfb008eb2bab2bb79347cb064a48e4e7c4115ccbe4469c787bb6c4"
+    },
+    {
+      "archived_path": "holdout/008/capture_record.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/holdout/008/capture_record.json",
+      "bytes": 1510,
+      "sha256": "2416f4f1d7818b8874bf5670b7855a321642635af417bea92b8c3c55167a0c1a"
+    },
+    {
+      "archived_path": "holdout/008/head_plane.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/holdout/008/head_plane.json",
+      "bytes": 427,
+      "sha256": "d8d2eaded84ef58ae6d46e40168f6a84dad533dd52d29691b624b7815152dbd8"
+    },
+    {
+      "archived_path": "holdout/008/points_raw.json.gz",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/holdout/008/points_raw.json.gz",
+      "bytes": 225313,
+      "sha256": "a291b510ebe81fdf3ab81fd0d409dace73865d4f32193a8546f58d1571d72935"
+    },
+    {
+      "archived_path": "holdout/008/xyz.npz",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/holdout/008/xyz.npz",
+      "bytes": 207975,
+      "sha256": "e0e416efba374a5596b8c0f9b6cf072bf6d7172b176ef1c22d790bef8d6be2fa"
+    },
+    {
+      "archived_path": "holdout/009/capture_id.txt",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/holdout/009/capture_id.txt",
+      "bytes": 3,
+      "sha256": "19b8d5c59e421f037fe563007c7254eb8d98bc221b278c3db3e5fdbbfd52e273"
+    },
+    {
+      "archived_path": "holdout/009/capture_record.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/holdout/009/capture_record.json",
+      "bytes": 1508,
+      "sha256": "af094846447faec3321c6c08c9185829a5c86f93008d1e65a4ecc79f727d8300"
+    },
+    {
+      "archived_path": "holdout/009/head_plane.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/holdout/009/head_plane.json",
+      "bytes": 429,
+      "sha256": "d9d534587a61a39f9878623e36a133d4bd5753b2330070ebd5b350b02823dfb7"
+    },
+    {
+      "archived_path": "holdout/009/points_raw.json.gz",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/holdout/009/points_raw.json.gz",
+      "bytes": 225694,
+      "sha256": "2542e5daad210f589c14104034b7113fdca2c9f54a204170f635922e2b53e5b0"
+    },
+    {
+      "archived_path": "holdout/009/xyz.npz",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/holdout/009/xyz.npz",
+      "bytes": 208160,
+      "sha256": "8f4d09e11742fbb0c952d961a2d85d37ec7015e27e020b9d36d1aaf58fb63121"
+    },
+    {
+      "archived_path": "holdout/010/capture_id.txt",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/holdout/010/capture_id.txt",
+      "bytes": 3,
+      "sha256": "ea243e5457028e97f9bc93b37a72f8e80ea61ae081911bb037765590ee6aa435"
+    },
+    {
+      "archived_path": "holdout/010/capture_record.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/holdout/010/capture_record.json",
+      "bytes": 1508,
+      "sha256": "35cc1e85d80922b71fa2246fcb083e1ec3b1eb4ea7f02a282b15b787cc69cdc2"
+    },
+    {
+      "archived_path": "holdout/010/head_plane.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/holdout/010/head_plane.json",
+      "bytes": 430,
+      "sha256": "adc5061e86ff58d80f3ae10f5bb37483cb3840a4c17555e606de60eaa65e576a"
+    },
+    {
+      "archived_path": "holdout/010/points_raw.json.gz",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/holdout/010/points_raw.json.gz",
+      "bytes": 225592,
+      "sha256": "0eecfb720423ddc5849366d40b3bc1f6e52a908aaced56cce276fc55a3439f1f"
+    },
+    {
+      "archived_path": "holdout/010/xyz.npz",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/holdout/010/xyz.npz",
+      "bytes": 207980,
+      "sha256": "bb2b963e4c0ac14e1f95e79d590122bd76fceb7a385509a089d46c6af2953e9a"
+    },
+    {
+      "archived_path": "images/head_000.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/images/head_000.png",
+      "bytes": 20400,
+      "sha256": "ecabd4dedb29f32ab43954878a3d4ca369fc716cb26979e17dc72ec04dcb7571"
+    },
+    {
+      "archived_path": "images/head_000_preview.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/images/head_000_preview.png",
+      "bytes": 20648,
+      "sha256": "a0775b4f7ea3c58f6770eae2681e37e9eeeaedd649094704755178dab40a6194"
+    },
+    {
+      "archived_path": "images/head_001.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/images/head_001.png",
+      "bytes": 39067,
+      "sha256": "2847418015879f550beffb333fcfb77fa2f4d688d763f2f72f466db2a72902e8"
+    },
+    {
+      "archived_path": "images/head_001_preview.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/images/head_001_preview.png",
+      "bytes": 39086,
+      "sha256": "b01efcc5fb4fcfa44b36314d4ffda5515bb5d113b4c47d9eeaf1729da9da8949"
+    },
+    {
+      "archived_path": "images/head_002.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/images/head_002.png",
+      "bytes": 33147,
+      "sha256": "fe9d8f6990b0f09c4955ad573cbcbfc1b855d283919cfd02dabe022697807986"
+    },
+    {
+      "archived_path": "images/head_002_preview.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/images/head_002_preview.png",
+      "bytes": 33343,
+      "sha256": "029c6df58d35c41f37069c57efd23260b2fd37efc7901d6d267ad1feb4e9e1e1"
+    },
+    {
+      "archived_path": "images/head_003.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/images/head_003.png",
+      "bytes": 29630,
+      "sha256": "7e2006ae08467c63c5db9a217fca3a09f6f75a0df95a943168bb4101e42e55c5"
+    },
+    {
+      "archived_path": "images/head_003_preview.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/images/head_003_preview.png",
+      "bytes": 29918,
+      "sha256": "dd98aae0769d228cd6e9f523e319c3295277b6aae8d30c89731ce4035cd2f08c"
+    },
+    {
+      "archived_path": "images/head_004.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/images/head_004.png",
+      "bytes": 30045,
+      "sha256": "950846b242b34281f4f53921d5d3e5358933574fa95e18ee58d81ce195515318"
+    },
+    {
+      "archived_path": "images/head_004_preview.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/images/head_004_preview.png",
+      "bytes": 30129,
+      "sha256": "c9e09623a4aae346dbcafeeb1cfbe5b1e2735b7ca81a29e45ad39c0c19e33e3d"
+    },
+    {
+      "archived_path": "images/head_005.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/images/head_005.png",
+      "bytes": 33648,
+      "sha256": "c88d9bb7a86ddc14d25f4b88c87661529fdf4d1899434640d72030419bd91a45"
+    },
+    {
+      "archived_path": "images/head_005_preview.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/images/head_005_preview.png",
+      "bytes": 33853,
+      "sha256": "fb3b0f57f956a495f6159de50ea9664d90a2ac11bd98058001d0ad20b7500e6b"
+    },
+    {
+      "archived_path": "images/head_006.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/images/head_006.png",
+      "bytes": 33231,
+      "sha256": "949ed69773ce9f0945b7adf88e7f5c26e47ae9942ddbdc490f066cbd5d8d5708"
+    },
+    {
+      "archived_path": "images/head_006_preview.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/images/head_006_preview.png",
+      "bytes": 33300,
+      "sha256": "961de46c894120e93b3b2531ccd5760697288d0938b06be1b7e38ca7cc7b65df"
+    },
+    {
+      "archived_path": "images/head_007.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/images/head_007.png",
+      "bytes": 31147,
+      "sha256": "0b037e6605c4f2f359486011eaeb36baac4b9bd93284eddb42aa48e059802355"
+    },
+    {
+      "archived_path": "images/head_007_preview.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/images/head_007_preview.png",
+      "bytes": 31189,
+      "sha256": "efc7b5ab0fd345e04261b600c7175eed2ade03ea7d4d5a5c68ea876a31d21ac7"
+    },
+    {
+      "archived_path": "images/head_008.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/images/head_008.png",
+      "bytes": 29772,
+      "sha256": "b9e930da158b1e2076af1e416371b3faba6286b3e183cd4cd905e41d8ead7b82"
+    },
+    {
+      "archived_path": "images/head_008_preview.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/images/head_008_preview.png",
+      "bytes": 29736,
+      "sha256": "b64ed25cbb19af2c17582b094993ab23080817b637de3aaca2c9315214f3f3bc"
+    },
+    {
+      "archived_path": "images/head_009.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/images/head_009.png",
+      "bytes": 30930,
+      "sha256": "2b98d48d1100a62078635c70386b10df1755938f803907ce8d498e89f92fbea3"
+    },
+    {
+      "archived_path": "images/head_009_preview.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/images/head_009_preview.png",
+      "bytes": 30973,
+      "sha256": "21418b6133198160234845e3e0097ae7d7b7ea97f980b3ffbf55e3556752f3c1"
+    },
+    {
+      "archived_path": "images/head_010.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/images/head_010.png",
+      "bytes": 35709,
+      "sha256": "d42b430fa251b3c9ce4ea0f5cce198ece3522665d4c7bb2675b9acb246f94783"
+    },
+    {
+      "archived_path": "images/head_010_preview.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/images/head_010_preview.png",
+      "bytes": 35968,
+      "sha256": "6ffd569406e5b335bfd8fadb789cca2b1d1d47411f9eab3a473c85b01f3fed80"
+    },
+    {
+      "archived_path": "images/head_011.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/images/head_011.png",
+      "bytes": 29761,
+      "sha256": "957a0dee791eed13ff89b804db74791e68f5716f735a9d8138b19082e815a582"
+    },
+    {
+      "archived_path": "images/head_011_preview.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/images/head_011_preview.png",
+      "bytes": 29827,
+      "sha256": "2d70e5210b82990e60f02404dcbbea1fdc8cd9bd112667ba14a915793388ee7a"
+    },
+    {
+      "archived_path": "images/head_012.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/images/head_012.png",
+      "bytes": 29649,
+      "sha256": "2c50d388045a596d4b680c1651b0f429d3de064df929af349bb5bf219374dbbb"
+    },
+    {
+      "archived_path": "images/head_012_preview.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/images/head_012_preview.png",
+      "bytes": 29842,
+      "sha256": "f0345094c472d0f4999d62206d3b11c5fe263e75e12e150151fb323b7dacb6e1"
+    },
+    {
+      "archived_path": "images/head_013.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/images/head_013.png",
+      "bytes": 27943,
+      "sha256": "b54ec1c40fcf8580a434026dadfe56ea8e773def6b7ae773f0f16396f175b436"
+    },
+    {
+      "archived_path": "images/head_013_preview.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/images/head_013_preview.png",
+      "bytes": 28108,
+      "sha256": "d831115a5894331fa704c8201f637cfcd4b7c91b0fdcf1e3f28b59b48b8356c1"
+    },
+    {
+      "archived_path": "images/head_014.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/images/head_014.png",
+      "bytes": 36903,
+      "sha256": "68dd8ff3333a1bf55c4eb66adbd2e9dbb6441f4363f349c34e3f9988bfa173db"
+    },
+    {
+      "archived_path": "images/head_014_preview.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/images/head_014_preview.png",
+      "bytes": 36983,
+      "sha256": "4a91e6a82637c8ee473e5feffc0a82a3fdc951e1f3a5faaf92da0ab30e46f01e"
+    },
+    {
+      "archived_path": "images/head_015.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/images/head_015.png",
+      "bytes": 32894,
+      "sha256": "73aaea63bb669832d2e74d9fc3635922471392bb2b1c00d432d191614a9e2250"
+    },
+    {
+      "archived_path": "images/head_015_preview.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/images/head_015_preview.png",
+      "bytes": 33088,
+      "sha256": "20b3c0df13456da338c779abb806f0d2eddf7535f7ab743aa46179bf08825873"
+    },
+    {
+      "archived_path": "images/head_016.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/images/head_016.png",
+      "bytes": 31506,
+      "sha256": "bfc9d3392acd96df2e688af7c489527c68318bd4db20894c0718c67fcbf59f45"
+    },
+    {
+      "archived_path": "images/head_016_preview.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/images/head_016_preview.png",
+      "bytes": 31463,
+      "sha256": "180ff7a426d0fd1bede8015738561800ec79756b5a48c42268e9dc21d0ed0ace"
+    },
+    {
+      "archived_path": "images/head_017.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/images/head_017.png",
+      "bytes": 29069,
+      "sha256": "6e4e0e2e9753a236f91c30f1c9217aaddd5144b4493e384f6064ba2bc6921dad"
+    },
+    {
+      "archived_path": "images/head_017_preview.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/images/head_017_preview.png",
+      "bytes": 29366,
+      "sha256": "81ca288d516a736a03af9b3478514ed62c7c96ad79e019e514dc61b526b4e84e"
+    },
+    {
+      "archived_path": "images/head_018.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/images/head_018.png",
+      "bytes": 30676,
+      "sha256": "8231ed3fe52a95f0ac618895e77ffd41f61906b669698a56686cdd6e9795e809"
+    },
+    {
+      "archived_path": "images/head_018_preview.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/images/head_018_preview.png",
+      "bytes": 30719,
+      "sha256": "abf1183b285cf3c64d721561ff9bb945613fd978a6a625426ca5a4c560149c2e"
+    },
+    {
+      "archived_path": "images/head_019.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/images/head_019.png",
+      "bytes": 33043,
+      "sha256": "2c104f354d760187c1123e1f2fb1b4da0ad515e539ce687f5ebe628aac661e1a"
+    },
+    {
+      "archived_path": "images/head_019_preview.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/images/head_019_preview.png",
+      "bytes": 33083,
+      "sha256": "fb7378b6123e51e78e32014900c1860ea27de47ed1f3a8533aae4e94f2088ad9"
+    },
+    {
+      "archived_path": "images/head_020.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/images/head_020.png",
+      "bytes": 35127,
+      "sha256": "8173e9b8b7ff1ec401ed780d9807dce41c4e7835c947eb88345e354f58123a53"
+    },
+    {
+      "archived_path": "images/head_020_preview.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/images/head_020_preview.png",
+      "bytes": 35340,
+      "sha256": "ec6edcc376fb5068452a8e51ec3a9f890e205458ead64eea61e1c6b2423ce5cc"
+    },
+    {
+      "archived_path": "images/head_021.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/images/head_021.png",
+      "bytes": 30701,
+      "sha256": "56f86c41f39462e56e9a94e64706eae2039b9eee9eda80aed7779669c0c51b1c"
+    },
+    {
+      "archived_path": "images/head_021_preview.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/images/head_021_preview.png",
+      "bytes": 30925,
+      "sha256": "1ef642a3bf2f1872a7d2c27ace621e0b77646c431bb9521344c1363ab448d3ca"
+    },
+    {
+      "archived_path": "images/head_022.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/images/head_022.png",
+      "bytes": 29339,
+      "sha256": "e358230b47fdd604d0a8aca270d56d85d12597dca6af846cab35f3c00c1bfbfa"
+    },
+    {
+      "archived_path": "images/head_022_preview.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/images/head_022_preview.png",
+      "bytes": 29633,
+      "sha256": "5da09e1683bbd1db4e7d8d2f67beaeb4fee4eea5f74d5a457f15602c03f5367b"
+    },
+    {
+      "archived_path": "images/head_023.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/images/head_023.png",
+      "bytes": 32032,
+      "sha256": "3ca35f5703c779eed5af94448e6711343e02b6640fbc50647109e62538f907a1"
+    },
+    {
+      "archived_path": "images/head_023_preview.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/images/head_023_preview.png",
+      "bytes": 32029,
+      "sha256": "9d10ca365b7abe3f13ed34b82929f822c18fdd43ae3b1927c9674334f711fc64"
+    },
+    {
+      "archived_path": "images/head_024.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/images/head_024.png",
+      "bytes": 39614,
+      "sha256": "3529c6b39529a4e0b00fc733c5394e715cb7b3c21a2a7d3b5616521731e27ecd"
+    },
+    {
+      "archived_path": "images/head_024_preview.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/images/head_024_preview.png",
+      "bytes": 39772,
+      "sha256": "4e712cbe44c62612be42896b15f269d6572c62f54b684a217d73d41c28106e63"
+    },
+    {
+      "archived_path": "images/head_025.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/images/head_025.png",
+      "bytes": 29358,
+      "sha256": "5c4603226876d647e2d7770959f8c2819dc0c4594aca7718525238b30b9ef244"
+    },
+    {
+      "archived_path": "images/head_025_preview.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/images/head_025_preview.png",
+      "bytes": 29276,
+      "sha256": "79f7fe539353f6182fda759557e795dc14b99a6e31997c4b5840a70b7eddd3e5"
+    },
+    {
+      "archived_path": "images/head_026.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/images/head_026.png",
+      "bytes": 32927,
+      "sha256": "948d78b3dedcbe4a105c62b1395419645abae47a5640f02f4ea2754cf96eba7c"
+    },
+    {
+      "archived_path": "images/head_026_preview.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/images/head_026_preview.png",
+      "bytes": 32892,
+      "sha256": "605207af48c7f5cb29384392c08cae3d1877201c2297f055833165a3f12d0e8a"
+    },
+    {
+      "archived_path": "images/head_027.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/images/head_027.png",
+      "bytes": 30538,
+      "sha256": "ae2fd2203e180e19eeb907a138c007d428f55c96a4cfa54ef86debfaf374ca76"
+    },
+    {
+      "archived_path": "images/head_027_preview.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/images/head_027_preview.png",
+      "bytes": 30666,
+      "sha256": "60bbc91f5b9dda70489120a63eef6be3b580ce7d057ac22b1fe9d861e7850cb5"
+    },
+    {
+      "archived_path": "images/head_028.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/images/head_028.png",
+      "bytes": 33039,
+      "sha256": "378d4c52bd57f215358a8851bf67d68f6f66a2b03ad2ec3090d5f66a699a4ecc"
+    },
+    {
+      "archived_path": "images/head_028_preview.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/images/head_028_preview.png",
+      "bytes": 33070,
+      "sha256": "726c3dacbb2f9012eed6242b6dd31fad80c99a45069325c68a569f9a7549b9c8"
+    },
+    {
+      "archived_path": "images/head_029.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/images/head_029.png",
+      "bytes": 32423,
+      "sha256": "fbfbe228a5716173395267a4490d56f628773d8331a1839502ff95798e9f4fcf"
+    },
+    {
+      "archived_path": "images/head_029_preview.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/images/head_029_preview.png",
+      "bytes": 32380,
+      "sha256": "e11ce597fd6cabb204284fc59f810352861e8517b8d313d130644b4640e7d0f1"
+    },
+    {
+      "archived_path": "images/head_030.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/images/head_030.png",
+      "bytes": 32151,
+      "sha256": "7bca12d952911d861b12cbbe5133917a25e3d2bf1c607aeff88a9a88bf1316d9"
+    },
+    {
+      "archived_path": "images/head_030_preview.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/images/head_030_preview.png",
+      "bytes": 32271,
+      "sha256": "886b7bc269be9bbf571dca380bd2e7e4be2c651f94007cc864247154a88d57c2"
+    },
+    {
+      "archived_path": "images/head_031.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/images/head_031.png",
+      "bytes": 30546,
+      "sha256": "07d492897eadb044086cb5a0280c13a3aa35ce08c99523f3cc1dc7b89345ab99"
+    },
+    {
+      "archived_path": "images/head_031_preview.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/images/head_031_preview.png",
+      "bytes": 30486,
+      "sha256": "ee86cada5b32a54beb1ea0086ae018e42a9554c3f9aa34d6505fe8f72acbd3c2"
+    },
+    {
+      "archived_path": "images/head_032.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/images/head_032.png",
+      "bytes": 30501,
+      "sha256": "6abfa175cda8145f025fe697bbb28651e184a584f41b3a799b94f27d49b31049"
+    },
+    {
+      "archived_path": "images/head_032_preview.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/images/head_032_preview.png",
+      "bytes": 30397,
+      "sha256": "a6ff7a5ac6ae61f5f3d4a6b84b5bdfec8cda2183e343dfa32f2cc2d8a174de0c"
+    },
+    {
+      "archived_path": "images/head_033.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/images/head_033.png",
+      "bytes": 31839,
+      "sha256": "c34826fe2d8050a9906119d240767ee27c401abad59a14f991a8197314e949e6"
+    },
+    {
+      "archived_path": "images/head_033_preview.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/images/head_033_preview.png",
+      "bytes": 31909,
+      "sha256": "3c6ec43dc366d3692e124c926aec20d5053e36099eb9ffebc9217a41cccbe03f"
+    },
+    {
+      "archived_path": "images/head_034.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/images/head_034.png",
+      "bytes": 34032,
+      "sha256": "8caebd4a9e002a6de49b371ba215af9f1c13dc891651611828fb7c2bf18f5c78"
+    },
+    {
+      "archived_path": "images/head_034_preview.png",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/images/head_034_preview.png",
+      "bytes": 34141,
+      "sha256": "103e5d6010659db4620742e83dbe80682d828dca7c9c36afef2c6a0c9ee77020"
+    },
+    {
+      "archived_path": "results/automated_01/actual_pose_overlap.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/results/automated_01/actual_pose_overlap.json",
+      "bytes": 317,
+      "sha256": "8944feb58541014df4fd8f05cf4b53b54680815232970685ea1c7b7fe63a3d6c"
+    },
+    {
+      "archived_path": "results/automated_01/auto_board_holdout/automatic_association.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/results/automated_01/auto_board_holdout/automatic_association.json",
+      "bytes": 8228,
+      "sha256": "ba36e7d0c36db12a8faedeffafdfa48ddb2e02aae2036789373ff076a78f856d"
+    },
+    {
+      "archived_path": "results/automated_01/auto_board_holdout/pairs.csv",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/results/automated_01/auto_board_holdout/pairs.csv",
+      "bytes": 3164,
+      "sha256": "c1cdebaea8bc0fa3c3a4e5e5caf2417e377a398972c7b9de2febeb72c39f4791"
+    },
+    {
+      "archived_path": "results/automated_01/auto_board_train/automatic_association.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/results/automated_01/auto_board_train/automatic_association.json",
+      "bytes": 19634,
+      "sha256": "f0183f79eea0f5c523818a8bb9aaa7a896b144050b7097918a12de766b4d1b29"
+    },
+    {
+      "archived_path": "results/automated_01/auto_board_train/pairs.csv",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/results/automated_01/auto_board_train/pairs.csv",
+      "bytes": 7609,
+      "sha256": "415fd4c7bf9b2a75c17fbfbf8bdc3653f6f90c7ae19272a8693c80856e64f500"
+    },
+    {
+      "archived_path": "results/automated_01/evaluation_summary.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/results/automated_01/evaluation_summary.json",
+      "bytes": 2339,
+      "sha256": "38ff9571ed22ca220f6b794f54f9f0dc451a3911361720f1c9e76424c993ffd3"
+    },
+    {
+      "archived_path": "results/automated_01/ground_truth_plane_diagnostics.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/results/automated_01/ground_truth_plane_diagnostics.json",
+      "bytes": 5589,
+      "sha256": "8dddbb30176480d6ec8140e8c53c82da98b49a9bea7ad81020ce3cc203d61ff1"
+    },
+    {
+      "archived_path": "results/automated_01/head_mid360.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/results/automated_01/head_mid360.json",
+      "bytes": 1125,
+      "sha256": "3e29ded5bc3506d0004eebe230515793d76280b2f584d83e962343ae82d56e16"
+    },
+    {
+      "archived_path": "results/automated_01/head_mid360_validation.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/results/automated_01/head_mid360_validation.json",
+      "bytes": 863,
+      "sha256": "2aeb2502d478bdd42421ab50af12bab840bd14723ff8310b813a1db99af38cdb"
+    },
+    {
+      "archived_path": "train/001/capture_id.txt",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/001/capture_id.txt",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "archived_path": "train/001/head_plane.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/001/head_plane.json",
+      "bytes": 423,
+      "sha256": "daec68276917c94d907da6fb4ce1350f862686dcae486f75cb828d0c24dac502"
+    },
+    {
+      "archived_path": "train/001/points_raw.json.gz",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/001/points_raw.json.gz",
+      "bytes": 230163,
+      "sha256": "988f505c587760a657030613791d8f3e54c7e17e0ba21a5f18c5b18262779034"
+    },
+    {
+      "archived_path": "train/001/xyz.npz",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/001/xyz.npz",
+      "bytes": 207268,
+      "sha256": "a94fb71043657ee61c58e3bcc1ab4ac8c99b807c53a94e4ae170fe560a47c364"
+    },
+    {
+      "archived_path": "train/002/capture_id.txt",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/002/capture_id.txt",
+      "bytes": 2,
+      "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+    },
+    {
+      "archived_path": "train/002/capture_record.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/002/capture_record.json",
+      "bytes": 1484,
+      "sha256": "d185623d31010c4b169444ae70aa9c47de3608d3f2aaf3a732d1bf42f9f8a1e7"
+    },
+    {
+      "archived_path": "train/002/head_plane.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/002/head_plane.json",
+      "bytes": 420,
+      "sha256": "f053ed767012cb2aa3778d0f8cdf4c0071f61a8a7f9027ff2be28ecd54225018"
+    },
+    {
+      "archived_path": "train/002/points_raw.json.gz",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/002/points_raw.json.gz",
+      "bytes": 225775,
+      "sha256": "9f099d5ee81eac28c35fba0b7cb4a9f86ef8e935f66e7587b325adc256de2199"
+    },
+    {
+      "archived_path": "train/002/xyz.npz",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/002/xyz.npz",
+      "bytes": 208116,
+      "sha256": "823b2f66e78d9f50b9236a26f8d1e0277dae9380f8412b42807313b90c24d044"
+    },
+    {
+      "archived_path": "train/003/capture_id.txt",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/003/capture_id.txt",
+      "bytes": 2,
+      "sha256": "53c234e5e8472b6ac51c1ae1cab3fe06fad053beb8ebfd8977b010655bfdd3c3"
+    },
+    {
+      "archived_path": "train/003/capture_record.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/003/capture_record.json",
+      "bytes": 1502,
+      "sha256": "acca09a2664a20e8fde6bd8b7169760bfdbbb35f494d87774062db98f1d0ac14"
+    },
+    {
+      "archived_path": "train/003/head_plane.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/003/head_plane.json",
+      "bytes": 421,
+      "sha256": "adab073bb56bc36e9b8d4865b3979d6dfb05615e76f8f4bcbbc80e878a385576"
+    },
+    {
+      "archived_path": "train/003/points_raw.json.gz",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/003/points_raw.json.gz",
+      "bytes": 225470,
+      "sha256": "2ed60b9f81a12b307fe3a8890e9e4626cf856a384a281a1b440298c89198cff6"
+    },
+    {
+      "archived_path": "train/003/xyz.npz",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/003/xyz.npz",
+      "bytes": 207944,
+      "sha256": "30d7debdf5fcc68d25a8f85da15b4680e368978b5c8707249f593211c75a9d7f"
+    },
+    {
+      "archived_path": "train/004/capture_id.txt",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/004/capture_id.txt",
+      "bytes": 2,
+      "sha256": "1121cfccd5913f0a63fec40a6ffd44ea64f9dc135c66634ba001d10bcf4302a2"
+    },
+    {
+      "archived_path": "train/004/capture_record.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/004/capture_record.json",
+      "bytes": 1510,
+      "sha256": "57f95d3ba8c0352653666eb6ac5897b2a5840f1cba95f93f096b15339d92d42d"
+    },
+    {
+      "archived_path": "train/004/head_plane.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/004/head_plane.json",
+      "bytes": 423,
+      "sha256": "5eb0fe5f8d21d93cf48b9a5a9e15c0d9ba3da7eb6fae95c502b1765513adc845"
+    },
+    {
+      "archived_path": "train/004/points_raw.json.gz",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/004/points_raw.json.gz",
+      "bytes": 225194,
+      "sha256": "45ed7d4cae0360556fa22b2f867428638882a3803b1fe279fb00e114e6d96cab"
+    },
+    {
+      "archived_path": "train/004/xyz.npz",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/004/xyz.npz",
+      "bytes": 207578,
+      "sha256": "547cdbb710b5243143e0ff7a0c8bdcb096f3ffc6ae42422aab7c5cdd2a056805"
+    },
+    {
+      "archived_path": "train/005/capture_id.txt",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/005/capture_id.txt",
+      "bytes": 2,
+      "sha256": "7de1555df0c2700329e815b93b32c571c3ea54dc967b89e81ab73b9972b72d1d"
+    },
+    {
+      "archived_path": "train/005/capture_record.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/005/capture_record.json",
+      "bytes": 1516,
+      "sha256": "14564a458ca0da554b835212830f063123a56751e07125a28911b1254ea4830a"
+    },
+    {
+      "archived_path": "train/005/head_plane.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/005/head_plane.json",
+      "bytes": 431,
+      "sha256": "0bab6b722ef45d44dce62554cf69df9917570562f65e333e62be369510a8543e"
+    },
+    {
+      "archived_path": "train/005/points_raw.json.gz",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/005/points_raw.json.gz",
+      "bytes": 225567,
+      "sha256": "594f3f5e47f3f378cc5ea14471c709f00d193e5e4abb9b89c25377410c4ae778"
+    },
+    {
+      "archived_path": "train/005/xyz.npz",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/005/xyz.npz",
+      "bytes": 208101,
+      "sha256": "14d3123600de140e7c4ebb89bd820c643ac7ad65697824538944e95fa56fb2e9"
+    },
+    {
+      "archived_path": "train/006/capture_id.txt",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/006/capture_id.txt",
+      "bytes": 2,
+      "sha256": "f0b5c2c2211c8d67ed15e75e656c7862d086e9245420892a7de62cd9ec582a06"
+    },
+    {
+      "archived_path": "train/006/capture_record.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/006/capture_record.json",
+      "bytes": 1500,
+      "sha256": "2c1ab31acc79ed5d01922b931940c85818df84ea7cb2bdb7bb0de88b01d5690e"
+    },
+    {
+      "archived_path": "train/006/head_plane.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/006/head_plane.json",
+      "bytes": 419,
+      "sha256": "cc143b62867fa7db4fe7ffc9e77984bb8e2473aea4d97cf267b7e5f25444988e"
+    },
+    {
+      "archived_path": "train/006/points_raw.json.gz",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/006/points_raw.json.gz",
+      "bytes": 225745,
+      "sha256": "8139a05fd1fbd822a514233cb54228c1d47dfb6a60020357c359fd53ca6e8026"
+    },
+    {
+      "archived_path": "train/006/xyz.npz",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/006/xyz.npz",
+      "bytes": 208129,
+      "sha256": "803ddc171221a5ecd81cee8af4aedb9d6fc596898c1b9231c816af05696f2b75"
+    },
+    {
+      "archived_path": "train/007/capture_id.txt",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/007/capture_id.txt",
+      "bytes": 2,
+      "sha256": "06e9d52c1720fca412803e3b07c4b228ff113e303f4c7ab94665319d832bbfb7"
+    },
+    {
+      "archived_path": "train/007/capture_record.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/007/capture_record.json",
+      "bytes": 1503,
+      "sha256": "479f36feb1e97abf2552ee90290fd51ffa6f16e4ddc8e78fc33b46bb042d87a5"
+    },
+    {
+      "archived_path": "train/007/head_plane.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/007/head_plane.json",
+      "bytes": 422,
+      "sha256": "8aa7bc47ea448719e8df16e2f1d364a87db2289f9d9e3fc126f537fa27066834"
+    },
+    {
+      "archived_path": "train/007/points_raw.json.gz",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/007/points_raw.json.gz",
+      "bytes": 225815,
+      "sha256": "4febae979ba8cc4c5917e5cc61d991d197fed7915c1c914ec5d9ce175c7bb30c"
+    },
+    {
+      "archived_path": "train/007/xyz.npz",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/007/xyz.npz",
+      "bytes": 208201,
+      "sha256": "094fa3cff1a361cf45a68515a1b009bb3454303c22e7ad2020fbfc063721c837"
+    },
+    {
+      "archived_path": "train/008/capture_id.txt",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/008/capture_id.txt",
+      "bytes": 2,
+      "sha256": "10159baf262b43a92d95db59dae1f72c645127301661e0a3ce4e38b295a97c58"
+    },
+    {
+      "archived_path": "train/008/capture_record.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/008/capture_record.json",
+      "bytes": 1504,
+      "sha256": "63485cbe3bea8a993c70e3b1a4520691bb2400c271c5591e083e0cabdf300252"
+    },
+    {
+      "archived_path": "train/008/head_plane.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/008/head_plane.json",
+      "bytes": 422,
+      "sha256": "e23fb02fa4d16e3411f8bc62d0f2bda6c36b44ee17ade6881512204bff41c214"
+    },
+    {
+      "archived_path": "train/008/points_raw.json.gz",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/008/points_raw.json.gz",
+      "bytes": 225440,
+      "sha256": "b3396fb0b4fc4187f019645e39b4f2840ec8be7871507217ebe475564377f499"
+    },
+    {
+      "archived_path": "train/008/xyz.npz",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/008/xyz.npz",
+      "bytes": 207916,
+      "sha256": "934aa280e5e9500a58d46482ec40f2b4eb340478dd62599d0a37ec2f66dd9841"
+    },
+    {
+      "archived_path": "train/009/capture_id.txt",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/009/capture_id.txt",
+      "bytes": 2,
+      "sha256": "aa67a169b0bba217aa0aa88a65346920c84c42447c36ba5f7ea65f422c1fe5d8"
+    },
+    {
+      "archived_path": "train/009/capture_record.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/009/capture_record.json",
+      "bytes": 1514,
+      "sha256": "7d1258f515b52b29e0fc3fc87c6122f0746c0cdfb73454bb2367a161ecb48e47"
+    },
+    {
+      "archived_path": "train/009/head_plane.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/009/head_plane.json",
+      "bytes": 424,
+      "sha256": "a425f3a4cf0eee97173eea1a4dcb9a3f5a656ee772db5b5ef96155698fb0b5f6"
+    },
+    {
+      "archived_path": "train/009/points_raw.json.gz",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/009/points_raw.json.gz",
+      "bytes": 225191,
+      "sha256": "b2caefe60ae269213d703bca589f6bad8831d0ffab3e451a13d12b9b7f31aeca"
+    },
+    {
+      "archived_path": "train/009/xyz.npz",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/009/xyz.npz",
+      "bytes": 207535,
+      "sha256": "bdc611c10a3176e57ac561c5abcda44a7dd1fd51edac0890a476b0a49be084d5"
+    },
+    {
+      "archived_path": "train/010/capture_id.txt",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/010/capture_id.txt",
+      "bytes": 2,
+      "sha256": "2e6d31a5983a91251bfae5aefa1c0a19d8ba3cf601d0e8a706b4cfa9661a6b8a"
+    },
+    {
+      "archived_path": "train/010/capture_record.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/010/capture_record.json",
+      "bytes": 1502,
+      "sha256": "addca33cf9a00b80bf8893078ebacb1eed030f13ae89014f01b886bbdc514464"
+    },
+    {
+      "archived_path": "train/010/head_plane.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/010/head_plane.json",
+      "bytes": 419,
+      "sha256": "f3cb3b814b77a3fd46100544013cc06b458f4a2928ded5ea1441c0374bd76c75"
+    },
+    {
+      "archived_path": "train/010/points_raw.json.gz",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/010/points_raw.json.gz",
+      "bytes": 225541,
+      "sha256": "17be1b21e384098a3df9dd39415121d4444e1f830b0cc589a48d0cc228449deb"
+    },
+    {
+      "archived_path": "train/010/xyz.npz",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/010/xyz.npz",
+      "bytes": 208091,
+      "sha256": "c20b2196c635dba241be6ba9b941959e7fc0933e0d87862e9a553583efb2e4e2"
+    },
+    {
+      "archived_path": "train/011/capture_id.txt",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/011/capture_id.txt",
+      "bytes": 3,
+      "sha256": "917df3320d778ddbaa5c5c7742bc4046bf803c36ed2b050f30844ed206783469"
+    },
+    {
+      "archived_path": "train/011/capture_record.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/011/capture_record.json",
+      "bytes": 1507,
+      "sha256": "35d8dd52f3f4c4cfaedf7e507d72953cd00df2e189a2374d18e0c1b81caba6d7"
+    },
+    {
+      "archived_path": "train/011/head_plane.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/011/head_plane.json",
+      "bytes": 421,
+      "sha256": "eb5638f2105bcabe26944d93e2209c25cac244788d9b21007e7b97efbb199626"
+    },
+    {
+      "archived_path": "train/011/points_raw.json.gz",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/011/points_raw.json.gz",
+      "bytes": 225759,
+      "sha256": "666584d59654388b800d7939e83e53b0e5f48f2225ee50881388f37d4cdb129d"
+    },
+    {
+      "archived_path": "train/011/xyz.npz",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/011/xyz.npz",
+      "bytes": 208140,
+      "sha256": "284c269d3d4a66f91174dc6734a6332180f941c57c375c2432f4711e1d49dfeb"
+    },
+    {
+      "archived_path": "train/012/capture_id.txt",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/012/capture_id.txt",
+      "bytes": 3,
+      "sha256": "25d4f2a86deb5e2574bb3210b67bb24fcc4afb19f93a7b65a057daa874a9d18e"
+    },
+    {
+      "archived_path": "train/012/capture_record.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/012/capture_record.json",
+      "bytes": 1513,
+      "sha256": "05499404cd889d64c9e5cab88f51270fe374fed215f5a41ad17ecf95c5543814"
+    },
+    {
+      "archived_path": "train/012/head_plane.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/012/head_plane.json",
+      "bytes": 423,
+      "sha256": "039e1666e4de9218c71b1238a072274bd8e69b3e98e588f84a7f2c77226f6d97"
+    },
+    {
+      "archived_path": "train/012/points_raw.json.gz",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/012/points_raw.json.gz",
+      "bytes": 225765,
+      "sha256": "dc8a7a78745b0e5434bfcbe6b32555e4af4a2eaee2613e2ee643a581920c69a6"
+    },
+    {
+      "archived_path": "train/012/xyz.npz",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/012/xyz.npz",
+      "bytes": 207949,
+      "sha256": "ec36215b9a9f86282aa43d1e02fb0e8d5e01a69c06eb36677e37e369b6733b5c"
+    },
+    {
+      "archived_path": "train/013/capture_id.txt",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/013/capture_id.txt",
+      "bytes": 3,
+      "sha256": "a1fb50e6c86fae1679ef3351296fd6713411a08cf8dd1790a4fd05fae8688164"
+    },
+    {
+      "archived_path": "train/013/capture_record.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/013/capture_record.json",
+      "bytes": 1512,
+      "sha256": "200be12a0d3223af3db5bf630785d45d899ab56a64bb9bfc19e133dd7ccf141e"
+    },
+    {
+      "archived_path": "train/013/head_plane.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/013/head_plane.json",
+      "bytes": 424,
+      "sha256": "57529d6733c2462024409c583bbfcc140f7debf791cc7664e3fb1c93bfffcc3a"
+    },
+    {
+      "archived_path": "train/013/points_raw.json.gz",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/013/points_raw.json.gz",
+      "bytes": 225464,
+      "sha256": "09234703ee9c2dd2ba73a631ee04b6aba8c2a20de7388bd24318d895564a54da"
+    },
+    {
+      "archived_path": "train/013/xyz.npz",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/013/xyz.npz",
+      "bytes": 207814,
+      "sha256": "6a9b225d7e614c5607c8ef16455b5bc5d77ebb7c4c4405bba880e6fe80e16927"
+    },
+    {
+      "archived_path": "train/014/capture_id.txt",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/014/capture_id.txt",
+      "bytes": 3,
+      "sha256": "1a252402972f6057fa53cc172b52b9ffca698e18311facd0f3b06ecaaef79e17"
+    },
+    {
+      "archived_path": "train/014/capture_record.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/014/capture_record.json",
+      "bytes": 1512,
+      "sha256": "795bd57f7effd6d0b3e36e2343417d962f5fe4ef4e48bbfa1ccbfc8661adec6f"
+    },
+    {
+      "archived_path": "train/014/head_plane.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/014/head_plane.json",
+      "bytes": 422,
+      "sha256": "c1d359416159b55d1d50c154da2cfb946772c0e8eb9558dddb5d39df356cb623"
+    },
+    {
+      "archived_path": "train/014/points_raw.json.gz",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/014/points_raw.json.gz",
+      "bytes": 225443,
+      "sha256": "4320908e7ab6c6349f5000be258d39cd48b405d1745137709a267a498aa39902"
+    },
+    {
+      "archived_path": "train/014/xyz.npz",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/014/xyz.npz",
+      "bytes": 207790,
+      "sha256": "7ef3dee3cd0903d40e416d0724199073b342da4c4c7f629ef0718db1ee006907"
+    },
+    {
+      "archived_path": "train/015/capture_id.txt",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/015/capture_id.txt",
+      "bytes": 3,
+      "sha256": "9a92adbc0cee38ef658c71ce1b1bf8c65668f166bfb213644c895ccb1ad07a25"
+    },
+    {
+      "archived_path": "train/015/capture_record.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/015/capture_record.json",
+      "bytes": 1515,
+      "sha256": "9a34d7b3632d9d48ad788057c73d62089829b7e1b36a15b0c49df6fbc821cc18"
+    },
+    {
+      "archived_path": "train/015/head_plane.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/015/head_plane.json",
+      "bytes": 423,
+      "sha256": "157eb2382597c7651a3d4c07004ace5ccc7bcb957be9944ca7d4f3ca12803715"
+    },
+    {
+      "archived_path": "train/015/points_raw.json.gz",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/015/points_raw.json.gz",
+      "bytes": 225843,
+      "sha256": "9cfb10fbc4ed73b5b133433c3bfd897b8e8336733b1f87ff7ceebb75c6b6d73d"
+    },
+    {
+      "archived_path": "train/015/xyz.npz",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/015/xyz.npz",
+      "bytes": 208114,
+      "sha256": "2d74a5acb744c85233a2a38f8346e8b3362b1745ff022f89cfc69e54e5acab9b"
+    },
+    {
+      "archived_path": "train/016/capture_id.txt",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/016/capture_id.txt",
+      "bytes": 3,
+      "sha256": "238903180cc104ec2c5d8b3f20c5bc61b389ec0a967df8cc208cdc7cd454174f"
+    },
+    {
+      "archived_path": "train/016/capture_record.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/016/capture_record.json",
+      "bytes": 1505,
+      "sha256": "492388b02c57e9fc78efe035aba224a138a022769af63499faf628cf9b4c0076"
+    },
+    {
+      "archived_path": "train/016/head_plane.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/016/head_plane.json",
+      "bytes": 421,
+      "sha256": "10a91fbd9a5b75ad3926b212123b1fdfa9750ffa2d8c6f6f90618e137e43246c"
+    },
+    {
+      "archived_path": "train/016/points_raw.json.gz",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/016/points_raw.json.gz",
+      "bytes": 225709,
+      "sha256": "1771c38977b148f075635b04b3e79c6f0a3627619e0334fdfc9c141eb8b16bed"
+    },
+    {
+      "archived_path": "train/016/xyz.npz",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/016/xyz.npz",
+      "bytes": 208011,
+      "sha256": "c334b02e6b7b58157e4bba3a423388508b9c16c342cbfc915ff320cd6988f7b3"
+    },
+    {
+      "archived_path": "train/017/capture_id.txt",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/017/capture_id.txt",
+      "bytes": 3,
+      "sha256": "e6c21e8d260fe71882debdb339d2402a2ca7648529bc2303f48649bce0380017"
+    },
+    {
+      "archived_path": "train/017/capture_record.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/017/capture_record.json",
+      "bytes": 1507,
+      "sha256": "f5d03232fc0238516c539c9b197860fd16bdfbce48dba3ce14d4f0de49686c15"
+    },
+    {
+      "archived_path": "train/017/head_plane.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/017/head_plane.json",
+      "bytes": 421,
+      "sha256": "5b39be8fb0cb308ed9b2b97f40ebe34c80b714a570f3db2eb47b15d734f55db3"
+    },
+    {
+      "archived_path": "train/017/points_raw.json.gz",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/017/points_raw.json.gz",
+      "bytes": 225472,
+      "sha256": "86bd562ac96c7eeef04094c40f37a94d5ec8878216de9fc7142303dde85f828e"
+    },
+    {
+      "archived_path": "train/017/xyz.npz",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/017/xyz.npz",
+      "bytes": 207998,
+      "sha256": "ab75899092b945d30fd24da41bf51d51ef4155c7a8648dd04dda138fc7c03c4b"
+    },
+    {
+      "archived_path": "train/018/capture_id.txt",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/018/capture_id.txt",
+      "bytes": 3,
+      "sha256": "54183f4323f377b737433a1e98229ead0fdc686f93bab057ecb612daa94002b5"
+    },
+    {
+      "archived_path": "train/018/capture_record.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/018/capture_record.json",
+      "bytes": 1514,
+      "sha256": "00b61109694f0f5a0c86a26cacce6351f037ada04042de5dc0cc6acd60225303"
+    },
+    {
+      "archived_path": "train/018/head_plane.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/018/head_plane.json",
+      "bytes": 421,
+      "sha256": "b87b33a885bc8dc648e153d27dc138585143f463480e525ce529e4f2a357bd0d"
+    },
+    {
+      "archived_path": "train/018/points_raw.json.gz",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/018/points_raw.json.gz",
+      "bytes": 225129,
+      "sha256": "732b70a8a6187cb888939a0bba1713d091b4658e561f07e948399d1b84b49419"
+    },
+    {
+      "archived_path": "train/018/xyz.npz",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/018/xyz.npz",
+      "bytes": 207453,
+      "sha256": "429b119912a6c5056fb45233d036fd423ff7944acbc8c984a3008cf4f84e92a6"
+    },
+    {
+      "archived_path": "train/019/capture_id.txt",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/019/capture_id.txt",
+      "bytes": 3,
+      "sha256": "7ee29791fc17e986b97128845622b077fb45e349fdb80523fac9dba879b4ad60"
+    },
+    {
+      "archived_path": "train/019/capture_record.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/019/capture_record.json",
+      "bytes": 1507,
+      "sha256": "421bdafb9299411f27f027aa664e6f26b3e819e6e754490e133d99028c10235e"
+    },
+    {
+      "archived_path": "train/019/head_plane.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/019/head_plane.json",
+      "bytes": 421,
+      "sha256": "499b63116ff404e1ef6faea189a7f25c6aa8f07c34786da310e145188f9ae701"
+    },
+    {
+      "archived_path": "train/019/points_raw.json.gz",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/019/points_raw.json.gz",
+      "bytes": 225422,
+      "sha256": "b7ffed328dc218c4e6bc7fa5820cfbc8a2e6ac7194f5c6a33b455c07d2b9c929"
+    },
+    {
+      "archived_path": "train/019/xyz.npz",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/019/xyz.npz",
+      "bytes": 207923,
+      "sha256": "dde6821ad0d042fe1839fafdc01be09a67146e78a02da34d6e6e68dd3198bb1e"
+    },
+    {
+      "archived_path": "train/020/capture_id.txt",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/020/capture_id.txt",
+      "bytes": 3,
+      "sha256": "a9742eb8ee320e006666aef25ae9aeed948247f3125c9cafa7cf97b7e7467dd5"
+    },
+    {
+      "archived_path": "train/020/capture_record.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/020/capture_record.json",
+      "bytes": 1502,
+      "sha256": "ccc52c7d2a0b71751cc8d8ae2e67b286a967b488cef8e2277635c428b8917991"
+    },
+    {
+      "archived_path": "train/020/head_plane.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/020/head_plane.json",
+      "bytes": 419,
+      "sha256": "385a0d484ffe656144be13e0050e10b26cec25f6886c29cfcb764d753ca52d96"
+    },
+    {
+      "archived_path": "train/020/points_raw.json.gz",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/020/points_raw.json.gz",
+      "bytes": 225771,
+      "sha256": "1515242e2382663de4cff84fd2fecc6428a39dbdbe3650fbcb12e9762c0fac73"
+    },
+    {
+      "archived_path": "train/020/xyz.npz",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/020/xyz.npz",
+      "bytes": 208173,
+      "sha256": "3101a1cb53c6b04f3e3ea71d3de8580d9836a54e19abf5ef412fabee79544e2f"
+    },
+    {
+      "archived_path": "train/021/capture_id.txt",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/021/capture_id.txt",
+      "bytes": 3,
+      "sha256": "5378796307535df3ec8d8b15a2e2dc5641419c3d3060cfe32238c0fa973f7aa3"
+    },
+    {
+      "archived_path": "train/021/capture_record.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/021/capture_record.json",
+      "bytes": 1505,
+      "sha256": "729043793878529bd4110577beaf0992cdb6a462d1af9c469f96e362fa5476eb"
+    },
+    {
+      "archived_path": "train/021/head_plane.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/021/head_plane.json",
+      "bytes": 421,
+      "sha256": "bc8fec86cfd5499462b3079805d064ddbb91565c8e7144693046d1bc0058b5a9"
+    },
+    {
+      "archived_path": "train/021/points_raw.json.gz",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/021/points_raw.json.gz",
+      "bytes": 225647,
+      "sha256": "60b15f3657fb082792dee2973a814c48e94347e04ab803c721e04713c8534a2e"
+    },
+    {
+      "archived_path": "train/021/xyz.npz",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/021/xyz.npz",
+      "bytes": 207934,
+      "sha256": "773ea2efa9264b9fc135419bf4fd921c7b6e00405c5971e264e69383440a4244"
+    },
+    {
+      "archived_path": "train/022/capture_id.txt",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/022/capture_id.txt",
+      "bytes": 3,
+      "sha256": "6e2ae11dad0616f66bbb2b6e6556f580bb987fd911d7132aa6bee2bfc7cc7b52"
+    },
+    {
+      "archived_path": "train/022/capture_record.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/022/capture_record.json",
+      "bytes": 1505,
+      "sha256": "c274d91f13926885cb10566584a7be1b90f8380a9c737f41ca7602af1e9e8063"
+    },
+    {
+      "archived_path": "train/022/head_plane.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/022/head_plane.json",
+      "bytes": 420,
+      "sha256": "7a8fc25fc995110a11b083d079cd9bce813eb4a167a908392225e84aacfb4958"
+    },
+    {
+      "archived_path": "train/022/points_raw.json.gz",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/022/points_raw.json.gz",
+      "bytes": 225342,
+      "sha256": "023d9cd7a63c9dca97b7898f2a67271807f651f3432d6f87f5ec8d68d60c9518"
+    },
+    {
+      "archived_path": "train/022/xyz.npz",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/022/xyz.npz",
+      "bytes": 207807,
+      "sha256": "fa45b0ac5d122bfe8e8014e451900a09d378a1b7d9631899cd0f5fff6441b8e3"
+    },
+    {
+      "archived_path": "train/023/capture_id.txt",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/023/capture_id.txt",
+      "bytes": 3,
+      "sha256": "f14b4987904bcb5814e4459a057ed4d20f58a633152288a761214dcd28780b56"
+    },
+    {
+      "archived_path": "train/023/capture_record.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/023/capture_record.json",
+      "bytes": 1514,
+      "sha256": "f358ba5712d9af3afd4fc7bb0e6b4bc034e3a45a62e18888e7a0d7c68bd5221c"
+    },
+    {
+      "archived_path": "train/023/head_plane.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/023/head_plane.json",
+      "bytes": 424,
+      "sha256": "3c3556b8f7f1c91966a3f984068c34fc6b9cf59a153f42ffce0be0d6005dd812"
+    },
+    {
+      "archived_path": "train/023/points_raw.json.gz",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/023/points_raw.json.gz",
+      "bytes": 225119,
+      "sha256": "6a561aee8671a6e2f839e276de4af7d55983455da3b448d273828aa62d3e6f4f"
+    },
+    {
+      "archived_path": "train/023/xyz.npz",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/023/xyz.npz",
+      "bytes": 207493,
+      "sha256": "975876aefa0d70872960fac13e76af81e4b82a6c8537a2ff7471a4f3a5a04d7b"
+    },
+    {
+      "archived_path": "train/024/capture_id.txt",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/024/capture_id.txt",
+      "bytes": 3,
+      "sha256": "076320a2a08267b4c026d06573bba408ea68841e73cdc20e62cce59de165ece3"
+    },
+    {
+      "archived_path": "train/024/capture_record.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/024/capture_record.json",
+      "bytes": 1505,
+      "sha256": "5bb77ea862021b0da0cfcb370693e3f092f8904007c7b7fed66db18b132f61e0"
+    },
+    {
+      "archived_path": "train/024/head_plane.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/024/head_plane.json",
+      "bytes": 418,
+      "sha256": "1ce779e34935dd3172636ebe95130c67d16c36b1e17aec811221871da85c15e5"
+    },
+    {
+      "archived_path": "train/024/points_raw.json.gz",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/024/points_raw.json.gz",
+      "bytes": 225345,
+      "sha256": "97ebe6c96442468e1213f32cd79890476e77a6bee7b4051d0767c83a4afb0d67"
+    },
+    {
+      "archived_path": "train/024/xyz.npz",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/024/xyz.npz",
+      "bytes": 207855,
+      "sha256": "58e4174f3dd5549e123a34526866e148cf2d673fd58ea0fc5e3ffef3878e8108"
+    },
+    {
+      "archived_path": "train/025/capture_id.txt",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/025/capture_id.txt",
+      "bytes": 3,
+      "sha256": "68ca3fba3b7e864770cb61aeb306d4bd4354b68ab4dd38450860c5d823e42a53"
+    },
+    {
+      "archived_path": "train/025/capture_record.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/025/capture_record.json",
+      "bytes": 1505,
+      "sha256": "463d9c25f5cf3596fa604abde9c9a9352530d92e60a602bb96684ec600661b45"
+    },
+    {
+      "archived_path": "train/025/head_plane.json",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/025/head_plane.json",
+      "bytes": 421,
+      "sha256": "096ec0e86b8493894bdc9eb2410641cea71ec298275276f4c45191cf3522ffb0"
+    },
+    {
+      "archived_path": "train/025/points_raw.json.gz",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/025/points_raw.json.gz",
+      "bytes": 225809,
+      "sha256": "c2e7b8a676e6bd4c33657aff53cc9fe2ecaf54c061477fa80661dd31a9fede0a"
+    },
+    {
+      "archived_path": "train/025/xyz.npz",
+      "source_absolute_path": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/train/025/xyz.npz",
+      "bytes": 208141,
+      "sha256": "e5f822671c0a27d9801bc3bb8127f6385291a7825af028f5b9d576caa62860c3"
+    }
+  ],
+  "excluded": [
+    "xyz.html (derived viewer)",
+    "incomplete captures",
+    "console logs",
+    "virtual environments"
+  ],
+  "related_run_record": "../20261006_camera_run/README.md",
+  "measurement_model": "../20261006_camera_run/config/measurement_model.urdf",
+  "source_repository_commit_field": "Legacy collector constant; model/scene/source hashes are the archived provenance.",
+  "train_count": 25,
+  "holdout_count": 10,
+  "archived_held_out_status": "passed_provisional_limits",
+  "ground_truth_error": {
+    "translation_mm": 11.720000061470623,
+    "rotation_deg": 0.1692352710111643
+  },
+  "transform_direction": "camera_optical_frame <- livox_frame"
+}

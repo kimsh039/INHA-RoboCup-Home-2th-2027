@@ -1,0 +1,30 @@
+{
+  "matrix4x4": [
+    [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      1.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      1.0,
+      -0.0001
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "translation_unit": "m",
+  "source": "Generated fixture: tag visual is 0.1mm above board collision top"
+}

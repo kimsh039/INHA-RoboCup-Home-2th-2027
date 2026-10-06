@@ -1,0 +1,221 @@
+{
+  "manual_roi": false,
+  "method": "whole-cloud plane extraction, persistent-background rejection, multi-pose normal/distance correspondence",
+  "same_visible_board_face_required": true,
+  "sensors_must_remain_stationary": true,
+  "assignments": [
+    {
+      "plane_id": "holdout_board001",
+      "cloud": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/holdout/001/xyz.npz",
+      "head_plane": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/holdout/001/head_plane.json",
+      "selected_plane": {
+        "normal": [
+          -0.9452176863351037,
+          0.0986007550602688,
+          -0.3111935355062153
+        ],
+        "d": 1.0410202849458527,
+        "points": 916,
+        "rms_m": 0.001153774888487728,
+        "centroid_m": [
+          1.0702905681260808,
+          -0.04465996256308304,
+          0.08020476506734227
+        ]
+      },
+      "candidate_count": 5
+    },
+    {
+      "plane_id": "holdout_board002",
+      "cloud": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/holdout/002/xyz.npz",
+      "head_plane": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/holdout/002/head_plane.json",
+      "selected_plane": {
+        "normal": [
+          -0.9452161213241888,
+          0.3089177264287224,
+          -0.105528774687121
+        ],
+        "d": 1.0871335755042282,
+        "points": 765,
+        "rms_m": 0.0014939785408371318,
+        "centroid_m": [
+          1.1308246385817435,
+          -0.03373875770390869,
+          0.0742678613201076
+        ]
+      },
+      "candidate_count": 5
+    },
+    {
+      "plane_id": "holdout_board003",
+      "cloud": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/holdout/003/xyz.npz",
+      "head_plane": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/holdout/003/head_plane.json",
+      "selected_plane": {
+        "normal": [
+          -0.9470832237022928,
+          -0.09996888756627614,
+          0.3050239152926108
+        ],
+        "d": 1.161527467194563,
+        "points": 522,
+        "rms_m": 0.0008065157870956782,
+        "centroid_m": [
+          1.2223773167051117,
+          0.05239680476019363,
+          0.004601713848011247
+        ]
+      },
+      "candidate_count": 6
+    },
+    {
+      "plane_id": "holdout_board004",
+      "cloud": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/holdout/004/xyz.npz",
+      "head_plane": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/holdout/004/head_plane.json",
+      "selected_plane": {
+        "normal": [
+          -0.9475109232428601,
+          -0.3038685841429254,
+          0.0994330624412039
+        ],
+        "d": 1.1582520333394601,
+        "points": 651,
+        "rms_m": 0.0014979379625445642,
+        "centroid_m": [
+          1.2286826242133402,
+          0.0027743954610539062,
+          0.06819890442371551
+        ]
+      },
+      "candidate_count": 5
+    },
+    {
+      "plane_id": "holdout_board005",
+      "cloud": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/holdout/005/xyz.npz",
+      "head_plane": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/holdout/005/head_plane.json",
+      "selected_plane": {
+        "normal": [
+          -0.9044059328070444,
+          0.29753535747282556,
+          0.3058146820493379
+        ],
+        "d": 1.1500339776564636,
+        "points": 626,
+        "rms_m": 0.0014155429912613366,
+        "centroid_m": [
+          1.274092090777315,
+          -0.0466516701970354,
+          0.05278683628160923
+        ]
+      },
+      "candidate_count": 6
+    },
+    {
+      "plane_id": "holdout_board006",
+      "cloud": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/holdout/006/xyz.npz",
+      "head_plane": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/holdout/006/head_plane.json",
+      "selected_plane": {
+        "normal": [
+          -0.9037098809225527,
+          -0.2948210641550021,
+          -0.31046576502644835
+        ],
+        "d": 1.131969051014915,
+        "points": 746,
+        "rms_m": 0.001250983427453186,
+        "centroid_m": [
+          1.2254139213715418,
+          -0.0012962597468615287,
+          0.08030691154391052
+        ]
+      },
+      "candidate_count": 6
+    },
+    {
+      "plane_id": "holdout_board007",
+      "cloud": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/holdout/007/xyz.npz",
+      "head_plane": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/holdout/007/head_plane.json",
+      "selected_plane": {
+        "normal": [
+          -0.9887441099651918,
+          -0.1054191067674013,
+          -0.10616919015187216
+        ],
+        "d": 1.0692484326910268,
+        "points": 812,
+        "rms_m": 0.0009822853486154569,
+        "centroid_m": [
+          1.0733188704904078,
+          0.022094453377049995,
+          0.05351405460938004
+        ]
+      },
+      "candidate_count": 5
+    },
+    {
+      "plane_id": "holdout_board008",
+      "cloud": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/holdout/008/xyz.npz",
+      "head_plane": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/holdout/008/head_plane.json",
+      "selected_plane": {
+        "normal": [
+          -0.9895471642806432,
+          0.10423971345347227,
+          0.09965185298465597
+        ],
+        "d": 1.1264319020902258,
+        "points": 777,
+        "rms_m": 0.0014087572352047277,
+        "centroid_m": [
+          1.1424623452405058,
+          -0.030540575384044012,
+          0.07297418511411513
+        ]
+      },
+      "candidate_count": 5
+    },
+    {
+      "plane_id": "holdout_board009",
+      "cloud": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/holdout/009/xyz.npz",
+      "head_plane": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/holdout/009/head_plane.json",
+      "selected_plane": {
+        "normal": [
+          -0.903745604301517,
+          0.2939479917047458,
+          -0.3111887865563802
+        ],
+        "d": 1.0218248139816803,
+        "points": 863,
+        "rms_m": 0.0014066720951399394,
+        "centroid_m": [
+          1.0983063141412834,
+          0.0011262188834519852,
+          0.0950110076461527
+        ]
+      },
+      "candidate_count": 5
+    },
+    {
+      "plane_id": "holdout_board010",
+      "cloud": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/holdout/010/xyz.npz",
+      "head_plane": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/head_mid360_01/holdout/010/head_plane.json",
+      "selected_plane": {
+        "normal": [
+          -0.9057645854476392,
+          -0.29310469419404134,
+          0.30607213853973003
+        ],
+        "d": 1.097250166819389,
+        "points": 718,
+        "rms_m": 0.001668675938156022,
+        "centroid_m": [
+          1.1991369066796262,
+          0.1219754620753322,
+          0.08049460817491609
+        ]
+      },
+      "candidate_count": 5
+    }
+  ],
+  "calibration_complete": false,
+  "reference_sha256": "3e29ded5bc3506d0004eebe230515793d76280b2f584d83e962343ae82d56e16",
+  "reference_refitted": false
+}

@@ -1,0 +1,212 @@
+[
+  {
+    "split": "train",
+    "plane_id": "board001",
+    "normal_error_to_gt_deg": 0.11529520375531631,
+    "offset_error_to_gt_mm": 25.92165604380625
+  },
+  {
+    "split": "train",
+    "plane_id": "board002",
+    "normal_error_to_gt_deg": 0.1862234161057025,
+    "offset_error_to_gt_mm": 9.657473728611254
+  },
+  {
+    "split": "train",
+    "plane_id": "board003",
+    "normal_error_to_gt_deg": 0.2361334112055552,
+    "offset_error_to_gt_mm": 10.09128520455893
+  },
+  {
+    "split": "train",
+    "plane_id": "board004",
+    "normal_error_to_gt_deg": 0.2980508500573539,
+    "offset_error_to_gt_mm": 6.8094903772443205
+  },
+  {
+    "split": "train",
+    "plane_id": "board005",
+    "normal_error_to_gt_deg": 0.2673119825990886,
+    "offset_error_to_gt_mm": 9.155326662460439
+  },
+  {
+    "split": "train",
+    "plane_id": "board006",
+    "normal_error_to_gt_deg": 0.3350110201140898,
+    "offset_error_to_gt_mm": 9.90703253316405
+  },
+  {
+    "split": "train",
+    "plane_id": "board007",
+    "normal_error_to_gt_deg": 0.16480943360894773,
+    "offset_error_to_gt_mm": 7.500221152696884
+  },
+  {
+    "split": "train",
+    "plane_id": "board008",
+    "normal_error_to_gt_deg": 0.6875775172098606,
+    "offset_error_to_gt_mm": 12.446064440010174
+  },
+  {
+    "split": "train",
+    "plane_id": "board009",
+    "normal_error_to_gt_deg": 0.20807703665808705,
+    "offset_error_to_gt_mm": 8.41473513677804
+  },
+  {
+    "split": "train",
+    "plane_id": "board010",
+    "normal_error_to_gt_deg": 0.18439409501035817,
+    "offset_error_to_gt_mm": 10.174980853979276
+  },
+  {
+    "split": "train",
+    "plane_id": "board011",
+    "normal_error_to_gt_deg": 0.09950734888325281,
+    "offset_error_to_gt_mm": 13.107798402336446
+  },
+  {
+    "split": "train",
+    "plane_id": "board012",
+    "normal_error_to_gt_deg": 0.2101634505399572,
+    "offset_error_to_gt_mm": 11.358455994339378
+  },
+  {
+    "split": "train",
+    "plane_id": "board013",
+    "normal_error_to_gt_deg": 0.4184818987344374,
+    "offset_error_to_gt_mm": 15.066924366679668
+  },
+  {
+    "split": "train",
+    "plane_id": "board014",
+    "normal_error_to_gt_deg": 0.5167798273214196,
+    "offset_error_to_gt_mm": 11.509870898665397
+  },
+  {
+    "split": "train",
+    "plane_id": "board015",
+    "normal_error_to_gt_deg": 0.33652027814064617,
+    "offset_error_to_gt_mm": 7.636453003989407
+  },
+  {
+    "split": "train",
+    "plane_id": "board016",
+    "normal_error_to_gt_deg": 0.24821780860506923,
+    "offset_error_to_gt_mm": 13.223798528110065
+  },
+  {
+    "split": "train",
+    "plane_id": "board017",
+    "normal_error_to_gt_deg": 0.25534152168464863,
+    "offset_error_to_gt_mm": 7.04354108915517
+  },
+  {
+    "split": "train",
+    "plane_id": "board018",
+    "normal_error_to_gt_deg": 0.6337331118742051,
+    "offset_error_to_gt_mm": 11.854611787407876
+  },
+  {
+    "split": "train",
+    "plane_id": "board019",
+    "normal_error_to_gt_deg": 0.5714073697724197,
+    "offset_error_to_gt_mm": 7.424432013183324
+  },
+  {
+    "split": "train",
+    "plane_id": "board020",
+    "normal_error_to_gt_deg": 0.25596072121510755,
+    "offset_error_to_gt_mm": 9.965409158463778
+  },
+  {
+    "split": "train",
+    "plane_id": "board021",
+    "normal_error_to_gt_deg": 0.6090461836041948,
+    "offset_error_to_gt_mm": 11.587770305119705
+  },
+  {
+    "split": "train",
+    "plane_id": "board022",
+    "normal_error_to_gt_deg": 0.6563298964377047,
+    "offset_error_to_gt_mm": 7.371579673031814
+  },
+  {
+    "split": "train",
+    "plane_id": "board023",
+    "normal_error_to_gt_deg": 0.023272389637056093,
+    "offset_error_to_gt_mm": 9.334386661384864
+  },
+  {
+    "split": "train",
+    "plane_id": "board024",
+    "normal_error_to_gt_deg": 0.18974385762674711,
+    "offset_error_to_gt_mm": 10.60168710846665
+  },
+  {
+    "split": "train",
+    "plane_id": "board025",
+    "normal_error_to_gt_deg": 0.11566248738014487,
+    "offset_error_to_gt_mm": 7.814597096546971
+  },
+  {
+    "split": "holdout",
+    "plane_id": "holdout_board001",
+    "normal_error_to_gt_deg": 0.08348537916034193,
+    "offset_error_to_gt_mm": 10.876271103821944
+  },
+  {
+    "split": "holdout",
+    "plane_id": "holdout_board002",
+    "normal_error_to_gt_deg": 0.4512057406271443,
+    "offset_error_to_gt_mm": 13.394799210042274
+  },
+  {
+    "split": "holdout",
+    "plane_id": "holdout_board003",
+    "normal_error_to_gt_deg": 0.4298658636787935,
+    "offset_error_to_gt_mm": 6.877434121367321
+  },
+  {
+    "split": "holdout",
+    "plane_id": "holdout_board004",
+    "normal_error_to_gt_deg": 0.30633507051360165,
+    "offset_error_to_gt_mm": 9.22314056212259
+  },
+  {
+    "split": "holdout",
+    "plane_id": "holdout_board005",
+    "normal_error_to_gt_deg": 0.297643348079275,
+    "offset_error_to_gt_mm": 13.650047328206849
+  },
+  {
+    "split": "holdout",
+    "plane_id": "holdout_board006",
+    "normal_error_to_gt_deg": 0.2538296562388074,
+    "offset_error_to_gt_mm": 11.801204601980197
+  },
+  {
+    "split": "holdout",
+    "plane_id": "holdout_board007",
+    "normal_error_to_gt_deg": 0.08897326428004362,
+    "offset_error_to_gt_mm": 10.21470379976508
+  },
+  {
+    "split": "holdout",
+    "plane_id": "holdout_board008",
+    "normal_error_to_gt_deg": 0.9484930582650745,
+    "offset_error_to_gt_mm": 9.02001597081692
+  },
+  {
+    "split": "holdout",
+    "plane_id": "holdout_board009",
+    "normal_error_to_gt_deg": 0.36793649908515463,
+    "offset_error_to_gt_mm": 6.091152938907607
+  },
+  {
+    "split": "holdout",
+    "plane_id": "holdout_board010",
+    "normal_error_to_gt_deg": 0.03869471148841281,
+    "offset_error_to_gt_mm": 10.442220769384392
+  }
+]
