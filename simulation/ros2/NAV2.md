@@ -57,7 +57,7 @@ RViz 상단 **Nav2 Goal** → 지도 위 목표 지점을 클릭한 채 끌어 �
 
 ```bash
 ros2 action send_goal /navigate_to_pose nav2_msgs/action/NavigateToPose \
-  "{pose: {header: {frame_id: map}, pose: {position: {x: 2.0, y: 1.8}, orientation: {w: 1.0}}}}"
+  "{pose: {header: {frame_id: map}, pose: {position: {x: 1.8, y: 0.4}, orientation: {w: 1.0}}}}"
 ```
 
 ## 종료

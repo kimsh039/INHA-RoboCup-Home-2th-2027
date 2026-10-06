@@ -1,0 +1,5 @@
+newmtl apple_material
+Kd 1 1 1
+# shader_type beckmann
+map_Kd apple.jpg
+

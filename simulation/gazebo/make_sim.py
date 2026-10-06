@@ -45,9 +45,25 @@ WALL_GREY = '0.75 0.75 0.75 1'
 ROOM_WALLS = [('wall_north', '0 3.05 0.5 0 0 0', '6.2 0.1 1.0'), ('wall_south', '0 -3.05 0.5 0 0 0', '6.2 0.1 1.0'),
               ('wall_east', '3.05 0 0.5 0 0 0', '0.1 6.0 1.0'), ('wall_west', '-3.05 0 0.5 0 0 0', '0.1 6.0 1.0'),
               ('wall_partition', '-1.5 2.25 0.5 0 0 0', '0.1 1.5 1.0')]
-# Table 1.6 x 0.8 m, top 0.03 m thick with surface at 0.72 m; legs 0.05 m square inset 0.05 m.
-TABLE_CENTRE = (1.8, -1.0)
+# Two identical tables 1.6 x 0.8 m, top 0.03 m thick with surface at 0.72 m; legs 0.05 m square inset 0.05 m.
+# Long sides face each other across a 2 m gap (edge to edge, y -0.6 .. 1.4).
+TABLE_CENTRES = [(1.8, -1.0), (1.8, 1.8)]
 TABLE_LEG_OFFSETS = [(.725, .325), (.725, -.325), (-.725, .325), (-.725, -.325)]
+TABLE_SURFACE_Z = 0.72
+# Objects on the tables (meshes in objects/, see objects/README.md): name -> (x, y, yaw, mass kg, collision).
+# Mesh origins sit on the supporting surface. Collision is a primitive around the mesh:
+# ('box', centre xyz, size xyz) / ('sphere', centre xyz, radius) / ('cylinder', centre xyz, radius, length).
+# Masses are of the real items (YCB fruit are light plastic replicas); the can holds 350 ml of soda.
+OBJECTS = {
+    'plate': (1.40, -0.85, 0.0, 0.279, ('cylinder', (-0.012, 0, 0.0105), 0.13, 0.027)),
+    'mug': (1.90, -0.80, 1.2, 0.118, ('box', (-0.0085, 0.0175, 0.040), (0.117, 0.093, 0.082))),
+    'banana': (2.30, -0.90, 0.5, 0.120, ('box', (0.0115, -0.0075, 0.018), (0.109, 0.178, 0.036))),
+    'fanta_can': (1.55, 1.62, 0.0, 0.377, ('cylinder', (0, 0, 0.061), 0.033, 0.122)),
+    'peach': (1.85, 1.72, 0.0, 0.130, ('sphere', (-0.0143, 0.0056, 0.0293), 0.0305)),
+    'apple': (2.10, 1.65, 0.0, 0.180, ('sphere', (0.001, -0.0035, 0.036), 0.036)),
+    'green_apple': (2.40, 1.60, 0.0, 0.180, ('sphere', (0.001, -0.0035, 0.036), 0.036)),
+}
+OBJECT_DIR = HERE / 'objects'
 GUI_PLUGINS = ('GzSceneManager', 'InteractiveViewControl', 'SelectEntities', 'CameraTracking', 'WorldControl',
                'WorldStats', 'EntityTree', 'TransformControl', 'JointPositionController')
 
@@ -56,7 +72,7 @@ def parse_args():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--test-wall', action='store_true', help='Add a wall 2 m forward for sensor validation')
     parser.add_argument('--world', choices=['empty', 'room'], default='empty',
-                        help='room: walls, partition and table for SLAM/Nav2 tests (see README)')
+                        help='room: walls, partition and two tables for SLAM/Nav2 tests (see README)')
     parser.add_argument('--detection-demo', action='store_true', help='640x480 head sensors, 10 Hz, 5 m depth')
     parser.add_argument('--target-image', type=Path, help='Add a textured test billboard ahead of the robot')
     return parser.parse_args()
@@ -187,10 +203,44 @@ def add_test_wall(world):
 def add_room(world):
     for name, pose, size in ROOM_WALLS:
         static_box(world, name, pose, size)
-    tx, ty = TABLE_CENTRE
-    static_box(world, 'table_top', f'{tx} {ty} 0.705 0 0 0', '1.6 0.8 0.03', '0.55 0.35 0.2 1')
-    for i, (dx, dy) in enumerate(TABLE_LEG_OFFSETS):
-        static_box(world, f'table_leg{i}', f'{tx + dx} {ty + dy} 0.345 0 0 0', '0.05 0.05 0.69', '0.3 0.3 0.3 1')
+    for n, (tx, ty) in enumerate(TABLE_CENTRES, 1):
+        static_box(world, f'table{n}_top', f'{tx} {ty} 0.705 0 0 0', '1.6 0.8 0.03', '0.55 0.35 0.2 1')
+        for i, (dx, dy) in enumerate(TABLE_LEG_OFFSETS):
+            static_box(world, f'table{n}_leg{i}', f'{tx + dx} {ty + dy} 0.345 0 0 0', '0.05 0.05 0.69', '0.3 0.3 0.3 1')
+    add_table_objects(world)
+
+
+def add_table_objects(world):
+    for name, (x, y, yaw, mass, (shape, centre, *dims)) in OBJECTS.items():
+        model = sub(world, 'model', name=name)
+        sub(model, 'pose', f'{x} {y} {TABLE_SURFACE_Z + 0.002} 0 0 {yaw}')
+        link = sub(model, 'link', name='link')
+        if shape == 'box':
+            sx, sy, sz = dims[0]
+            diagonal = ((sy*sy + sz*sz)/12, (sx*sx + sz*sz)/12, (sx*sx + sy*sy)/12)
+        elif shape == 'sphere':
+            diagonal = (0.4*dims[0]**2,)*3
+        else:
+            r, length = dims
+            diagonal = ((3*r*r + length*length)/12,)*2 + (r*r/2,)
+        inertial = sub(link, 'inertial')
+        sub(inertial, 'pose', '{} {} {} 0 0 0'.format(*centre))
+        sub(inertial, 'mass', str(mass))
+        inertia = sub(inertial, 'inertia')
+        for key, value in zip(('ixx', 'iyy', 'izz'), diagonal):
+            sub(inertia, key, f'{mass*value:.3e}')
+        collision = sub(link, 'collision', name='collision')
+        sub(collision, 'pose', '{} {} {} 0 0 0'.format(*centre))
+        geometry = sub(sub(collision, 'geometry'), shape)
+        if shape == 'box':
+            sub(geometry, 'size', '{} {} {}'.format(*dims[0]))
+        else:
+            sub(geometry, 'radius', str(dims[0]))
+            if shape == 'cylinder':
+                sub(geometry, 'length', str(dims[1]))
+        visual = sub(link, 'visual', name='visual')
+        # Gazebo caches meshes and textures by file name, so each object has its own names.
+        sub(sub(sub(visual, 'geometry'), 'mesh'), 'uri', (OBJECT_DIR / name / f'{name}.obj').as_uri())
 
 
 def add_lighting_and_gui(world):
