@@ -117,7 +117,7 @@ INHA-RoboCup-Home-2th-2027/
 │       ├── sensor_rack_description/  # 프로파일·센서 메시 / CAD 보고서
 │       └── wrist_camera_description/ # 손목 마운트·카메라 / STEP·배치 자료
 ├── simulation/
-│   ├── robot_description/robocup.urdf # 유일한 통합 URDF: 89 links / 88 joints
+│   ├── robot_description/robocup.urdf # 유일한 통합 URDF: 94 links / 93 joints
 │   ├── mujoco/                       # 손목 관측·GraspNet·물리 픽앤플레이스
 │   ├── gazebo/                       # world 생성 / Gazebo 실행
 │   ├── ros2/                         # ROS bridge·RViz·SLAM/Nav2 설정

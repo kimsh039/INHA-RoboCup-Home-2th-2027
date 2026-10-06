@@ -2,7 +2,18 @@
 
 최종 모델 확정으로 독립 랙 URDF·ROS 패키지 실행 파일은 삭제했습니다. 메시·CAD 검증 보고서는 유지합니다.
 최종 파일은 [robocup.urdf](../../../simulation/robot_description/robocup.urdf)이며 실행은 [Gazebo 안내](../../../simulation/gazebo/README.md)를 사용하세요.
-아래는 최초 랙 내보내기 당시 좌표·물성 기록입니다.
+아래는 최초 랙 내보내기 당시 좌표·물성 기록입니다. `export_report.json`과 `validation_report.json`도 최초 내보내기 기록입니다.
+
+## 2026-10-06 프로파일 변경
+
+현재 `meshes/base_link.stl`과 최종 URDF는 수정된 Fusion `final_assembly`의 프로파일·브래킷 형상을 사용합니다. 750mm 기둥과 150mm 가로 프로파일 등의 변경을 반영하고 이전 매니퓰레이터 판형 마운트를 제거했습니다. 센서 마운트 두 개의 형상·센서 좌표·센서 기능 설정은 유지했습니다.
+
+- 알루미늄 6061 랙: 51개 본체, 질량 **15.646368 kg**.
+- 랙 기준 무게중심: `(-0.061344968, 0.000001958, 0.483339112)` m.
+- Piper 베이스: `Assembly`에서 확인한 랙 기준 `(-0.0195, 0, 0.790)` m, RPY `(0, 0, 0)`.
+- 팔 관절 영점·가동 범위·그리퍼·손목 카메라 상대 연결은 유지합니다.
+- 최신 형상·물성·구성요소 좌표는 [rack_revision_20261006.json](rack_revision_20261006.json)을 참고하세요.
+- [이번 정적 검증 결과](rack_revision_validation_20261006.json): 94 links / 93 joints, 전체 명목 질량 50.961433 kg. 센서 Gazebo 설정·헤드 센서 전역 좌표·팔 및 손목 상대 변환 보존 검사 통과. 이번 변경 후 ROS/Gazebo 실구동은 수행하지 않았습니다.
 
 ## 최초 센서 프레임 내보내기 기록
 
