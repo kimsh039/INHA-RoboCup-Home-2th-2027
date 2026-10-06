@@ -157,6 +157,67 @@ RViz는 [Nav2 가이드](../simulation/ros2/NAV2.md)대로 열고 Fixed Frame을
 Nav2 거절·실패 시에는 이 handoff를 호출하지 않는다. 이 테스트는 손목 카메라·팔·그리퍼를 움직이지 않는다.
 중단할 때에는 검출 터미널뿐 아니라 Nav2/Gazebo 터미널도 종료해 진행 중인 주행을 끝낸다.
 
+## 4. 테이블 위 물체 검출 (GPU)
+
+방 world의 두 테이블 위 물체(접시·컵·바나나·환타 캔·복숭아·사과·청사과)를 헤드 카메라로 검출해 map 좌표를 구한다.
+물체는 `sim/table-scene` 브랜치의 world가 필요하다. 표적 이미지 판(`target_image`)과 `detection_demo`는 쓰지 않는다.
+테이블 물체는 2~3 m에서 30~90 px로 작아 640×480·YOLO11n으로는 거의 검출되지 않으므로, 1920×1080 원본 해상도와
+**YOLO11m · 입력 1280 · GPU**를 사용한다.
+
+### 준비 (최초 1회)
+
+```bash
+# CUDA torch로 교체 (CPU 환경을 만든 뒤). MX450에서 확인: torch 2.5.1+cu124
+detection/.venv-test/bin/python3 -m pip install --index-url https://download.pytorch.org/whl/cu124 \
+  --force-reinstall torch==2.5.1 torchvision==0.20.1
+detection/.venv-test/bin/python3 -m pip install --ignore-installed numpy==1.26.4
+curl -L -o detection/models/yolo11m.pt \
+  https://github.com/ultralytics/assets/releases/download/v8.3.0/yolo11m.pt
+```
+
+GPU 메모리가 2 GB이면 Gazebo 화면과 RViz를 내장 GPU에서 띄워 VRAM을 확보한다. 센서 렌더링(서버)만 NVIDIA를 쓴다.
+
+```bash
+# 터미널 1: Gazebo 서버만 (NVIDIA)
+__NV_PRIME_RENDER_OFFLOAD=1 __GLX_VENDOR_LIBRARY_NAME=nvidia \
+  ros2 launch simulation/ros2/sim.launch.py world:=room rviz:=false gui:=false
+# 터미널 1-2: Gazebo 화면 (내장 GPU)
+GZ_PARTITION=robocup_motion GZ_IP=127.0.0.1 gz sim -g
+```
+
+SLAM·Nav2는 2절과 같다. 로봇을 0.5 m 정도 움직여 지도를 채운 뒤, 테이블이 모두 보이는 (-0.5, 0.4)·정면 방향에서 실행한다.
+
+### 터미널 4: 테이블 물체 검출
+
+```bash
+ros2 launch robocup_head_detection sim_detection.launch.py \
+  config:=$PWD/detection/head_detection_ws/install/robocup_head_detection/share/robocup_head_detection/config/sim_table_detection.yaml \
+  model_path:=$PWD/detection/models/yolo11m.pt device:=0 \
+  python_executable:=$PWD/detection/.venv-test/bin/python3 auto_send:=false
+```
+
+[`sim_table_detection.yaml`](head_detection_ws/src/robocup_head_detection/config/sim_table_detection.yaml)의 기본 목표는 `cup`이다.
+
+| 사전학습 COCO 결과 (YOLO11m, 1280) | 클래스·신뢰도 |
+|---|---|
+| 머그컵 | `cup` 0.8 — 가장 안정적 |
+| 사과·청사과 | `apple` 0.5~0.6 |
+| 바나나 | `frisbee`로 오검출 |
+| 접시 | 검출 안 됨 |
+
+| 설정 | 값 | 이유 |
+|---|---|---|
+| `imgsz` | 1280 | 640에서는 테이블 물체가 거의 검출되지 않음 |
+| `roi_margin` | 6.0 | ROI = 박스×margin. 2.0이면 144×120 px ROI를 1280으로 9배 키워 재검증이 실패하고 추적이 계속 초기화됨 |
+| `input_timeout` | 3.0 | 실시간 기준 감시. Gazebo가 실시간보다 느려 프레임이 1초 넘게 끊기면 추적이 초기화됨 |
+
+확인 결과(컵, 2.4 m): YOLO 검증 프레임 34개의 map 위치가 실제 모델 원점과 수평 5.3 cm 차이였다. 대부분 카메라 쪽
+컵 표면(반지름 약 4.5 cm)을 측정하기 때문이다. GPU 추론은 약 0.17 s/frame(CPU 1.2~3.4 s)이다.
+
+**알려진 제한**
+- 기존 노드는 목표 1 m 앞을 이동 목표로 잡으므로 테이블 다리 옆에 떨어져 `GOAL_OCCUPIED_OR_UNKNOWN`이 된다. 테이블 가장자리 기준 접근 자세는 후속 작업이다.
+- TF에 바닥 기준 `base_footprint`가 없어 `base_link`(바닥 위 0.1425 m)가 map z=0에 놓인다. 따라서 map의 높이는 실제보다 0.1425 m 낮다(컵 0.62 m → 실제 0.76 m). 수평 위치에는 영향이 없다.
+
 ## 실패 사유
 
 | 상태 | 확인할 것 |
