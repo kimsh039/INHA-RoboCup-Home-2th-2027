@@ -254,6 +254,8 @@ def main():
         sub(target, 'pose', '2.2 0.25 1.3 0 0 0')
         link = sub(target, 'link', name='board')
         visual = sub(link, 'visual', name='image')
+        # A plane with normal -x maps the image's up axis to +y; roll it upright.
+        sub(visual, 'pose', '0 0 0 1.5707963 0 0')
         plane = sub(sub(visual, 'geometry'), 'plane')
         sub(plane, 'normal', '-1 0 0')
         sub(plane, 'size', '1.5 2.0')
