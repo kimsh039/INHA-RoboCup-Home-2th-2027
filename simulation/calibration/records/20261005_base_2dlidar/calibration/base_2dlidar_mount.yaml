@@ -1,0 +1,114 @@
+schema: base_lidar_known_room/v1
+status: computed_validation_pending
+parent_frame: base_link
+child_frame: laser_frame
+transform_direction: base_link <- laser_frame
+estimated_parameters:
+- x_m
+- y_m
+- yaw_rad
+estimated_xy_yaw:
+- 0.00012360970169123957
+- 0.0005205163463867296
+- 0.15437059215843316
+yaw_deg: 8.844783411613541
+translation_m:
+- 0.00012360970169123957
+- 0.0005205163463867296
+- 0.34271
+quaternion_xyzw:
+- 0.0
+- 0.0
+- 0.07710867943872361
+- 0.997022693600911
+matrix_4x4:
+- - 0.9881085031104323
+  - -0.15375820654801078
+  - 0.0
+  - 0.00012360970169123957
+- - 0.15375820654801078
+  - 0.9881085031104323
+  - 0.0
+  - 0.0005205163463867296
+- - 0.0
+  - 0.0
+  - 0.9999999999999999
+  - 0.34271
+- - 0.0
+  - 0.0
+  - 0.0
+  - 1.0
+fixed_z_roll_pitch:
+- 0.34271
+- 0.0
+- 0.0
+fixed_input_source: sensor z/roll/pitch in archived SDF (CAD); not estimated by 2D
+  calibration
+room_walls:
+  wall_east: 3.0
+  wall_west: -3.0
+  wall_north: 3.0
+  wall_south: -3.0
+heading_prior_deg: 0
+heading_search_halfwidth_deg: 40
+wall_gate_m: 0.05
+training_samples:
+- sample: /Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/base_2dlidar_02/train/002
+  scan_sha256: 1655941f9d59838eb21b5d87202b3da96cb3dac0b9f631cacf1e3f193f160c29
+  input_sha256:
+    scan.json.gz: 1655941f9d59838eb21b5d87202b3da96cb3dac0b9f631cacf1e3f193f160c29
+    base_pose_before.json: d7765e88daf6469443deba38139ba893db6318e0d9fadcbb9344bd3be5f05461
+    base_pose_after.json: 77d6dfdb81cfc6f5a692efaa9129651bf3b93de809daa23164f2adb31d4fb86a
+    run_id.txt: 19b4d3858e1c7048f9f011c1cd9376f0b13e8982831db9056e85162f90429e90
+  scan_sim_ns: 165201000000
+  run_id: run_20261005T134132_407742Z
+  world_sha256: c6ea615e723abd8f1519a2f520a0e01099d65a2a31b6c2df79281f173265ac90
+  base_pose_at_scan:
+    position_xyz_m:
+    - -0.0009472394628870725
+    - -1.8373038268337124e-06
+    - 0.14249832473477103
+    quaternion_xyzw:
+    - -6.997179643263035e-08
+    - -0.002156293887538198
+    - -3.245203323901901e-05
+    - 0.9999976746690621
+  valid_returns: 500
+  wall_points: 411
+  wall_fraction: 0.822
+  excluded_points: 89
+  wall_rms_mm: 4.836250631785338
+  wall_p95_abs_mm: 9.283471746320826
+  all_returns_median_nearest_wall_abs_mm: 4.162144683347524
+  per_wall:
+    east:
+      points: 116
+      rms_mm: 5.050984282136207
+    west:
+      points: 123
+      rms_mm: 4.955561646767086
+    north:
+      points: 82
+      rms_mm: 4.531818042026619
+    south:
+      points: 90
+      rms_mm: 4.65345611256804
+method: robust known-wall least squares, train only; actual base xyz/quaternion interpolated
+  at scan stamp; fixed CAD z/roll/pitch
+jacobian_rank: 3
+jacobian_condition: 2.3512187620903755
+limitations:
+- z/roll/pitch are not calibrated
+- pose pairs are stationary samples, not a hardware time-sync guarantee
+- square room symmetry is resolved with a heading prior within +/-40 degrees
+- wall residual metrics exclude nonwall/outlier returns; support counts are reported
+- known walls must remain at archived positions; do not move walls in GUI
+ground_truth_comparison:
+  source: archived SDF sensor pose; used for comparison after fitting only
+  reference_xy_yaw:
+  - 0.000175
+  - 0.0
+  - 0.15375400000000003
+  xy_error_mm: 0.523047062525021
+  yaw_error_deg: 0.03532812835907996
+calibration_id: calibration_20261005T134437_018194Z

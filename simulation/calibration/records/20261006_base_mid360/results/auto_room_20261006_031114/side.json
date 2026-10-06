@@ -1,0 +1,14 @@
+{
+  "plane_id": "side",
+  "nx": 0.00023567348705245663,
+  "ny": -0.9999998665600496,
+  "nz": -0.000459715010464005,
+  "d": -2.999707854355783,
+  "unit": "m",
+  "frame": "livox_frame",
+  "inlier_count": 774,
+  "rms_m": 0.0035271767121049956,
+  "manual_roi": false,
+  "cloud_sha256": "f9a51545cc8b2e1e14a4470acf8b465759dd439ac9a7b65c3ab79996fdff1349",
+  "raw_sha256": "affdc81305d0142d0a4cf83214b25073c733763477595f1f4f9ba712a2231441"
+}

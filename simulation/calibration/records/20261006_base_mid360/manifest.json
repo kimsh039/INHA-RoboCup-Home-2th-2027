@@ -1,0 +1,22 @@
+{
+  "record_id": "20261006_base_mid360",
+  "status": "computed_validation_pending",
+  "transform_direction": "base_link <- livox_frame",
+  "translation_xyz_m": [
+    -0.17996226644996516,
+    0.00015620113972566324,
+    1.1988668192037322
+  ],
+  "measured_scene": "config/world.sdf",
+  "measurement_model_commit": "not independently recorded; captured world is authoritative",
+  "integration_model_commit": "1509ede",
+  "candidate_urdf": "../../../robot_description/robocup.calibrated.urdf",
+  "includes_base_2dlidar_record": "../20261005_base_2dlidar/calibration/calibration.json",
+  "accuracy_evaluation_performed_during_this_update": false,
+  "latest_assembly_runtime_tested": false,
+  "notes": [
+    "Recorded runtime preserves the measurement-time robot structure and machine-local mesh URIs; do not launch it directly on another machine.",
+    "Current calibrated URDF is generated on top of the latest nominal URDF, including its revised rack and Piper mounting.",
+    "Recollect validation after restarting a scene generated from a changed URDF; retain the original measured world."
+  ]
+}

@@ -28,3 +28,7 @@ Gazebo·ROS의 관절값과 수동 제어 명령은 이 새 영점을 기준으�
 최종 확정 후 별도 Gazebo 서버에서 G2 10 Hz/500 rays, Mid-360S 10 Hz/20,000 rays·points,
 헤드·손목 RGB/depth 약 30 Hz 메시지와 프레임을 확인했고 정면 검사 벽 거리 검사를 통과했습니다.
 ROS 런치는 당시 Gazebo 개발 PC에 ROS가 없어 구문 확인까지만 했습니다. 별도 Jetson 실기 setup은 [Jetson 문서](../../setup/jetson/README.md)에 기록했으며 이 시뮬레이션 실행 검증과 구분합니다.
+
+## 보정 모델 후보 — 측정·적용·정확도 평가
+
+최신 명목 모델은 `robocup.urdf`이며 `robot_description/robocup.calibrated.urdf`는 보관한 Base–2D/Mid360 결과를 최신 구조에 적용한 별도 후보다. 센서 보정과 독립 관측 평가를 포함한 [Ubuntu 실행 가이드](../calibration/README.md)에서 로봇 이동, pose/점군 저장, 결과 적용, A/B 오차 판정과 보고서 경로를 따라 한다. Mid360 결과는 검증 대기이며 이 업데이트에서 ROS/Gazebo/정확도 평가를 실행하지 않았다.

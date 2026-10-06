@@ -1,0 +1,121 @@
+{
+  "status": "passed_provisional_limits",
+  "calibration_file": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/base_2dlidar_02/results/calibration_20261005T134437_018194Z/base_2dlidar_mount.yaml",
+  "calibration_sha256": "9ce1fd23a0c999d527571055b558f98bbc8c4102340ffe9e66afa0606b35d134",
+  "calibration_was_refitted": false,
+  "limits": {
+    "max_wall_rms_mm": 15,
+    "max_wall_p95_mm": 25,
+    "min_wall_fraction": 0.6,
+    "min_points_each_wall": 10,
+    "wall_gate_m": 0.05
+  },
+  "samples": [
+    {
+      "sample": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/base_2dlidar_02/validation/001",
+      "scan_sha256": "198388775ebc1c1a0315ed8f102bab621fe459a11bc6f405cb214561d0055bb7",
+      "input_sha256": {
+        "scan.json.gz": "198388775ebc1c1a0315ed8f102bab621fe459a11bc6f405cb214561d0055bb7",
+        "base_pose_before.json": "329fcf920b690ecdf670071b0b3dbb4d02e3593826b8270c0d566c13fb0bdf75",
+        "base_pose_after.json": "84cf08a4241e0d3df0b78cd75cf90e0fe858d835c19d21d8f41ea69b482f5e63",
+        "run_id.txt": "19b4d3858e1c7048f9f011c1cd9376f0b13e8982831db9056e85162f90429e90"
+      },
+      "scan_sim_ns": 291520000000,
+      "run_id": "run_20261005T134132_407742Z",
+      "world_sha256": "c6ea615e723abd8f1519a2f520a0e01099d65a2a31b6c2df79281f173265ac90",
+      "base_pose_at_scan": {
+        "position_xyz_m": [
+          0.9991855084085719,
+          0.4995286678165537,
+          0.1424983225648678
+        ],
+        "quaternion_xyzw": [
+          0.0005581080653080356,
+          -0.0020831401423395406,
+          0.25878952145338346,
+          0.9659313291474004
+        ]
+      },
+      "valid_returns": 500,
+      "wall_points": 400,
+      "wall_fraction": 0.8,
+      "excluded_points": 100,
+      "wall_rms_mm": 6.737003887304214,
+      "wall_p95_abs_mm": 14.73569521724685,
+      "all_returns_median_nearest_wall_abs_mm": 4.225208488672472,
+      "per_wall": {
+        "east": {
+          "points": 135,
+          "rms_mm": 6.388034146215903
+        },
+        "west": {
+          "points": 77,
+          "rms_mm": 7.0854686749753855
+        },
+        "north": {
+          "points": 99,
+          "rms_mm": 5.520385893963389
+        },
+        "south": {
+          "points": 89,
+          "rms_mm": 8.047092521864574
+        }
+      },
+      "passed": true,
+      "reasons": []
+    },
+    {
+      "sample": "/Users/seoneum/Documents/Codex/2026-10-03/wh/outputs/robocup-tutorial-calibration/calibration_data/sim/base_2dlidar_02/validation/002",
+      "scan_sha256": "d5534415dfcd5a3a25c9cfb3f11d949d3a50e89ace05940b6d51c607316a4800",
+      "input_sha256": {
+        "scan.json.gz": "d5534415dfcd5a3a25c9cfb3f11d949d3a50e89ace05940b6d51c607316a4800",
+        "base_pose_before.json": "e155e50158d9022fde3b3a0a11929a4252cb9f42de14894ee10d02316a8fc3be",
+        "base_pose_after.json": "91fc492b5a327282e0d9ef045c6e73a25a32bc6b01aac641d9dbc1087a16addc",
+        "run_id.txt": "19b4d3858e1c7048f9f011c1cd9376f0b13e8982831db9056e85162f90429e90"
+      },
+      "scan_sim_ns": 306046000000,
+      "run_id": "run_20261005T134132_407742Z",
+      "world_sha256": "c6ea615e723abd8f1519a2f520a0e01099d65a2a31b6c2df79281f173265ac90",
+      "base_pose_at_scan": {
+        "position_xyz_m": [
+          -0.5006656304063903,
+          1.000663023777501,
+          0.1424983692292472
+        ],
+        "quaternion_xyzw": [
+          -0.0008253770167373311,
+          -0.00199246546470172,
+          -0.38271021216081075,
+          0.9238659222755105
+        ]
+      },
+      "valid_returns": 500,
+      "wall_points": 373,
+      "wall_fraction": 0.746,
+      "excluded_points": 127,
+      "wall_rms_mm": 6.845772379938376,
+      "wall_p95_abs_mm": 14.620908475031136,
+      "all_returns_median_nearest_wall_abs_mm": 4.689768484628543,
+      "per_wall": {
+        "east": {
+          "points": 94,
+          "rms_mm": 7.7596287825215144
+        },
+        "west": {
+          "points": 96,
+          "rms_mm": 7.34564285726609
+        },
+        "north": {
+          "points": 96,
+          "rms_mm": 5.898798051979261
+        },
+        "south": {
+          "points": 87,
+          "rms_mm": 6.158977336547033
+        }
+      },
+      "passed": true,
+      "reasons": []
+    }
+  ]
+}

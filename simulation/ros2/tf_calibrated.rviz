@@ -1,0 +1,100 @@
+Panels:
+  - Class: rviz_common/Displays
+    Name: Displays
+Visualization Manager:
+  Class: ""
+  Displays:
+    - Class: rviz_default_plugins/Grid
+      Name: Grid
+      Enabled: true
+      Cell Size: 1
+      Plane Cell Count: 10
+    - Class: rviz_default_plugins/TF
+      Name: Calibrated TF
+      Enabled: true
+      Show Arrows: false
+      Show Axes: true
+      Show Names: true
+      Marker Scale: 0.15
+      Filter (whitelist): "^(base_link|laser_frame|livox_frame|g2_link|mid360_link|camera_.*|wrist_camera_.*|piper_.*|tcp|.*_tcp|tool0|end_effector|ee_link)$"
+      Filter (blacklist): ""
+      Frames:
+        All Enabled: true
+        base_link:
+          Value: true
+        livox_frame:
+          Value: true
+        laser_frame:
+          Value: true
+        camera_optical_frame:
+          Value: true
+        wrist_camera_optical_frame:
+          Value: true
+        camera_link:
+          Value: true
+        wrist_camera_mount_link:
+          Value: true
+        wrist_camera_cad_link:
+          Value: true
+        wrist_camera_link:
+          Value: true
+        piper_base_link:
+          Value: true
+        piper_link1:
+          Value: true
+        piper_link2:
+          Value: true
+        piper_link3:
+          Value: true
+        piper_link4:
+          Value: true
+        piper_link5:
+          Value: true
+        piper_link6:
+          Value: true
+        piper_flange_link:
+          Value: true
+        piper_gripper_base:
+          Value: true
+        piper_gripper_link1:
+          Value: true
+        piper_gripper_link2:
+          Value: true
+        tcp:
+          Value: true
+        tool0:
+          Value: true
+        end_effector:
+          Value: true
+        ee_link:
+          Value: true
+    - Class: rviz_default_plugins/LaserScan
+      Name: Saved validation scan replay
+      Enabled: true
+      Topic:
+        Value: /calibration/scan_replay
+        Reliability Policy: Best Effort
+        Durability Policy: Volatile
+        Depth: 5
+      Style: Points
+      Size (Pixels): 4
+      Color Transformer: FlatColor
+      Color: 255; 100; 0
+  Global Options:
+    Fixed Frame: base_link
+    Background Color: 48; 48; 48
+    Frame Rate: 30
+  Tools:
+    - Class: rviz_default_plugins/Interact
+    - Class: rviz_default_plugins/MoveCamera
+  Views:
+    Current:
+      Class: rviz_default_plugins/Orbit
+      Target Frame: base_link
+      Distance: 9
+      Pitch: 1.2
+      Yaw: 0.5
+      Focal Point:
+        X: 0
+        Y: 0
+        Z: 0

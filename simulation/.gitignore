@@ -2,3 +2,8 @@ __pycache__/
 *.pyc
 gazebo/build/
 *.log
+
+# Local calibration environments, captures and recovery copies
+calibration/.venv/
+calibration/data/
+ros2/calibration_backups/

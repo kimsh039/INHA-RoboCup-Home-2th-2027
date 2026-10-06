@@ -1,0 +1,55 @@
+{
+  "parent_frame": "base_link",
+  "child_frame": "livox_frame",
+  "translation_unit": "m",
+  "matrix4x4": [
+    [
+      0.9999999994227341,
+      -2.7090195113089114e-05,
+      -2.0509828763556174e-05,
+      -0.17996226644996516
+    ],
+    [
+      -2.709151850817313e-05,
+      -0.9999999975511326,
+      -6.45273932103569e-05,
+      0.00015620113972566324
+    ],
+    [
+      -2.0508080653658113e-05,
+      6.452794881551299e-05,
+      -0.9999999977077813,
+      1.1988668192037322
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "translation_xyz_m": [
+    -0.17996226644996516,
+    0.00015620113972566324,
+    1.1988668192037322
+  ],
+  "quaternion_xyzw": [
+    0.999999999335206,
+    -1.354542841432048e-05,
+    -1.0254477361120686e-05,
+    3.2263835527916276e-05
+  ],
+  "status": "computed_validation_pending",
+  "manual_roi": false,
+  "method": "whole-cloud sequential RANSAC, room hypothesis matching, robust plane residual fitting",
+  "training_sha256": "c7d23c243e49d9ef3428ec9c35d6031e5b768cb15d008bd6061b3309bac1f296",
+  "cloud_sha256": "f9a51545cc8b2e1e14a4470acf8b465759dd439ac9a7b65c3ab79996fdff1349",
+  "targets_sha256": "2a658b9a5ae38574a2a1b9766db60b777038378c59a48e9119dfc2cc0f803832",
+  "initial_rpy_deg": [
+    180.0,
+    0.0,
+    0.0
+  ],
+  "max_rotation_deg": 40,
+  "max_translation_m": 1.5
+}

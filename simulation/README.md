@@ -39,3 +39,7 @@ robot-camera --partition robocup_motion --camera wrist
 
 위 별칭은 기존 Gazebo 개발 PC에서 사용한 단축 명령입니다. 다른 PC에서는 [tools 안내](tools/README.md)의 Python 명령을 사용합니다.
 손목 카메라는 항상 포함되므로 이전 `--with-wrist-camera`, `wrist_camera:=true` 옵션은 사용하지 않습니다.
+
+## 캘리브레이션 — 측정·적용·정확도 평가
+
+최신 명목 모델은 `robocup.urdf`이며 `robot_description/robocup.calibrated.urdf`는 보관한 Base–2D/Mid360 결과를 최신 구조에 적용한 별도 후보다. 센서 보정과 독립 관측 평가를 포함한 [Ubuntu 실행 가이드](calibration/README.md)에서 로봇 이동, pose/점군 저장, 결과 적용, A/B 오차 판정과 보고서 경로를 따라 한다. Mid360 결과는 검증 대기이며 이 업데이트에서 ROS/Gazebo/정확도 평가를 실행하지 않았다.
