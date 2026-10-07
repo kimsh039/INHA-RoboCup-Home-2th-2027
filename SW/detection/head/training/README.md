@@ -1,6 +1,6 @@
 # Head YOLO11n · 7개 클래스 학습
 
-2026-10-07 촬영 영상으로 헤드 카메라 객체 검출 모델을 학습합니다. 학습은 **Colab Tesla T4**에서 시작했으며, 완료 후 최적 가중치와 검증 수치·두 보관 영상의 추론 결과를 이 폴더에 기록합니다. 현재 결과 상태는 [run_status.json](run_status.json)을 확인하세요.
+2026-10-06 촬영 영상으로 **Colab Tesla T4에서 100 epoch 학습을 완료**했습니다. [최적 가중치](../models/head_yolo11n_20261007.pt) · [학습 결과](experiments/20261007/TRAINING_RESULTS.md) · [두 테스트 영상 결과](experiments/20261007/holdout/TEST_RESULTS.md) · [상태](run_status.json). 검증 mAP50 97.739%, mAP50–95 67.885%는 라벨 초안 기준이며, 테스트에서 머그컵/가림 장면 누락이 확인된 실험 모델입니다.
 
 | 항목 | 설정 |
 |---|---|

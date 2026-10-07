@@ -7,3 +7,4 @@ __pycache__/
 demo_assets/
 models/*
 !models/.gitkeep
+!models/head_yolo11n_20261007.pt

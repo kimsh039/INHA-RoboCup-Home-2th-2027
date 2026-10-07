@@ -21,8 +21,7 @@ CSRT/KCF를 제거한 버전이다. 빨간 풍선용 HSV와 ARMS 메시지·제�
 
 - 포함: 순수 Python 상태 머신, YOLO adapter, CSRT/KCF adapter, ROS 2 노드·커스텀 메시지,
   raw/JPEG 입력, 디버그 영상, 파라미터·launch·Docker CPU/GPU 설정, 모델 없이 실행하는 테스트.
-- 가중치: **미포함**. 학습·다운로드하지 않는다. 빈 경로/없는 파일이면 `WAITING_MODEL`로
-  무효 결과를 발행한다. 나중에 로컬 `.pt` 파일을 연결하고 노드를 재시작한다.
+- 가중치: [7개 클래스 YOLO11n 초안](models/head_yolo11n_20261007.pt)을 포함한다. [실제 학습·영상 평가](training/experiments/20261007/TRAINING_RESULTS.md)에 누락과 한계를 기록했다. 모델 경로를 명시해 노드에 연결하며 빈 경로/없는 파일이면 `WAITING_MODEL`로 무효 결과를 발행한다.
 - 후속 구현: Mid-360 작업면·경계·접근 자세, D435 목표 위치와 작업면 연결, Wrist D435의 SAM 분할·depth 점군, GraspNet·주변 충돌 장면·팔 제어.
 - 실제 센서·학습 모델의 성능과 ROS/Docker 전체 구동은 대상 PC에서 검증해야 한다.
 
@@ -42,7 +41,7 @@ SW/detection/head/
 │       ├── config/head_detection.yaml
 │       └── launch/head_detection.launch.py
 ├── docker/                        # Dockerfile, CPU Compose, GPU override
-├── models/                        # 추후 가중치 배치 (Git 제외)
+├── models/                        # 7개 클래스 학습 가중치 + 사용자 모델
 └── tests/                         # 모델 없이 상태/좌표/추적 검증
 ```
 
@@ -146,14 +145,14 @@ docker compose -f compose.yaml up -d
 docker compose -f compose.yaml logs -f head_detection
 ```
 
-모델이 없으므로 영상 수신 시 `WAITING_MODEL`, 입력이 없으면 `WAITING_IMAGE` 상태가 나온다.
-모델 파일이 나중에 준비되면 `SW/detection/head/models/best.pt`에 놓고 다음처럼 실행한다.
+모델 경로를 비워 실행하면 영상 수신 시 `WAITING_MODEL`, 입력이 없으면 `WAITING_IMAGE` 상태가 나온다.
+게시된 모델을 연결하려면 다음처럼 실행한다. 이미지 크기와 임계값은 실기 입력에서 별도 조정한다.
 
 ```bash
-ROBOCUP_MODEL=/models/best.pt docker compose -f compose.yaml up -d --force-recreate
+ROBOCUP_MODEL=/models/head_yolo11n_20261007.pt docker compose -f compose.yaml up -d --force-recreate
 ```
 
-컨테이너 내부 경로 `/models/best.pt`는 호스트 `SW/detection/head/models/best.pt`에 대응한다.
+컨테이너 내부 경로 `/models/head_yolo11n_20261007.pt`는 호스트 `SW/detection/head/models/head_yolo11n_20261007.pt`에 대응한다.
 코드·YAML은 읽기 전용 bind mount로 연결했다. 이를 수정한 뒤에는 다음 명령으로 재시작한다.
 
 ```bash
@@ -178,7 +177,7 @@ docker compose -f compose.yaml down
 ```bash
 cd /home/projectsh/Documents/INHA/RoboCup/INHA-RoboCup-Home-2th-2027/SW/detection/head/docker
 docker compose -f compose.yaml -f compose.gpu.yaml build
-ROBOCUP_MODEL=/models/best.pt docker compose -f compose.yaml -f compose.gpu.yaml up -d --force-recreate
+ROBOCUP_MODEL=/models/head_yolo11n_20261007.pt docker compose -f compose.yaml -f compose.gpu.yaml up -d --force-recreate
 docker compose -f compose.yaml -f compose.gpu.yaml logs -f head_detection
 ```
 

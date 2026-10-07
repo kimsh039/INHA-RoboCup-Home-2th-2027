@@ -338,7 +338,7 @@ Mid-360의 Nav2 장애물 소스와 자기 점 필터는 **시뮬레이션 코�
 
 `~/detection_data/datasets/known_objects/data.yaml`의 `names`는 실제 클래스 입력 전 비어 있습니다. [makesense.ai](https://www.makesense.ai/)에서 YOLO bbox 형식으로 export하고, 라벨은 `class_id cx cy w h`의 **0–1 정규화 좌표**를 사용합니다. train/val/test는 촬영 세션별로 나누며 같은 연속 프레임을 split 사이에 섞지 않습니다.
 
-현재 범위는 **YOLO detection 학습 환경 + 사전학습 SAM 사용**입니다. bbox 학습, YOLO segmentation 학습, SAM fine-tuning은 각각 별도 작업입니다. 2026-10-07 촬영 데이터의 YOLO11n fine-tuning은 Colab T4에서 진행 중입니다. 데이터 분리·설정·결과는 [Head 학습 실험](detection/head/training/README.md)에 별도로 기록합니다. [학습·평가·resume 명령](setup/jetson/RUN_COMMANDS.md#11-known_objects-yolo-detection-학습)을 참고하세요.
+현재 범위는 **YOLO detection 학습 환경 + 사전학습 SAM 사용**입니다. bbox 학습, YOLO segmentation 학습, SAM fine-tuning은 각각 별도 작업입니다. 2026-10-06 촬영 데이터의 YOLO11n fine-tuning은 2026-10-07 Colab T4에서 100 epoch 완료했습니다. 최적 가중치와 두 보관 영상 739프레임의 실제 결과를 게시했으며, 가림·머그컵 누락이 남은 실험용 초안입니다. 데이터 분리·설정·결과는 [Head 학습 실험](detection/head/training/README.md)에 별도로 기록합니다. [학습·평가·resume 명령](setup/jetson/RUN_COMMANDS.md#11-known_objects-yolo-detection-학습)을 참고하세요.
 
 ### 후속 개발
 

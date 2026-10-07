@@ -1,7 +1,7 @@
 head_detection_node:
   ros__parameters:
     # Model path/device are supplied by environment or launch arguments.
-    # No weights are bundled or automatically downloaded.
+    # A seven-class draft is in models/; select its path explicitly. No automatic download.
     task: detect                  # YOLO11n bbox default; segment for optional YOLO-seg weights
     confidence: 0.35              # Initial tuning values, not measured operating limits
     nms_iou: 0.45

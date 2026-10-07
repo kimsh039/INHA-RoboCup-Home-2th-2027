@@ -1,0 +1,270 @@
+{
+  "models/head_yolo11n_20261007.pt": {
+    "bytes": 5496410,
+    "sha256": "c5691631b1d8516d5c62e8cd93f35928f7b5e70e7dc8cce6bebc1d03706fc2c9"
+  },
+  "training/experiments/20261007/.gitattributes": {
+    "bytes": 9,
+    "sha256": "8b9c3028d6467ff3be7c793141927841d70f47f52d0590677438f488ca154992"
+  },
+  "training/experiments/20261007/args.yaml": {
+    "bytes": 1720,
+    "sha256": "0544f55eccf55aa5440eff539cef13f4cba0d80516f0cbb8a9b667dcde4f46c1"
+  },
+  "training/experiments/20261007/BoxF1_curve.png": {
+    "bytes": 266191,
+    "sha256": "c4657a268c4eaa6d1f19410bb2403c5a68f33408c6fc603072c16d3c1030b7e3"
+  },
+  "training/experiments/20261007/BoxPR_curve.png": {
+    "bytes": 134409,
+    "sha256": "42f900dd21affcc367e9cf4c53509ab859e674a9c1ebaa2e5128c0d675ecc7b8"
+  },
+  "training/experiments/20261007/BoxP_curve.png": {
+    "bytes": 170143,
+    "sha256": "9e95f19afd03aad85583dc3ff0c61400fc10e870cc8f85fb17e125b3b61d0090"
+  },
+  "training/experiments/20261007/BoxR_curve.png": {
+    "bytes": 233280,
+    "sha256": "067ff1a25de23457668baf0ebc1693dfaeb33fbef467d7785079a7e415276d55"
+  },
+  "training/experiments/20261007/colab_training_log.txt": {
+    "bytes": 56159,
+    "sha256": "08354eb83685fb24cba21853f44da779bda85a82cf7811e9a906505a2753974c"
+  },
+  "training/experiments/20261007/confusion_matrix.png": {
+    "bytes": 211250,
+    "sha256": "7c91a3906290672cc3e7e4abedeff58b5ad591bef2f6875172efd5711c7a3a9c"
+  },
+  "training/experiments/20261007/confusion_matrix_normalized.png": {
+    "bytes": 250264,
+    "sha256": "0b7d18c67885d77e3e39681f68d5b5a9b7ebba9c19d1fbc4b35d9af57d27b195"
+  },
+  "training/experiments/20261007/labels.jpg": {
+    "bytes": 124781,
+    "sha256": "bacbbfa317a7493ef2567bc54ae92948582d01166af79120338843f1316b32ee"
+  },
+  "training/experiments/20261007/results.csv": {
+    "bytes": 12735,
+    "sha256": "e67af2ff1fbc1be8e0b3a53711dad60ee5b369556c272800100c2259e689ae15"
+  },
+  "training/experiments/20261007/results.png": {
+    "bytes": 335314,
+    "sha256": "367ccdce852e49f389fd8a4c215a5c76aed32e722899cb97cad5ce3308b42cdd"
+  },
+  "training/experiments/20261007/TRAINING_RESULTS.md": {
+    "bytes": 4197,
+    "sha256": "cc43cc2e67ac77558072c4b45d282a428b6edc17b59711fff866174234f419f6"
+  },
+  "training/experiments/20261007/train_batch0.jpg": {
+    "bytes": 300463,
+    "sha256": "b8122775c4bdf58d5fa8f69fc0ae47b6a3483d036bca8628a8da4ae91211206b"
+  },
+  "training/experiments/20261007/train_batch1.jpg": {
+    "bytes": 318761,
+    "sha256": "9db21ff779d6cfc1abd1f289bae1cc1c700848d3450883b6547d232138c5e058"
+  },
+  "training/experiments/20261007/train_batch12240.jpg": {
+    "bytes": 276389,
+    "sha256": "58b2c4b3812df685af374148cb7f94ff8fe279116b856d2451eb1392a90ba489"
+  },
+  "training/experiments/20261007/train_batch12241.jpg": {
+    "bytes": 241211,
+    "sha256": "d62a0d76164dd7b4588ea9f9683cb9a6cf7a2a339fcca12a274f6cddbd505af7"
+  },
+  "training/experiments/20261007/train_batch12242.jpg": {
+    "bytes": 258594,
+    "sha256": "50ca4b231091baf1c86d6e4d6a838f7ea49777ce9bfc4cad3f688b3d3e8ca3ff"
+  },
+  "training/experiments/20261007/train_batch2.jpg": {
+    "bytes": 313718,
+    "sha256": "19d5e15e04e3ce1254f8b30e72f9ddcb4657139ea666e9f32025c874abd34855"
+  },
+  "training/experiments/20261007/validation_metrics.json": {
+    "bytes": 1703,
+    "sha256": "4fd90eb09ee4dda64f03b3de07e782faede87847d8528e40469100d19a220119"
+  },
+  "training/experiments/20261007/val_batch0_labels.jpg": {
+    "bytes": 315940,
+    "sha256": "808920494af7f9a713896a21de33a2aad9563321ade74a0bb5cd96a6431d4442"
+  },
+  "training/experiments/20261007/val_batch0_pred.jpg": {
+    "bytes": 320912,
+    "sha256": "ccf072d4a9f4fef67e0382488874430d1727032adf3d16d4489dd4fff5c75a1d"
+  },
+  "training/experiments/20261007/val_batch1_labels.jpg": {
+    "bytes": 309030,
+    "sha256": "4b766c56b8017dede47086c4fd043d073d29b7258a926bc4d9230b70449754b9"
+  },
+  "training/experiments/20261007/val_batch1_pred.jpg": {
+    "bytes": 313557,
+    "sha256": "ffa8119bef40da12948bbe1826d5983611fcc6794b5f1444d6e2daca9ec447bc"
+  },
+  "training/experiments/20261007/val_batch2_labels.jpg": {
+    "bytes": 325620,
+    "sha256": "7de83e0821ebc385366c5826e097195c4b519429ca611b28ddbebe39bb8cbe19"
+  },
+  "training/experiments/20261007/val_batch2_pred.jpg": {
+    "bytes": 334959,
+    "sha256": "8497d600cf8165d83c9d5ba4f5ce10c46969b40d3e24f1111762345e676a232a"
+  },
+  "training/experiments/20261007/holdout/TEST_RESULTS.md": {
+    "bytes": 5213,
+    "sha256": "16e97a6d11fa0104092e090328068279722de5ec1edbba3765011bbca2a16361"
+  },
+  "training/experiments/20261007/holdout/test_summary.json": {
+    "bytes": 5414,
+    "sha256": "2d68e09270ffac2b0111f23c16173446047629527d46b996749f09c90b3da705"
+  },
+  "training/experiments/20261007/holdout/WIN_20261006_23_49_36_Pro_111_detail.jpg": {
+    "bytes": 82308,
+    "sha256": "49a774875c278267404976f8c402129ab83e9741ba77a600aafcce5ea97a27a7"
+  },
+  "training/experiments/20261007/holdout/WIN_20261006_23_49_36_Pro_contact.jpg": {
+    "bytes": 757750,
+    "sha256": "3b9f076c92c7ab1f9874993648ec5c0d776dda2254af2123e32254bb48d1c43e"
+  },
+  "training/experiments/20261007/holdout/WIN_20261006_23_52_09_Pro_0_detail.jpg": {
+    "bytes": 82830,
+    "sha256": "89ff4aefd687fa37e9213b6719eb8f31e1b7e088e701d55b8f216a9ac38501e1"
+  },
+  "training/experiments/20261007/holdout/WIN_20261006_23_52_09_Pro_273_detail.jpg": {
+    "bytes": 85219,
+    "sha256": "5e2090171e60548f26c7253785837bcdeae0465cb6b6f3be4767dc4b8f9cf257"
+  },
+  "training/experiments/20261007/holdout/WIN_20261006_23_52_09_Pro_contact.jpg": {
+    "bytes": 734835,
+    "sha256": "40b5041b9a8303a82cebc30d7bd8f7d6218752d480a35eaea85e02e85956c795"
+  },
+  "training/experiments/20261007/weights/last.pt": {
+    "bytes": 5496410,
+    "sha256": "fc118e7d1a3d54499785400b49465e26b0d193ac5f11f493797bad5049c712be"
+  },
+  "training/experiments/20261007/holdout/WIN_20261006_23_49_36_Pro/annotated.mp4": {
+    "bytes": 6843969,
+    "sha256": "74eb02e488e46979482f920fb2d7250bdd08fe93abceabdeb9456342c72db063"
+  },
+  "training/experiments/20261007/holdout/WIN_20261006_23_49_36_Pro/detections.csv": {
+    "bytes": 165647,
+    "sha256": "f6098e85751b69afcc25bcfabd33696f3cd9e1768bf781452df914042b432c4f"
+  },
+  "training/experiments/20261007/holdout/WIN_20261006_23_49_36_Pro/frame_000000.jpg": {
+    "bytes": 350314,
+    "sha256": "bda7dafc116dddc7d381a18033a84916c6495ffaf1271225f14af451588e5ba1"
+  },
+  "training/experiments/20261007/holdout/WIN_20261006_23_49_36_Pro/frame_000027.jpg": {
+    "bytes": 345287,
+    "sha256": "49ef6200f87b27b61a21cde334336a6e5509c74ebc62acaff3e8f40db5fccc21"
+  },
+  "training/experiments/20261007/holdout/WIN_20261006_23_49_36_Pro/frame_000055.jpg": {
+    "bytes": 340600,
+    "sha256": "ba2e97da09b45e73dc8c567ed7bd519b0c19f8a057e3be90a8c3ae58848265e8"
+  },
+  "training/experiments/20261007/holdout/WIN_20261006_23_49_36_Pro/frame_000083.jpg": {
+    "bytes": 340589,
+    "sha256": "f546053c207d153324dd6841bd7d3215c6462778d5cfcebb33aa80587cd10785"
+  },
+  "training/experiments/20261007/holdout/WIN_20261006_23_49_36_Pro/frame_000111.jpg": {
+    "bytes": 340210,
+    "sha256": "dac754a96a4258ee41584c32f89377e459eb05e6c0443a91e8807000fc345a39"
+  },
+  "training/experiments/20261007/holdout/WIN_20261006_23_49_36_Pro/frame_000139.jpg": {
+    "bytes": 321616,
+    "sha256": "ebf8c72959c03c13fa727998fcf0aa1becbb97016b51c0b4733b209f3359fe52"
+  },
+  "training/experiments/20261007/holdout/WIN_20261006_23_49_36_Pro/frame_000167.jpg": {
+    "bytes": 319328,
+    "sha256": "13550fd0fc2efe82c4e9be1dad0c1cd595d01c45b2d1d1c8b4140a7ab13d2fba"
+  },
+  "training/experiments/20261007/holdout/WIN_20261006_23_49_36_Pro/frame_000195.jpg": {
+    "bytes": 342076,
+    "sha256": "84b23851baebb811b5501d3b847e43c46639ae7f93986e17e29b82e7bd98a0fc"
+  },
+  "training/experiments/20261007/holdout/WIN_20261006_23_49_36_Pro/frame_000223.jpg": {
+    "bytes": 322964,
+    "sha256": "a1642a9c6d66331ebaa5de29eb33fc23796e9d5130d6de227de3b3ae9e7a6145"
+  },
+  "training/experiments/20261007/holdout/WIN_20261006_23_49_36_Pro/frame_000251.jpg": {
+    "bytes": 318600,
+    "sha256": "519802ab04ccc26230f80bcae176263d9eb01fe640acf6945afcafc23920a6b6"
+  },
+  "training/experiments/20261007/holdout/WIN_20261006_23_49_36_Pro/frame_000279.jpg": {
+    "bytes": 325440,
+    "sha256": "efc4a4417d9cb912e898e39b6f739832109ea3a8356e1bf27d7ece8abf77e681"
+  },
+  "training/experiments/20261007/holdout/WIN_20261006_23_49_36_Pro/frame_000307.jpg": {
+    "bytes": 329630,
+    "sha256": "3497de3bae99c88d35b8447b33ef670c74a01b447c23bc09f85efdc64d22a147"
+  },
+  "training/experiments/20261007/holdout/WIN_20261006_23_49_36_Pro/predictions.jsonl": {
+    "bytes": 261801,
+    "sha256": "ff8ec2dc132e2637ae1b6bf14e19fc4a67b9f744b47c3c6fb2987894580b506c"
+  },
+  "training/experiments/20261007/holdout/WIN_20261006_23_49_36_Pro/summary.json": {
+    "bytes": 2177,
+    "sha256": "3f3e61fec8a1c45e668789e05d0bd37102a6c6d8fe576b5c809aa82e8fdcd4d1"
+  },
+  "training/experiments/20261007/holdout/WIN_20261006_23_52_09_Pro/annotated.mp4": {
+    "bytes": 9055563,
+    "sha256": "ed1cde7c464dd37863d31cb033a2ad77cc9ea6192132395d7b280da804fdafa3"
+  },
+  "training/experiments/20261007/holdout/WIN_20261006_23_52_09_Pro/detections.csv": {
+    "bytes": 159327,
+    "sha256": "1f063e68b84cd4fdb8a0af215ba01e8cfe6e0acbbf5430977116fad73b69c32e"
+  },
+  "training/experiments/20261007/holdout/WIN_20261006_23_52_09_Pro/frame_000000.jpg": {
+    "bytes": 332783,
+    "sha256": "0f6b5e0e650d1d00958b0cbd6c3e3d5b9adfa6e0319f20a78d3a9f9ff3c08198"
+  },
+  "training/experiments/20261007/holdout/WIN_20261006_23_52_09_Pro/frame_000039.jpg": {
+    "bytes": 336847,
+    "sha256": "50c42cdf6b567d9a310bb9ef15d9341f82a35f049d7e0889a5d525c1e1d8d7f3"
+  },
+  "training/experiments/20261007/holdout/WIN_20261006_23_52_09_Pro/frame_000078.jpg": {
+    "bytes": 337129,
+    "sha256": "6d888a553c1b21ab1965a03288eb49c619ad84c5772d9a5e99fb35bf21962afd"
+  },
+  "training/experiments/20261007/holdout/WIN_20261006_23_52_09_Pro/frame_000117.jpg": {
+    "bytes": 338078,
+    "sha256": "2cb652b2005e998efacaef1f1f25ecb2b0534f3712ed012f60b3895cf1610892"
+  },
+  "training/experiments/20261007/holdout/WIN_20261006_23_52_09_Pro/frame_000156.jpg": {
+    "bytes": 320607,
+    "sha256": "dea9f829e97a829de202630d026bbcc739234008816b88d22f0763958c31f3f1"
+  },
+  "training/experiments/20261007/holdout/WIN_20261006_23_52_09_Pro/frame_000195.jpg": {
+    "bytes": 324787,
+    "sha256": "380e3a5308bce8db1aa39ee9f9bca07bc028c4ae982503740bc8eb05bd5e6c8d"
+  },
+  "training/experiments/20261007/holdout/WIN_20261006_23_52_09_Pro/frame_000234.jpg": {
+    "bytes": 314540,
+    "sha256": "eb6b3d6753ab94a2ec72b3de2a5e30fd9ec28370e5e3239a39216c4706802ce8"
+  },
+  "training/experiments/20261007/holdout/WIN_20261006_23_52_09_Pro/frame_000273.jpg": {
+    "bytes": 341670,
+    "sha256": "c75f99cf896ed174975f2e002ec7779c908e4015ed042a412f2a35719614a58f"
+  },
+  "training/experiments/20261007/holdout/WIN_20261006_23_52_09_Pro/frame_000312.jpg": {
+    "bytes": 332494,
+    "sha256": "d436b5f1e2f93fb5feeaf8ae9364c428d1ca34f88de04583a28a97b33c27407f"
+  },
+  "training/experiments/20261007/holdout/WIN_20261006_23_52_09_Pro/frame_000351.jpg": {
+    "bytes": 325651,
+    "sha256": "ebb1796023286f2cc0b13bf34cac10ec3f0eb17cd2471fe2cd66f096ca1f7fc5"
+  },
+  "training/experiments/20261007/holdout/WIN_20261006_23_52_09_Pro/frame_000390.jpg": {
+    "bytes": 319644,
+    "sha256": "06711894e1a3725263726c2b3bab8ff9fbe04130c6661eed20e7ff3d2d9ba07f"
+  },
+  "training/experiments/20261007/holdout/WIN_20261006_23_52_09_Pro/frame_000430.jpg": {
+    "bytes": 331681,
+    "sha256": "0c9f3cca28122f1e7cd3aa6743bf8e0d418d62d33af77ae9df42f177a1625059"
+  },
+  "training/experiments/20261007/holdout/WIN_20261006_23_52_09_Pro/predictions.jsonl": {
+    "bytes": 258475,
+    "sha256": "8e7714de8200439d0d1a7baf9e9c7c1ac848ed145b171f50937a57fe54c1b18b"
+  },
+  "training/experiments/20261007/holdout/WIN_20261006_23_52_09_Pro/summary.json": {
+    "bytes": 2175,
+    "sha256": "83166ea5ef6509fc375dac76fa0551d55d486d34a4e414226a3bb3135c3038e4"
+  }
+}
