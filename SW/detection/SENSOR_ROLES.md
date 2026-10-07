@@ -56,7 +56,7 @@ flowchart TD
 | 헤드 검출·추적 | [`HEAD_DETECTION.md`](head/README.md) | ROS 패키지·Docker 구성 존재; 실제 모델·센서 통합은 후속 |
 | 작업면 추출 | [`SUPPORT_SURFACES.md`](SUPPORT_SURFACES.md) | `support_surface_node`: Mid-360 → 작업면 높이·윤곽·확인된 가장자리 (Gazebo 확인) |
 | 목표와 작업면 연결 | [`CLOSED_APPROACH.md`](CLOSED_APPROACH.md) 1절 | `approach_node`: 목표가 놓인 작업면·확인된 변 선택 (Gazebo 확인) |
-| 접근 자세 생성·자동 접근 | [`CLOSED_APPROACH.md`](CLOSED_APPROACH.md) 1절 | `approach_node`: 접근·대기 자세 (Gazebo 확인). 자동 도킹은 미구현 |
+| 접근 자세 생성·자동 접근 | [`CLOSED_APPROACH.md`](CLOSED_APPROACH.md) 1·2절 | `approach_node`·`dock_node`: 접근·대기 자세, 가장자리 추적 도킹 (Gazebo 확인) |
 | Wrist SAM·GraspNet 통합 | [`README.md`](PIPELINE.md)의 손목 단계 | 통합 노드 미구현 |
 | MoveIt 주변 충돌 장면 | 이 문서의 후속 확장 | 연결 미구현 |
 
