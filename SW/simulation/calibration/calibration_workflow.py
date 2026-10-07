@@ -215,12 +215,16 @@ def urdf_reference(a):
 def pivot(a):
     values=read(a.samples)
     if values.get('translation_unit')!='m': raise ValueError('Samples unit must be m')
+    if values.get('flange_frame',a.parent)!=a.parent: raise ValueError('Pivot flange frame differs from output parent')
     samples=values['samples']; train=[se3(s['T_base_flange']) for s in samples if s['split']=='train']; hold=[se3(s['T_base_flange']) for s in samples if s['split']=='holdout']
     if len(train)<6 or len(hold)<3: raise ValueError('Need >=6 train and >=3 held-out actual pivot poses')
     mat=np.vstack([np.column_stack([t[:3,:3],-np.eye(3)]) for t in train]);rhs=np.concatenate([-t[:3,3] for t in train]); x,res,rank,sv=np.linalg.lstsq(mat,rhs,rcond=None)
     if rank<6 or np.linalg.cond(mat)>1e4: raise ValueError('Pivot orientations insufficient')
     errors=[float(np.linalg.norm(t[:3,:3]@x[:3]+t[:3,3]-x[3:])*1000) for t in hold];t=np.eye(4);t[:3,3]=x[:3]; t[:3,:3]=Rotation.from_euler('xyz',a.rpy).as_matrix()
-    write(a.output,transform(t,a.parent,a.child,status='passed_provisional_limits' if max(errors)<=a.max_mm else 'failed_provisional_limits',orientation_estimated=False,orientation_source=a.orientation_source,source_sha256=sha(a.samples),training_count=len(train),holdout_count=len(hold),max_holdout_mm=max(errors),holdout_errors_mm=errors,pivot_point_base_m=x[3:].tolist(),condition_number=float(np.linalg.cond(mat))))
+    provenance={k:values[k] for k in ('input_kind','simulation','independent_measurement','hardware_accuracy_established','definition','fixture_kind') if k in values}
+    provenance['base_frame']=values.get('base_frame')
+    write(a.output,transform(t,a.parent,a.child,status='passed_provisional_limits' if max(errors)<=a.max_mm else 'failed_provisional_limits',orientation_estimated=False,orientation_source=os.path.relpath(Path(a.orientation_source).resolve(),Path(a.output).resolve().parent),orientation_source_sha256=sha(a.orientation_source),source_sha256=sha(a.samples),training_count=len(train),holdout_count=len(hold),max_holdout_mm=max(errors),holdout_errors_mm=errors,pivot_point_base_m=x[3:].tolist(),condition_number=float(np.linalg.cond(mat)),max_allowed_holdout_mm=a.max_mm,**provenance))
+    print(json.dumps(dict(status='passed_provisional_limits' if max(errors)<=a.max_mm else 'failed_provisional_limits',translation_xyz_m=x[:3].tolist(),max_holdout_mm=max(errors),condition_number=float(np.linalg.cond(mat)),training_count=len(train),holdout_count=len(hold))))
     if max(errors)>a.max_mm: raise ValueError('Pivot validation failed; result saved')
 def compose(a):
     left,tl=result(a.left); right,tr=result(a.right)
@@ -325,7 +329,7 @@ def add_tcp(a):
             resolved=(Path(a.urdf).resolve().parent/name).resolve()
             mesh.set('filename',os.path.relpath(resolved,Path(a.output).resolve().parent) if getattr(a,'portable_meshes',False) else resolved.as_uri())
     with Path(a.output).open('xb') as f:tree.write(f,encoding='utf-8',xml_declaration=True)
-    write(str(a.output)+'.application.json',dict(result_sha256=sha(a.result),source_urdf_sha256=sha(a.urdf),runtime_urdf_sha256=sha(a.output),input_status=v['status'],independent_measurement=not nominal,application_only=True))
+    write(str(a.output)+'.application.json',dict(result_sha256=sha(a.result),source_urdf_sha256=sha(a.urdf),runtime_urdf_sha256=sha(a.output),input_status=v['status'],input_kind=v.get('input_kind','pivot_observations' if not nominal else 'urdf_reference'),simulation=v.get('simulation',False),independent_measurement=v.get('independent_measurement',not nominal),hardware_accuracy_established=v.get('hardware_accuracy_established',False),orientation_estimated=v.get('orientation_estimated',False),application_only=True))
 
 def main():
     p=argparse.ArgumentParser(description=__doc__);sub=p.add_subparsers(dest='cmd',required=True)

@@ -1528,4 +1528,4 @@
     <child link="cad_bracket_36" />
     <origin xyz="-0.01 -0.0693408679762 0.761669546471" rpy="0 -1.57079632679 -2.66113378704e-16" />
   </joint>
-<link name="tcp" /><joint name="calibrated_tcp_joint" type="fixed"><parent link="piper_link6" /><child link="tcp" /><origin xyz="0.0 0.0 0.14250000000000002" rpy="0.0 0.0 0.0" /></joint></robot>
+<link name="tcp" /><joint name="calibrated_tcp_joint" type="fixed"><parent link="piper_link6" /><child link="tcp" /><origin xyz="3.1410601675219113e-09 -6.041407414281427e-10 0.14250000226360077" rpy="0.0 0.0 0.0" /></joint></robot>

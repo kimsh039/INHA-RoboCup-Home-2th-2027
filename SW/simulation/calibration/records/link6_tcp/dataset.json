@@ -1,0 +1,1553 @@
+{
+  "translation_unit": "m",
+  "base_frame": "piper_base_link",
+  "flange_frame": "piper_link6",
+  "input_kind": "simulated_constrained_joint_observations",
+  "simulation": true,
+  "independent_measurement": false,
+  "hardware_accuracy_established": false,
+  "definition": "Virtual probe at the symmetric CAD jaw-tip centre, attached rigidly to Link6 and seated in a fixed simulated point socket. TCP axes are defined parallel to Link6; orientation is not fitted.",
+  "fixture_kind": "site-to-site point equality; virtual ball socket, not frictional surface contact",
+  "samples": [
+    {
+      "id": 0,
+      "split": "train",
+      "T_base_flange": [
+        [
+          -0.07005893148693543,
+          -0.7716271681124915,
+          0.6322050771305203,
+          0.09215848232687388
+        ],
+        [
+          -0.09769788424950959,
+          0.6360230266560367,
+          0.7654605365245589,
+          0.21637942016546863
+        ],
+        [
+          -0.9927471327241799,
+          -0.008137751163122986,
+          -0.11994543540263955,
+          0.5062208999121227
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "measured_joint_positions": {
+        "piper_joint1": -0.26065846788177005,
+        "piper_joint2": 1.1817661397348174,
+        "piper_joint3": -1.4961759347051091,
+        "piper_joint4": -0.7646602710325614,
+        "piper_joint5": 0.6882878327363579,
+        "piper_joint6": 0.68867728282259
+      },
+      "simulation_stamp": 3.749999999999698,
+      "pose_sha256": "6fbe80ff41948b4ee26e54835b82b4e97c575bcb4fd206658e67f1cad749dc72",
+      "observation_sha256": "ed1bd95bfb98073e81e6affe1fd79090c0d5f5967e927184c8c920ad61d1fc97",
+      "contact_note": "Fixed simulated point equality active; settled actual qpos, no teleport",
+      "probe_socket_distance_mm": 8.478697635405214e-06,
+      "max_joint_velocity_rad_s": 7.573598502825933e-07
+    },
+    {
+      "id": 1,
+      "split": "train",
+      "T_base_flange": [
+        [
+          0.06103299340848228,
+          -0.6675011122158526,
+          0.7421032535343055,
+          0.07649799148225819
+        ],
+        [
+          0.3145853314887997,
+          0.7184608262161039,
+          0.6203628860634375,
+          0.237055834028407
+        ],
+        [
+          -0.9472650330966959,
+          0.19559219407602918,
+          0.25383587352626646,
+          0.45295706138275377
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "measured_joint_positions": {
+        "piper_joint1": -0.07911953745116332,
+        "piper_joint2": 1.1900805626748305,
+        "piper_joint3": -1.136252553449986,
+        "piper_joint4": 1.2553953215662759,
+        "piper_joint5": -0.8436549594597244,
+        "piper_joint6": -1.1788244836086939
+      },
+      "simulation_stamp": 5.550000000000188,
+      "pose_sha256": "fa22ac0b477003f576d8223c6629ad3421c6b4e5f15e9f15bba9fadaec03fa79",
+      "observation_sha256": "4329a3cf97c20a432304fc0cd8a11d5fc7cdd96c884a30f429b5229589ab7fa9",
+      "contact_note": "Fixed simulated point equality active; settled actual qpos, no teleport",
+      "probe_socket_distance_mm": 1.0705774815834564e-05,
+      "max_joint_velocity_rad_s": 6.767037450059745e-07
+    },
+    {
+      "id": 2,
+      "split": "train",
+      "T_base_flange": [
+        [
+          0.057628958854388,
+          -0.9819948753392008,
+          0.17990266231745405,
+          0.15661157638142797
+        ],
+        [
+          0.1560935197364305,
+          0.18684884872864674,
+          0.9699084084721985,
+          0.18724559670815222
+        ],
+        [
+          -0.9860596920053337,
+          -0.027813171993283297,
+          0.16405094107020604,
+          0.4657514145194545
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "measured_joint_positions": {
+        "piper_joint1": -0.9857497940624321,
+        "piper_joint2": 1.1708486910208733,
+        "piper_joint3": -1.2069968768079438,
+        "piper_joint4": 1.6805118575805387,
+        "piper_joint5": 0.7657751380341451,
+        "piper_joint6": -1.5919069678838849
+      },
+      "simulation_stamp": 7.350000000000789,
+      "pose_sha256": "30f6483d9099546741609cf6c2f4e8859ec29b7d6a1353d7061ebef628efb954",
+      "observation_sha256": "8ce49d973537a835286bb58536ac456152bf5724eef90ba9592d5de9672405f3",
+      "contact_note": "Fixed simulated point equality active; settled actual qpos, no teleport",
+      "probe_socket_distance_mm": 1.0472571656386965e-05,
+      "max_joint_velocity_rad_s": 5.337533129955001e-07
+    },
+    {
+      "id": 3,
+      "split": "train",
+      "T_base_flange": [
+        [
+          0.13589629375909248,
+          -0.6823201895320675,
+          0.7183114619017762,
+          0.07988832163499228
+        ],
+        [
+          0.081288888048233,
+          0.7302722260482927,
+          0.6783027292753245,
+          0.22879940613859984
+        ],
+        [
+          -0.9873825570782714,
+          -0.0337880869448977,
+          0.15470633845508636,
+          0.4670830203817472
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "measured_joint_positions": {
+        "piper_joint1": -0.11551088697665945,
+        "piper_joint2": 1.1589371266736685,
+        "piper_joint3": -1.2076560915223338,
+        "piper_joint4": -1.6516810152240942,
+        "piper_joint5": 0.7199188525425172,
+        "piper_joint6": 1.5070341570501529
+      },
+      "simulation_stamp": 9.20000000000034,
+      "pose_sha256": "1f22582946acef65a81efd0a5c88d3a6d8b5ac40a3bb9df88cc8d16dc98a4788",
+      "observation_sha256": "40a398fa614b6ac621630f2cf92d9eaa75b7a7523e22540213be15f3d3e93fa2",
+      "contact_note": "Fixed simulated point equality active; settled actual qpos, no teleport",
+      "probe_socket_distance_mm": 1.0563061338319263e-05,
+      "max_joint_velocity_rad_s": 4.885717771778283e-07
+    },
+    {
+      "id": 4,
+      "split": "train",
+      "T_base_flange": [
+        [
+          -0.433046855727645,
+          -0.632607349162117,
+          0.642089061213848,
+          0.09075001652138798
+        ],
+        [
+          -0.05128976539541946,
+          0.7284865331393932,
+          0.6831374173621529,
+          0.22811046704938592
+        ],
+        [
+          -0.8999109848813294,
+          0.2628979133059606,
+          -0.3479150851418904,
+          0.5387065758394743
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "measured_joint_positions": {
+        "piper_joint1": -0.22142895319176925,
+        "piper_joint2": 1.3561744247754193,
+        "piper_joint3": -1.8873976196056668,
+        "piper_joint4": -0.591873431893328,
+        "piper_joint5": 1.1101147519821757,
+        "piper_joint6": 0.7904270848222317
+      },
+      "simulation_stamp": 10.94999999999937,
+      "pose_sha256": "3d9d5b1fb8801ca0e59c1c1d1ebb3582b188856cbf1696f29c9fbc6b9264eede",
+      "observation_sha256": "2c838a30ad0802c11d599ce9dde4050cf35542a79715ef5206ba3ea46e775897",
+      "contact_note": "Fixed simulated point equality active; settled actual qpos, no teleport",
+      "probe_socket_distance_mm": 7.715328869489356e-06,
+      "max_joint_velocity_rad_s": 7.685225475416856e-07
+    },
+    {
+      "id": 5,
+      "split": "train",
+      "T_base_flange": [
+        [
+          0.11146625940404796,
+          -0.9883804235362995,
+          0.10334123758053276,
+          0.16752158011041907
+        ],
+        [
+          0.12033287101097506,
+          0.11664809687712806,
+          0.9858565928415765,
+          0.18497298172064378
+        ],
+        [
+          -0.9864559154715061,
+          -0.09745439890097708,
+          0.1319369810406608,
+          0.4703276542225665
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "measured_joint_positions": {
+        "piper_joint1": -1.0580620589940304,
+        "piper_joint2": 1.2209353735744433,
+        "piper_joint3": -1.2738681469143274,
+        "piper_joint4": 1.6303907234127413,
+        "piper_joint5": 0.9152220101691618,
+        "piper_joint6": -1.5937175176799505
+      },
+      "simulation_stamp": 12.749999999998373,
+      "pose_sha256": "8b77d9e9e766d273b35b29fcb63ce38746d51d0b730f0ca4f95d34a472d9c575",
+      "observation_sha256": "f98184c1203816c7c8b1f5c6f5d9ec801ba929521371f2bc98074916ad6091cd",
+      "contact_note": "Fixed simulated point equality active; settled actual qpos, no teleport",
+      "probe_socket_distance_mm": 9.766906902736933e-06,
+      "max_joint_velocity_rad_s": 8.660784872331901e-07
+    },
+    {
+      "id": 6,
+      "split": "train",
+      "T_base_flange": [
+        [
+          -0.5118043751104505,
+          -0.5617777454814336,
+          0.6499708041901577,
+          0.08962686757776978
+        ],
+        [
+          0.14838547853337103,
+          0.6873935861566849,
+          0.7109654052561746,
+          0.22414497799017308
+        ],
+        [
+          -0.8461903044695238,
+          0.460321433774761,
+          -0.2684513852251928,
+          0.5273829984256193
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "measured_joint_positions": {
+        "piper_joint1": -0.21789301472927883,
+        "piper_joint2": 1.2871937560430473,
+        "piper_joint3": -1.7359549300405208,
+        "piper_joint4": -0.6607876290081519,
+        "piper_joint5": 0.9665874868857967,
+        "piper_joint6": 1.077910079358209
+      },
+      "simulation_stamp": 14.549999999997375,
+      "pose_sha256": "a2d0acd56fa06685f12287182bd2da016a0f923e22b5990f6e13d3c378f9a38d",
+      "observation_sha256": "0f9f18fcd47c1a047d1b5e589201b015ca014d88aa88bab019b3a80aa08e44a3",
+      "contact_note": "Fixed simulated point equality active; settled actual qpos, no teleport",
+      "probe_socket_distance_mm": 7.736113543437512e-06,
+      "max_joint_velocity_rad_s": 9.726284199316813e-07
+    },
+    {
+      "id": 7,
+      "split": "train",
+      "T_base_flange": [
+        [
+          -0.14338710351707246,
+          -0.8311939304727555,
+          0.5371748211618238,
+          0.10570029478581527
+        ],
+        [
+          -0.23016257721234185,
+          0.5559079909057465,
+          0.798743697125749,
+          0.21163657087303636
+        ],
+        [
+          -0.9625306886515147,
+          -0.009107996068805108,
+          -0.27101977383883574,
+          0.527748993941488
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "measured_joint_positions": {
+        "piper_joint1": -0.41725935312739987,
+        "piper_joint2": 1.2498326629050895,
+        "piper_joint3": -1.7102698809596766,
+        "piper_joint4": -0.2637092089759329,
+        "piper_joint5": 0.8451694947543437,
+        "piper_joint6": 0.22383482778030275
+      },
+      "simulation_stamp": 16.29999999999694,
+      "pose_sha256": "c77724bd74ce8b9c2d10fe8e3d40b12bdbb06c3cc06a85256a2f8b28c9001780",
+      "observation_sha256": "341c4f22c4feb73878becca7df811f69514d4ec5fc710cc389d095c130af6bba",
+      "contact_note": "Fixed simulated point equality active; settled actual qpos, no teleport",
+      "probe_socket_distance_mm": 7.5731236833652914e-06,
+      "max_joint_velocity_rad_s": 7.185596921730906e-07
+    },
+    {
+      "id": 8,
+      "split": "train",
+      "T_base_flange": [
+        [
+          -0.4653444194690043,
+          -0.8846405940024883,
+          0.029420923030751264,
+          0.17805522566455498
+        ],
+        [
+          0.07985631087244398,
+          -0.008856571055257279,
+          0.9967670393642579,
+          0.1834182447368652
+        ],
+        [
+          -0.8815200172899652,
+          0.4661894256544965,
+          0.07476549020124083,
+          0.4784745920481537
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "measured_joint_positions": {
+        "piper_joint1": -1.1139219492606347,
+        "piper_joint2": 1.2794766516379112,
+        "piper_joint3": -1.3745985677014276,
+        "piper_joint4": 1.5527567887092135,
+        "piper_joint5": 1.0505769637515052,
+        "piper_joint6": -0.9168882605791142
+      },
+      "simulation_stamp": 18.099999999999138,
+      "pose_sha256": "e722ae8ee75be366b910935e72d433e13f9c5726bb8a4d974b5f3ad1ff9e7076",
+      "observation_sha256": "f04e555d2d9f88f4db5b72a840ce3e134bf67987be4d0c5054561552202187fb",
+      "contact_note": "Fixed simulated point equality active; settled actual qpos, no teleport",
+      "probe_socket_distance_mm": 9.280565151936342e-06,
+      "max_joint_velocity_rad_s": 5.799372002326666e-07
+    },
+    {
+      "id": 9,
+      "split": "train",
+      "T_base_flange": [
+        [
+          -0.5460210872065877,
+          -0.7670535617742563,
+          0.3368824805405645,
+          0.13424195335746092
+        ],
+        [
+          0.012553539156237588,
+          0.39458108623184107,
+          0.9187753670200098,
+          0.19453205740427515
+        ],
+        [
+          -0.8376773728473212,
+          0.5058997922094136,
+          -0.20582035677280155,
+          0.5184580766650518
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "measured_joint_positions": {
+        "piper_joint1": -0.7806267744243892,
+        "piper_joint2": 1.2221281165399256,
+        "piper_joint3": -1.6166537671113217,
+        "piper_joint4": 0.565797052226384,
+        "piper_joint5": 0.7906635988997667,
+        "piper_joint6": 0.03641901905962764
+      },
+      "simulation_stamp": 19.850000000001277,
+      "pose_sha256": "2dfff674f48080956dda7efb1782213622a2158845fed9b09f8b67837569c67c",
+      "observation_sha256": "86e327fd46870a6ab0f5aee7ca7b55772cee44696f6b6ff3a20bda9264e6887a",
+      "contact_note": "Fixed simulated point equality active; settled actual qpos, no teleport",
+      "probe_socket_distance_mm": 7.919025225421298e-06,
+      "max_joint_velocity_rad_s": 8.229293863801757e-07
+    },
+    {
+      "id": 10,
+      "split": "train",
+      "T_base_flange": [
+        [
+          -0.16593129345043053,
+          -0.7037329852655158,
+          0.690815960515645,
+          0.08380643388322692
+        ],
+        [
+          -0.33946864258287823,
+          0.6984744443293213,
+          0.6299956280179928,
+          0.23568317255847165
+        ],
+        [
+          -0.9258659981643168,
+          -0.12997436696569153,
+          -0.3547940492385165,
+          0.539686828121211
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "measured_joint_positions": {
+        "piper_joint1": -0.14596937814554395,
+        "piper_joint2": 1.3959699797794247,
+        "piper_joint3": -1.9320764675527988,
+        "piper_joint4": -0.7187809513647888,
+        "piper_joint5": 1.195829325279757,
+        "piper_joint6": 0.46925155342450126
+      },
+      "simulation_stamp": 21.600000000003416,
+      "pose_sha256": "362ebf98f109c6103e612545a4355bb81ad5f7eea5b31004acfa5fae9c0b075d",
+      "observation_sha256": "27495bc6885c11937fc6373c13ff94611e4564a23ca7b3f3d8817f6500c41289",
+      "contact_note": "Fixed simulated point equality active; settled actual qpos, no teleport",
+      "probe_socket_distance_mm": 7.995660994146893e-06,
+      "max_joint_velocity_rad_s": 9.921792256228783e-07
+    },
+    {
+      "id": 11,
+      "split": "train",
+      "T_base_flange": [
+        [
+          -0.3489647051213227,
+          -0.8165960330599085,
+          0.4597766342153658,
+          0.11672953722348876
+        ],
+        [
+          -0.27162000067878395,
+          0.5576935094950829,
+          0.784347196526077,
+          0.2136880735122797
+        ],
+        [
+          -0.896909253944259,
+          0.14882495845079194,
+          -0.41641916614305186,
+          0.5484684077233245
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "measured_joint_positions": {
+        "piper_joint1": -0.5136079180602643,
+        "piper_joint2": 1.3779951821108198,
+        "piper_joint3": -1.9937004242130367,
+        "piper_joint4": -0.04596953952929318,
+        "piper_joint5": 1.133278029143423,
+        "piper_joint6": 0.2030035848655321
+      },
+      "simulation_stamp": 23.350000000005554,
+      "pose_sha256": "b4809953b00040f3d02a123adfa15488d21a6ebc4df7b29ee749dbfeea91679c",
+      "observation_sha256": "92917946a754c9e6a30114e053222fb933d1494551fd711801065c380b26ec9d",
+      "contact_note": "Fixed simulated point equality active; settled actual qpos, no teleport",
+      "probe_socket_distance_mm": 7.376970602671172e-06,
+      "max_joint_velocity_rad_s": 5.51174006031823e-07
+    },
+    {
+      "id": 12,
+      "split": "train",
+      "T_base_flange": [
+        [
+          0.07132524731449724,
+          -0.8295411076710093,
+          0.5538720608403014,
+          0.1033209362271228
+        ],
+        [
+          0.2925433160364247,
+          0.5482642094569422,
+          0.7834696962046257,
+          0.2138131113587124
+        ],
+        [
+          -0.9535885471931489,
+          0.10615039949294097,
+          0.2817817867598094,
+          0.448974768600901
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "measured_joint_positions": {
+        "piper_joint1": -0.38512650062648807,
+        "piper_joint2": 1.085515430066267,
+        "piper_joint3": -1.04065585624834,
+        "piper_joint4": 0.7934667194555489,
+        "piper_joint5": -0.35260027554744433,
+        "piper_joint6": -0.72552293781057
+      },
+      "simulation_stamp": 25.150000000007754,
+      "pose_sha256": "d41b678a9c09e250764348adf40268e3ede91661dbc395a0764479e93be91167",
+      "observation_sha256": "5db548b10cc8f2d5998f391e0ae9a828584cadb67a18471e9067716d5774d656",
+      "contact_note": "Fixed simulated point equality active; settled actual qpos, no teleport",
+      "probe_socket_distance_mm": 1.1572992478256627e-05,
+      "max_joint_velocity_rad_s": 5.038960874897018e-07
+    },
+    {
+      "id": 13,
+      "split": "train",
+      "T_base_flange": [
+        [
+          -0.29489742630658117,
+          -0.8265291395263307,
+          0.479463334856399,
+          0.1139241805032636
+        ],
+        [
+          0.14626481825339868,
+          0.4568180704231702,
+          0.8774530491577045,
+          0.20042048587014316
+        ],
+        [
+          -0.944268029162831,
+          0.3288872634334087,
+          -0.013822338884174784,
+          0.49109835852852535
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "measured_joint_positions": {
+        "piper_joint1": -0.557076167123045,
+        "piper_joint2": 1.107742390163316,
+        "piper_joint3": -1.3396131009729133,
+        "piper_joint4": 0.08479511221552577,
+        "piper_joint5": 0.33407871697303687,
+        "piper_joint6": 0.2546465999402406
+      },
+      "simulation_stamp": 26.900000000009893,
+      "pose_sha256": "8980e1f1a96c288a553b58d16f68e1b3095a252eb5d8f4fa38973aae83be980d",
+      "observation_sha256": "667ce59ea0a3ed4878227374d7c372509c32593725d786206f4767a0d35f77cc",
+      "contact_note": "Fixed simulated point equality active; settled actual qpos, no teleport",
+      "probe_socket_distance_mm": 8.839987755261741e-06,
+      "max_joint_velocity_rad_s": 8.254053613455967e-07
+    },
+    {
+      "id": 14,
+      "split": "train",
+      "T_base_flange": [
+        [
+          0.1726305198532772,
+          -0.8605087888351235,
+          0.479294614984038,
+          0.11394822325654565
+        ],
+        [
+          -0.16081868252954706,
+          0.45544720041981956,
+          0.8756170389954793,
+          0.20068211770038727
+        ],
+        [
+          -0.9717695482801721,
+          -0.22823775315941627,
+          -0.059761802751367686,
+          0.49764473234619294
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "measured_joint_positions": {
+        "piper_joint1": -0.5557622553970021,
+        "piper_joint2": 1.1246752107958533,
+        "piper_joint3": -1.3967597133602199,
+        "piper_joint4": 0.06303480591654345,
+        "piper_joint5": 0.41990772646264063,
+        "piper_joint6": -0.2897964774876479
+      },
+      "simulation_stamp": 28.65000000001203,
+      "pose_sha256": "d66bae3164322abbed87242868b9512f40be67cbe6ad67e996f1252380a0e80b",
+      "observation_sha256": "17a519fb1ab952e95f1f5353b0c687b64d6266c537594f8ddcb6f9b99388bb94",
+      "contact_note": "Fixed simulated point equality active; settled actual qpos, no teleport",
+      "probe_socket_distance_mm": 8.525997195579883e-06,
+      "max_joint_velocity_rad_s": 4.573946364192116e-07
+    },
+    {
+      "id": 15,
+      "split": "train",
+      "T_base_flange": [
+        [
+          -0.5145631028464683,
+          -0.7756375522854604,
+          0.3655286591686562,
+          0.13015987363894493
+        ],
+        [
+          -0.18680200699146682,
+          0.5174616442189399,
+          0.835067935527519,
+          0.2064603683038339
+        ],
+        [
+          -0.8368571104871942,
+          0.36141366084702975,
+          -0.4111573207182058,
+          0.5477185946919959
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "measured_joint_positions": {
+        "piper_joint1": -0.6680541413422699,
+        "piper_joint2": 1.3795544116613008,
+        "piper_joint3": -1.9881992075237633,
+        "piper_joint4": 0.2270637725229744,
+        "piper_joint5": 1.1393541006191943,
+        "piper_joint6": 0.21698942091196566
+      },
+      "simulation_stamp": 30.40000000001417,
+      "pose_sha256": "b8f5cef1f32bec5e0bdf3ee28f69cc9bbd88a5ed39bcda484a9899d55ecfee66",
+      "observation_sha256": "372972442361afa0b771b75a8002c7b46bff06c268063e8cc5a341e6eb6d65dc",
+      "contact_note": "Fixed simulated point equality active; settled actual qpos, no teleport",
+      "probe_socket_distance_mm": 7.448876547677224e-06,
+      "max_joint_velocity_rad_s": 5.121708237060137e-07
+    },
+    {
+      "id": 16,
+      "split": "train",
+      "T_base_flange": [
+        [
+          -0.28245163216158176,
+          -0.9455097806897055,
+          0.1619639778140971,
+          0.15916783985465563
+        ],
+        [
+          0.02873034019969708,
+          0.16042515538944874,
+          0.9866297872405244,
+          0.18486280209418607
+        ],
+        [
+          -0.9588512100640378,
+          0.28332847392801513,
+          -0.018147529318169,
+          0.4917146976458039
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "measured_joint_positions": {
+        "piper_joint1": -1.0181198930784272,
+        "piper_joint2": 1.2182368767953944,
+        "piper_joint3": -1.4178785979817936,
+        "piper_joint4": 1.2936588623338963,
+        "piper_joint5": 0.8701323515910158,
+        "piper_joint6": -0.8876567876816805
+      },
+      "simulation_stamp": 32.15000000001577,
+      "pose_sha256": "bd0d19f9f5bace502b45f0b8ccdfa7e5507978b2c84f046ecbcc9688467f8743",
+      "observation_sha256": "7837a2aefcafe33276f052ccc193fa286b0b2c0ab67f72371482336a9fb71211",
+      "contact_note": "Fixed simulated point equality active; settled actual qpos, no teleport",
+      "probe_socket_distance_mm": 9.023179496307456e-06,
+      "max_joint_velocity_rad_s": 9.311640812314844e-07
+    },
+    {
+      "id": 17,
+      "split": "train",
+      "T_base_flange": [
+        [
+          -0.5051745765610012,
+          -0.7347767267082813,
+          0.45266081019266247,
+          0.11774354126865297
+        ],
+        [
+          0.020546683569170693,
+          0.5141209517885915,
+          0.8574715626341802,
+          0.20326784969275458
+        ],
+        [
+          -0.8627725546114244,
+          0.4424735119980149,
+          -0.2446236092232747,
+          0.5239875404376585
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "measured_joint_positions": {
+        "piper_joint1": -0.5778900665188328,
+        "piper_joint2": 1.22551897287604,
+        "piper_joint3": -1.6624576841885126,
+        "piper_joint4": 0.08742341340099685,
+        "piper_joint5": 0.7737201535947289,
+        "piper_joint6": 0.39583956056632363
+      },
+      "simulation_stamp": 33.95000000001158,
+      "pose_sha256": "19697bffae0910a59af896b91a8cd9d322dc561ba347246ca0c47e825c3e6510",
+      "observation_sha256": "06cea9b83b191081fde4dbb9545ae23d6372b003fcae5860d9132896ce6804c9",
+      "contact_note": "Fixed simulated point equality active; settled actual qpos, no teleport",
+      "probe_socket_distance_mm": 7.622060541071794e-06,
+      "max_joint_velocity_rad_s": 4.656849419740153e-07
+    },
+    {
+      "id": 18,
+      "split": "train",
+      "T_base_flange": [
+        [
+          -0.49137021760317345,
+          -0.6592477149635658,
+          0.569164088438412,
+          0.10114182431353579
+        ],
+        [
+          0.04715662119002151,
+          0.6324009749764803,
+          0.7732045395150882,
+          0.21527590099047614
+        ],
+        [
+          -0.869673250324829,
+          0.4067695381467443,
+          -0.27965510992172804,
+          0.5289795293359175
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "measured_joint_positions": {
+        "piper_joint1": -0.35728265725405767,
+        "piper_joint2": 1.2638764594020047,
+        "piper_joint3": -1.7307660614446725,
+        "piper_joint4": -0.3827382633870139,
+        "piper_joint5": 0.8876807567222761,
+        "piper_joint6": 0.7746156882834231
+      },
+      "simulation_stamp": 35.650000000007616,
+      "pose_sha256": "7f441d0bbacc467826f15eacaa0f3656f8c6c40370700c96fa78726e6654c2c8",
+      "observation_sha256": "7cee073a67c4000149b0e1637e590a60a43c362ed3413a9fe4f665b6a498d9d4",
+      "contact_note": "Fixed simulated point equality active; settled actual qpos, no teleport",
+      "probe_socket_distance_mm": 7.574060302773773e-06,
+      "max_joint_velocity_rad_s": 8.882547289782419e-07
+    },
+    {
+      "id": 19,
+      "split": "train",
+      "T_base_flange": [
+        [
+          -0.555906458273769,
+          -0.7474345180221409,
+          0.3637439359199348,
+          0.13041419594349338
+        ],
+        [
+          0.014250135737437171,
+          0.4289559782705786,
+          0.9032129883573404,
+          0.19674969651015575
+        ],
+        [
+          -0.8311227004967322,
+          0.5072853338851244,
+          -0.2278083552990956,
+          0.5215913666073226
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "measured_joint_positions": {
+        "piper_joint1": -0.7335688391227658,
+        "piper_joint2": 1.2281352424880172,
+        "piper_joint3": -1.6453786259993664,
+        "piper_joint4": 0.444528520352667,
+        "piper_joint5": 0.7973609052384999,
+        "piper_joint6": 0.15103856220262496
+      },
+      "simulation_stamp": 37.40000000000354,
+      "pose_sha256": "1158a340300a82cfbbb552d9b48e53d098bbb9130f46192b84488fe28db2c5e0",
+      "observation_sha256": "aa4b99beccdb991d76923746aaf9cec5541db3f95fc48f93e701ead6febd8c04",
+      "contact_note": "Fixed simulated point equality active; settled actual qpos, no teleport",
+      "probe_socket_distance_mm": 7.76406402321468e-06,
+      "max_joint_velocity_rad_s": 6.906724888052435e-07
+    },
+    {
+      "id": 20,
+      "split": "train",
+      "T_base_flange": [
+        [
+          -0.2673196825761494,
+          -0.6831056440120293,
+          0.6796373050578517,
+          0.085399389203292
+        ],
+        [
+          0.23725024307177767,
+          0.6369351624202382,
+          0.7335025024054718,
+          0.22093343916422617
+        ],
+        [
+          -0.9339445965739999,
+          0.35732377193746495,
+          -0.008198325354209189,
+          0.49029693589627943
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "measured_joint_positions": {
+        "piper_joint1": -0.18037766268289107,
+        "piper_joint2": 1.159422729480607,
+        "piper_joint3": -1.366631945352311,
+        "piper_joint4": -1.1548145910100591,
+        "piper_joint5": 0.6608183575652037,
+        "piper_joint6": 1.4316243748166513
+      },
+      "simulation_stamp": 39.19999999999934,
+      "pose_sha256": "e62d029e471886df4df64cb5f5c028fe91b7773a3c080435f7bb515f10063da3",
+      "observation_sha256": "a79f9df7397686de9df37a7be801844540269c6662cbab314c4b90118a7a3e36",
+      "contact_note": "Fixed simulated point equality active; settled actual qpos, no teleport",
+      "probe_socket_distance_mm": 9.511056588068054e-06,
+      "max_joint_velocity_rad_s": 5.713455836963886e-07
+    },
+    {
+      "id": 21,
+      "split": "train",
+      "T_base_flange": [
+        [
+          -0.11973583914677668,
+          -0.7795384736530176,
+          0.6148032993718737,
+          0.09463823720866521
+        ],
+        [
+          -0.31235155941605663,
+          0.617390593743599,
+          0.7219870899727262,
+          0.22257438818376887
+        ],
+        [
+          -0.9423904881492472,
+          -0.10558703922191742,
+          -0.3174138386935492,
+          0.5343601481921099
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "measured_joint_positions": {
+        "piper_joint1": -0.27087189896086544,
+        "piper_joint2": 1.3126260219605164,
+        "piper_joint3": -1.8135778795386652,
+        "piper_joint4": -0.5235780591677188,
+        "piper_joint5": 1.012821496719982,
+        "piper_joint6": 0.3425009698806349
+      },
+      "simulation_stamp": 40.94999999999526,
+      "pose_sha256": "ec050994a8a178918b2525d482e92e3a85b28c33335f932d7eaf09f533538135",
+      "observation_sha256": "d0c13433ba91e3f6227ca5174681a162b1cfb1158a47147e2bb2c02384c3b37d",
+      "contact_note": "Fixed simulated point equality active; settled actual qpos, no teleport",
+      "probe_socket_distance_mm": 7.632358790089187e-06,
+      "max_joint_velocity_rad_s": 9.164838173482752e-07
+    },
+    {
+      "id": 22,
+      "split": "train",
+      "T_base_flange": [
+        [
+          -0.5471843637912736,
+          -0.8345428900716095,
+          0.06424512941278678,
+          0.17309277598847833
+        ],
+        [
+          0.10642986866288467,
+          0.0067605801717154496,
+          0.9942972280018406,
+          0.18377019225137986
+        ],
+        [
+          -0.830218016594883,
+          0.5509014968092465,
+          0.08512100642374555,
+          0.4769989308873025
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "measured_joint_positions": {
+        "piper_joint1": -1.09144428370043,
+        "piper_joint2": 1.25385086335492,
+        "piper_joint3": -1.3440495947241449,
+        "piper_joint4": 1.5569534520080712,
+        "piper_joint5": 0.9922634489108018,
+        "piper_joint6": -0.8284858480680087
+      },
+      "simulation_stamp": 42.74999999999107,
+      "pose_sha256": "7cc1a61f04b6a2e11f3be84f9e5141751d68a409d772846fdbc84bd8d4d771a9",
+      "observation_sha256": "3df5acf7968dfe3650292abfe74c118c3b37147fbb73dc7aa4b0c91efd15be63",
+      "contact_note": "Fixed simulated point equality active; settled actual qpos, no teleport",
+      "probe_socket_distance_mm": 9.381909713491893e-06,
+      "max_joint_velocity_rad_s": 6.815973207605257e-07
+    },
+    {
+      "id": 23,
+      "split": "train",
+      "T_base_flange": [
+        [
+          -0.0530257705818703,
+          -0.7837565093932606,
+          0.6188004538119639,
+          0.09406863954147549
+        ],
+        [
+          0.15486903990904316,
+          0.6057202971302195,
+          0.7804604423813751,
+          0.21424193115205947
+        ],
+        [
+          -0.9865109467876431,
+          0.1372175485430789,
+          0.08926083261978775,
+          0.47640900500763456
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "measured_joint_positions": {
+        "piper_joint1": -0.28645043480854593,
+        "piper_joint2": 1.1064716954994,
+        "piper_joint3": -1.236531931987074,
+        "piper_joint4": -1.3034423934990294,
+        "piper_joint5": 0.42750757808773965,
+        "piper_joint6": 1.3775203632560982
+      },
+      "simulation_stamp": 44.59999999998676,
+      "pose_sha256": "a30926c727375a1ba9ae4efc1a952b153118f8b1f9bd733e086074d2ed63aeb8",
+      "observation_sha256": "8ba3cc22fe6208504880f62ebde405a26c8898b077ea4f151554699280cdf342",
+      "contact_note": "Fixed simulated point equality active; settled actual qpos, no teleport",
+      "probe_socket_distance_mm": 1.093714389507731e-05,
+      "max_joint_velocity_rad_s": 4.4459418330652885e-07
+    },
+    {
+      "id": 24,
+      "split": "train",
+      "T_base_flange": [
+        [
+          -0.09308506888591084,
+          -0.5992447693605445,
+          0.7951357596942391,
+          0.06894086258652316
+        ],
+        [
+          -0.24932253764997825,
+          0.7871885770585489,
+          0.5640677409392543,
+          0.24507789659718404
+        ],
+        [
+          -0.9639364305649422,
+          -0.14573898086156023,
+          -0.22268072949214407,
+          0.5208606794857877
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "measured_joint_positions": {
+        "piper_joint1": -0.011417411444577972,
+        "piper_joint2": 1.3670379814737086,
+        "piper_joint3": -1.7528024090265957,
+        "piper_joint4": -1.0622931584163602,
+        "piper_joint5": 1.1723252307003094,
+        "piper_joint6": 0.7732269344823821
+      },
+      "simulation_stamp": 46.34999999998268,
+      "pose_sha256": "81395bb3fd9b46315d03a4248c4b864e7556948abc4de47aff128f4929b60004",
+      "observation_sha256": "fddbe7d2d771bd42552d17ea5d6fd56ad789bd2295d4085a848510a11340fc4c",
+      "contact_note": "Fixed simulated point equality active; settled actual qpos, no teleport",
+      "probe_socket_distance_mm": 8.564726929664652e-06,
+      "max_joint_velocity_rad_s": 5.103164431831828e-07
+    },
+    {
+      "id": 25,
+      "split": "holdout",
+      "T_base_flange": [
+        [
+          -0.4432807218598719,
+          -0.7198402116053881,
+          0.5341650226131451,
+          0.10612918981153319
+        ],
+        [
+          0.19751658134929848,
+          0.5028260259701851,
+          0.8415183822704753,
+          0.20554117660800084
+        ],
+        [
+          -0.8743508458962446,
+          0.4785353250941271,
+          -0.08071270604794256,
+          0.5006302360793662
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "measured_joint_positions": {
+        "piper_joint1": -0.44856881310661784,
+        "piper_joint2": 1.1363126164562731,
+        "piper_joint3": -1.425621341847839,
+        "piper_joint4": -0.3203802041601457,
+        "piper_joint5": 0.4792894060053063,
+        "piper_joint6": 0.7989902962258028
+      },
+      "simulation_stamp": 48.0999999999786,
+      "pose_sha256": "373e616bbac59b1ab4909ad7ccf3a453c2282caa4947f73649928f3601a06315",
+      "observation_sha256": "aa38f7d4af5b089bde0ba6a3ed071f7f743dea9512348097be2d3700d512b619",
+      "contact_note": "Fixed simulated point equality active; settled actual qpos, no teleport",
+      "probe_socket_distance_mm": 8.498366040226621e-06,
+      "max_joint_velocity_rad_s": 6.535864009048889e-07
+    },
+    {
+      "id": 26,
+      "split": "holdout",
+      "T_base_flange": [
+        [
+          0.11084074472766303,
+          -0.9593336778772774,
+          0.2596020489107789,
+          0.14525441457776733
+        ],
+        [
+          -0.11824753889572057,
+          0.24662604595663198,
+          0.9618695925128853,
+          0.1883911293659098
+        ],
+        [
+          -0.9867785206688093,
+          -0.1373116453410082,
+          -0.0861026317856961,
+          0.501398300110763
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "measured_joint_positions": {
+        "piper_joint1": -0.9080252509738624,
+        "piper_joint2": 1.1921827422117994,
+        "piper_joint3": -1.4680739166968273,
+        "piper_joint4": 0.999614627949675,
+        "piper_joint5": 0.752519157063382,
+        "piper_joint6": -1.0479752673536222
+      },
+      "simulation_stamp": 49.899999999974405,
+      "pose_sha256": "08a6e9e4d23beefd3b5f0d3a0aee41afda75b2ca46a1d0092b7a96074777b39d",
+      "observation_sha256": "839a68f94dd58e42f0421ee3143b66e4f9e3ecc74c20e385dafe964e5e51e4e0",
+      "contact_note": "Fixed simulated point equality active; settled actual qpos, no teleport",
+      "probe_socket_distance_mm": 8.740933333774151e-06,
+      "max_joint_velocity_rad_s": 6.697369947199947e-07
+    },
+    {
+      "id": 27,
+      "split": "holdout",
+      "T_base_flange": [
+        [
+          0.03922182510748076,
+          -0.7381607278847928,
+          0.6734837698444057,
+          0.08627626741401673
+        ],
+        [
+          0.2383741641510173,
+          0.6614548576340598,
+          0.7110943883744348,
+          0.22412659379430636
+        ],
+        [
+          -0.9703810624185448,
+          0.13265071097020306,
+          0.20190191326126053,
+          0.4603576505918122
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "measured_joint_positions": {
+        "piper_joint1": -0.1851325848878153,
+        "piper_joint2": 1.1287710454166742,
+        "piper_joint3": -1.1428088657232682,
+        "piper_joint4": 1.359108662402113,
+        "piper_joint5": -0.6035277689806243,
+        "piper_joint6": -1.3175494801575391
+      },
+      "simulation_stamp": 51.69999999997021,
+      "pose_sha256": "71d55482b587f8d432659252f0a24f5d860054ffff9c58135887a1fc4d600af8",
+      "observation_sha256": "35df96e74d7d253d364271ab4dc0c1d4555d2944f02528d5e2957da4cee13932",
+      "contact_note": "Fixed simulated point equality active; settled actual qpos, no teleport",
+      "probe_socket_distance_mm": 1.1238613163532125e-05,
+      "max_joint_velocity_rad_s": 4.4127654294957544e-07
+    },
+    {
+      "id": 28,
+      "split": "holdout",
+      "T_base_flange": [
+        [
+          -0.10958913131844884,
+          -0.8138604857919942,
+          0.5706323965244949,
+          0.10093259112071462
+        ],
+        [
+          -0.38537121763258075,
+          0.5639756747733345,
+          0.7303563944296961,
+          0.22138176262565837
+        ],
+        [
+          -0.9162310008492682,
+          -0.13986617865081735,
+          -0.37544401067585037,
+          0.5426294478978281
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "measured_joint_positions": {
+        "piper_joint1": -0.335478922650059,
+        "piper_joint2": 1.353198249388592,
+        "piper_joint3": -1.9188741163355658,
+        "piper_joint4": -0.37375180411385583,
+        "piper_joint5": 1.0908936564684708,
+        "piper_joint6": 0.16675763971812785
+      },
+      "simulation_stamp": 53.499999999966015,
+      "pose_sha256": "ab3fe0ef45bf86a6ae8cb18aff179ecf3639667cfb74192a6e41095225c2c5aa",
+      "observation_sha256": "df5dfd7431b6bb2a67790187d0928bca8378654e8d7a1fc6200317f5c67c6179",
+      "contact_note": "Fixed simulated point equality active; settled actual qpos, no teleport",
+      "probe_socket_distance_mm": 7.5101334508748735e-06,
+      "max_joint_velocity_rad_s": 5.383898134197208e-07
+    },
+    {
+      "id": 29,
+      "split": "holdout",
+      "T_base_flange": [
+        [
+          -0.08586613330573958,
+          -0.7502445114434317,
+          0.6555609660436846,
+          0.0888302696413685
+        ],
+        [
+          -0.2927499775305238,
+          0.6479440458555152,
+          0.7031827387644448,
+          0.22525400811083685
+        ],
+        [
+          -0.9523258149430796,
+          -0.13153587529413402,
+          -0.27527051368355315,
+          0.5283547242212183
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "measured_joint_positions": {
+        "piper_joint1": -0.20799243860368757,
+        "piper_joint2": 1.2958625787858344,
+        "piper_joint3": -1.750697104911689,
+        "piper_joint4": -0.672574412903149,
+        "piper_joint5": 0.987702107048402,
+        "piper_joint6": 0.45126239661650036
+      },
+      "simulation_stamp": 55.19999999996205,
+      "pose_sha256": "8097fcfb7723758ce8643b3f1784ad1cacc7c5542d8ad532890f74f6f01d6325",
+      "observation_sha256": "3c81ae18099d217ec4c3bd6359adc50ccc18be2360d0533601e05634f868f510",
+      "contact_note": "Fixed simulated point equality active; settled actual qpos, no teleport",
+      "probe_socket_distance_mm": 7.764843806526532e-06,
+      "max_joint_velocity_rad_s": 5.837104166969542e-07
+    },
+    {
+      "id": 30,
+      "split": "holdout",
+      "T_base_flange": [
+        [
+          0.09368360915783897,
+          -0.7186435554875248,
+          0.6890390566081226,
+          0.08405964039409361
+        ],
+        [
+          -0.2139239330182109,
+          0.6613877938383189,
+          0.718889933886755,
+          0.22301573122255172
+        ],
+        [
+          -0.9723476396110515,
+          -0.2147501485865187,
+          -0.09177386024836776,
+          0.5022064502133563
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "measured_joint_positions": {
+        "piper_joint1": -0.16356457418170764,
+        "piper_joint2": 1.197582843385832,
+        "piper_joint3": -1.4777066790259048,
+        "piper_joint4": -1.0023196864403319,
+        "piper_joint5": 0.7698017686351685,
+        "piper_joint6": 0.6931451165749555
+      },
+      "simulation_stamp": 56.89999999995809,
+      "pose_sha256": "ab2cad4fa1aaee6d3e9fee24c268c22a73b34c0d3bfce33d9ab4c7cc16bac014",
+      "observation_sha256": "e406725dcfbb3c2989ee4590ece394fad9402bf86c28c22430a79a95c38dc596",
+      "contact_note": "Fixed simulated point equality active; settled actual qpos, no teleport",
+      "probe_socket_distance_mm": 8.672657001338048e-06,
+      "max_joint_velocity_rad_s": 6.670645433891278e-07
+    },
+    {
+      "id": 31,
+      "split": "holdout",
+      "T_base_flange": [
+        [
+          0.07747644667630019,
+          -0.93793282509182,
+          0.33805238621505573,
+          0.13407524008014998
+        ],
+        [
+          0.0915698139185252,
+          0.3443327486978595,
+          0.9343714076067959,
+          0.19230961787857226
+        ],
+        [
+          -0.9927801213709622,
+          -0.041436382436881386,
+          0.11256401210512801,
+          0.4730883017489157
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "measured_joint_positions": {
+        "piper_joint1": -0.7962890601181709,
+        "piper_joint2": 1.1037075700964007,
+        "piper_joint3": -1.2122039713047108,
+        "piper_joint4": 1.4091268058496835,
+        "piper_joint5": 0.4229663223805701,
+        "piper_joint6": -1.3853091382765756
+      },
+      "simulation_stamp": 58.699999999953896,
+      "pose_sha256": "f7468019d67dde8f874930e048318a9b7852ca485181df80222442c7af48d301",
+      "observation_sha256": "0dcd40634a9cebce40b816280fa5c5d95acb771adc31998cdb4048dbaa640207",
+      "contact_note": "Fixed simulated point equality active; settled actual qpos, no teleport",
+      "probe_socket_distance_mm": 1.1172672942432278e-05,
+      "max_joint_velocity_rad_s": 8.705910228732551e-07
+    },
+    {
+      "id": 32,
+      "split": "holdout",
+      "T_base_flange": [
+        [
+          -0.5677318694451556,
+          -0.7098138754806296,
+          0.41694698295044547,
+          0.12283276218936728
+        ],
+        [
+          -0.06390993834342706,
+          0.5429625539654028,
+          0.8373214345592184,
+          0.20613924399879696
+        ],
+        [
+          -0.8207289712184221,
+          0.4487270073959636,
+          -0.3536213068187705,
+          0.539519712624104
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "measured_joint_positions": {
+        "piper_joint1": -0.6079287371003712,
+        "piper_joint2": 1.3149389707870018,
+        "piper_joint3": -1.8593343711244759,
+        "piper_joint4": 0.12987821692276014,
+        "piper_joint5": 0.999220400437956,
+        "piper_joint6": 0.3883612173641276
+      },
+      "simulation_stamp": 60.4999999999497,
+      "pose_sha256": "a540ad6248b03e308dbe0a6589fc0ceeae2da5ecff3c0df2dd5ac6712d30a447",
+      "observation_sha256": "17e37263353fb47c95cc4982f6d06d32cf6592dbdcacfe2ed2dd07c672b81b77",
+      "contact_note": "Fixed simulated point equality active; settled actual qpos, no teleport",
+      "probe_socket_distance_mm": 7.4017494691752354e-06,
+      "max_joint_velocity_rad_s": 6.429500712806056e-07
+    },
+    {
+      "id": 33,
+      "split": "holdout",
+      "T_base_flange": [
+        [
+          -0.4684759036458015,
+          -0.7344472545078976,
+          0.4910372267446349,
+          0.11227490138388795
+        ],
+        [
+          0.11495288961067368,
+          0.5004032357907264,
+          0.8581272835543269,
+          0.2031744086699404
+        ],
+        [
+          -0.8759658445815155,
+          0.4584581027269376,
+          -0.15000002390203518,
+          0.5105036792468953
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "measured_joint_positions": {
+        "piper_joint1": -0.5245912408397152,
+        "piper_joint2": 1.1669685728811863,
+        "piper_joint3": -1.518314619144086,
+        "piper_joint4": -0.04331110981404367,
+        "piper_joint5": 0.589658351388122,
+        "piper_joint6": 0.5218298341501247
+      },
+      "simulation_stamp": 62.19999999994574,
+      "pose_sha256": "35372b73f26bc01992d8efec7a2f6ed0b33dc651def13e9b7d07f09fe6ae246e",
+      "observation_sha256": "b87f7ee9c992a38ef633dc408d0ac0a5a6310ae950965475abeb18b44a4c43bf",
+      "contact_note": "Fixed simulated point equality active; settled actual qpos, no teleport",
+      "probe_socket_distance_mm": 7.984593118758184e-06,
+      "max_joint_velocity_rad_s": 8.009110248445992e-07
+    },
+    {
+      "id": 34,
+      "split": "holdout",
+      "T_base_flange": [
+        [
+          -0.5943220876535109,
+          -0.7890309257536713,
+          0.15560030312142192,
+          0.16007466337475926
+        ],
+        [
+          0.11118013933338963,
+          0.11101090506168029,
+          0.9875806577567203,
+          0.18472730275402674
+        ],
+        [
+          -0.796505011123585,
+          0.6042406616255587,
+          0.021748335415082917,
+          0.4860295366681591
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "measured_joint_positions": {
+        "piper_joint1": -1.0238888335700083,
+        "piper_joint2": 1.2104743792213413,
+        "piper_joint3": -1.3726574253344697,
+        "piper_joint4": 1.3795222720643912,
+        "piper_joint5": 0.859040690772347,
+        "piper_joint6": -0.6094113790393603
+      },
+      "simulation_stamp": 63.999999999941544,
+      "pose_sha256": "ca7108d70ce1c838bf1f59cc4ddd9a648a35aafdf07afd2d2ee86ee1cb05bad6",
+      "observation_sha256": "5aa7285635f7d2108f6c2a3194999c3e9c7fb7a6cda90c42ffe90c306ca22c40",
+      "contact_note": "Fixed simulated point equality active; settled actual qpos, no teleport",
+      "probe_socket_distance_mm": 9.303919973619537e-06,
+      "max_joint_velocity_rad_s": 4.7444342659387507e-07
+    }
+  ]
+}

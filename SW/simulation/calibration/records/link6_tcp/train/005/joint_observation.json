@@ -1,0 +1,37 @@
+{
+  "simulator": "MuJoCo",
+  "simulation_stamp": 12.749999999998373,
+  "positions": {
+    "piper_joint1": -1.0580620589940304,
+    "piper_joint2": 1.2209353735744433,
+    "piper_joint3": -1.2738681469143274,
+    "piper_joint4": 1.6303907234127413,
+    "piper_joint5": 0.9152220101691618,
+    "piper_joint6": -1.5937175176799505
+  },
+  "velocities": {
+    "piper_joint1": -1.671965924266931e-08,
+    "piper_joint2": 1.0993127612393267e-08,
+    "piper_joint3": 3.4239853937463e-07,
+    "piper_joint4": 7.456336593866983e-07,
+    "piper_joint5": 9.617596304385432e-08,
+    "piper_joint6": -8.660784872331901e-07
+  },
+  "commanded_positions": {
+    "piper_joint1": -1.0581636098351443,
+    "piper_joint2": 1.2210247595473993,
+    "piper_joint3": -1.2743965287193781,
+    "piper_joint4": 1.6294541755273417,
+    "piper_joint5": 0.9153815444211926,
+    "piper_joint6": -1.5937143461645684
+  },
+  "probe_socket_distance_mm": 9.766906902736933e-06,
+  "max_joint_velocity_rad_s": 8.660784872331901e-07,
+  "equality_force": [
+    0.5308577979351005,
+    1.6166542626184597,
+    10.774598444212627
+  ],
+  "constraint_active": true,
+  "scene_sha256": "c1c854fd7835e35cd15da87302c9e5859e3722b9ed18a16b0a203157d2d3a554"
+}
