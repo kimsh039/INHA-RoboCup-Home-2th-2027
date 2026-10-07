@@ -18,5 +18,8 @@ setup(
         "detection_nav_goal_node = robocup_head_detection.nav_goal_node:main",
         "support_surface_node = robocup_head_detection.support_surface_node:main",
         "approach_node = robocup_head_detection.approach_node:main",
+        "dock_node = robocup_head_detection.dock_node:main",
+        "wrist_observe_node = robocup_head_detection.wrist_observe_node:main",
+        "wrist_sam_node = robocup_head_detection.wrist_sam_node:main",
     ]},
 )
