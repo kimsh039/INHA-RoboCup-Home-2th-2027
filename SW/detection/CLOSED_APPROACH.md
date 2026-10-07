@@ -20,10 +20,12 @@ flowchart LR
 [SIM_NAV_TEST](head/SIM_NAV_TEST.md)대로 Gazebo·SLAM·Nav2를 띄우고, 로봇을 0.5 m쯤 움직여 지도를 채운 뒤 테이블이 보이는 곳에서 헤드 검출(4절, `auto_send:=false`)을 실행합니다. 그리고:
 
 ```bash
-ros2 launch robocup_head_detection closed_approach.launch.py
+ros2 launch robocup_head_detection closed_approach.launch.py \
+  python_executable:=$PWD/SW/detection/head/.venv-test/bin/python3 \
+  sam_checkpoint:=$PWD/SW/detection/head/models/sam2.1_hiera_tiny.pt
 ```
 
-목표가 확정되면 접근 → 도킹까지 자동으로 진행합니다. 상태 토픽: `/detection/approach/status`, `/detection/dock/status`. RViz 설정: [`SW/simulation/ros2/approach.rviz`](../simulation/ros2/approach.rviz).
+목표가 확정되면 접근 → 도킹 → 손목 관측까지 자동으로 진행합니다. 상태 토픽: `/detection/approach/status`, `/detection/dock/status`, `/detection/wrist/observe_status`, `/detection/wrist/status`. RViz 설정: [`SW/simulation/ros2/approach.rviz`](../simulation/ros2/approach.rviz).
 
 ## 1. 접근 자세
 
@@ -56,6 +58,28 @@ ros2 launch robocup_head_detection closed_approach.launch.py
 
 제어는 **`odom` 좌표**에서 합니다. 로봇이 테이블 밑으로 들어가면 G2 스캔이 크게 달라져 SLAM 위치가 0.5 m 넘게 튄 적이 있습니다. `map`은 시작할 때 계획을 넘겨받는 데만 씁니다. G2가 진행 경로(앞 0.36~0.50 m, 좌우 ±0.30 m)에서 물체를 보면 멈춥니다.
 
+## 3. 손목 관측과 SAM 2.1
+
+`wrist_observe_node` · [`arm_kinematics.py`](head/head_detection_ws/src/robocup_head_detection/robocup_head_detection/arm_kinematics.py) · `wrist_sam_node`
+
+1. 도킹이 남긴 목표로 **손목 카메라가 목표를 바라보는 자세**를 IK로 구합니다. URDF(`/robot_description`)에서 팔 체인을 읽으므로 장착이 바뀌어도 따라갑니다. 수직으로 내려다보는 자세부터(75°, 60°, 50°, 40° 순) 카메라 거리 0.30·0.35·0.40 m를 시도하고, 손가락 끝까지 테이블 위 0.06 m 이상 떨어진 첫 자세를 씁니다.
+2. 현재 자세에서 관절 공간 직선 경로(0.05 rad 간격, 테이블 간섭 검사)로 이동합니다. 시뮬레이터에서는 Gazebo 관절 위치 명령(`SimArm`)이고, 실물에서는 같은 자리에 Piper 드라이버를 넣습니다.
+3. `OBSERVING`이 되면 SAM 2.1 tiny가 손목 RGB를 분할합니다. 헤드 목표를 손목 영상에 투영한 점·박스(12 cm)로 1차 분할하고, **그 마스크 범위를 30% 넓힌 박스로 다시 분할**합니다. 헤드 추정이 몇 cm 어긋나 박스가 물체를 자르는 경우를 바로잡습니다.
+4. 마스크 픽셀의 손목 depth로 물체 점군(`/detection/wrist/object_cloud`)과 중심(`/detection/wrist/target`, `base_link`)을 냅니다. 테이블 윗면 점은 높이로 제외합니다.
+
+준비: 검출 가상환경에 SAM 2.1과 체크포인트를 설치합니다.
+
+```bash
+cd SW/detection/head
+.venv-test/bin/python3 -m pip install hydra-core iopath wheel "setuptools<80"
+SAM2_BUILD_CUDA=0 .venv-test/bin/python3 -m pip install --no-build-isolation --no-deps \
+  "git+https://github.com/facebookresearch/sam2.git"
+curl -L -o models/sam2.1_hiera_tiny.pt \
+  https://dl.fbaipublicfiles.com/segment_anything_2/092824/sam2.1_hiera_tiny.pt
+```
+
+`--no-build-isolation`이 없으면 빌드용으로 torch를 다시 내려받습니다. GPU 메모리가 2 GB면 헤드 YOLO11m(약 640 MB)과 SAM(약 600 MB)을 동시에 올리기 어렵습니다. 도킹 후 헤드 검출을 내리고 손목 단계를 시작합니다.
+
 ## 확인 결과 (Gazebo 방, 2026-10-07)
 
 컵(머그)이 table1 통로 쪽 가장자리에서 0.2 m 안쪽에 있을 때, 관측 위치 (0.5, 0.4)에서 시작:
@@ -64,9 +88,13 @@ ros2 launch robocup_head_detection closed_approach.launch.py
 |---|---|
 | 도킹 (Gazebo 실제 위치) | 가장자리 거리 0.206 m(계획 0.20), 방향 -90.1°(목표 -90) · 가장자리 측정 39~47회, 걸러낸 측정 19~20회 |
 | 대기 자세 도착 오차 | 옆 0.21 m, 방향 14°까지 도킹에서 보정 |
+| 손목 관측 | 수직 하향, 카메라-컵 0.30 m, 손가락 끝-테이블 0.24 m |
+| 컵 위치 (`base_link`) | 헤드 YOLO 약 30 mm 오차 → **손목 SAM 6 mm** (실제 몸통 축 대비) |
+| 컵 높이 | 테이블 위 0.084 m (실제 0.081 m) |
 
 ## 제한
 
 - **높이 기준:** URDF에 `base_footprint`가 없어 `map`·`odom`의 높이가 0.1425 m 낮습니다. 노드들은 `floor_z: -0.1425`로 보정합니다. `base_footprint`가 생기면 `0.0`으로 바꿉니다.
-- 헤드 목표는 카메라 쪽 물체 앞면을 재므로 1~3 cm 치우칩니다.
-- 수평 작업면만, 한 번에 목표 하나. 손목 관측(3절)은 후속 PR입니다.
+- 헤드 목표는 카메라 쪽 물체 앞면을 재므로 1~3 cm 치우칩니다. 손목 단계에서 보정됩니다.
+- Gazebo 손목 RGB와 depth는 같은 광학 원점·다른 화각입니다(CameraInfo로 대응). 실물 D435f는 정렬된 depth를 씁니다.
+- 수평 작업면만, 한 번에 목표 하나. 파지(GraspNet·MoveIt)와의 연결은 다음 단계입니다.
