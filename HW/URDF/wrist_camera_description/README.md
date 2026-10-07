@@ -2,20 +2,20 @@
 
 2026-10-03. STL·장착 좌표·CAD 원본을 보관한다. 손목 카메라는 최종 URDF에 통합했으며 독립 URDF와 병합 스크립트는 정리했다.
 
-**2026-10-05 실기 선택은 Head D435 + Wrist D435입니다.** 아래 D435f 이름의 CAD·메시는 형상 원본으로 유지합니다. 손목 D435의 내부 보정·관측 거리·depth 품질과 PiPER hand–eye 보정은 실물 장치에서 별도로 측정합니다. [센서 역할](../../../detection/SENSOR_ROLES.md) · [두 D435 실행 명령](../../../setup/jetson/RUN_COMMANDS.md#2-realsense-head--wrist)
+**2026-10-05 실기 선택은 Head D435 + Wrist D435입니다.** 아래 D435f 이름의 CAD·메시는 형상 원본으로 유지합니다. 손목 D435의 내부 보정·관측 거리·depth 품질과 PiPER hand–eye 보정은 실물 장치에서 별도로 측정합니다. [센서 역할](../../../SW/detection/SENSOR_ROLES.md) · [두 D435 실행 명령](../../../SW/setup/jetson/RUN_COMMANDS.md#2-realsense-head--wrist)
 
 ## 실행
 
-최종 [robocup.urdf](../../../simulation/robot_description/robocup.urdf)에 손목 카메라가 항상 포함됩니다.
+최종 [robocup.urdf](../../../SW/simulation/robot_description/robocup.urdf)에 손목 카메라가 항상 포함됩니다.
 독립 wrist_camera.urdf와 merge.py는 삭제했습니다. 저장소 루트에서:
 
 ```bash
-./simulation/gazebo/start_sim.sh --world room
+./SW/simulation/gazebo/start_sim.sh --world room
 # 다른 터미널
 robot-camera --partition robocup_motion --camera wrist
 ```
 
-[컨트롤러·영상 명령](../../../simulation/tools/README.md)
+[컨트롤러·영상 명령](../../../SW/simulation/tools/README.md)
 
 ## 포함된 자료
 

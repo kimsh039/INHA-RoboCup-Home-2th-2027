@@ -1,0 +1,9 @@
+{
+  "zip": "head_camera_yolo11_dataset.zip",
+  "bytes": 149917936,
+  "sha256": "897e2d22b3fe08e968a01307a7eaacb319693b5c8e98c3c1ce3748930811d2d0",
+  "notebook": "head_camera_yolo11n_colab.ipynb",
+  "train": 1087,
+  "val": 175,
+  "test_included": false
+}

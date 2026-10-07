@@ -1,7 +1,7 @@
 # 보관 자료 안내
 
 최종 모델 확정으로 독립 랙 URDF·ROS 패키지 실행 파일은 삭제했습니다. 메시·CAD 검증 보고서는 유지합니다.
-현재 최종 보정 파일은 [robocup.calibrated.urdf](../../../simulation/robot_description/robocup.calibrated.urdf)입니다. 2026-10-06 랙 변경 후 2D/Mid360 보정값을 누적해 업로드했으며 [모델 이력·적용 방법](../../../simulation/robot_description/README.md)을 참고하세요. Gazebo는 CAD 원본 [robocup.urdf](../../../simulation/robot_description/robocup.urdf)에서 생성하며 [Gazebo 안내](../../../simulation/gazebo/README.md)를 사용합니다.
+현재 최종 보정 파일은 [robocup.calibrated.urdf](../../../SW/simulation/robot_description/robocup.calibrated.urdf)입니다. 2026-10-06 랙 변경 후 2D/Mid360 보정값을 누적해 업로드했으며 [모델 이력·적용 방법](../../../SW/simulation/robot_description/README.md)을 참고하세요. Gazebo는 CAD 원본 [robocup.urdf](../../../SW/simulation/robot_description/robocup.urdf)에서 생성하며 [Gazebo 안내](../../../SW/simulation/gazebo/README.md)를 사용합니다.
 아래는 최초 랙 내보내기 당시 좌표·물성 기록입니다. `export_report.json`과 `validation_report.json`도 최초 내보내기 기록입니다.
 
 ## 2026-10-06 프로파일 변경
@@ -64,9 +64,9 @@ G2 구형 데이터시트에는 214g, V1.3에는 185g이 기재되어 있습니�
 
 ## 현재 실행 경로
 
-독립 sensor_rack_description ROS 패키지와 display.launch.py는 최종 통합 과정에서 삭제했습니다. 이 폴더를 colcon 패키지로 빌드하지 않고 [통합 모델 실행 안내](../../../simulation/README.md)를 사용합니다. `rviz/display.rviz`는 초기 랙 표시 설정으로 보관합니다.
+독립 sensor_rack_description ROS 패키지와 display.launch.py는 최종 통합 과정에서 삭제했습니다. 이 폴더를 colcon 패키지로 빌드하지 않고 [통합 모델 실행 안내](../../../SW/simulation/README.md)를 사용합니다. `rviz/display.rviz`는 초기 랙 표시 설정으로 보관합니다.
 
-실기 Jetson은 [Jetson 운영 문서](../../../setup/jetson/README.md)를 따릅니다. 여기의 G2·Mid-360S·D435f 명칭과 CAD 좌표는 당시 내보내기 자료이며 현재 실물 모델·외부 보정값과 별도로 대조합니다.
+실기 Jetson은 [Jetson 운영 문서](../../../SW/setup/jetson/README.md)를 따릅니다. 여기의 G2·Mid-360S·D435f 명칭과 CAD 좌표는 당시 내보내기 자료이며 현재 실물 모델·외부 보정값과 별도로 대조합니다.
 
 메시는 미터 단위이며 URDF scale은 1입니다. 충돌 형상은 각 솔리드의 경계 박스로 단순화해 프로파일 홈과 구멍을 표현하지 않습니다. 정밀 접촉 시뮬레이션에는 별도의 충돌 형상이 필요합니다.
 

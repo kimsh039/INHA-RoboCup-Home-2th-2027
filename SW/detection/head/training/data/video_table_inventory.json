@@ -1,0 +1,13 @@
+{
+  "status": "draft_inferred_from_reference_frames_requires_review",
+  "table_id_definition": "Physical tables named from the initial room view, not changing screen-side IDs",
+  "videos": {
+    "WIN_20261006_23_47_12_Pro.mp4": {"table_left": ["apple","banana","fanta_can","green_apple","mug","peach","plate"], "table_right": []},
+    "WIN_20261006_23_48_36_Pro.mp4": {"table_left": ["apple","fanta_can","mug","plate"], "table_right": ["banana","green_apple","peach"]},
+    "WIN_20261006_23_49_36_Pro.mp4": {"table_left": ["apple","green_apple","plate"], "table_right": ["banana","fanta_can","mug","peach"]},
+    "WIN_20261006_23_50_08_Pro.mp4": {"table_left": ["apple","banana","fanta_can","green_apple","mug","peach","plate"], "table_right": []},
+    "WIN_20261006_23_50_46_Pro.mp4": {"table_left": ["apple","banana","fanta_can","green_apple","mug","peach","plate"], "table_right": []},
+    "WIN_20261006_23_51_34_Pro.mp4": {"table_left": [], "table_right": ["apple","banana","fanta_can","green_apple","mug","peach","plate"]},
+    "WIN_20261006_23_52_09_Pro.mp4": {"table_left": [], "table_right": ["apple","banana","fanta_can","green_apple","mug","peach","plate"]}
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "source": "best.pt train_metrics; class values rounded from final Colab best.pt validation log",
+  "selected_epoch": 6,
+  "selection_evidence": "Checkpoint train_metrics match results.csv epoch 6; stripped epoch is -1",
+  "validation_images": 175,
+  "validation_instances": 1137,
+  "labels_status": "optical_flow_draft_not_exhaustively_human_verified",
+  "aggregate": {
+    "metrics/precision(B)": 0.92608,
+    "metrics/recall(B)": 0.96958,
+    "metrics/mAP50(B)": 0.97739,
+    "metrics/mAP50-95(B)": 0.67885,
+    "val/box_loss": 1.11558,
+    "val/cls_loss": 0.76652,
+    "val/dfl_loss": 0.90625,
+    "fitness": 0.67885
+  },
+  "per_class_rounded": {
+    "apple": {
+      "instances": 169,
+      "precision": 0.984,
+      "recall": 0.994,
+      "mAP50": 0.995,
+      "mAP50_95": 0.605
+    },
+    "banana": {
+      "instances": 175,
+      "precision": 0.518,
+      "recall": 1,
+      "mAP50": 0.877,
+      "mAP50_95": 0.513
+    },
+    "fanta_can": {
+      "instances": 149,
+      "precision": 0.989,
+      "recall": 1,
+      "mAP50": 0.995,
+      "mAP50_95": 0.827
+    },
+    "green_apple": {
+      "instances": 175,
+      "precision": 1,
+      "recall": 0.828,
+      "mAP50": 0.994,
+      "mAP50_95": 0.561
+    },
+    "mug": {
+      "instances": 148,
+      "precision": 1,
+      "recall": 0.983,
+      "mAP50": 0.99,
+      "mAP50_95": 0.746
+    },
+    "peach": {
+      "instances": 146,
+      "precision": 0.995,
+      "recall": 0.986,
+      "mAP50": 0.993,
+      "mAP50_95": 0.836
+    },
+    "plate": {
+      "instances": 175,
+      "precision": 0.996,
+      "recall": 1,
+      "mAP50": 0.995,
+      "mAP50_95": 0.666
+    }
+  }
+}

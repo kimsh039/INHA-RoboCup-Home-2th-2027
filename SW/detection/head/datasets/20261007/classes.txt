@@ -1,0 +1,7 @@
+apple
+banana
+fanta_can
+green_apple
+mug
+peach
+plate

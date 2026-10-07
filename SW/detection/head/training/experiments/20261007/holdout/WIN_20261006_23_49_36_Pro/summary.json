@@ -1,0 +1,82 @@
+{
+  "video": "WIN_20261006_23_49_36_Pro.mp4",
+  "source_sha256": "48f9788054c81d92c7ddbbde691147e12fc9b9f8813ff6d89f9f9c8f05ea513e",
+  "frames": 308,
+  "source_fps": 29.978003153530203,
+  "duration_s": 10.2742,
+  "width": 1920,
+  "height": 1080,
+  "frames_with_any_detection": 308,
+  "per_class": {
+    "apple": {
+      "boxes": 313,
+      "frames": 308,
+      "frame_fraction": 1.0,
+      "mean_confidence": 0.931814400532756
+    },
+    "banana": {
+      "boxes": 283,
+      "frames": 266,
+      "frame_fraction": 0.8636363636363636,
+      "mean_confidence": 0.876992239442394
+    },
+    "fanta_can": {
+      "boxes": 308,
+      "frames": 308,
+      "frame_fraction": 1.0,
+      "mean_confidence": 0.9551267184607395
+    },
+    "green_apple": {
+      "boxes": 308,
+      "frames": 308,
+      "frame_fraction": 1.0,
+      "mean_confidence": 0.9377106455239382
+    },
+    "mug": {
+      "boxes": 160,
+      "frames": 159,
+      "frame_fraction": 0.5162337662337663,
+      "mean_confidence": 0.6251056363806129
+    },
+    "peach": {
+      "boxes": 301,
+      "frames": 301,
+      "frame_fraction": 0.9772727272727273,
+      "mean_confidence": 0.6624239156412524
+    },
+    "plate": {
+      "boxes": 308,
+      "frames": 308,
+      "frame_fraction": 1.0,
+      "mean_confidence": 0.8786643702875484
+    }
+  },
+  "mean_stage_ms": {
+    "preprocess": 3.0763100650282076,
+    "inference": 6.923778571567178,
+    "postprocess": 1.3311025973584416
+  },
+  "wall_time_s": 7.246917999997095,
+  "wall_frames_per_s": 42.50082586833789,
+  "speed_scope": "wall FPS includes decoding, plotting and output; stage times are Ultralytics measurements",
+  "ground_truth_available": false,
+  "precision": null,
+  "recall": null,
+  "mAP50": null,
+  "mAP50_95": null,
+  "table_assignment_evaluated": false,
+  "sample_images": [
+    "frame_000000.jpg",
+    "frame_000027.jpg",
+    "frame_000055.jpg",
+    "frame_000083.jpg",
+    "frame_000111.jpg",
+    "frame_000139.jpg",
+    "frame_000167.jpg",
+    "frame_000195.jpg",
+    "frame_000223.jpg",
+    "frame_000251.jpg",
+    "frame_000279.jpg",
+    "frame_000307.jpg"
+  ]
+}
