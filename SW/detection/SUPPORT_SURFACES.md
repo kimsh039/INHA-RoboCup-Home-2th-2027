@@ -17,15 +17,15 @@ RViz에 `MarkerArray` `/detection/support_surfaces/markers`를 추가합니다. 
 
 | 선 색 | 의미 |
 |---|---|
-| 초록 | 확인된 경계 (윗면 점이 변까지 오고, 바로 바깥에 더 낮은 반사가 보임) |
+| 초록 | 확인된 경계 (윗면 점이 변까지 오고, 변 바로 바깥을 윗면 높이에서 지나간 광선이 더 낮은 곳에 맞음) |
 | 회색 | 미확인 (시야 끝·가림·윗면 자신의 그림자. 실제 가장자리가 더 바깥일 수 있음) |
 
 ## 동작
 
-1. `/mid360/points_filtered`를 점군 시각의 TF로 `map`에 변환해 최근 2초를 누적합니다(이동 중에도 일관됨).
-2. 높이 히스토그램 봉우리마다 같은 높이 점을 모으고, 20 cm 격자로 연결된 덩어리를 찾습니다.
-3. 짧은 변이 0.25 m보다 가는 덩어리(같은 높이에서 벽에 찍힌 스캔 선)는 버립니다.
-4. 최소 면적 사각형을 맞추고, 각 변의 "확인된 경계" 비율(`edge_observed`)을 계산합니다.
+1. `/mid360/points_filtered`를 점군 시각의 TF로 `map`에 변환해 최근 2초를 누적합니다(이동 중에도 일관됨). 점군마다 센서(`livox_frame`) 위치도 함께 기록합니다.
+2. 5 cm 칸 안에서 반사가 0.15 m 넘는 높이에 걸쳐 쌓인 곳(벽·기둥)은 작업면 후보에서 뺍니다. 테이블 끝 0.3 m 옆 벽에 찍힌 스캔 선이 테이블과 합쳐지던 문제(1.6 m 테이블 → 2.0 m)를 막습니다.
+3. 높이 히스토그램 봉우리마다 같은 높이 점을 모으고, 15 cm 격자로 연결된 덩어리를 찾습니다. 짧은 변이 0.25 m보다 가는 덩어리는 버립니다.
+4. 최소 면적 사각형을 맞추고 각 변의 `edge_observed`를 계산합니다. **윗면이 변까지 온 비율**과 **변 바로 바깥(0.02~0.4 m)을 윗면 높이에서 지나간 광선이 더 낮은 곳에 맞은 비율** 중 작은 값입니다. 광선 기준이라 가까이에서(변 바깥 바닥이 Mid-360 시야 밖일 때) 테이블 밑 바닥에 맞은 광선으로도 확인되고, 시야 끝·가림·그림자 쪽 변은 그런 광선이 없어 미확인으로 남습니다. 두 비율을 따로 보는 이유는 로봇 팔이 변 앞 바닥 일부를 가려도 윗면이 다 보이면 확인되게 하기 위해서입니다.
 5. 주기마다 같은 높이·가까운 위치의 작업면에 같은 `id`를 유지합니다(5초간 못 봐도 유지).
 
 코드: [`surface_geometry.py`](head/head_detection_ws/src/robocup_head_detection/robocup_head_detection/surface_geometry.py)(ROS 없는 계산), [`support_surface_node.py`](head/head_detection_ws/src/robocup_head_detection/robocup_head_detection/support_surface_node.py), 테스트 [`test_surface_geometry.py`](head/tests/test_surface_geometry.py).
@@ -40,7 +40,7 @@ RViz에 `MarkerArray` `/detection/support_surfaces/markers`를 추가합니다. 
 | `height`, `z` | 바닥 기준 높이 / `map`의 z |
 | `centre` (`Pose2D`), `length`, `width` | 사각형 중심, 긴 변 방향(`theta`), 크기. 관측된 범위이므로 실제보다 작을 수 있음 |
 | `corners[4]` | 반시계 방향. 변 i = `corners[i] → corners[i+1]`, 바깥 법선은 진행 방향의 오른쪽 |
-| `edge_observed[4]` | 변 i 길이 중 확인된 경계의 비율 (0~1) |
+| `edge_observed[4]` | 변 i가 확인된 경계인 정도 (0~1): 윗면 도달 비율과 광선 통과 비율 중 작은 값 |
 | `inliers`, `residual` | 점 수, 높이 표준편차 |
 
 ## 파라미터
@@ -50,6 +50,7 @@ RViz에 `MarkerArray` `/detection/support_surfaces/markers`를 추가합니다. 
 | `input_topic` | `/mid360/points_filtered` | 자기 점이 제거된 점군 |
 | `frame` | `map` | 출력 좌표계 (중력 방향 정렬 필요) |
 | `floor_z` | `-0.1425` | `frame`에서 바닥의 z (아래 참고) |
+| `sensor_frame` | `livox_frame` | 광선 원점(센서) 프레임 |
 | `window_sec` | 2.0 | 누적 시간 |
 | `min_height`, `max_height` | 0.3, 1.3 | 찾을 작업면 높이 범위 (바닥 기준, m) |
 | `min_side` | 0.25 | 작업면 짧은 변 최솟값 |

@@ -83,6 +83,29 @@ class SurfaceGeometryTests(unittest.TestCase):
         start = min(range(4), key=lambda i: surface.edge(i)[2][0])   # x = 1.0, the real end
         self.assertGreater(surface.edge_observed[start], 0.8)
 
+    def test_wall_near_table_end_not_merged(self):
+        # A table top ending at x = 2.7 and a wall 0.25 m beyond it whose scan column crosses
+        # table height: the wall must neither join the table nor stretch it.
+        top = np.array([(x, y, 0.72) for x in np.arange(1.1, 2.7, 0.03) for y in np.arange(1.4, 2.2, 0.03)])
+        wall = np.array([(2.95, y, z) for y in np.arange(1.70, 1.81, 0.02) for z in np.arange(0.05, 1.0, 0.004)])
+        floor = np.array([(x, y, 0.0) for x in np.arange(0.5, 1.1, 0.05) for y in np.arange(1.0, 2.6, 0.05)])
+        (surface,) = find_surfaces(np.vstack([top, wall, floor]))
+        self.assertAlmostEqual(surface.length, 1.6, delta=0.05)
+        self.assertLess(max(x for x, _ in surface.corners), 2.72)
+
+    def test_near_edge_confirmed_by_rays_close_up(self):
+        # 0.7 m from the near edge the floor just outside it is below the lidar's field of view;
+        # rays passing that edge at table height land on the floor under the table instead.
+        sensor = (0.0, 0.0, 1.34)
+        cloud = ring_cloud([(0.0, -1.1, 0.0, 1.6, 0.8, 0.72)], sensor=sensor)
+        cfg = SurfaceConfig(min_layer_points=40)
+        near = lambda s: max(range(4), key=lambda i: s.edge(i)[2][1])
+        (plain,) = find_surfaces(cloud, cfg)
+        (rays,) = find_surfaces(cloud, cfg, origins=np.tile(sensor, (len(cloud), 1)))
+        self.assertLess(plain.edge_observed[near(plain)], 0.5)
+        self.assertGreater(rays.edge_observed[near(rays)], 0.6)
+        self.assertAlmostEqual(rays.edge(near(rays))[2][1], -0.7, delta=0.03)
+
     def test_empty_and_nan(self):
         self.assertEqual(find_surfaces(np.full((10, 3), np.nan)), [])
         self.assertEqual(find_surfaces(np.zeros((0, 3))), [])
