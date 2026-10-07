@@ -4,8 +4,8 @@
     "sha256": "c5691631b1d8516d5c62e8cd93f35928f7b5e70e7dc8cce6bebc1d03706fc2c9"
   },
   "training/experiments/20261007/.gitattributes": {
-    "bytes": 9,
-    "sha256": "8b9c3028d6467ff3be7c793141927841d70f47f52d0590677438f488ca154992"
+    "bytes": 8,
+    "sha256": "705fd4d6451a31d36b3df7de96f83f30ac976c9b4a6d1e51671d8e2f33e2d0da"
   },
   "training/experiments/20261007/args.yaml": {
     "bytes": 1720,
@@ -28,8 +28,8 @@
     "sha256": "067ff1a25de23457668baf0ebc1693dfaeb33fbef467d7785079a7e415276d55"
   },
   "training/experiments/20261007/colab_training_log.txt": {
-    "bytes": 56159,
-    "sha256": "08354eb83685fb24cba21853f44da779bda85a82cf7811e9a906505a2753974c"
+    "bytes": 55570,
+    "sha256": "7e74d7332aa0076a711b926eaf029cd37a30ba43b7bd5d3e474cb628fbb0f0cd"
   },
   "training/experiments/20261007/confusion_matrix.png": {
     "bytes": 211250,
@@ -52,8 +52,8 @@
     "sha256": "367ccdce852e49f389fd8a4c215a5c76aed32e722899cb97cad5ce3308b42cdd"
   },
   "training/experiments/20261007/TRAINING_RESULTS.md": {
-    "bytes": 4197,
-    "sha256": "cc43cc2e67ac77558072c4b45d282a428b6edc17b59711fff866174234f419f6"
+    "bytes": 4147,
+    "sha256": "865cc57eb252db770e4e2f9b95c1b6adee965b83fd5d5a075fa518b5ae4701e8"
   },
   "training/experiments/20261007/train_batch0.jpg": {
     "bytes": 300463,
@@ -80,8 +80,8 @@
     "sha256": "19d5e15e04e3ce1254f8b30e72f9ddcb4657139ea666e9f32025c874abd34855"
   },
   "training/experiments/20261007/validation_metrics.json": {
-    "bytes": 1703,
-    "sha256": "4fd90eb09ee4dda64f03b3de07e782faede87847d8528e40469100d19a220119"
+    "bytes": 1634,
+    "sha256": "aee9ce370266801a256d5e1633ff02e470f2df9fd9600c7ca0b9e01393528982"
   },
   "training/experiments/20261007/val_batch0_labels.jpg": {
     "bytes": 315940,
@@ -108,12 +108,12 @@
     "sha256": "8497d600cf8165d83c9d5ba4f5ce10c46969b40d3e24f1111762345e676a232a"
   },
   "training/experiments/20261007/holdout/TEST_RESULTS.md": {
-    "bytes": 5213,
-    "sha256": "16e97a6d11fa0104092e090328068279722de5ec1edbba3765011bbca2a16361"
+    "bytes": 5135,
+    "sha256": "85d0732dd4e434c7fe10adce234a36c5d5c77ccd1b13c35db0bf5c3d596a1b5d"
   },
   "training/experiments/20261007/holdout/test_summary.json": {
-    "bytes": 5414,
-    "sha256": "2d68e09270ffac2b0111f23c16173446047629527d46b996749f09c90b3da705"
+    "bytes": 5234,
+    "sha256": "b95afc942a221c63c36b08a4975200129259020f5364fd99ddf97b0f54e2e389"
   },
   "training/experiments/20261007/holdout/WIN_20261006_23_49_36_Pro_111_detail.jpg": {
     "bytes": 82308,
@@ -144,8 +144,8 @@
     "sha256": "74eb02e488e46979482f920fb2d7250bdd08fe93abceabdeb9456342c72db063"
   },
   "training/experiments/20261007/holdout/WIN_20261006_23_49_36_Pro/detections.csv": {
-    "bytes": 165647,
-    "sha256": "f6098e85751b69afcc25bcfabd33696f3cd9e1768bf781452df914042b432c4f"
+    "bytes": 163665,
+    "sha256": "8ed022dce3a9c77521d8903448fb473ee6cbfe2f4c6f351b4ce601db9bd8cfe4"
   },
   "training/experiments/20261007/holdout/WIN_20261006_23_49_36_Pro/frame_000000.jpg": {
     "bytes": 350314,
@@ -196,20 +196,20 @@
     "sha256": "3497de3bae99c88d35b8447b33ef670c74a01b447c23bc09f85efdc64d22a147"
   },
   "training/experiments/20261007/holdout/WIN_20261006_23_49_36_Pro/predictions.jsonl": {
-    "bytes": 261801,
-    "sha256": "ff8ec2dc132e2637ae1b6bf14e19fc4a67b9f744b47c3c6fb2987894580b506c"
+    "bytes": 261493,
+    "sha256": "4d1299a3e953764800eafb9bd1e88dbe75c0e223e8c29821a46d1d7358f57235"
   },
   "training/experiments/20261007/holdout/WIN_20261006_23_49_36_Pro/summary.json": {
-    "bytes": 2177,
-    "sha256": "3f3e61fec8a1c45e668789e05d0bd37102a6c6d8fe576b5c809aa82e8fdcd4d1"
+    "bytes": 2096,
+    "sha256": "d64da4c7d1096ce9ec2719a44b772241eb4d16a0a6475c6a28a7faad64451bbb"
   },
   "training/experiments/20261007/holdout/WIN_20261006_23_52_09_Pro/annotated.mp4": {
     "bytes": 9055563,
     "sha256": "ed1cde7c464dd37863d31cb033a2ad77cc9ea6192132395d7b280da804fdafa3"
   },
   "training/experiments/20261007/holdout/WIN_20261006_23_52_09_Pro/detections.csv": {
-    "bytes": 159327,
-    "sha256": "1f063e68b84cd4fdb8a0af215ba01e8cfe6e0acbbf5430977116fad73b69c32e"
+    "bytes": 157469,
+    "sha256": "e5a8f771a53ba709b1831d8e1943a9c04c445692f07f6a719024778f32f626d4"
   },
   "training/experiments/20261007/holdout/WIN_20261006_23_52_09_Pro/frame_000000.jpg": {
     "bytes": 332783,
@@ -260,11 +260,11 @@
     "sha256": "0c9f3cca28122f1e7cd3aa6743bf8e0d418d62d33af77ae9df42f177a1625059"
   },
   "training/experiments/20261007/holdout/WIN_20261006_23_52_09_Pro/predictions.jsonl": {
-    "bytes": 258475,
-    "sha256": "8e7714de8200439d0d1a7baf9e9c7c1ac848ed145b171f50937a57fe54c1b18b"
+    "bytes": 258044,
+    "sha256": "3181744f91d596af9e3aea7cae1c527c67ba177448cd7169c011b4cbeb101937"
   },
   "training/experiments/20261007/holdout/WIN_20261006_23_52_09_Pro/summary.json": {
-    "bytes": 2175,
-    "sha256": "83166ea5ef6509fc375dac76fa0551d55d486d34a4e414226a3bb3135c3038e4"
+    "bytes": 2094,
+    "sha256": "792753a0d70659d9c587875fde1cf5e3f9faa54de250c5071f75925fcb353583"
   }
 }
