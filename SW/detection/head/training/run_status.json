@@ -1,0 +1,13 @@
+{
+  "status": "training",
+  "started_local": "2026-10-07 19:35 Asia/Seoul",
+  "model": "YOLO11n",
+  "epochs": 100,
+  "imgsz": 960,
+  "batch": 8,
+  "seed": 42,
+  "gpu": "Tesla T4",
+  "dataset_commit": "af37a6291ca5acef815e24acdfd4a89899eafa97",
+  "test_evaluated": false,
+  "model_pushed": false
+}

@@ -1,7 +1,7 @@
 # Tracer 메시와 물성 기록
 
 독립 URDF와 재계산 생성기는 삭제했고 메시·inertial_report.json을 유지합니다.
-현재 최종 보정 모델은 [robocup.calibrated.urdf](../../../simulation/robot_description/robocup.calibrated.urdf)입니다. [robocup.urdf](../../../simulation/robot_description/robocup.urdf)는 CAD 원본으로 유지하며, 2026-10-06 반영·업로드한 2D/Mid360 보정과 랙 변경의 [날짜·커밋 이력](../../../simulation/robot_description/README.md#모델-변경보정업로드-이력)을 기록합니다.
+현재 최종 보정 모델은 [robocup.calibrated.urdf](../../../SW/simulation/robot_description/robocup.calibrated.urdf)입니다. [robocup.urdf](../../../SW/simulation/robot_description/robocup.urdf)는 CAD 원본으로 유지하며, 2026-10-06 반영·업로드한 2D/Mid360 보정과 랙 변경의 [날짜·커밋 이력](../../../SW/simulation/robot_description/README.md#모델-변경보정업로드-이력)을 기록합니다.
 
 ## 질량·관성 보정 (2026-10-03)
 
