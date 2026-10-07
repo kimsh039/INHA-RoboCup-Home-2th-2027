@@ -57,7 +57,7 @@ flowchart TD
 | 작업면 추출 | [`SUPPORT_SURFACES.md`](SUPPORT_SURFACES.md) | `support_surface_node`: Mid-360 → 작업면 높이·윤곽·확인된 가장자리 (Gazebo 확인) |
 | 목표와 작업면 연결 | [`CLOSED_APPROACH.md`](CLOSED_APPROACH.md) 1절 | `approach_node`: 목표가 놓인 작업면·확인된 변 선택 (Gazebo 확인) |
 | 접근 자세 생성·자동 접근 | [`CLOSED_APPROACH.md`](CLOSED_APPROACH.md) 1·2절 | `approach_node`·`dock_node`: 접근·대기 자세, 가장자리 추적 도킹 (Gazebo 확인) |
-| Wrist SAM·GraspNet 통합 | [`README.md`](PIPELINE.md)의 손목 단계 | 통합 노드 미구현 |
+| Wrist SAM·GraspNet 통합 | [`CLOSED_APPROACH.md`](CLOSED_APPROACH.md) 3절 | `wrist_observe_node`·`wrist_sam_node`: 관측 자세 IK, SAM 2.1 마스크·점군 (Gazebo 확인). GraspNet 연결 미구현 |
 | MoveIt 주변 충돌 장면 | 이 문서의 후속 확장 | 연결 미구현 |
 
 `sim.launch.py`는 bridge와 자기 점 필터를 켜지만 SLAM/Nav2는 별도로 실행한다. 위 설정의 존재를 Jetson 실기 주행·접근·파지 검증 완료로 해석하지 않는다.
