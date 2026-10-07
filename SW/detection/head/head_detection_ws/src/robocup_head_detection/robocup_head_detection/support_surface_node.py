@@ -43,6 +43,7 @@ class SupportSurfaceNode(Node):
         self.cfg = SurfaceConfig(floor_z=get('floor_z', -0.1425), min_height=get('min_height', 0.3),
                                  max_height=get('max_height', 1.3), min_side=get('min_side', 0.25))
         self.match_distance = get('match_distance', 0.5)
+        self.sensor_frame = get('sensor_frame', 'livox_frame')
         self.track_timeout = Duration(seconds=get('track_timeout', 5.0))
         self.clouds = deque()
         self.tracks, self.next_id = [], 1
@@ -60,10 +61,15 @@ class SupportSurfaceNode(Node):
                                                  timeout=Duration(seconds=0.05))
         except TransformException:
             return
+        try:                                     # ray origin, for edge confirmation
+            sensor = self.tf.lookup_transform(self.frame, self.sensor_frame, Time.from_msg(msg.header.stamp),
+                                              timeout=Duration(seconds=0.05)).transform.translation
+        except TransformException:
+            return
         xyz = point_cloud2.read_points_numpy(msg, field_names=('x', 'y', 'z'), skip_nans=True).astype(float)
         rotation, translation = matrix(transform.transform)
         stamp = Time.from_msg(msg.header.stamp)
-        self.clouds.append((stamp, xyz @ rotation.T + translation))
+        self.clouds.append((stamp, xyz @ rotation.T + translation, np.array([sensor.x, sensor.y, sensor.z])))
         while self.clouds and stamp - self.clouds[0][0] > self.window:
             self.clouds.popleft()
 
@@ -89,7 +95,9 @@ class SupportSurfaceNode(Node):
         if not self.clouds:
             return
         stamp = self.clouds[-1][0].to_msg()
-        surfaces = find_surfaces(np.concatenate([c for _, c in self.clouds]), self.cfg)
+        points = np.concatenate([c for _, c, _ in self.clouds])
+        origins = np.concatenate([np.repeat(o[None], len(c), axis=0) for _, c, o in self.clouds])
+        surfaces = find_surfaces(points, self.cfg, origins)
         out = SupportSurfaceArray()
         out.header.stamp, out.header.frame_id = stamp, self.frame
         markers = MarkerArray(markers=[Marker(action=Marker.DELETEALL)])

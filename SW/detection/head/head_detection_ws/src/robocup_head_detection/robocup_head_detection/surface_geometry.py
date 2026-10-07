@@ -17,7 +17,9 @@ class SurfaceConfig:
     bin_size: float = 0.01        # height histogram bin, m
     layer_half: float = 0.015     # points within +-this of a peak belong to the layer
     min_layer_points: int = 150
-    link_cell: float = 0.2        # XY grid joining the scan lines that cross one surface, m
+    link_cell: float = 0.15       # XY grid joining the scan lines that cross one surface, m
+    vertical_cell: float = 0.05   # XY grid for spotting vertical structures (walls, posts)
+    vertical_span: float = 0.15   # a cell with returns spread over more height than this is vertical
     min_side: float = 0.25        # shorter side of a real surface, m (a ring on a wall is a thin line)
     min_fill: float = 0.5         # occupied link cells / link cells inside the fitted rectangle
     edge_band: float = 0.06       # surface points this close inside a side observe it, m
@@ -35,7 +37,7 @@ class Surface:
     length: float                 # along yaw
     width: float
     corners: tuple                # 4 x (x, y), counter-clockwise; side i runs corners[i] -> corners[i+1]
-    edge_observed: tuple          # fraction of each side's length confirmed as a real boundary
+    edge_observed: tuple          # per side: min(share reached by the top, share with lower returns outside)
     inliers: int
     residual: float               # z standard deviation, m
 
@@ -130,10 +132,13 @@ def min_area_rect(xy):
     return centre, a, float(hi[0]-lo[0]), float(hi[1]-lo[1]), corners
 
 
-def _edge_coverage(surface_xy, lower_xy, a, b, cfg):
-    """Fraction of side a->b where the top reaches the side and the lidar sees lower returns
-    just outside it. Where the scan simply ends (range, occlusion, the surface's own shadow)
-    there are no lower returns, so the fitted side there is not a confirmed boundary."""
+def _edge_coverage(surface_xy, drop_xy, a, b, cfg):
+    """How much side a->b is a confirmed boundary: the smaller of the share of its length the
+    top reaches and the share where rays went past the surface just outside it (drop_xy: where
+    rays that hit something lower crossed the surface height). Where the scan simply ends
+    (range, occlusion, the surface's own shadow) no ray passes there, so that side stays
+    unconfirmed. Both shares are taken separately because the robot's own arm can hide part
+    of the floor in front of an edge whose top is fully seen."""
     d = b-a
     length = float(np.linalg.norm(d))
     d = d/length
@@ -147,21 +152,37 @@ def _edge_coverage(surface_xy, lower_xy, a, b, cfg):
         return set(np.clip((sel/length*bins).astype(int), 0, bins-1).tolist())
 
     top = hit_bins(surface_xy, -cfg.edge_band, 0.01)
-    drop = hit_bins(lower_xy, *cfg.drop_band)
-    return len(top & drop)/bins
+    drop = hit_bins(drop_xy, *cfg.drop_band)
+    return min(len(top), len(drop))/bins
 
 
-def find_surfaces(points, cfg=SurfaceConfig()):
-    """points: (N, 3) array in a gravity-aligned frame. Returns surfaces, largest first."""
+def find_surfaces(points, cfg=SurfaceConfig(), origins=None):
+    """points: (N, 3) array in a gravity-aligned frame; origins: optional (N, 3) sensor position
+    for each point. With origins, an edge is confirmed by rays passing just outside it at the
+    surface height (works close up, where the floor beyond the edge is out of view); without,
+    by lower returns just outside it. Returns surfaces, largest first."""
     p = np.asarray(points, float).reshape(-1, 3)
-    p = p[np.all(np.isfinite(p), axis=1)]
-    everything = p
+    finite = np.all(np.isfinite(p), axis=1)
+    p = p[finite]
+    o = None if origins is None else np.asarray(origins, float).reshape(-1, 3)[finite]
+    everything, everything_origins = p, o
     h = p[:, 2]-cfg.floor_z
+    # Cells where returns stack up over a height span are walls / posts: a scan ring crossing a
+    # wall at table height must not join (or be) a surface. The floor is left out of the span.
+    above_floor = p[h > 0.05]
+    vij, vinv = np.unique(np.floor(above_floor[:, :2]/cfg.vertical_cell).astype(int), axis=0, return_inverse=True)
+    vinv = vinv.ravel()
+    zmin, zmax = np.full(len(vij), np.inf), np.full(len(vij), -np.inf)
+    np.minimum.at(zmin, vinv, above_floor[:, 2])
+    np.maximum.at(zmax, vinv, above_floor[:, 2])
+    vertical = {tuple(c) for c in vij[zmax-zmin > cfg.vertical_span]}
     keep = (h > cfg.min_height) & (h < cfg.max_height)
     p, h = p[keep], h[keep]
     surfaces = []
     for peak in _height_peaks(h, cfg):
         layer = p[np.abs(h-peak) < cfg.layer_half]
+        if vertical:
+            layer = layer[[tuple(c) not in vertical for c in np.floor(layer[:, :2]/cfg.vertical_cell).astype(int)]]
         if len(layer) < cfg.min_layer_points:
             continue
         cells, inverse = np.unique(np.floor(layer[:, :2]/cfg.link_cell).astype(int), axis=0, return_inverse=True)
@@ -181,8 +202,17 @@ def find_surfaces(points, cfg=SurfaceConfig()):
             fill = occupied/max((length+cfg.link_cell)*(width+cfg.link_cell), 1e-6)
             if fill < cfg.min_fill:
                 continue
-            lower = everything[everything[:, 2] < pts[:, 2].mean()-cfg.drop_depth, :2]
-            observed = tuple(_edge_coverage(pts[:, :2], lower, corners[i], corners[(i+1) % 4], cfg)
+            z = pts[:, 2].mean()
+            low = everything[:, 2] < z-cfg.drop_depth
+            if everything_origins is None:
+                drop = everything[low, :2]
+            else:                                # where each ray to a lower return crossed height z
+                q, so = everything[low], everything_origins[low]
+                above = so[:, 2] > z
+                q, so = q[above], so[above]
+                f = (so[:, 2]-z)/(so[:, 2]-q[:, 2])
+                drop = so[:, :2] + (q[:, :2]-so[:, :2])*f[:, None]
+            observed = tuple(_edge_coverage(pts[:, :2], drop, corners[i], corners[(i+1) % 4], cfg)
                              for i in range(4))
             surfaces.append(Surface(
                 z=float(pts[:, 2].mean()), height=float(pts[:, 2].mean()-cfg.floor_z),

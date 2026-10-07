@@ -145,6 +145,10 @@ class DetectionNavGoalNode(Node):
         current_robot = robot.transform.translation
         goal_xy = standoff_goal(median, (current_robot.x, current_robot.y), self.standoff)
         world_point.point.x, world_point.point.y = float(median[0]), float(median[1])
+        # Publish the confirmed target even if the standoff goal below is rejected: the approach
+        # node plans from the support surface instead (a goal 1 m before a table object often
+        # lands by a table leg).
+        self.point_pub.publish(world_point)
         if goal_xy is None:
             self.frozen, self.frozen_point = True, world_point
             self.report('ALREADY_NEAR_TARGET')
@@ -158,7 +162,6 @@ class DetectionNavGoalNode(Node):
         goal.header.frame_id, goal.header.stamp = 'map', self.get_clock().now().to_msg()
         goal.pose.position.x, goal.pose.position.y = float(x), float(y)
         goal.pose.orientation.z, goal.pose.orientation.w = math.sin(yaw/2), math.cos(yaw/2)
-        self.point_pub.publish(world_point)
         self.goal_pub.publish(goal)
         self.frozen, self.frozen_point, self.frozen_goal = True, world_point, goal
         if not self.auto_send:

@@ -1,0 +1,140 @@
+Panels:
+  - Class: rviz_common/Displays
+    Name: Displays
+  - Class: rviz_common/Views
+    Name: Views
+Visualization Manager:
+  Class: ""
+  Displays:
+    - Class: rviz_default_plugins/Grid
+      Name: Grid
+      Enabled: true
+      Reference Frame: <Fixed Frame>
+      Cell Size: 1
+      Plane Cell Count: 10
+    - Class: rviz_default_plugins/Map
+      Name: SLAM map
+      Enabled: true
+      Topic:
+        Value: /map
+        Durability Policy: Transient Local
+      Alpha: 0.8
+      Color Scheme: map
+    - Class: rviz_default_plugins/Map
+      Name: Global costmap
+      Enabled: true
+      Topic:
+        Value: /global_costmap/costmap
+      Alpha: 0.3
+      Color Scheme: costmap
+    - Class: rviz_default_plugins/Map
+      Name: Local costmap
+      Enabled: true
+      Topic:
+        Value: /local_costmap/costmap
+      Alpha: 0.5
+      Color Scheme: costmap
+    - Class: rviz_default_plugins/RobotModel
+      Name: Robot
+      Enabled: true
+      Description Topic:
+        Value: /robot_description
+    - Class: rviz_default_plugins/LaserScan
+      Name: G2 scan
+      Enabled: true
+      Topic:
+        Value: /scan
+        Reliability Policy: Best Effort
+      Size (m): 0.04
+      Color Transformer: FlatColor
+      Color: 255; 0; 0
+    - Class: rviz_default_plugins/PointCloud2
+      Name: Mid-360 (filtered)
+      Enabled: true
+      Topic:
+        Value: /mid360/points_filtered
+        Reliability Policy: Best Effort
+      Size (m): 0.02
+      Color Transformer: AxisColor
+      Axis: Z
+    - Class: rviz_default_plugins/Path
+      Name: Nav2 plan
+      Enabled: true
+      Topic:
+        Value: /plan
+      Color: 0; 120; 255
+    - Class: rviz_default_plugins/Polygon
+      Name: Footprint
+      Enabled: true
+      Topic:
+        Value: /local_costmap/published_footprint
+      Color: 0; 200; 0
+    - Class: rviz_default_plugins/MarkerArray
+      Name: Support surfaces
+      Enabled: true
+      Topic:
+        Value: /detection/support_surfaces/markers
+    - Class: rviz_default_plugins/PointStamped
+      Name: Target (map)
+      Enabled: true
+      Topic:
+        Value: /detection/target_map_point
+      Color: 255; 200; 0
+      Radius: 0.08
+    - Class: rviz_default_plugins/Pose
+      Name: Detection nav goal
+      Enabled: true
+      Topic:
+        Value: /detection/navigation_goal
+      Shape: Arrow
+      Color: 255; 0; 255
+      Shaft Length: 0.4
+      Head Length: 0.15
+    - Class: rviz_default_plugins/MarkerArray
+      Name: Approach
+      Enabled: true
+      Topic:
+        Value: /detection/approach/markers
+    - Class: rviz_default_plugins/Image
+      Name: Head detection
+      Enabled: true
+      Topic:
+        Value: /detection/head/debug_image
+        Reliability Policy: Best Effort
+    - Class: rviz_default_plugins/Image
+      Name: Wrist SAM
+      Enabled: true
+      Topic:
+        Value: /detection/wrist/debug_image
+        Durability Policy: Transient Local
+    - Class: rviz_default_plugins/PointCloud2
+      Name: Wrist object cloud
+      Enabled: true
+      Topic:
+        Value: /detection/wrist/object_cloud
+        Durability Policy: Transient Local
+      Size (m): 0.005
+      Color Transformer: FlatColor
+      Color: 0; 255; 0
+  Global Options:
+    Fixed Frame: map
+    Background Color: 48; 48; 48
+  Tools:
+    - Class: rviz_default_plugins/Interact
+    - Class: rviz_default_plugins/MoveCamera
+    - Class: rviz_default_plugins/Select
+    - Class: rviz_default_plugins/Measure
+    - Class: rviz_default_plugins/SetGoal
+      Topic:
+        Value: /goal_pose
+    - Class: rviz_default_plugins/PublishPoint
+  Views:
+    Current:
+      Class: rviz_default_plugins/TopDownOrtho
+      Name: Current View
+      Scale: 90
+      X: 0.8
+      Y: 0.3
+Window Geometry:
+  Width: 1400
+  Height: 900

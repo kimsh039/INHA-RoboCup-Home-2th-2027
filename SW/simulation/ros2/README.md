@@ -16,6 +16,14 @@ Gazebo에 NVIDIA가 사용 가능하면 PRIME offload를 자동 지정합니다.
 TF는 DiffDrive의 odom→base_link와 robot_state_publisher의 base_link 이하 트리로 연결됩니다.
 RViz Fixed Frame은 `odom`, 모든 노드는 simulation time을 사용합니다.
 
+SLAM·Nav2·closed approach를 함께 볼 때는 [`approach.rviz`](approach.rviz)를 씁니다(Fixed Frame `map`):
+
+```bash
+rviz2 -d SW/simulation/ros2/approach.rviz --ros-args -p use_sim_time:=true
+```
+
+SLAM 지도·costmap·Nav2 경로, G2 스캔·Mid-360 점군, 작업면 윤곽(초록=확인된 가장자리), 검출 목표·접근 자세, 헤드 검출 영상, 손목 SAM 마스크·물체 점군을 표시합니다. 노트북 GPU가 PRIME offload면 RViz는 NVIDIA에서 띄웁니다(내장 GPU에서는 지도 표시 셰이더가 실패할 수 있음).
+
 다른 터미널에서 ROS 환경을 활성화한 뒤:
 
 ```bash
