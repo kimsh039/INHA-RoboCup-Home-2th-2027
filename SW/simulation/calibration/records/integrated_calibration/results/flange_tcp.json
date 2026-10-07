@@ -7,19 +7,19 @@
       1.0,
       0.0,
       0.0,
-      0.0
+      3.1410601675219113e-09
     ],
     [
       0.0,
       1.0,
       0.0,
-      0.0
+      -6.041407414281427e-10
     ],
     [
       0.0,
       0.0,
       1.0,
-      0.14250000000000002
+      0.14250000226360077
     ],
     [
       0.0,
@@ -29,9 +29,9 @@
     ]
   ],
   "translation_xyz_m": [
-    0.0,
-    0.0,
-    0.14250000000000002
+    3.1410601675219113e-09,
+    -6.041407414281427e-10,
+    0.14250000226360077
   ],
   "quaternion_xyzw": [
     0.0,
@@ -39,22 +39,38 @@
     0.0,
     1.0
   ],
-  "status": "urdf_nominal_reference",
-  "input_kind": "urdf_reference",
+  "status": "passed_provisional_limits",
+  "orientation_estimated": false,
+  "orientation_source": "../../link6_tcp/config/tcp_orientation.md",
+  "orientation_source_sha256": "c37dea2a5975af443e58c4b6b83feaefa11f81421274b093a387e537227b87d1",
+  "source_sha256": "9c6d2f6a0e54acf8f3b948089dbf955def96f326754c62e085b92d444506fc5b",
+  "training_count": 25,
+  "holdout_count": 10,
+  "max_holdout_mm": 3.2105125636744076e-06,
+  "holdout_errors_mm": [
+    1.603282097524214e-06,
+    9.26760217797275e-07,
+    2.854640766345297e-06,
+    1.9540354905063957e-06,
+    1.7356629301242103e-06,
+    1.488023953329545e-06,
+    3.2105125636744076e-06,
+    1.5900647115407291e-06,
+    1.1974714825906251e-06,
+    1.8849603348373432e-06
+  ],
+  "pivot_point_base_m": [
+    0.18224770733693138,
+    0.3254575485301786,
+    0.489128671914445
+  ],
+  "condition_number": 6.640699986712954,
+  "max_allowed_holdout_mm": 5.0,
+  "input_kind": "simulated_constrained_joint_observations",
+  "simulation": true,
   "independent_measurement": false,
-  "reference_urdf": "../../../../robot_description/robocup.urdf",
-  "reference_urdf_sha256": "19d65a7e711138d4be9b10abc0ebb1de185e8ccb41eaee54d8cdc41562bba414",
-  "reference_child": "piper_gripper_base",
-  "offset_xyz_m": [
-    0.0,
-    0.0,
-    0.138
-  ],
-  "offset_rpy_rad": [
-    0.0,
-    0.0,
-    0.0
-  ],
-  "definition": "Nominal midpoint of the two jaw joint origins at symmetric opening; axes follow gripper base. Not a measured fingertip/contact point.",
-  "method": "Fixed URDF chain and explicitly defined tool offset"
+  "hardware_accuracy_established": false,
+  "definition": "Virtual probe at the symmetric CAD jaw-tip centre, attached rigidly to Link6 and seated in a fixed simulated point socket. TCP axes are defined parallel to Link6; orientation is not fitted.",
+  "fixture_kind": "site-to-site point equality; virtual ball socket, not frictional surface contact",
+  "base_frame": "piper_base_link"
 }

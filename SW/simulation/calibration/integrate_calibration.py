@@ -47,6 +47,12 @@ def main():
     mid_input = RECORDS / '20261006_base_mid360/results/auto_room_20261006_031114/base_mid360.json'
     head_input = RECORDS / '20261006_head_mid360/results/automated_01/head_mid360.json'
     wrist_input = RECORDS / '20261006_wrist_d435/results/flange_wrist.json'
+    tcp_input = RECORDS / 'link6_tcp/results/flange_tcp.json'
+    tcp = workflow.read(tcp_input)
+    if (tcp.get('status') != 'passed_provisional_limits'
+            or tcp.get('input_kind') != 'simulated_constrained_joint_observations'
+            or not tcp.get('simulation') or tcp.get('independent_measurement') is not False):
+        raise ValueError('Expected the completed, explicitly marked simulated TCP pivot result')
     output.parent.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryDirectory(prefix='calibration_', dir=output.parent) as temp:
         bundle = Path(temp)
@@ -72,7 +78,14 @@ def main():
         invoke('urdf_reference', urdf=nominal, parent='piper_link6', child='tcp',
                reference_child='piper_gripper_base', offset_xyz=offset, offset_rpy=[0., 0., 0.],
                definition='Nominal midpoint of the two jaw joint origins at symmetric opening; axes follow gripper base. Not a measured fingertip/contact point.',
-               output=results / 'flange_tcp.json')
+               output=results / 'flange_tcp_nominal.json')
+        # Preserve the old CAD reference separately; use actual stepped joint observations.
+        shutil.copy2(tcp_input, results / 'flange_tcp.json')
+        # The archived result's orientation-source path is relative to its original session.
+        copied_tcp = workflow.read(results / 'flange_tcp.json')
+        import os
+        copied_tcp['orientation_source'] = os.path.relpath((tcp_input.parent / tcp['orientation_source']).resolve(), results)
+        (results / 'flange_tcp.json').write_text(json.dumps(copied_tcp, indent=2, allow_nan=False) + '\n')
         invoke('compose', left=results / 'base_mid360.json', right=results / 'head_mid360_recorded.json',
                inverse_left=False, inverse_right=True, output=results / 'base_head_via_lidar.json')
         invoke('compose', left=results / 'base_piper.json', right=results / 'piper_head.json',
@@ -109,7 +122,7 @@ def main():
             tcp_application = workflow.read(str(staged_runtime) + '.application.json')
             tcp_application['runtime_urdf_sha256'] = workflow.sha(staged_runtime)
             summary = {
-                'status': 'simulation_estimates_and_nominal_references_integrated',
+                'status': 'simulation_calibration_integrated',
                 'transform_convention': 'parent <- child, metres',
                 'runtime': 'SW/simulation/robot_description/' + runtime.name, 'runtime_path_basis': 'repository_root', 'runtime_urdf_sha256': workflow.sha(staged_runtime),
                 'nominal_urdf_sha256': workflow.sha(nominal),
@@ -122,11 +135,21 @@ def main():
                 },
                 'head_path_difference': workflow.read(results / 'head_path_difference.json'),
                 'head_paths_share_nominal_arm_mount': True,
-                'base_piper_input_kind': 'urdf_reference', 'tcp_input_kind': 'urdf_reference',
+                'base_piper_input_kind': 'urdf_reference', 'tcp_input_kind': tcp['input_kind'],
                 'tcp_definition': workflow.read(results / 'flange_tcp.json')['definition'],
+                'tcp_solver_holdout': {
+                    'train_count': tcp['training_count'], 'holdout_count': tcp['holdout_count'],
+                    'max_translation_mm': tcp['max_holdout_mm'], 'max_allowed_mm': tcp['max_allowed_holdout_mm'],
+                    'condition_number': tcp['condition_number'], 'orientation_estimated': False,
+                    'within_provisional_limits': True, 'additional_validation_run': False,
+                },
+                'tcp_translation_xyz_m': tcp['translation_xyz_m'],
+                'tcp_result_source_sha256': workflow.sha(tcp_input),
+                'tcp_simulation': True, 'tcp_independent_measurement': False,
+                'tcp_fixture_kind': tcp['fixture_kind'],
                 'hardware_accuracy_established': False, 'ros_runtime_launched': False,
                 'post_work_verification_run': False,
-                'remaining_independent_measurements': ['physical arm mount', 'TCP contact/pivot and tool axes',
+                'remaining_independent_measurements': ['physical arm mount', 'physical TCP contact/pivot and tool axes',
                     'joint zero offsets, axes and link geometry', 'gripper opening/zero', 'real sensor calibration'],
                 'historical_head_plane_bias': 'Recorded Head–Mid360 plane estimate has 11.720 mm Gazebo GT position error; retained and not silently corrected.',
                 'applications': applications, 'tcp_application': tcp_application,
@@ -138,7 +161,7 @@ def main():
             staged_runtime.replace(runtime)
             application = runtime.with_name(runtime.name + '.application.json')
             application.write_text(json.dumps(summary, indent=2, allow_nan=False) + '\n')
-        print(json.dumps({k: summary[k] for k in ('status', 'head_selection', 'head_arm_solver_holdout', 'head_path_difference', 'runtime')}, indent=2))
+        print(json.dumps({k: summary[k] for k in ('status', 'head_selection', 'head_arm_solver_holdout', 'tcp_solver_holdout', 'tcp_translation_xyz_m', 'runtime')}, indent=2))
 
 
 if __name__ == '__main__':

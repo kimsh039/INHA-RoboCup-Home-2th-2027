@@ -1,6 +1,6 @@
 # Robot description and integrated runtime
 
-**Current runtime: [robocup.calibrated.urdf](robocup.calibrated.urdf), updated 2026-10-07.** It combines recorded Gazebo sensor estimates with explicit URDF arm/TCP references. [robocup.urdf](robocup.urdf) remains the nominal CAD model used by the Gazebo generator.
+**Current runtime: [robocup.calibrated.urdf](robocup.calibrated.urdf), updated 2026-10-07.** It combines recorded Gazebo sensor estimates, the explicit URDF arm mount reference and the completed MuJoCo TCP pivot. [robocup.urdf](robocup.urdf) remains the nominal CAD model used by the Gazebo generator.
 
 The runtime has 95 links and 94 joints, including the new fixed `tcp` frame. Detailed numerical results, source hashes, application history and limits are in the [calibration summary](../calibration/README.md) and [integration bundle](../calibration/records/integrated_calibration/README.md).
 
@@ -13,11 +13,11 @@ The runtime has 95 links and 94 joints, including the new fixed `tcp` frame. Det
 | Base←PiPER | URDF reference: xyz=(-0.0195, 0, 0.80611) m, no rotation |
 | Base←Head | New measured Head–PiPER hand-eye composed through the nominal PiPER mount |
 | Link6←Wrist optical | Recorded Wrist hand-eye estimate |
-| Link6←TCP | URDF jaw-reference midpoint: xyz=(0, 0, 0.1425) m, axes follow gripper base |
+| Link6←TCP | Actual stepped MuJoCo joints + fixed-point pivot, 25 train / 10 holdout; xyz≈(0, 0, 0.1425) m, axes defined parallel to Link6 |
 
 The Head hand-eye solver reports 25 train / 10 held-out poses and a maximum held-out fixed-tag inconsistency of 0.272 mm / 0.203°. The old LiDAR-based Head route differs by 9.871 mm / 0.414°. Its historical plane-fit GT position error was 11.720 mm; that result is preserved without correcting it using ground truth. The new arm route is selected for the runtime.
 
-The TCP is a nominal gripper reference, not a physically measured fingertip or contact point. Physical arm mounting, pivot/tool axes, joint zero offsets/link geometry and gripper opening calibration remain independent measurement tasks. This model does not establish physical robot accuracy.
+The TCP pivot is complete for CAD-based simulation. Its maximum intrinsic held-out residual is 3.210513e-06 mm, a numerical consequence of the shared model and imposed virtual socket. Rotation is separately defined. [TCP observation records](../calibration/records/link6_tcp/README.md) preserve actual joints, commands and fixture forces. Physical arm mounting, physical pivot/tool axes, joint zero offsets/link geometry and gripper opening require independent measurements; this model does not establish physical robot accuracy.
 
 ## Model details
 
