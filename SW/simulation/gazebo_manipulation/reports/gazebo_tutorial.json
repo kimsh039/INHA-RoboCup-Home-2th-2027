@@ -1,0 +1,878 @@
+{
+  "result": "PHYSICAL_PICK_PLACE_PASS_WITH_RELAXED_HOLD",
+  "scope": "MuJoCo tutorial full sequence on Gazebo physics; preserved GraspNet candidates; no live GPU/servo E2E claim",
+  "original_hold_criteria_passed": false,
+  "original_hold_limits": {
+    "relative_position_tolerance_m": 0.01,
+    "relative_orientation_tolerance_rad": 0.2
+  },
+  "effective_hold_limits": {
+    "relative_position_tolerance_m": 0.025,
+    "relative_orientation_tolerance_rad": 1.0471975511965976
+  },
+  "contact_diagnostics": {
+    "cube": {
+      "received": true,
+      "sim_age_s": 0.0,
+      "pairs": [
+        {
+          "collision1": "manipulation_cube::cube_link::collision",
+          "id1": 181,
+          "collision2": "manipulation_table::link::collision",
+          "id2": 161
+        }
+      ]
+    },
+    "finger1": {
+      "received": true,
+      "sim_age_s": 33.79900000000001,
+      "pairs": [
+        {
+          "collision1": "robocup::piper_gripper_link1::piper_gripper_link1_collision",
+          "id1": 128,
+          "collision2": "manipulation_cube::cube_link::collision",
+          "id2": 181
+        }
+      ]
+    },
+    "finger2": {
+      "received": true,
+      "sim_age_s": 33.79900000000001,
+      "pairs": [
+        {
+          "collision1": "robocup::piper_gripper_link2::piper_gripper_link2_collision",
+          "id1": 132,
+          "collision2": "manipulation_cube::cube_link::collision",
+          "id2": 181
+        }
+      ]
+    }
+  },
+  "slip_experiment": true,
+  "tcp_checks": [
+    {
+      "stage": "APPROACH_GRASP",
+      "target": [
+        [
+          -0.005782169289886948,
+          -0.9999803900718689,
+          -0.0024068856146186577,
+          0.4946270029006183
+        ],
+        [
+          -0.5550136566162109,
+          0.0012070547090843307,
+          0.8318403959274292,
+          -0.09796835415101626
+        ],
+        [
+          -0.8318212032318115,
+          0.0061456891708075966,
+          -0.5550097227096558,
+          0.7350452434347942
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "actual": [
+        [
+          -0.02421846153843273,
+          -0.9993695713573754,
+          0.025960084084762112,
+          0.4952002699006058
+        ],
+        [
+          -0.5544961831303528,
+          0.03503560305048915,
+          0.8314484285947984,
+          -0.11087365346596656
+        ],
+        [
+          -0.8318337868916977,
+          0.00574163425036986,
+          -0.5549951212592352,
+          0.7352033902663767
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "position_error_m": 0.01291899360949106,
+      "orientation_error_rad": 0.033838802799367844,
+      "within_precision_tolerance": false,
+      "base_pose": [
+        [
+          0.9999640010522466,
+          -0.006512430794331814,
+          -0.005439195228323747,
+          0.10526417134179088
+        ],
+        [
+          0.006512334026003353,
+          0.999978793897722,
+          -3.5501984982787686e-05,
+          -0.02019433897003396
+        ],
+        [
+          0.0054393110884136875,
+          7.885078919733782e-08,
+          0.9999852068380198,
+          0.14249869569777399
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "stage": "LIFT_OBJECT",
+      "position_error_m": 0.00022580698871560445,
+      "orientation_error_rad": 0.0001053334812286404,
+      "within_precision_tolerance": true
+    },
+    {
+      "stage": "MOVE_TO_PLACE",
+      "target": [
+        [
+          -0.005782169289886948,
+          -0.9999803900718689,
+          -0.0024068856146186577,
+          0.4952889740799338
+        ],
+        [
+          -0.5550136566162109,
+          0.0012070547090843307,
+          0.8318403959274292,
+          -0.19796616309685405
+        ],
+        [
+          -0.8318212032318115,
+          0.0061456891708075966,
+          -0.5550097227096558,
+          0.93504480814196
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "actual": [
+        [
+          -0.00017281015746396962,
+          -0.9999410956313917,
+          -0.01085243770505861,
+          0.4991548001389766
+        ],
+        [
+          -0.5550490255029865,
+          -0.008931336687291352,
+          0.8317696859787352,
+          -0.19390905559817928
+        ],
+        [
+          -0.8318176178855766,
+          0.0061673732229323795,
+          -0.5550147872648932,
+          0.935037463116049
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "position_error_m": 0.005603997352246289,
+      "orientation_error_rad": 0.010138769671623919,
+      "within_precision_tolerance": false,
+      "base_pose": [
+        [
+          0.9998449053865529,
+          -0.016757195123082918,
+          -0.005418633052934505,
+          0.10710755452918097
+        ],
+        [
+          0.01675694722045418,
+          0.999859588348031,
+          -9.115018972891936e-05,
+          -0.020102756027942786
+        ],
+        [
+          0.005419399635230922,
+          3.363047504457021e-07,
+          0.999985314945915,
+          0.14249872545805714
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    {
+      "stage": "LOWER_OBJECT",
+      "position_error_m": 0.002265470589239383,
+      "orientation_error_rad": 0.005525819815543379,
+      "within_precision_tolerance": true
+    },
+    {
+      "stage": "RETREAT",
+      "position_error_m": 0.00020280738337533197,
+      "orientation_error_rad": 0.0004522767091320733,
+      "within_precision_tolerance": true
+    }
+  ],
+  "motion_timings": [
+    {
+      "points": 110,
+      "duration_sim_s": 10.80605402,
+      "method": "MoveIt TOTG"
+    },
+    {
+      "points": 64,
+      "duration_sim_s": 6.264691956,
+      "method": "MoveIt TOTG"
+    },
+    {
+      "points": 35,
+      "duration_sim_s": 3.36333506,
+      "method": "MoveIt TOTG"
+    },
+    {
+      "points": 64,
+      "duration_sim_s": 6.245776664,
+      "method": "MoveIt TOTG"
+    },
+    {
+      "points": 110,
+      "duration_sim_s": 10.80605402,
+      "method": "MoveIt TOTG"
+    },
+    {
+      "points": 64,
+      "duration_sim_s": 6.262570512,
+      "method": "MoveIt TOTG"
+    },
+    {
+      "points": 32,
+      "duration_sim_s": 3.073521598,
+      "method": "MoveIt TOTG"
+    },
+    {
+      "points": 65,
+      "duration_sim_s": 6.310785014,
+      "method": "MoveIt TOTG"
+    },
+    {
+      "points": 64,
+      "duration_sim_s": 6.289552243,
+      "method": "MoveIt TOTG"
+    },
+    {
+      "points": 64,
+      "duration_sim_s": 6.287071717,
+      "method": "MoveIt TOTG"
+    }
+  ],
+  "events": [
+    {
+      "state": "WAIT_FOR_GAZEBO",
+      "time_wall": 1791374631.80832
+    },
+    {
+      "state": "MOVE_TO_INITIAL",
+      "time_wall": 1791374632.0729399
+    },
+    {
+      "state": "OPEN_GRIPPER",
+      "time_wall": 1791374633.9587867
+    },
+    {
+      "state": "MOVE_TO_WRIST_OBSERVATION",
+      "time_wall": 1791374634.2710276
+    },
+    {
+      "state": "ACQUIRE_WRIST_RGBD",
+      "time_wall": 1791374688.7717278
+    },
+    {
+      "state": "INIT",
+      "time_wall": 1791374697.955869
+    },
+    {
+      "state": "OPEN_GRIPPER",
+      "time_wall": 1791374698.0603795
+    },
+    {
+      "state": "LOAD_OBJECT",
+      "time_wall": 1791374701.54049
+    },
+    {
+      "state": "BASE_STOPPED",
+      "time_wall": 1791374701.7062435
+    },
+    {
+      "state": "SELECT_GRASP",
+      "time_wall": 1791374701.81716
+    },
+    {
+      "state": "APPROACH_GRASP",
+      "time_wall": 1791374702.7787018
+    },
+    {
+      "state": "CLOSE_GRIPPER",
+      "time_wall": 1791374741.8097293
+    },
+    {
+      "state": "VERIFY_GRASP",
+      "time_wall": 1791374761.2712066
+    },
+    {
+      "state": "LIFT_OBJECT",
+      "time_wall": 1791374761.4414532
+    },
+    {
+      "state": "PLAN_PLACE_LEFT",
+      "time_wall": 1791374782.2411616
+    },
+    {
+      "state": "PLAN_PLACE_RIGHT",
+      "time_wall": 1791374782.878146
+    },
+    {
+      "state": "MOVE_TO_PLACE",
+      "time_wall": 1791374782.9959488
+    },
+    {
+      "state": "LOWER_OBJECT",
+      "time_wall": 1791374798.1055708
+    },
+    {
+      "state": "OPEN_GRIPPER",
+      "time_wall": 1791374816.832486
+    },
+    {
+      "state": "RETREAT",
+      "time_wall": 1791374821.1192064
+    },
+    {
+      "state": "RETURN_TO_INITIAL",
+      "time_wall": 1791374840.387013
+    },
+    {
+      "state": "DONE",
+      "time_wall": 1791374889.6430483
+    }
+  ],
+  "selected": {
+    "candidate_id": 741,
+    "score": 1.6224913597106934,
+    "width_m": 0.08260218054056168,
+    "width_policy": "actual maximum opening",
+    "actual_opening_m": 0.07,
+    "opening_check": {
+      "fits": true,
+      "jaw_axis_min_m": -0.025491556773044557,
+      "jaw_axis_max_m": 0.014801768585025875,
+      "opening_m": 0.07,
+      "margin_per_side_m": 0.001
+    },
+    "T_world_pre_tcp": [
+      [
+        0.004982619746129109,
+        0.2253565720041092,
+        0.9742636136872929,
+        0.4288189201147556
+      ],
+      [
+        0.004697616473684018,
+        0.9742596824750206,
+        -0.2253796874235538,
+        -0.0627868668356702
+      ],
+      [
+        -0.9999765526750777,
+        0.005699698082301346,
+        0.003795726786658053,
+        0.943855910764997
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "T_world_grasp_tcp": [
+      [
+        -0.005782169289886948,
+        -0.9999803900718689,
+        -0.0024068856146186577,
+        0.4946270029006183
+      ],
+      [
+        -0.5550136566162109,
+        0.0012070547090843307,
+        0.8318403959274292,
+        -0.09796835415101626
+      ],
+      [
+        -0.8318212032318115,
+        0.0061456891708075966,
+        -0.5550097227096558,
+        0.7350452434347942
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "approach_start": "measured wrist observation"
+  },
+  "rejected": [],
+  "observation": {
+    "source": "live Gazebo RGB-D, cube ground-truth ROI; no learned detector claim",
+    "points": 571,
+    "T_world_base_at_observation": [
+      [
+        0.9991734086310945,
+        -0.040338870115757125,
+        -0.005027428995426626,
+        0.10160433976393335
+      ],
+      [
+        0.0403383595100508,
+        0.9991860565269034,
+        -0.00020296367611857163,
+        -0.02054085539511417
+      ],
+      [
+        0.005031524277778505,
+        -2.330133082035883e-09,
+        0.9999873418016062,
+        0.14249895551252179
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "base_offset_from_recording_m": 0.006246199516309444,
+    "base_rotation_from_recording_rad": 0.040662277906532325,
+    "source_stamp_s": 31.6,
+    "T_world_camera": [
+      [
+        -0.2660925571643819,
+        -0.9639346071166384,
+        0.004982391455191898,
+        0.49242301516456527
+      ],
+      [
+        -0.9639297837865045,
+        0.26611543919335734,
+        0.004684543972460491,
+        -0.08091615056490421
+      ],
+      [
+        -0.00584148534394594,
+        -0.003556153233361847,
+        -0.9999766151381534,
+        1.0424001584543858
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "cloud_sha256": "bcae79f41846250150fbfd109a6fe32ca9d796ae87b35142a604132f8df9defc",
+    "inference": "preserved MuJoCo GraspNet candidates reused, not new GPU inference on this capture"
+  },
+  "lift_samples": [
+    {
+      "rise_m": 0.1931585708747826,
+      "relative_position_error_m": 0.006846636327877026,
+      "relative_orientation_error_rad": 0.5083883566617734,
+      "finger_contacts": [
+        "link7",
+        "link8"
+      ],
+      "finger_contact_forces": null
+    },
+    {
+      "rise_m": 0.19315760233252854,
+      "relative_position_error_m": 0.006846941576474164,
+      "relative_orientation_error_rad": 0.5083859620875392,
+      "finger_contacts": [
+        "link7",
+        "link8"
+      ],
+      "finger_contact_forces": null
+    },
+    {
+      "rise_m": 0.19315824940402515,
+      "relative_position_error_m": 0.006847007611424328,
+      "relative_orientation_error_rad": 0.508382455285114,
+      "finger_contacts": [
+        "link7",
+        "link8"
+      ],
+      "finger_contact_forces": null
+    },
+    {
+      "rise_m": 0.19315836757888694,
+      "relative_position_error_m": 0.006846872442568418,
+      "relative_orientation_error_rad": 0.5083819182358441,
+      "finger_contacts": [
+        "link7",
+        "link8"
+      ],
+      "finger_contact_forces": null
+    },
+    {
+      "rise_m": 0.19315836757888694,
+      "relative_position_error_m": 0.006846872442568418,
+      "relative_orientation_error_rad": 0.5083819182358441,
+      "finger_contacts": [
+        "link7",
+        "link8"
+      ],
+      "finger_contact_forces": null
+    },
+    {
+      "rise_m": 0.19315836757888694,
+      "relative_position_error_m": 0.006846872442568418,
+      "relative_orientation_error_rad": 0.5083819182358441,
+      "finger_contacts": [
+        "link7",
+        "link8"
+      ],
+      "finger_contact_forces": null
+    },
+    {
+      "rise_m": 0.19315845286454003,
+      "relative_position_error_m": 0.006846775383153464,
+      "relative_orientation_error_rad": 0.5083813156047639,
+      "finger_contacts": [
+        "link7",
+        "link8"
+      ],
+      "finger_contact_forces": null
+    },
+    {
+      "rise_m": 0.1931587259841837,
+      "relative_position_error_m": 0.006847056873426999,
+      "relative_orientation_error_rad": 0.5083791693525843,
+      "finger_contacts": [
+        "link7",
+        "link8"
+      ],
+      "finger_contact_forces": null
+    },
+    {
+      "rise_m": 0.1931577499686684,
+      "relative_position_error_m": 0.006846835942266443,
+      "relative_orientation_error_rad": 0.5083797717243865,
+      "finger_contacts": [
+        "link7",
+        "link8"
+      ],
+      "finger_contact_forces": null
+    },
+    {
+      "rise_m": 0.1931577499686684,
+      "relative_position_error_m": 0.006846835942266443,
+      "relative_orientation_error_rad": 0.5083797717243865,
+      "finger_contacts": [
+        "link7",
+        "link8"
+      ],
+      "finger_contact_forces": null
+    },
+    {
+      "rise_m": 0.1931577499686684,
+      "relative_position_error_m": 0.006846835942266443,
+      "relative_orientation_error_rad": 0.5083797717243865,
+      "finger_contacts": [
+        "link7",
+        "link8"
+      ],
+      "finger_contact_forces": null
+    },
+    {
+      "rise_m": 0.19315808464264084,
+      "relative_position_error_m": 0.006847100176022643,
+      "relative_orientation_error_rad": 0.5083784935576278,
+      "finger_contacts": [
+        "link7",
+        "link8"
+      ],
+      "finger_contact_forces": null
+    },
+    {
+      "rise_m": 0.193158331950249,
+      "relative_position_error_m": 0.006846830261252319,
+      "relative_orientation_error_rad": 0.5083788580309313,
+      "finger_contacts": [
+        "link7",
+        "link8"
+      ],
+      "finger_contact_forces": null
+    },
+    {
+      "rise_m": 0.1931584970742255,
+      "relative_position_error_m": 0.006847296681736262,
+      "relative_orientation_error_rad": 0.5083768233432663,
+      "finger_contacts": [
+        "link7",
+        "link8"
+      ],
+      "finger_contact_forces": null
+    },
+    {
+      "rise_m": 0.1931584970742255,
+      "relative_position_error_m": 0.006847296681736262,
+      "relative_orientation_error_rad": 0.5083768233432663,
+      "finger_contacts": [
+        "link7",
+        "link8"
+      ],
+      "finger_contact_forces": null
+    },
+    {
+      "rise_m": 0.1931584970742255,
+      "relative_position_error_m": 0.006847296681736262,
+      "relative_orientation_error_rad": 0.5083768233432663,
+      "finger_contacts": [
+        "link7",
+        "link8"
+      ],
+      "finger_contact_forces": null
+    },
+    {
+      "rise_m": 0.1931584970742255,
+      "relative_position_error_m": 0.006847296681736262,
+      "relative_orientation_error_rad": 0.5083768233432663,
+      "finger_contacts": [
+        "link7",
+        "link8"
+      ],
+      "finger_contact_forces": null
+    },
+    {
+      "rise_m": 0.19315854870076932,
+      "relative_position_error_m": 0.006847236166349292,
+      "relative_orientation_error_rad": 0.5083765808434189,
+      "finger_contacts": [
+        "link7",
+        "link8"
+      ],
+      "finger_contact_forces": null
+    },
+    {
+      "rise_m": 0.19315747867533728,
+      "relative_position_error_m": 0.006847123786914544,
+      "relative_orientation_error_rad": 0.508377903293348,
+      "finger_contacts": [
+        "link7",
+        "link8"
+      ],
+      "finger_contact_forces": null
+    },
+    {
+      "rise_m": 0.19315747867533728,
+      "relative_position_error_m": 0.006847123786914544,
+      "relative_orientation_error_rad": 0.508377903293348,
+      "finger_contacts": [
+        "link7",
+        "link8"
+      ],
+      "finger_contact_forces": null
+    }
+  ],
+  "placement": {
+    "side": "right",
+    "offset_m": 0.1,
+    "T_world_place_tcp": [
+      [
+        -0.005782169289886948,
+        -0.9999803900718689,
+        -0.0024068856146186577,
+        0.4952889740799338
+      ],
+      [
+        -0.5550136566162109,
+        0.0012070547090843307,
+        0.8318403959274292,
+        -0.19796616309685405
+      ],
+      [
+        -0.8318212032318115,
+        0.0061456891708075966,
+        -0.5550097227096558,
+        0.73504480814196
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "expected_object_position_m": [
+      0.4978195239533174,
+      -0.20034065867429876,
+      0.7402979676366717
+    ],
+    "actual_object_position_m": [
+      0.49423922622007294,
+      -0.19244056316601557,
+      0.7399999853705
+    ]
+  },
+  "final_return": {
+    "target_joints_rad": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "actual_joints_rad": [
+      0.0006184246391056674,
+      0.0034964375954411337,
+      -0.0035811721497868796,
+      0.00019990014847447908,
+      -0.0017829716692892427,
+      -0.003401559942863286
+    ],
+    "max_joint_error_rad": 0.0035811721497868796,
+    "tolerance_rad": 0.02
+  },
+  "last_status": {
+    "failure": null,
+    "simulation_time_s": 107.4,
+    "T_world_base": [
+      [
+        0.998335566016631,
+        -0.05743096616687704,
+        -0.005270839723646609,
+        0.10489499971503777
+      ],
+      [
+        0.057430161049019296,
+        0.9983494799539625,
+        -0.000304101194572672,
+        -0.021223035648565997
+      ],
+      [
+        0.00527960492244009,
+        8.898640174490426e-07,
+        0.9999860627884127,
+        0.14249858141253666
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "T_world_object": [
+      [
+        0.9999877731465127,
+        0.004945053835035312,
+        2.176228044066987e-07,
+        0.49423922622007294
+      ],
+      [
+        0.0049450538350348005,
+        -0.9999877731465364,
+        2.892609429382737e-09,
+        -0.19244056316601557
+      ],
+      [
+        2.176344476739109e-07,
+        -1.8164175783486737e-09,
+        -0.9999999999999764,
+        0.7399999853705
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "T_world_tcp": [
+      [
+        -0.08729632360300238,
+        -0.9961821571412236,
+        -0.0006794695420775931,
+        0.06335733832454402
+      ],
+      [
+        0.9922113815443314,
+        -0.08688747992884051,
+        -0.08925883802461725,
+        0.167364228510328
+      ],
+      [
+        0.08885902441108276,
+        -0.00846614582168706,
+        0.996008231971823,
+        1.174837079300329
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "joint_positions": [
+      0.0006184246391056674,
+      0.0034964375954411337,
+      -0.0035811721497868796,
+      0.00019990014847447925,
+      -0.0017829716692892425,
+      -0.0034015599428632855,
+      0.03499584663019326,
+      -0.03500415334184589
+    ],
+    "jaw_opening_m": 0.06999999997203915,
+    "max_jaw_opening_m": 0.07,
+    "finger_contacts": [],
+    "finger_contact_forces": null,
+    "object_support_contact": true,
+    "base_state": "STOPPED",
+    "measured_base_state": "STOPPED",
+    "base_velocity": [
+      -8.156438997343322e-14,
+      0.0,
+      1.2358854305346028e-12
+    ]
+  },
+  "trace_path": "/home/doyeonlee/\ubb38\uc11c/ChatGPT/RoboCup@Home2027/Gazebo_Manipulation/reports/gazebo_tutorial.trace.jsonl"
+}

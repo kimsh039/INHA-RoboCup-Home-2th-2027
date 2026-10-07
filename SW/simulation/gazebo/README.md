@@ -83,3 +83,7 @@ GZ_PARTITION=robocup_sensor_test python3 SW/simulation/tools/check_sensors.py --
 현재 make_sim.py의 방은 내부 6×6 m, 벽 높이 1 m이며 같은 책상(1.6×0.8 m, 윗면 0.72 m) 2개가 있습니다.
 책상 중심은 (1.8, -1.0)과 (1.8, 1.8)이고, 긴 변끼리 마주 보며 사이 간격은 2 m입니다.
 G2는 책상 상판 아래에서 스캔하므로 다리만 검출합니다.
+
+## 팔 픽앤플레이스
+
+기존 주행/센서 실행과 별도로 [Gazebo Manipulation](../gazebo_manipulation/README.md)에서 손목 관측·물리 파지·배치·초기 복귀를 실행한다. 2026-10-07 사용자 성공은 베이스 밀림을 유지한 완화 hold 기준25mm/60° 실험이며 strict 유지/실기 검증과 구분한다.

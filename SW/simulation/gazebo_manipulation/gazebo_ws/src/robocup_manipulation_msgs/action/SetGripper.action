@@ -1,0 +1,9 @@
+float64 gap_m
+float64 timeout_s
+---
+bool success
+string error_code
+float64 measured_gap_m
+# Opening reached is not grasp/contact confirmation.
+---
+float64 measured_gap_m

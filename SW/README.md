@@ -55,6 +55,7 @@ Gazebo 기반 보정 결과입니다. Head/Wrist D435와 실물 센서는 별도
 | Gazebo 모델을 실행하거나 수정하는 방법 | [Simulation](simulation/README.md) / [Hardware](../HW/URDF/README.md) |
 | 전체 캘리브레이션 순서·과정·계산·평가 결과 | [Calibration 전체 과정과 결과](simulation/calibration/README.md) |
 | 2D·3D LiDAR 보정 URDF 적용·RViz 실행 | [보정 URDF 적용하기 — Ubuntu/Mac](simulation/robot_description/README.md#보정-urdf-적용하기) |
+| Gazebo에서 베이스 밀림을 포함한 물리 픽앤플레이스 실행·성공 조건 | [Gazebo Manipulation](simulation/gazebo_manipulation/README.md) |
 | 최신 프로파일·팔 장착 구조의 MuJoCo 파지·배치·초기 자세 복귀 | [Manipulation 튜토리얼](simulation/mujoco/README.md) |
 | 인지·분할·파지의 후속 설계 | [Detection 설계](detection/PIPELINE.md) |
 | 2D LiDAR·두 D435·Mid-360의 역할 | [센서 역할과 접근 설계](detection/SENSOR_ROLES.md) |

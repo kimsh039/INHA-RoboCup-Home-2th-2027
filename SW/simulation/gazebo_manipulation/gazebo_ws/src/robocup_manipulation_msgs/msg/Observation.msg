@@ -1,0 +1,7 @@
+std_msgs/Header header
+string observation_id
+string target_id
+sensor_msgs/PointCloud2 object_cloud
+sensor_msgs/PointCloud2 scene_cloud
+geometry_msgs/Point feature_camera
+float32 quality

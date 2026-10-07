@@ -1,0 +1,12 @@
+bool plan_only
+string task_id
+string object_class
+geometry_msgs/PoseStamped destination
+robocup_manipulation_msgs/Target3D target
+robocup_manipulation_msgs/Observation observation
+robocup_manipulation_msgs/GraspCandidate[] candidates
+geometry_msgs/PoseStamped grasp_tcp
+geometry_msgs/PoseStamped pregrasp_tcp
+geometry_msgs/Point desired_feature_camera
+float64 selected_width_m
+moveit_msgs/RobotTrajectory trajectory

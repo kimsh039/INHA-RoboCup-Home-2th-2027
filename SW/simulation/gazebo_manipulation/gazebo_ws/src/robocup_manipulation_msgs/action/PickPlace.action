@@ -1,0 +1,12 @@
+string task_id
+string object_class
+geometry_msgs/PoseStamped destination
+float64 timeout_s
+bool plan_only
+---
+bool success
+string error_code
+string detail
+string final_state
+---
+robocup_manipulation_msgs/TaskStatus status
