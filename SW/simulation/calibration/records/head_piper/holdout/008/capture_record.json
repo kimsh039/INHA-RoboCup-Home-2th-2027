@@ -1,0 +1,28 @@
+{
+  "split": "holdout",
+  "sample_id": "008",
+  "image_id": 32,
+  "joint_targets_rad": [
+    0.08,
+    0.0,
+    0.0,
+    0.04,
+    0.03,
+    0.0
+  ],
+  "measured_joint_positions": {
+    "piper_joint1": 0.07999999999999993,
+    "piper_joint2": -1.7628230247441602e-14,
+    "piper_joint3": 7.418200489781991e-14,
+    "piper_joint4": 0.040000000000040746,
+    "piper_joint5": 0.030000000000164524,
+    "piper_joint6": 1.3408909092084837e-14
+  },
+  "max_command_error_rad": 1.6452464390859234e-13,
+  "capture": {
+    "sample": 32,
+    "time_skew_s": 0.0,
+    "reprojection_px": 0.060667759518698405,
+    "dataset": "/Users/seoneum/Desktop/RoboCup/calibration/tutorial/outputs/robocup-tutorial-calibration/calibration_data/sim/head_piper/dataset.json"
+  }
+}

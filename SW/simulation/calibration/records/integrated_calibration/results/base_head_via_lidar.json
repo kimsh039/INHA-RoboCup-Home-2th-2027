@@ -1,0 +1,64 @@
+{
+  "parent_frame": "base_link",
+  "child_frame": "camera_optical_frame",
+  "translation_unit": "m",
+  "matrix4x4": [
+    [
+      -0.0029771090918535082,
+      0.00010952331429753068,
+      0.9999955624032031,
+      -0.13656046910898184
+    ],
+    [
+      -0.999995568367885,
+      7.800802021500007e-06,
+      -0.002977109963984236,
+      0.001371709297348066
+    ],
+    [
+      -8.126830354726692e-06,
+      -0.9999999939718951,
+      0.0001094996050918702,
+      1.2859000586610707
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "translation_xyz_m": [
+    -0.13656046910898184,
+    0.001371709297348066,
+    1.2859000586610707
+  ],
+  "quaternion_xyzw": [
+    0.4992257982368884,
+    -0.5007183365647752,
+    0.5007691104428578,
+    -0.4992845359399938
+  ],
+  "status": "derived_transform",
+  "method": "Transform composition; no additional measurement",
+  "sources": [
+    {
+      "path": "base_mid360.json",
+      "sha256": "53fd478d044b8db6b66723e1a517245cf57ca638ae2ffb6d270a0b394459796c",
+      "status": "computed_validation_pending",
+      "inverted": false
+    },
+    {
+      "path": "head_mid360_recorded.json",
+      "sha256": "3e29ded5bc3506d0004eebe230515793d76280b2f584d83e962343ae82d56e16",
+      "status": "computed_validation_pending",
+      "inverted": true
+    }
+  ],
+  "contains_nominal_reference": false,
+  "independent_measurement": false,
+  "source_sha256": [
+    "53fd478d044b8db6b66723e1a517245cf57ca638ae2ffb6d270a0b394459796c",
+    "3e29ded5bc3506d0004eebe230515793d76280b2f584d83e962343ae82d56e16"
+  ]
+}

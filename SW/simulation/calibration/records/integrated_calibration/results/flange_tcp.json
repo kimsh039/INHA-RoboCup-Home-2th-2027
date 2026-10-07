@@ -1,0 +1,60 @@
+{
+  "parent_frame": "piper_link6",
+  "child_frame": "tcp",
+  "translation_unit": "m",
+  "matrix4x4": [
+    [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      1.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      1.0,
+      0.14250000000000002
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "translation_xyz_m": [
+    0.0,
+    0.0,
+    0.14250000000000002
+  ],
+  "quaternion_xyzw": [
+    0.0,
+    0.0,
+    0.0,
+    1.0
+  ],
+  "status": "urdf_nominal_reference",
+  "input_kind": "urdf_reference",
+  "independent_measurement": false,
+  "reference_urdf": "../../../../robot_description/robocup.urdf",
+  "reference_urdf_sha256": "19d65a7e711138d4be9b10abc0ebb1de185e8ccb41eaee54d8cdc41562bba414",
+  "reference_child": "piper_gripper_base",
+  "offset_xyz_m": [
+    0.0,
+    0.0,
+    0.138
+  ],
+  "offset_rpy_rad": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "definition": "Nominal midpoint of the two jaw joint origins at symmetric opening; axes follow gripper base. Not a measured fingertip/contact point.",
+  "method": "Fixed URDF chain and explicitly defined tool offset"
+}

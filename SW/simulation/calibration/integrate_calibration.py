@@ -1,0 +1,145 @@
+#!/usr/bin/env python3
+"""Assemble recorded sensor estimates and explicit URDF references into one runtime model.
+
+This performs the requested transform composition/application. It does not run ROS,
+Gazebo, tests, or an independent accuracy check. Original measurements are preserved.
+"""
+import argparse
+import json
+from pathlib import Path
+from types import SimpleNamespace
+import shutil
+import tempfile
+import xml.etree.ElementTree as ET
+
+import numpy as np
+
+import calibration_workflow as workflow
+
+HERE = Path(__file__).resolve().parent
+DESCRIPTION = HERE.parent / 'robot_description'
+RECORDS = HERE / 'records'
+
+
+def invoke(name, **kwargs):
+    getattr(workflow, name)(SimpleNamespace(**kwargs))
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--output-dir', type=Path, default=RECORDS / 'integrated_calibration')
+    parser.add_argument('--runtime', type=Path, default=DESCRIPTION / 'robocup.calibrated.urdf')
+    parser.add_argument('--replace', action='store_true', help='Replace the selected generated bundle/runtime, preserving recorded inputs')
+    args = parser.parse_args()
+    output = args.output_dir.resolve()
+    runtime = args.runtime.resolve()
+    if output.exists() and not args.replace:
+        raise ValueError('Output bundle already exists; choose a new path or explicitly use --replace')
+    nominal = DESCRIPTION / 'robocup.urdf'
+    head_arm = RECORDS / 'head_piper/results/piper_head.json'
+    handeye = workflow.read(RECORDS / 'head_piper/results/handeye.json')
+    if handeye.get('synthetic') or handeye.get('mode') != 'eye_on_base':
+        raise ValueError('Expected measured eye-on-base Head–PiPER input')
+    # The hand-eye solver already reports held-out residuals as part of calibration.
+    # Use those recorded values, without reprocessing images or launching a validation job.
+    head_arm_usable = handeye['max_holdout_translation_m'] <= 0.005 and handeye['max_holdout_rotation_deg'] <= 1.0
+    lidar_input = RECORDS / '20261005_base_2dlidar/calibration/calibration.json'
+    mid_input = RECORDS / '20261006_base_mid360/results/auto_room_20261006_031114/base_mid360.json'
+    head_input = RECORDS / '20261006_head_mid360/results/automated_01/head_mid360.json'
+    wrist_input = RECORDS / '20261006_wrist_d435/results/flange_wrist.json'
+    output.parent.mkdir(parents=True, exist_ok=True)
+    with tempfile.TemporaryDirectory(prefix='calibration_', dir=output.parent) as temp:
+        bundle = Path(temp)
+        results = bundle / 'results'
+        results.mkdir()
+        steps = bundle / 'application'
+        steps.mkdir()
+        invoke('normalize_base', input=lidar_input, output=results / 'base_lidar.json')
+        for source, name in [(mid_input, 'base_mid360.json'), (head_input, 'head_mid360_recorded.json'), (wrist_input, 'flange_wrist.json'), (head_arm, 'piper_head.json')]:
+            shutil.copy2(source, results / name)
+        invoke('urdf_reference', urdf=nominal, parent='base_link', child='piper_base_link',
+               reference_child=None, offset_xyz=[0., 0., 0.], offset_rpy=[0., 0., 0.],
+               definition='PiPER mounting reference from the CAD/URDF fixed chain; no independent measurement',
+               output=results / 'base_piper.json')
+        root = ET.parse(nominal).getroot()
+        jaw_origins = []
+        for name in ('piper_gripper_joint1', 'piper_gripper_joint2'):
+            joint = root.find(f"joint[@name='{name}']")
+            if joint is None or joint.find('parent').get('link') != 'piper_gripper_base':
+                raise ValueError('Expected two gripper joints below piper_gripper_base')
+            jaw_origins.append(np.fromstring(joint.find('origin').get('xyz', '0 0 0'), sep=' '))
+        offset = np.mean(jaw_origins, axis=0).tolist()
+        invoke('urdf_reference', urdf=nominal, parent='piper_link6', child='tcp',
+               reference_child='piper_gripper_base', offset_xyz=offset, offset_rpy=[0., 0., 0.],
+               definition='Nominal midpoint of the two jaw joint origins at symmetric opening; axes follow gripper base. Not a measured fingertip/contact point.',
+               output=results / 'flange_tcp.json')
+        invoke('compose', left=results / 'base_mid360.json', right=results / 'head_mid360_recorded.json',
+               inverse_left=False, inverse_right=True, output=results / 'base_head_via_lidar.json')
+        invoke('compose', left=results / 'base_piper.json', right=results / 'piper_head.json',
+               inverse_left=False, inverse_right=False, output=results / 'base_head_via_arm.json')
+        invoke('compare', left=results / 'base_head_via_lidar.json', right=results / 'base_head_via_arm.json',
+               output=results / 'head_path_difference.json')
+        selected_head = 'base_head_via_arm.json' if head_arm_usable else 'base_head_via_lidar.json'
+        shutil.copy2(results / selected_head, results / 'base_head.json')
+        # Express a coherent Head–Mid360 transform from the selected Head runtime chain.
+        # Keep the independently fitted plane estimate under its recorded name.
+        invoke('compose', left=results / 'base_head.json', right=results / 'base_mid360.json',
+               inverse_left=True, inverse_right=False, output=results / 'head_mid360_runtime.json')
+        source = nominal
+        applications = []
+        for name, target in [('base_lidar', None), ('base_mid360', None), ('base_piper', None),
+                             ('base_head', 'camera_link'), ('flange_wrist', 'wrist_camera_mount_link')]:
+            destination = steps / (name + '.urdf')
+            invoke('patch', urdf=source, result=results / (name + '.json'), output=destination,
+                   mount_child=target, portable_meshes=True)
+            applications.append(workflow.read(str(destination) + '.application.json'))
+            source = destination
+        # Write directly beside the final runtime so relative mesh paths remain portable.
+        runtime.parent.mkdir(parents=True, exist_ok=True)
+        with tempfile.TemporaryDirectory(prefix='runtime_', dir=runtime.parent) as runtime_temp:
+            staged_runtime = Path(runtime_temp) / runtime.name
+            invoke('add_tcp', urdf=source, result=results / 'flange_tcp.json', output=staged_runtime, portable_meshes=True)
+            tree = ET.parse(staged_runtime)
+            import os
+            for mesh in tree.findall('.//mesh'):
+                name = mesh.get('filename', '')
+                if name and not name.startswith(('file:', 'package:', 'http:', 'https:')):
+                    mesh.set('filename', os.path.relpath((staged_runtime.parent / name).resolve(), runtime.parent))
+            tree.write(staged_runtime, encoding='utf-8', xml_declaration=True)
+            tcp_application = workflow.read(str(staged_runtime) + '.application.json')
+            tcp_application['runtime_urdf_sha256'] = workflow.sha(staged_runtime)
+            summary = {
+                'status': 'simulation_estimates_and_nominal_references_integrated',
+                'transform_convention': 'parent <- child, metres',
+                'runtime': 'SW/simulation/robot_description/' + runtime.name, 'runtime_path_basis': 'repository_root', 'runtime_urdf_sha256': workflow.sha(staged_runtime),
+                'nominal_urdf_sha256': workflow.sha(nominal),
+                'head_selection': 'independent_head_arm_handeye' if head_arm_usable else 'recorded_head_lidar_plane_estimate',
+                'head_arm_solver_holdout': {
+                    'train_count': handeye['training_count'], 'holdout_count': handeye['holdout_count'],
+                    'max_translation_mm': handeye['max_holdout_translation_m'] * 1000,
+                    'max_rotation_deg': handeye['max_holdout_rotation_deg'],
+                    'within_provisional_limits': head_arm_usable, 'additional_validation_run': False,
+                },
+                'head_path_difference': workflow.read(results / 'head_path_difference.json'),
+                'head_paths_share_nominal_arm_mount': True,
+                'base_piper_input_kind': 'urdf_reference', 'tcp_input_kind': 'urdf_reference',
+                'tcp_definition': workflow.read(results / 'flange_tcp.json')['definition'],
+                'hardware_accuracy_established': False, 'ros_runtime_launched': False,
+                'post_work_verification_run': False,
+                'remaining_independent_measurements': ['physical arm mount', 'TCP contact/pivot and tool axes',
+                    'joint zero offsets, axes and link geometry', 'gripper opening/zero', 'real sensor calibration'],
+                'historical_head_plane_bias': 'Recorded Head–Mid360 plane estimate has 11.720 mm Gazebo GT position error; retained and not silently corrected.',
+                'applications': applications, 'tcp_application': tcp_application,
+            }
+            workflow.write(bundle / 'summary.json', summary)
+            if output.exists():
+                shutil.rmtree(output)
+            shutil.copytree(bundle, output)
+            staged_runtime.replace(runtime)
+            application = runtime.with_name(runtime.name + '.application.json')
+            application.write_text(json.dumps(summary, indent=2, allow_nan=False) + '\n')
+        print(json.dumps({k: summary[k] for k in ('status', 'head_selection', 'head_arm_solver_holdout', 'head_path_difference', 'runtime')}, indent=2))
+
+
+if __name__ == '__main__':
+    main()

@@ -12,8 +12,8 @@
 - 랙 기준 무게중심: `(-0.061344968, 0.000001958, 0.483339112)` m.
 - Piper 베이스: `Assembly`에서 확인한 랙 기준 `(-0.0195, 0, 0.790)` m, RPY `(0, 0, 0)`.
 - 팔 관절 영점·가동 범위·그리퍼·손목 카메라 상대 연결은 유지합니다.
-- 최신 형상·물성·구성요소 좌표는 [rack_revision_20261006.json](rack_revision_20261006.json)을 참고하세요.
-- [이번 정적 검증 결과](rack_revision_validation_20261006.json): 94 links / 93 joints, 전체 명목 질량 50.961433 kg. 센서 Gazebo 설정·헤드 센서 전역 좌표·팔 및 손목 상대 변환 보존 검사 통과. 이번 변경 후 ROS/Gazebo 실구동은 수행하지 않았습니다.
+- 최신 형상·물성·구성요소 좌표는 [rack_revision.json](rack_revision.json)을 참고하세요.
+- [이번 정적 검증 결과](rack_revision_validation.json): 94 links / 93 joints, 전체 명목 질량 50.961433 kg. 센서 Gazebo 설정·헤드 센서 전역 좌표·팔 및 손목 상대 변환 보존 검사 통과. 이번 변경 후 ROS/Gazebo 실구동은 수행하지 않았습니다.
 
 ## 최초 센서 프레임 내보내기 기록
 

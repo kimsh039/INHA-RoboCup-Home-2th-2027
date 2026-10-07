@@ -1,0 +1,18 @@
+{
+  "source_urdf_sha256": "c3411b742cbf540a0bff010cea112b39661ac737330f932ad78560e4e428877d",
+  "result_sha256": "53fd478d044b8db6b66723e1a517245cf57ca638ae2ffb6d270a0b394459796c",
+  "runtime_urdf_sha256": "74ecd6952dd62dd33ff0d84f8d10c5c2e7a77af8c3106701d151cba1ae9bfd2c",
+  "joint": "livox_frame_joint",
+  "origin_xyz": [
+    3.773355003483525e-05,
+    0.00015620113972823895,
+    -0.00024318079626794997
+  ],
+  "origin_rpy": [
+    3.141528125640919,
+    2.050808065501286e-05,
+    -2.7091518517208257e-05
+  ],
+  "composition_verified": true,
+  "acceptance": "User must review held-out validation before launching"
+}

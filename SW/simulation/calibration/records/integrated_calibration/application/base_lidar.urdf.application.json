@@ -1,0 +1,18 @@
+{
+  "source_urdf_sha256": "19d65a7e711138d4be9b10abc0ebb1de185e8ccb41eaee54d8cdc41562bba414",
+  "result_sha256": "9b76f0c73a539e1058aa18ec0ddda65f89831199e8548bc508cf383cb1fc5276",
+  "runtime_urdf_sha256": "c3411b742cbf540a0bff010cea112b39661ac737330f932ad78560e4e428877d",
+  "joint": "laser_frame_joint",
+  "origin_xyz": [
+    -5.1389834908760446e-05,
+    0.0005205163555950081,
+    0.0
+  ],
+  "origin_rpy": [
+    0.0,
+    0.0,
+    0.15437059215843318
+  ],
+  "composition_verified": true,
+  "acceptance": "User must review held-out validation before launching"
+}
