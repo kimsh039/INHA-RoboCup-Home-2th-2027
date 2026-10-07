@@ -71,7 +71,7 @@ Gazebo 렌더링 카메라는 +X 전방/+Z 상방을 사용하고 메시지의 `
 Gazebo Harmonic과 시스템 Python Gazebo 바인딩을 사용합니다.
 
 ```bash
-cd simulation
+cd SW/simulation
 ./gazebo/start_sim.sh
 ```
 

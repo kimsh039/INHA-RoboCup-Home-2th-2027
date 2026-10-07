@@ -16,7 +16,7 @@ sudo apt install ros-humble-ros-base ros-humble-moveit ros-humble-rviz2 \
 이 작업에서는 apt 설치를 새로 수행하지 않았습니다. 기존 성공 PC의 ROS/MoveIt을 사용했습니다. 로컬 CUDA나 micromamba를 설치하지 않습니다. 팀 저장소 전체를 clone하여 공용 URDF와 HW 메시의 상대 구조를 유지합니다. venv와 생성 모델은 새 PC에서 다시 만듭니다.
 
 ```bash
-cd "$HOME/INHA-RoboCup-Home-2th-2027/simulation/mujoco"
+cd "$HOME/INHA-RoboCup-Home-2th-2027/SW/simulation/mujoco"
 source /opt/ros/humble/setup.bash
 /usr/bin/python3 -m venv --system-site-packages .ros_venv
 source .ros_venv/bin/activate
@@ -32,7 +32,7 @@ python -m unittest discover -s tests -v
 [Colab](https://colab.research.google.com/)에서 파일 → 노트북 업로드로 다음 파일을 엽니다.
 
 ```text
-$HOME/INHA-RoboCup-Home-2th-2027/simulation/mujoco/colab/graspnet_wrist_camera.ipynb
+$HOME/INHA-RoboCup-Home-2th-2027/SW/simulation/mujoco/colab/graspnet_wrist_camera.ipynb
 ```
 
 런타임 유형을 GPU로 선택하고 위에서 아래로 코드 셀을 실행합니다.
@@ -54,7 +54,7 @@ $HOME/INHA-RoboCup-Home-2th-2027/simulation/mujoco/colab/graspnet_wrist_camera.i
 아래를 **터미널 1~5 모두** 실행합니다. 검증에 사용한 ROS domain 47을 동일하게 유지하고 다른 Gazebo/관절 게시 노드와 섞이지 않게 합니다.
 
 ```bash
-cd "$HOME/INHA-RoboCup-Home-2th-2027/simulation/mujoco"
+cd "$HOME/INHA-RoboCup-Home-2th-2027/SW/simulation/mujoco"
 source /opt/ros/humble/setup.bash
 source .ros_venv/bin/activate
 export ROS_LOG_DIR="$PWD/logs/ros"
