@@ -1,0 +1,64 @@
+{
+  "parent_frame": "camera_optical_frame",
+  "child_frame": "livox_frame",
+  "translation_unit": "m",
+  "matrix4x4": [
+    [
+      0.001541088458330239,
+      0.9999917017000152,
+      0.0037711506826046924,
+      -0.0016328632220024009
+    ],
+    [
+      0.004408241432393333,
+      -0.003777911968593434,
+      0.9999831472523082,
+      0.08595419944698035
+    ],
+    [
+      0.9999890961674716,
+      -0.001524438344067722,
+      -0.004414026948014811,
+      -0.05311408966149561
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "translation_xyz_m": [
+    -0.0016328632220024009,
+    0.08595419944698035,
+    -0.05311408966149561
+  ],
+  "quaternion_xyzw": [
+    0.5024273647441337,
+    0.49977370542103633,
+    0.4994554025541841,
+    -0.49833451354028285
+  ],
+  "status": "derived_transform",
+  "method": "Transform composition; no additional measurement",
+  "sources": [
+    {
+      "path": "base_head.json",
+      "sha256": "8217e5e1cac4ec32ffa4fc8bc2ce9bd6403ffa12add0035ac44b6d07d6e7cff0",
+      "status": "derived_transform",
+      "inverted": true
+    },
+    {
+      "path": "base_mid360.json",
+      "sha256": "53fd478d044b8db6b66723e1a517245cf57ca638ae2ffb6d270a0b394459796c",
+      "status": "computed_validation_pending",
+      "inverted": false
+    }
+  ],
+  "contains_nominal_reference": true,
+  "independent_measurement": false,
+  "source_sha256": [
+    "8217e5e1cac4ec32ffa4fc8bc2ce9bd6403ffa12add0035ac44b6d07d6e7cff0",
+    "53fd478d044b8db6b66723e1a517245cf57ca638ae2ffb6d270a0b394459796c"
+  ]
+}

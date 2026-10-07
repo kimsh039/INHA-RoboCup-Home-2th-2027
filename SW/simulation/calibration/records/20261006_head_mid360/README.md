@@ -1,5 +1,7 @@
 # Head D435–Mid360 보정 기록 · 2026-10-06
 
+> 2026-10-07 통합 상태: [현재 모델 기록](../integrated_calibration/README.md). Head는 새 Head–PiPER 결과를 채택했고 Wrist는 기존 결과를 모델에 적용했다. 아래 수치는 과거 측정 기록이다.
+
 **학습 25개 + 별도 평가 10개. 평면 일관성 기준은 통과했지만 GT 위치 오차 11.72mm가 남았다.** Head/Wrist 카메라는 모두 D435다.
 
 | 항목 | 저장된 결과 |
@@ -30,10 +32,10 @@
 | 별도 평가 판정과 10개 오차 | [head_mid360_validation.json](results/automated_01/head_mid360_validation.json) |
 | GT 비교와 각도 중복 요약 | [evaluation_summary.json](results/automated_01/evaluation_summary.json) |
 | GT 공통 offset 진단 | [ground_truth_plane_diagnostics.json](results/automated_01/ground_truth_plane_diagnostics.json) |
-| 사진·시각·CameraInfo·PnP·실제 관절 | [head_samples.json](head_samples.json), [images/](images) |
-| 학습 / 평가 점군과 촬영 연결 | [train/](train), [holdout/](holdout): `points_raw.json.gz`, `xyz.npz`, `head_plane.json`, `capture_id.txt` |
+| 사진·시각·CameraInfo·PnP·실제 관절 | [head_samples.json](head_samples.json), [images/](images/) |
+| 학습 / 평가 점군과 촬영 연결 | [train/](train/), [holdout/](holdout/): `points_raw.json.gz`, `xyz.npz`, `head_plane.json`, `capture_id.txt` |
 | 새 관측의 명령 자세·사진/점군 시각·partition | 각 관측의 `capture_record.json`; 기존 `train/001`에는 원래 이 파일이 없어 추가하지 않음 |
-| 측정 장면·계획·태그와 평면 관계 | [config/](config) |
+| 측정 장면·계획·태그와 평면 관계 | [config/](config/) |
 | 원본 경로·SHA-256·보관 경로 | [manifest.json](manifest.json) |
 
 Ubuntu에서 저장소 루트에 있는 터미널로 숫자를 읽는다. JSON은 에디터에서도 열 수 있고 PNG는 이미지 뷰어로 연다.

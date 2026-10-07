@@ -24,7 +24,7 @@ ros2 launch SW/simulation/ros2/sim.launch.py world:=room rviz:=false
 
 # 터미널 2: SLAM
 ros2 launch slam_toolbox online_async_launch.py \
-  slam_params_file:=$PWD/simulation/ros2/slam_params.yaml use_sim_time:=true
+  slam_params_file:=$PWD/SW/simulation/ros2/slam_params.yaml use_sim_time:=true
 
 # 터미널 3: RViz
 ros2 run rviz2 rviz2 -d /opt/ros/humble/share/nav2_bringup/rviz/nav2_default_view.rviz \

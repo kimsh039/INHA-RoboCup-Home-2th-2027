@@ -17,6 +17,8 @@ SW/
     └── wrist/              # D435·SAM 2.1·정밀 분할
 ```
 
+새 코드와 자료는 위 구조에 맞춰 추가합니다. 저장소 루트에는 `HW/`, `SW/`, `README.md`를 유지하고, 카메라별 검출 코드·모델·실험은 `SW/detection/head/` 또는 `SW/detection/wrist/`에 둡니다. 공통 인지 문서는 `SW/detection/`에서 관리합니다. 가상환경과 빌드 산출물은 각 작업 폴더의 Git 제외 경로에 생성합니다.
+
 Head와 Wrist 카메라는 모두 RealSense D435를 사용합니다. Head는 목표 탐색과 두 테이블의 관측 증거 수집, Wrist는 접근 후 재관측·분할·depth 점군을 담당합니다. [인지 구성](SW/detection/README.md) · [센서 역할](SW/detection/SENSOR_ROLES.md)
 
 현재 최종 보정 모델은 [robocup.calibrated.urdf](SW/simulation/robot_description/robocup.calibrated.urdf)이며, [robocup.urdf](SW/simulation/robot_description/robocup.urdf)는 CAD 기준 원본입니다. 시뮬레이션 보정 기록과 실기 검증 범위는 [SW 안내](SW/README.md)에 있습니다.

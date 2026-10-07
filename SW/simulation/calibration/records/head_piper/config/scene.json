@@ -1,0 +1,36 @@
+{
+  "urdf_sha256": "3b31339f0af58a2e81d9abcf7213b0255848ed9d7b5b02b02102fa0a21ba8732",
+  "urdf": "/Users/seoneum/Desktop/RoboCup/repositories/INHA-RoboCup-Home-2th-2027/simulation/robot_description/robocup.urdf",
+  "scene_sha256": "91390a8c391cc02428d83c350810b581f0abd6b9d45699ef7565735905ba9a95",
+  "fixture_placement_only": true,
+  "T_flange_tag_for_fixture_only": [
+    [
+      -0.0871185894646405,
+      -0.9961946971679461,
+      0.002544936964706478,
+      -0.27132118896119856
+    ],
+    [
+      0.02919959912912876,
+      2.4007908282466942e-08,
+      0.999573600797208,
+      -0.24444571372130225
+    ],
+    [
+      -0.9957699206043472,
+      0.0871557533067228,
+      0.029088483720332757,
+      -0.03978013813372327
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "tag_black_edge_m": 0.08,
+  "collector_inputs": "RGB + CameraInfo + measured joints",
+  "camera_transform_not_used_in_solver": true,
+  "simulation": true
+}

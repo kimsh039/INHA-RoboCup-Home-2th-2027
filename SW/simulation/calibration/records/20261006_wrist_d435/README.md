@@ -1,5 +1,7 @@
 # Wrist D435–Link6 보정 기록 · 2026-10-06
 
+> 2026-10-07 통합 상태: [현재 모델 기록](../integrated_calibration/README.md). Head는 새 Head–PiPER 결과를 채택했고 Wrist는 기존 결과를 모델에 적용했다. 아래 수치는 과거 측정 기록이다.
+
 **학습 25개 + 별도 평가 10개. 별도 자세 기준을 통과했고 GT 장착 위치 오차는 0.598mm다.** Head/Wrist 카메라는 모두 D435다.
 
 | 항목 | 저장된 결과 |
@@ -31,9 +33,9 @@
 | PARK 계산 원본·개별 holdout 오차 | [handeye_01.json](results/handeye_01.json) |
 | 별도 평가 판정 | [handeye_validation_01.json](results/handeye_validation_01.json) |
 | GT 비교와 실제 자세 중복 | [evaluation_summary.json](results/evaluation_summary.json), [actual_pose_overlap.json](results/actual_pose_overlap.json) |
-| 35개 사진·실제 관절·FK·PnP·시각 | [dataset.json](dataset.json), [images/](images) |
-| 목표 관절·실제 관절·사진 id 연결 | [train/](train), [holdout/](holdout)의 `capture_record.json` |
-| 목표 자세와 실제 측정 장면 | [config/](config) |
+| 35개 사진·실제 관절·FK·PnP·시각 | [dataset.json](dataset.json), [images/](images/) |
+| 목표 관절·실제 관절·사진 id 연결 | [train/](train/), [holdout/](holdout/)의 `capture_record.json` |
+| 목표 자세와 실제 측정 장면 | [config/](config/) |
 | 원본 경로·SHA-256·보관 경로 | [manifest.json](manifest.json) |
 
 Ubuntu에서 저장소 루트에 있는 터미널로 숫자를 읽는다. JSON은 에디터에서도 열 수 있고 PNG는 이미지 뷰어로 연다.

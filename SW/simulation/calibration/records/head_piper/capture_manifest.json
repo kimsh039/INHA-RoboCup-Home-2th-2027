@@ -1,0 +1,985 @@
+{
+  "records": [
+    {
+      "split": "train",
+      "sample_id": "001",
+      "image_id": 0,
+      "joint_targets_rad": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "measured_joint_positions": {
+        "piper_joint1": -7.776345326418191e-17,
+        "piper_joint2": -1.7651131774212412e-14,
+        "piper_joint3": 7.439766556991211e-14,
+        "piper_joint4": 3.881977967042747e-14,
+        "piper_joint5": 1.649194722177191e-13,
+        "piper_joint6": 5.331328285882675e-15
+      },
+      "max_command_error_rad": 1.649194722177191e-13,
+      "capture": {
+        "sample": 0,
+        "time_skew_s": 0.0,
+        "reprojection_px": 3.869694890627302e-06,
+        "dataset": "/Users/seoneum/Desktop/RoboCup/calibration/tutorial/outputs/robocup-tutorial-calibration/calibration_data/sim/head_piper/dataset.json"
+      }
+    },
+    {
+      "split": "train",
+      "sample_id": "002",
+      "image_id": 1,
+      "joint_targets_rad": [
+        0.1,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "measured_joint_positions": {
+        "piper_joint1": 0.09999999999999992,
+        "piper_joint2": -1.764592697128937e-14,
+        "piper_joint3": 7.440267746108335e-14,
+        "piper_joint4": 3.883059554391196e-14,
+        "piper_joint5": 1.649291015051996e-13,
+        "piper_joint6": 5.344525525385169e-15
+      },
+      "max_command_error_rad": 1.649291015051996e-13,
+      "capture": {
+        "sample": 1,
+        "time_skew_s": 0.0,
+        "reprojection_px": 0.04938389826129277,
+        "dataset": "/Users/seoneum/Desktop/RoboCup/calibration/tutorial/outputs/robocup-tutorial-calibration/calibration_data/sim/head_piper/dataset.json"
+      }
+    },
+    {
+      "split": "train",
+      "sample_id": "003",
+      "image_id": 2,
+      "joint_targets_rad": [
+        -0.1,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "measured_joint_positions": {
+        "piper_joint1": -0.10000000000000009,
+        "piper_joint2": -1.7655831458977895e-14,
+        "piper_joint3": 7.439256218213224e-14,
+        "piper_joint4": 3.88232409941779e-14,
+        "piper_joint5": 1.649091986395562e-13,
+        "piper_joint6": 5.33830071287906e-15
+      },
+      "max_command_error_rad": 1.649091986395562e-13,
+      "capture": {
+        "sample": 2,
+        "time_skew_s": 0.0,
+        "reprojection_px": 0.05518676761351711,
+        "dataset": "/Users/seoneum/Desktop/RoboCup/calibration/tutorial/outputs/robocup-tutorial-calibration/calibration_data/sim/head_piper/dataset.json"
+      }
+    },
+    {
+      "split": "train",
+      "sample_id": "004",
+      "image_id": 3,
+      "joint_targets_rad": [
+        0.0,
+        0.0,
+        0.0,
+        0.1,
+        0.0,
+        0.0
+      ],
+      "measured_joint_positions": {
+        "piper_joint1": -1.0483067406302316e-16,
+        "piper_joint2": -1.764088271460628e-14,
+        "piper_joint3": 7.354168667881318e-14,
+        "piper_joint4": 0.1000000000000551,
+        "piper_joint5": 1.6222954348938986e-13,
+        "piper_joint6": 2.7024948376566893e-14
+      },
+      "max_command_error_rad": 1.6222954348938986e-13,
+      "capture": {
+        "sample": 3,
+        "time_skew_s": 0.0010000000000012221,
+        "reprojection_px": 0.02871690797565003,
+        "dataset": "/Users/seoneum/Desktop/RoboCup/calibration/tutorial/outputs/robocup-tutorial-calibration/calibration_data/sim/head_piper/dataset.json"
+      }
+    },
+    {
+      "split": "train",
+      "sample_id": "005",
+      "image_id": 4,
+      "joint_targets_rad": [
+        0.0,
+        0.0,
+        0.0,
+        -0.1,
+        0.0,
+        0.0
+      ],
+      "measured_joint_positions": {
+        "piper_joint1": -8.011033701175408e-17,
+        "piper_joint2": -1.7642003264125115e-14,
+        "piper_joint3": 7.352196948120538e-14,
+        "piper_joint4": -0.09999999999997791,
+        "piper_joint5": 1.6211229640590424e-13,
+        "piper_joint6": -1.6496086701144044e-14
+      },
+      "max_command_error_rad": 1.6211229640590424e-13,
+      "capture": {
+        "sample": 4,
+        "time_skew_s": 0.0,
+        "reprojection_px": 0.03086181978186535,
+        "dataset": "/Users/seoneum/Desktop/RoboCup/calibration/tutorial/outputs/robocup-tutorial-calibration/calibration_data/sim/head_piper/dataset.json"
+      }
+    },
+    {
+      "split": "train",
+      "sample_id": "006",
+      "image_id": 5,
+      "joint_targets_rad": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.1,
+        0.0
+      ],
+      "measured_joint_positions": {
+        "piper_joint1": -7.937664679692738e-17,
+        "piper_joint2": -1.7616309579685806e-14,
+        "piper_joint3": 7.394041601261623e-14,
+        "piper_joint4": 2.912896852101378e-14,
+        "piper_joint5": 0.10000000000016383,
+        "piper_joint6": 3.8976665305423954e-15
+      },
+      "max_command_error_rad": 1.6382728507124966e-13,
+      "capture": {
+        "sample": 5,
+        "time_skew_s": 0.0,
+        "reprojection_px": 0.023569277344530737,
+        "dataset": "/Users/seoneum/Desktop/RoboCup/calibration/tutorial/outputs/robocup-tutorial-calibration/calibration_data/sim/head_piper/dataset.json"
+      }
+    },
+    {
+      "split": "train",
+      "sample_id": "007",
+      "image_id": 6,
+      "joint_targets_rad": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        -0.1,
+        0.0
+      ],
+      "measured_joint_positions": {
+        "piper_joint1": -8.365276514492515e-17,
+        "piper_joint2": -1.7762044334793155e-14,
+        "piper_joint3": 7.381425567630029e-14,
+        "piper_joint4": 2.7413541625136873e-14,
+        "piper_joint5": -0.0999999999998377,
+        "piper_joint6": 4.405698937999803e-15
+      },
+      "max_command_error_rad": 1.6230072841239007e-13,
+      "capture": {
+        "sample": 6,
+        "time_skew_s": 0.0010000000000047748,
+        "reprojection_px": 0.03975716766940779,
+        "dataset": "/Users/seoneum/Desktop/RoboCup/calibration/tutorial/outputs/robocup-tutorial-calibration/calibration_data/sim/head_piper/dataset.json"
+      }
+    },
+    {
+      "split": "train",
+      "sample_id": "008",
+      "image_id": 7,
+      "joint_targets_rad": [
+        0.1,
+        0.0,
+        0.0,
+        0.0,
+        0.1,
+        0.0
+      ],
+      "measured_joint_positions": {
+        "piper_joint1": 0.09999999999999992,
+        "piper_joint2": -1.7611372038494364e-14,
+        "piper_joint3": 7.39447581945972e-14,
+        "piper_joint4": 2.9125331085499414e-14,
+        "piper_joint5": 0.10000000000016383,
+        "piper_joint6": 3.903190976632118e-15
+      },
+      "max_command_error_rad": 1.6382728507124966e-13,
+      "capture": {
+        "sample": 7,
+        "time_skew_s": 0.0,
+        "reprojection_px": 0.012839807187710245,
+        "dataset": "/Users/seoneum/Desktop/RoboCup/calibration/tutorial/outputs/robocup-tutorial-calibration/calibration_data/sim/head_piper/dataset.json"
+      }
+    },
+    {
+      "split": "train",
+      "sample_id": "009",
+      "image_id": 8,
+      "joint_targets_rad": [
+        -0.1,
+        0.0,
+        0.0,
+        0.0,
+        -0.1,
+        0.0
+      ],
+      "measured_joint_positions": {
+        "piper_joint1": -0.10000000000000009,
+        "piper_joint2": -1.776704200055154e-14,
+        "piper_joint3": 7.380843822301778e-14,
+        "piper_joint4": 2.737001584595559e-14,
+        "piper_joint5": -0.09999999999983772,
+        "piper_joint6": 4.4046776871479776e-15
+      },
+      "max_command_error_rad": 1.6228685062458226e-13,
+      "capture": {
+        "sample": 8,
+        "time_skew_s": 0.0,
+        "reprojection_px": 0.025997144305684755,
+        "dataset": "/Users/seoneum/Desktop/RoboCup/calibration/tutorial/outputs/robocup-tutorial-calibration/calibration_data/sim/head_piper/dataset.json"
+      }
+    },
+    {
+      "split": "train",
+      "sample_id": "010",
+      "image_id": 9,
+      "joint_targets_rad": [
+        0.0,
+        0.0,
+        0.0,
+        0.1,
+        0.1,
+        0.0
+      ],
+      "measured_joint_positions": {
+        "piper_joint1": -8.180167254774289e-17,
+        "piper_joint2": -1.7612642592043477e-14,
+        "piper_joint3": 7.301205892364816e-14,
+        "piper_joint4": 0.10000000000001824,
+        "piper_joint5": 0.10000000000016122,
+        "piper_joint6": 1.9739383756760114e-14
+      },
+      "max_command_error_rad": 1.6121826096338054e-13,
+      "capture": {
+        "sample": 9,
+        "time_skew_s": 0.0,
+        "reprojection_px": 0.06277614216105654,
+        "dataset": "/Users/seoneum/Desktop/RoboCup/calibration/tutorial/outputs/robocup-tutorial-calibration/calibration_data/sim/head_piper/dataset.json"
+      }
+    },
+    {
+      "split": "train",
+      "sample_id": "011",
+      "image_id": 10,
+      "joint_targets_rad": [
+        0.0,
+        0.0,
+        0.0,
+        -0.1,
+        -0.1,
+        0.0
+      ],
+      "measured_joint_positions": {
+        "piper_joint1": -1.0960622021290245e-16,
+        "piper_joint2": -1.7758155264935264e-14,
+        "piper_joint3": 7.283965618733266e-14,
+        "piper_joint4": -0.10000000000000646,
+        "piper_joint5": -0.09999999999984047,
+        "piper_joint6": -1.3826516783703781e-14
+      },
+      "max_command_error_rad": 1.59539048638635e-13,
+      "capture": {
+        "sample": 10,
+        "time_skew_s": 0.0010000000000047748,
+        "reprojection_px": 0.018046425359029446,
+        "dataset": "/Users/seoneum/Desktop/RoboCup/calibration/tutorial/outputs/robocup-tutorial-calibration/calibration_data/sim/head_piper/dataset.json"
+      }
+    },
+    {
+      "split": "train",
+      "sample_id": "012",
+      "image_id": 11,
+      "joint_targets_rad": [
+        0.1,
+        0.0,
+        0.0,
+        0.1,
+        0.0,
+        0.0
+      ],
+      "measured_joint_positions": {
+        "piper_joint1": 0.09999999999999995,
+        "piper_joint2": -1.76407177191862e-14,
+        "piper_joint3": 7.351803935997751e-14,
+        "piper_joint4": 0.10000000000005523,
+        "piper_joint5": 1.622402686823402e-13,
+        "piper_joint6": 2.7152205964221315e-14
+      },
+      "max_command_error_rad": 1.622402686823402e-13,
+      "capture": {
+        "sample": 11,
+        "time_skew_s": 0.0,
+        "reprojection_px": 0.07668396146689122,
+        "dataset": "/Users/seoneum/Desktop/RoboCup/calibration/tutorial/outputs/robocup-tutorial-calibration/calibration_data/sim/head_piper/dataset.json"
+      }
+    },
+    {
+      "split": "train",
+      "sample_id": "013",
+      "image_id": 12,
+      "joint_targets_rad": [
+        -0.1,
+        0.0,
+        0.0,
+        -0.1,
+        0.0,
+        0.0
+      ],
+      "measured_joint_positions": {
+        "piper_joint1": -0.10000000000000009,
+        "piper_joint2": -1.764686727632974e-14,
+        "piper_joint3": 7.35174693642608e-14,
+        "piper_joint4": -0.09999999999997791,
+        "piper_joint5": 1.6210396469476543e-13,
+        "piper_joint6": -1.6493350735782608e-14
+      },
+      "max_command_error_rad": 1.6210396469476543e-13,
+      "capture": {
+        "sample": 12,
+        "time_skew_s": 0.0,
+        "reprojection_px": 0.030525149965634674,
+        "dataset": "/Users/seoneum/Desktop/RoboCup/calibration/tutorial/outputs/robocup-tutorial-calibration/calibration_data/sim/head_piper/dataset.json"
+      }
+    },
+    {
+      "split": "train",
+      "sample_id": "014",
+      "image_id": 13,
+      "joint_targets_rad": [
+        0.1,
+        0.0,
+        0.0,
+        -0.1,
+        0.1,
+        0.0
+      ],
+      "measured_joint_positions": {
+        "piper_joint1": 0.0999999999999999,
+        "piper_joint2": -1.760661045943968e-14,
+        "piper_joint3": 7.363077436617425e-14,
+        "piper_joint4": -0.09999999999996119,
+        "piper_joint5": 0.10000000000016161,
+        "piper_joint6": -1.20096615074566e-14
+      },
+      "max_command_error_rad": 1.6160683902199935e-13,
+      "capture": {
+        "sample": 13,
+        "time_skew_s": 0.0,
+        "reprojection_px": 0.04828849102889921,
+        "dataset": "/Users/seoneum/Desktop/RoboCup/calibration/tutorial/outputs/robocup-tutorial-calibration/calibration_data/sim/head_piper/dataset.json"
+      }
+    },
+    {
+      "split": "train",
+      "sample_id": "015",
+      "image_id": 14,
+      "joint_targets_rad": [
+        -0.1,
+        0.0,
+        0.0,
+        0.1,
+        -0.1,
+        0.0
+      ],
+      "measured_joint_positions": {
+        "piper_joint1": -0.10000000000000013,
+        "piper_joint2": -1.775461520682184e-14,
+        "piper_joint3": 7.353797135702551e-14,
+        "piper_joint4": 0.10000000000006432,
+        "piper_joint5": -0.09999999999983983,
+        "piper_joint6": 2.26453862951086e-14
+      },
+      "max_command_error_rad": 1.6017742687779446e-13,
+      "capture": {
+        "sample": 14,
+        "time_skew_s": 0.000999999999990564,
+        "reprojection_px": 0.025819197736923802,
+        "dataset": "/Users/seoneum/Desktop/RoboCup/calibration/tutorial/outputs/robocup-tutorial-calibration/calibration_data/sim/head_piper/dataset.json"
+      }
+    },
+    {
+      "split": "train",
+      "sample_id": "016",
+      "image_id": 15,
+      "joint_targets_rad": [
+        0.1,
+        0.0,
+        0.0,
+        0.1,
+        0.1,
+        0.0
+      ],
+      "measured_joint_positions": {
+        "piper_joint1": 0.09999999999999995,
+        "piper_joint2": -1.7610215602204528e-14,
+        "piper_joint3": 7.300242779918205e-14,
+        "piper_joint4": 0.10000000000001923,
+        "piper_joint5": 0.10000000000016122,
+        "piper_joint6": 1.9788903593050014e-14
+      },
+      "max_command_error_rad": 1.6121826096338054e-13,
+      "capture": {
+        "sample": 15,
+        "time_skew_s": 0.0,
+        "reprojection_px": 0.025404149507623562,
+        "dataset": "/Users/seoneum/Desktop/RoboCup/calibration/tutorial/outputs/robocup-tutorial-calibration/calibration_data/sim/head_piper/dataset.json"
+      }
+    },
+    {
+      "split": "train",
+      "sample_id": "017",
+      "image_id": 16,
+      "joint_targets_rad": [
+        -0.1,
+        0.0,
+        0.0,
+        -0.1,
+        -0.1,
+        0.0
+      ],
+      "measured_joint_positions": {
+        "piper_joint1": -0.10000000000000009,
+        "piper_joint2": -1.776056685748832e-14,
+        "piper_joint3": 7.284998068284592e-14,
+        "piper_joint4": -0.10000000000000754,
+        "piper_joint5": -0.09999999999984048,
+        "piper_joint6": -1.3878854285639027e-14
+      },
+      "max_command_error_rad": 1.5952517085082718e-13,
+      "capture": {
+        "sample": 16,
+        "time_skew_s": 0.0,
+        "reprojection_px": 0.07434505010012676,
+        "dataset": "/Users/seoneum/Desktop/RoboCup/calibration/tutorial/outputs/robocup-tutorial-calibration/calibration_data/sim/head_piper/dataset.json"
+      }
+    },
+    {
+      "split": "train",
+      "sample_id": "018",
+      "image_id": 17,
+      "joint_targets_rad": [
+        0.1,
+        0.0,
+        0.0,
+        -0.1,
+        -0.1,
+        0.0
+      ],
+      "measured_joint_positions": {
+        "piper_joint1": 0.09999999999999995,
+        "piper_joint2": -1.7747479023866683e-14,
+        "piper_joint3": 7.287474371864424e-14,
+        "piper_joint4": -0.10000000000000848,
+        "piper_joint5": -0.09999999999984045,
+        "piper_joint6": -1.3923042215728109e-14
+      },
+      "max_command_error_rad": 1.595529264264428e-13,
+      "capture": {
+        "sample": 17,
+        "time_skew_s": 0.0,
+        "reprojection_px": 0.041116557226009744,
+        "dataset": "/Users/seoneum/Desktop/RoboCup/calibration/tutorial/outputs/robocup-tutorial-calibration/calibration_data/sim/head_piper/dataset.json"
+      }
+    },
+    {
+      "split": "train",
+      "sample_id": "019",
+      "image_id": 18,
+      "joint_targets_rad": [
+        -0.1,
+        0.0,
+        0.0,
+        0.1,
+        0.1,
+        0.0
+      ],
+      "measured_joint_positions": {
+        "piper_joint1": -0.10000000000000014,
+        "piper_joint2": -1.7612091237438095e-14,
+        "piper_joint3": 7.303588967448225e-14,
+        "piper_joint4": 0.10000000000001627,
+        "piper_joint5": 0.10000000000016122,
+        "piper_joint6": 1.9654606427361827e-14
+      },
+      "max_command_error_rad": 1.6121826096338054e-13,
+      "capture": {
+        "sample": 18,
+        "time_skew_s": 0.0,
+        "reprojection_px": 0.024208225002505558,
+        "dataset": "/Users/seoneum/Desktop/RoboCup/calibration/tutorial/outputs/robocup-tutorial-calibration/calibration_data/sim/head_piper/dataset.json"
+      }
+    },
+    {
+      "split": "train",
+      "sample_id": "020",
+      "image_id": 19,
+      "joint_targets_rad": [
+        0.05,
+        0.0,
+        0.0,
+        0.0,
+        0.1,
+        0.0
+      ],
+      "measured_joint_positions": {
+        "piper_joint1": 0.04999999999999992,
+        "piper_joint2": -1.7613869448542128e-14,
+        "piper_joint3": 7.394262717736463e-14,
+        "piper_joint4": 2.9003483428557327e-14,
+        "piper_joint5": 0.10000000000016383,
+        "piper_joint6": 3.905640017301068e-15
+      },
+      "max_command_error_rad": 1.6382728507124966e-13,
+      "capture": {
+        "sample": 19,
+        "time_skew_s": 0.0,
+        "reprojection_px": 0.037920321067603874,
+        "dataset": "/Users/seoneum/Desktop/RoboCup/calibration/tutorial/outputs/robocup-tutorial-calibration/calibration_data/sim/head_piper/dataset.json"
+      }
+    },
+    {
+      "split": "train",
+      "sample_id": "021",
+      "image_id": 20,
+      "joint_targets_rad": [
+        -0.05,
+        0.0,
+        0.0,
+        0.0,
+        -0.1,
+        0.0
+      ],
+      "measured_joint_positions": {
+        "piper_joint1": -0.050000000000000086,
+        "piper_joint2": -1.7764619027438955e-14,
+        "piper_joint3": 7.381134145521979e-14,
+        "piper_joint4": 2.7279086928578574e-14,
+        "piper_joint5": -0.0999999999998377,
+        "piper_joint6": 4.398845690514379e-15
+      },
+      "max_command_error_rad": 1.6230072841239007e-13,
+      "capture": {
+        "sample": 20,
+        "time_skew_s": 0.0,
+        "reprojection_px": 0.049658127559323896,
+        "dataset": "/Users/seoneum/Desktop/RoboCup/calibration/tutorial/outputs/robocup-tutorial-calibration/calibration_data/sim/head_piper/dataset.json"
+      }
+    },
+    {
+      "split": "train",
+      "sample_id": "022",
+      "image_id": 21,
+      "joint_targets_rad": [
+        0.0,
+        0.0,
+        0.0,
+        0.05,
+        0.1,
+        0.0
+      ],
+      "measured_joint_positions": {
+        "piper_joint1": -1.05926450222765e-16,
+        "piper_joint2": -1.7614660936542947e-14,
+        "piper_joint3": 7.363248026650746e-14,
+        "piper_joint4": 0.050000000000022714,
+        "piper_joint5": 0.10000000000016313,
+        "piper_joint6": 1.1785677078833014e-14
+      },
+      "max_command_error_rad": 1.6311951789305112e-13,
+      "capture": {
+        "sample": 21,
+        "time_skew_s": 0.0,
+        "reprojection_px": 0.05431420457775974,
+        "dataset": "/Users/seoneum/Desktop/RoboCup/calibration/tutorial/outputs/robocup-tutorial-calibration/calibration_data/sim/head_piper/dataset.json"
+      }
+    },
+    {
+      "split": "train",
+      "sample_id": "023",
+      "image_id": 22,
+      "joint_targets_rad": [
+        0.0,
+        0.0,
+        0.0,
+        -0.05,
+        -0.1,
+        0.0
+      ],
+      "measured_joint_positions": {
+        "piper_joint1": -9.663618950676998e-17,
+        "piper_joint2": -1.7761168883688208e-14,
+        "piper_joint3": 7.348377923120424e-14,
+        "piper_joint4": -0.04999999999998953,
+        "piper_joint5": -0.09999999999983848,
+        "piper_joint6": -4.71893044388377e-15
+      },
+      "max_command_error_rad": 1.6152357229515246e-13,
+      "capture": {
+        "sample": 22,
+        "time_skew_s": 0.0,
+        "reprojection_px": 0.03179400539943598,
+        "dataset": "/Users/seoneum/Desktop/RoboCup/calibration/tutorial/outputs/robocup-tutorial-calibration/calibration_data/sim/head_piper/dataset.json"
+      }
+    },
+    {
+      "split": "train",
+      "sample_id": "024",
+      "image_id": 23,
+      "joint_targets_rad": [
+        0.1,
+        0.0,
+        0.0,
+        0.05,
+        -0.1,
+        0.0
+      ],
+      "measured_joint_positions": {
+        "piper_joint1": 0.09999999999999994,
+        "piper_joint2": -1.7755248061999698e-14,
+        "piper_joint3": 7.382574229132586e-14,
+        "piper_joint4": 0.050000000000044446,
+        "piper_joint5": -0.09999999999983812,
+        "piper_joint6": 1.3600094545722558e-14
+      },
+      "max_command_error_rad": 1.6188439477815564e-13,
+      "capture": {
+        "sample": 23,
+        "time_skew_s": 0.0,
+        "reprojection_px": 0.082879712347097,
+        "dataset": "/Users/seoneum/Desktop/RoboCup/calibration/tutorial/outputs/robocup-tutorial-calibration/calibration_data/sim/head_piper/dataset.json"
+      }
+    },
+    {
+      "split": "train",
+      "sample_id": "025",
+      "image_id": 24,
+      "joint_targets_rad": [
+        -0.1,
+        0.0,
+        0.0,
+        -0.05,
+        0.1,
+        0.0
+      ],
+      "measured_joint_positions": {
+        "piper_joint1": -0.1000000000000001,
+        "piper_joint2": -1.7619169080818497e-14,
+        "piper_joint3": 7.393791058400021e-14,
+        "piper_joint4": -0.04999999999996609,
+        "piper_joint5": 0.10000000000016332,
+        "piper_joint6": -4.02824135886572e-15
+      },
+      "max_command_error_rad": 1.6331380692236053e-13,
+      "capture": {
+        "sample": 24,
+        "time_skew_s": 0.0,
+        "reprojection_px": 0.009088666366685705,
+        "dataset": "/Users/seoneum/Desktop/RoboCup/calibration/tutorial/outputs/robocup-tutorial-calibration/calibration_data/sim/head_piper/dataset.json"
+      }
+    },
+    {
+      "split": "holdout",
+      "sample_id": "001",
+      "image_id": 25,
+      "joint_targets_rad": [
+        0.05,
+        0.0,
+        0.0,
+        0.05,
+        0.05,
+        0.0
+      ],
+      "measured_joint_positions": {
+        "piper_joint1": 0.04999999999999991,
+        "piper_joint2": -1.7620064793539935e-14,
+        "piper_joint3": 7.40001496121531e-14,
+        "piper_joint4": 0.05000000000003601,
+        "piper_joint5": 0.050000000000164115,
+        "piper_joint6": 1.4536557233912252e-14
+      },
+      "max_command_error_rad": 1.6411177972130986e-13,
+      "capture": {
+        "sample": 25,
+        "time_skew_s": 0.0,
+        "reprojection_px": 0.044988024189296996,
+        "dataset": "/Users/seoneum/Desktop/RoboCup/calibration/tutorial/outputs/robocup-tutorial-calibration/calibration_data/sim/head_piper/dataset.json"
+      }
+    },
+    {
+      "split": "holdout",
+      "sample_id": "002",
+      "image_id": 26,
+      "joint_targets_rad": [
+        -0.05,
+        0.0,
+        0.0,
+        0.05,
+        0.05,
+        0.0
+      ],
+      "measured_joint_positions": {
+        "piper_joint1": -0.050000000000000086,
+        "piper_joint2": -1.7625420206430097e-14,
+        "piper_joint3": 7.399162474420356e-14,
+        "piper_joint4": 0.050000000000036314,
+        "piper_joint5": 0.05000000000016411,
+        "piper_joint6": 1.4559001834503924e-14
+      },
+      "max_command_error_rad": 1.6410484082740595e-13,
+      "capture": {
+        "sample": 26,
+        "time_skew_s": 0.0,
+        "reprojection_px": 0.0358462000417107,
+        "dataset": "/Users/seoneum/Desktop/RoboCup/calibration/tutorial/outputs/robocup-tutorial-calibration/calibration_data/sim/head_piper/dataset.json"
+      }
+    },
+    {
+      "split": "holdout",
+      "sample_id": "003",
+      "image_id": 27,
+      "joint_targets_rad": [
+        0.05,
+        0.0,
+        0.0,
+        -0.05,
+        -0.05,
+        0.0
+      ],
+      "measured_joint_positions": {
+        "piper_joint1": 0.049999999999999906,
+        "piper_joint2": -1.769301276876204e-14,
+        "piper_joint3": 7.392345174334213e-14,
+        "piper_joint4": -0.049999999999979464,
+        "piper_joint5": -0.04999999999983671,
+        "piper_joint6": -5.391975505557849e-15
+      },
+      "max_command_error_rad": 1.632929902406488e-13,
+      "capture": {
+        "sample": 27,
+        "time_skew_s": 0.0,
+        "reprojection_px": 0.005224966902804164,
+        "dataset": "/Users/seoneum/Desktop/RoboCup/calibration/tutorial/outputs/robocup-tutorial-calibration/calibration_data/sim/head_piper/dataset.json"
+      }
+    },
+    {
+      "split": "holdout",
+      "sample_id": "004",
+      "image_id": 28,
+      "joint_targets_rad": [
+        -0.05,
+        0.0,
+        0.0,
+        -0.05,
+        0.05,
+        0.0
+      ],
+      "measured_joint_positions": {
+        "piper_joint1": -0.0500000000000001,
+        "piper_joint2": -1.762478029121601e-14,
+        "piper_joint3": 7.419139142075648e-14,
+        "piper_joint4": -0.04999999999996474,
+        "piper_joint5": 0.05000000000016422,
+        "piper_joint6": -4.9614882621585794e-15
+      },
+      "max_command_error_rad": 1.6421586312986847e-13,
+      "capture": {
+        "sample": 28,
+        "time_skew_s": 0.0,
+        "reprojection_px": 0.04337130222539645,
+        "dataset": "/Users/seoneum/Desktop/RoboCup/calibration/tutorial/outputs/robocup-tutorial-calibration/calibration_data/sim/head_piper/dataset.json"
+      }
+    },
+    {
+      "split": "holdout",
+      "sample_id": "005",
+      "image_id": 29,
+      "joint_targets_rad": [
+        0.07,
+        0.0,
+        0.0,
+        0.03,
+        -0.07,
+        0.0
+      ],
+      "measured_joint_positions": {
+        "piper_joint1": 0.06999999999999994,
+        "piper_joint2": -1.771647280763642e-14,
+        "piper_joint3": 7.411275679307922e-14,
+        "piper_joint4": 0.030000000000041712,
+        "piper_joint5": -0.06999999999983667,
+        "piper_joint6": 1.0932510925420296e-14
+      },
+      "max_command_error_rad": 1.6334156249797616e-13,
+      "capture": {
+        "sample": 29,
+        "time_skew_s": 0.0010000000000047748,
+        "reprojection_px": 0.06823183074424483,
+        "dataset": "/Users/seoneum/Desktop/RoboCup/calibration/tutorial/outputs/robocup-tutorial-calibration/calibration_data/sim/head_piper/dataset.json"
+      }
+    },
+    {
+      "split": "holdout",
+      "sample_id": "006",
+      "image_id": 30,
+      "joint_targets_rad": [
+        0.03,
+        0.0,
+        0.0,
+        -0.07,
+        0.06,
+        0.0
+      ],
+      "measured_joint_positions": {
+        "piper_joint1": 0.0299999999999999,
+        "piper_joint2": -1.7616494119219815e-14,
+        "piper_joint3": 7.402713081151873e-14,
+        "piper_joint4": -0.06999999999996437,
+        "piper_joint5": 0.060000000000163506,
+        "piper_joint6": -8.561623277102031e-15
+      },
+      "max_command_error_rad": 1.6350809595166993e-13,
+      "capture": {
+        "sample": 30,
+        "time_skew_s": 0.0010000000000047748,
+        "reprojection_px": 0.06092479442438397,
+        "dataset": "/Users/seoneum/Desktop/RoboCup/calibration/tutorial/outputs/robocup-tutorial-calibration/calibration_data/sim/head_piper/dataset.json"
+      }
+    },
+    {
+      "split": "holdout",
+      "sample_id": "007",
+      "image_id": 31,
+      "joint_targets_rad": [
+        -0.03,
+        0.0,
+        0.0,
+        0.07,
+        -0.06,
+        0.0
+      ],
+      "measured_joint_positions": {
+        "piper_joint1": -0.030000000000000065,
+        "piper_joint2": -1.7707145541536904e-14,
+        "piper_joint3": 7.395063380292792e-14,
+        "piper_joint4": 0.07000000000005503,
+        "piper_joint5": -0.059999999999837315,
+        "piper_joint6": 1.9506451473147053e-14
+      },
+      "max_command_error_rad": 1.6268236757710497e-13,
+      "capture": {
+        "sample": 31,
+        "time_skew_s": 0.0,
+        "reprojection_px": 0.02114768097812446,
+        "dataset": "/Users/seoneum/Desktop/RoboCup/calibration/tutorial/outputs/robocup-tutorial-calibration/calibration_data/sim/head_piper/dataset.json"
+      }
+    },
+    {
+      "split": "holdout",
+      "sample_id": "008",
+      "image_id": 32,
+      "joint_targets_rad": [
+        0.08,
+        0.0,
+        0.0,
+        0.04,
+        0.03,
+        0.0
+      ],
+      "measured_joint_positions": {
+        "piper_joint1": 0.07999999999999993,
+        "piper_joint2": -1.7628230247441602e-14,
+        "piper_joint3": 7.418200489781991e-14,
+        "piper_joint4": 0.040000000000040746,
+        "piper_joint5": 0.030000000000164524,
+        "piper_joint6": 1.3408909092084837e-14
+      },
+      "max_command_error_rad": 1.6452464390859234e-13,
+      "capture": {
+        "sample": 32,
+        "time_skew_s": 0.0,
+        "reprojection_px": 0.060667759518698405,
+        "dataset": "/Users/seoneum/Desktop/RoboCup/calibration/tutorial/outputs/robocup-tutorial-calibration/calibration_data/sim/head_piper/dataset.json"
+      }
+    },
+    {
+      "split": "holdout",
+      "sample_id": "009",
+      "image_id": 33,
+      "joint_targets_rad": [
+        -0.08,
+        0.0,
+        0.0,
+        -0.04,
+        -0.03,
+        0.0
+      ],
+      "measured_joint_positions": {
+        "piper_joint1": -0.08000000000000006,
+        "piper_joint2": -1.7677949293746485e-14,
+        "piper_joint3": 7.41406700178628e-14,
+        "piper_joint4": -0.03999999999997326,
+        "piper_joint5": -0.02999999999983599,
+        "piper_joint6": -3.4574812598959178e-15
+      },
+      "max_command_error_rad": 1.6400769631275125e-13,
+      "capture": {
+        "sample": 33,
+        "time_skew_s": 0.0,
+        "reprojection_px": 0.012546986018080717,
+        "dataset": "/Users/seoneum/Desktop/RoboCup/calibration/tutorial/outputs/robocup-tutorial-calibration/calibration_data/sim/head_piper/dataset.json"
+      }
+    },
+    {
+      "split": "holdout",
+      "sample_id": "010",
+      "image_id": 34,
+      "joint_targets_rad": [
+        0.02,
+        0.0,
+        0.0,
+        -0.08,
+        0.07,
+        0.0
+      ],
+      "measured_joint_positions": {
+        "piper_joint1": 0.01999999999999992,
+        "piper_joint2": -1.7612275715046768e-14,
+        "piper_joint3": 7.392635632191171e-14,
+        "piper_joint4": -0.07999999999996293,
+        "piper_joint5": 0.07000000000016302,
+        "piper_joint6": -1.0094590237663922e-14
+      },
+      "max_command_error_rad": 1.630084955905886e-13,
+      "capture": {
+        "sample": 34,
+        "time_skew_s": 0.0,
+        "reprojection_px": 0.08921991465669678,
+        "dataset": "/Users/seoneum/Desktop/RoboCup/calibration/tutorial/outputs/robocup-tutorial-calibration/calibration_data/sim/head_piper/dataset.json"
+      }
+    }
+  ],
+  "simulation": true
+}

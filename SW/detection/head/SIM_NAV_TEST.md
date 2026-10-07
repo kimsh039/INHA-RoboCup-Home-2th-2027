@@ -105,14 +105,14 @@ ros2 launch SW/simulation/ros2/sim.launch.py world:=room rviz:=false \
 
 ```bash
 ros2 launch slam_toolbox online_async_launch.py \
-  slam_params_file:=$PWD/simulation/ros2/slam_params.yaml use_sim_time:=true
+  slam_params_file:=$PWD/SW/simulation/ros2/slam_params.yaml use_sim_time:=true
 ```
 
 ### 터미널 3: Nav2
 
 ```bash
 ros2 launch nav2_bringup navigation_launch.py \
-  params_file:=$PWD/simulation/ros2/nav2_params.yaml use_sim_time:=true
+  params_file:=$PWD/SW/simulation/ros2/nav2_params.yaml use_sim_time:=true
 ```
 
 `Managed nodes are active`와 `/navigate_to_pose` action 준비를 확인한다.
@@ -123,7 +123,7 @@ ros2 launch nav2_bringup navigation_launch.py \
 
 ```bash
 ros2 launch robocup_head_detection sim_detection.launch.py \
-  model_path:=$PWD/detection/models/yolo11n.pt device:=cpu \
+  model_path:=$PWD/SW/detection/head/models/yolo11n.pt device:=cpu \
   python_executable:=$PWD/SW/detection/head/.venv-test/bin/python3 \
   auto_send:=true standoff_distance:=1.0
 ```
@@ -191,8 +191,8 @@ SLAM·Nav2는 2절과 같다. 로봇을 0.5 m 정도 움직여 지도를 채운 
 
 ```bash
 ros2 launch robocup_head_detection sim_detection.launch.py \
-  config:=$PWD/detection/head_detection_ws/install/robocup_head_detection/share/robocup_head_detection/config/sim_table_detection.yaml \
-  model_path:=$PWD/detection/models/yolo11m.pt device:=0 \
+  config:=$PWD/SW/detection/head/head_detection_ws/install/robocup_head_detection/share/robocup_head_detection/config/sim_table_detection.yaml \
+  model_path:=$PWD/SW/detection/head/models/yolo11m.pt device:=0 \
   python_executable:=$PWD/SW/detection/head/.venv-test/bin/python3 auto_send:=false
 ```
 

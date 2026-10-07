@@ -1,0 +1,6 @@
+gazebo_ws/build/
+gazebo_ws/install/
+gazebo_ws/log/
+runtime/
+__pycache__/
+*.pyc

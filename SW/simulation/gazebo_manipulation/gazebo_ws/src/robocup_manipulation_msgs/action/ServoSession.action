@@ -1,0 +1,8 @@
+string session_id
+float64 timeout_s
+---
+bool stopped
+string error_code
+---
+float64 tracking_error_rad
+float64 command_interval_s

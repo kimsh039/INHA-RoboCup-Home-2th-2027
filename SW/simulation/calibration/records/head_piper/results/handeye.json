@@ -1,0 +1,92 @@
+{
+  "mode": "eye_on_base",
+  "translation_unit": "m",
+  "synthetic": false,
+  "transform_convention": "T_parent_child maps child coordinates to parent coordinates",
+  "result_frame": "T_base_camera",
+  "matrix": [
+    [
+      0.0015139211414746546,
+      0.004387834291104274,
+      0.9999892274184815,
+      -0.10772342972197517
+    ],
+    [
+      -0.999991984344118,
+      0.0037132662276411167,
+      0.0014976319428809998,
+      -0.0017162744624413407
+    ],
+    [
+      -0.003706654865383434,
+      -0.9999834791456089,
+      0.0043934207119805755,
+      0.4789368986951096
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "translation_xyz_m": [
+    -0.10772342972197517,
+    -0.0017162744624413407,
+    0.4789368986951096
+  ],
+  "quaternion_xyzw": [
+    -0.4983490830236006,
+    0.4994511798900333,
+    -0.49979151486966655,
+    0.5023993949242713
+  ],
+  "training_count": 25,
+  "holdout_count": 10,
+  "method": "OpenCV PARK",
+  "held_out_invariant_errors": [
+    {
+      "translation_m": 0.00024508586090774546,
+      "rotation_deg": 0.20290887718515954
+    },
+    {
+      "translation_m": 0.00015546734961397393,
+      "rotation_deg": 0.16148789183951337
+    },
+    {
+      "translation_m": 0.00012261836255283325,
+      "rotation_deg": 0.17574693802187982
+    },
+    {
+      "translation_m": 0.00019350201592887708,
+      "rotation_deg": 0.14244927586464462
+    },
+    {
+      "translation_m": 0.00019486643573595706,
+      "rotation_deg": 0.06299766307845756
+    },
+    {
+      "translation_m": 0.00017438803843863616,
+      "rotation_deg": 0.1506711218442334
+    },
+    {
+      "translation_m": 0.00010125112210543916,
+      "rotation_deg": 0.06385278654378852
+    },
+    {
+      "translation_m": 0.00024220747475720206,
+      "rotation_deg": 0.12688936557622169
+    },
+    {
+      "translation_m": 0.0002719070938268114,
+      "rotation_deg": 0.18204287335475833
+    },
+    {
+      "translation_m": 0.0002392093638906892,
+      "rotation_deg": 0.11659270548129007
+    }
+  ],
+  "max_holdout_translation_m": 0.0002719070938268114,
+  "max_holdout_rotation_deg": 0.20290887718515954,
+  "deployment_ready": false
+}

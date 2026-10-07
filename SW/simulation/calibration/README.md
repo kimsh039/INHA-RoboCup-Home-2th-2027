@@ -1,50 +1,90 @@
-# 전체 캘리브레이션 요약
+# Calibration summary
 
-**2026-10-06 기준 · Gazebo 시뮬레이션 · Head/Wrist 모두 D435**
+2026-10-07 · Gazebo simulation · Head/Wrist cameras: D435
 
-## 보정 순서와 현재 상태
+`robocup.calibrated.urdf` now includes both LiDAR estimates, the URDF PiPER mount reference, the newly measured Head–PiPER hand-eye estimate, the existing Wrist hand-eye estimate, and a nominal gripper TCP. This is a combination of simulation measurements and model references. Physical calibration is not established.
 
-**Base–2D LiDAR → Base–Mid360 → Head–Mid360 → Base–PiPER → Head–PiPER 검증 → Link6–Wrist → TCP → 전체 교차 검증**
+## Current state
 
-현재 **두 LiDAR의 계산·별도 자세 평가·URDF 반영**, **Head–Mid360과 Link6–Wrist의 계산·별도 자세 평가·기록 업로드**까지 진행했다. 두 카메라 보정값은 JSON으로 등록했으며 최종 URDF에는 아직 반영하지 않았다. 팔 베이스·TCP·전체 교차 검증은 남아 있다.
+| Stage | Result | Runtime status / evidence |
+|---|---|---|
+| Base–2D LiDAR | x=0.124 mm, y=0.521 mm, yaw=8.844783°; z/roll/pitch fixed | Applied. Recorded independent scans: RMS 6.737/6.846 mm |
+| Base–Mid360 | xyz≈(-0.179962, 0.000156, 1.198867) m; roll≈180° | Applied. Recorded A/B maximum plane offsets: 3.594/3.167 mm |
+| Head–Mid360 | Recorded plane fit; held-out maximum 4.247 mm / 0.814° | Preserved. Historical Gazebo GT position error 11.720 mm; not used as the current Head mount |
+| Base–PiPER | xyz=(-0.0195, 0, 0.80611) m; RPY=0 | Applied as `urdf_nominal_reference`; no independent measurement |
+| PiPER–Head | New eye-on-base image PnP + measured-joint FK, 25 train / 10 holdout | Applied through Base–PiPER. Solver held-out maximum 0.272 mm / 0.203° |
+| Link6–Wrist | Recorded eye-in-hand hand-eye, 25 train / 10 holdout | Applied. Recorded maximum 0.339 mm / 0.294° |
+| Link6–TCP | xyz=(0, 0, 0.1425) m; axes follow gripper base | Added as nominal jaw-reference midpoint, not a measured contact point |
+| Head path comparison | LiDAR route versus new arm route | Difference 9.871 mm / 0.414°; numerical comparison, not proof of physical accuracy |
+| TF integration | All above transforms in one URDF | Generated and recorded. ROS/RViz was not launched in this update |
 
-## 현재 결과
+[Integrated results and application history](records/integrated_calibration/README.md) · [New Head–PiPER observations](records/head_piper/README.md) · [URDF mount inputs and prior requested evaluation](records/base_piper/README.md)
 
-변환은 `parent ← child`, 즉 센서 좌표를 부모 좌표로 옮기는 방향이다. 아래 거리는 평가 대상이 서로 다르며, 별도 관측 오차와 GT 장착 변환 오차를 구분한다.
+## Coordinate convention and selection
 
-| 항목 | 계산 결과 | 별도 자세 평가 | GT 장착 오차 · 위치 / 방향 | 적용 상태 |
-|---|---|---|---|---|
-| **Base–2D LiDAR · 10/5** | `base_link ← laser_frame`: x=0.124mm, y=0.521mm, yaw=8.844783°. z/roll/pitch 고정 | 001/002 외벽 거리 RMS **6.737/6.846mm** · 임시 기준 통과 | **0.523mm (xy) / 0.0353° (yaw)** | 10/6 최종 URDF 반영 |
-| **Base–Mid360 · 10/6** | `base_link ← livox_frame`: xyz≈(-0.179962, 0.000156, 1.198867)m, roll≈180° | A/B 최대 평면 위치 **3.594/3.167mm**, 방향 **0.2100/0.1892°** · 임시 기준 통과 | **0.291mm / 0.00404°** | 10/6 최종 URDF 반영 |
-| **Head D435–Mid360 · 10/6** | `camera_optical_frame ← livox_frame`: xyz≈(0.001345, 0.087028, -0.043408)m | 25개 학습, 10개 평가. 최대 평면 거리 **4.247mm**, 방향 **0.814°** · 기준 10mm/1° 통과 | **11.720mm / 0.169°** · 위치 개선 필요 | JSON·원자료·평가 업로드; Base–Head 합성·URDF 미반영 |
-| **Link6–Wrist D435 · 10/6** | `piper_link6 ← wrist_camera_optical_frame`: xyz≈(-0.066255, -0.002195, 0.036703)m | 25개 학습, 10개 평가. 최대 고정 태그 위치 **0.339mm**, 방향 **0.294°** · 기준 5mm/1° 통과 | **0.598mm / 0.195°** | JSON·원자료·평가 업로드; URDF 미반영 |
+Every transform is `parent ← child`, in metres. A point is mapped by `p_parent = R p_child + t`.
 
-Head는 별도 평면 일관성 기준을 통과했어도 GT 장착 위치 오차가 11.72mm다. 원인 진단과 개선이 남아 있다. 표의 수치는 저장된 시뮬레이션 결과이며 실물 정확도를 뜻하지 않는다. 두 LiDAR 결과는 [robocup.calibrated.urdf](../robot_description/robocup.calibrated.urdf)에 반영돼 있다.
+- LiDAR Head route: `T_base_head = T_base_mid × inverse(T_head_mid_recorded)`.
+- Arm Head route: `T_base_head = T_base_piper × T_piper_head_measured`.
+- The current runtime selects the new arm route because its solver-reported held-out residuals meet the existing 5 mm / 1° provisional limits. This is not a GT-based correction of the plane result.
+- `head_mid360_runtime.json = inverse(T_base_head_selected) × T_base_mid` is a derived relation, not an independently refitted Head–Mid360 calibration.
+- The Base–PiPER reference shares the URDF with FK. The route comparison is therefore not an independent physical arm calibration.
+- TCP is at the midpoint of the two jaw joint origins under symmetric opening: 4.5 mm flange-to-gripper plus 138 mm gripper-to-jaw reference. It does not identify a fingertip surface, attached tool tip, or object contact point.
 
-## 진행 과정
+## Run the generated model
 
-1. **기록:** 실험 설정·world·모델·코드를 보관하고 실제 base/팔 pose, 시각, 사진·점군을 저장한다.
-2. **계산:** 학습 자료만으로 변환을 추정하고 결과 JSON과 대응 자료를 만든다.
-3. **평가:** 별도 자세의 관측에 계산값을 고정해 오차를 구한다. GT 비교와 관측 일관성 판정을 구분한다.
-4. **적용:** 적용할 결과를 최신 URDF에 누적하고 ROS·RViz에서 해당 모델을 선택한다. 결과 JSON 업로드만으로 TF가 바뀌지는 않는다.
-5. **보관:** 계산값·평가 숫자·원자료·적용 여부·날짜를 기록한다.
+From the repository root on Ubuntu:
 
-RViz에서 축이 보이는 것은 적용 확인이다. 잘 보정됐는지는 별도 관측과 GT 비교 보고서로 판단한다. 계산 JSON의 `computed_validation_pending`은 계산 당시 상태로 남아 있으며 후속 판정은 별도 평가 JSON에 있다. 이번 카메라 업로드에서는 기존 평가를 보관했고 추가 테스트·재평가를 하지 않았다.
+```bash
+source /opt/ros/jazzy/setup.bash
+export REPO="$PWD"
+export ROS_DOMAIN_ID=73
+export GZ_IP=127.0.0.1
+export GZ_PARTITION=robocup_motion
+ros2 launch "$REPO/SW/simulation/ros2/calibration_runtime.launch.py" \
+  urdf:="$REPO/SW/simulation/robot_description/robocup.calibrated.urdf" \
+  joints:=true rviz:=true
+```
 
-## 저장 위치와 읽는 순서
+On this Mac, use the installed `ros_jazzy` conda environment instead of the first line:
 
-| 자료 | 위치 |
-|---|---|
-| 새 측정·계산·평가·일지 | `SW/simulation/calibration/data/` 아래 날짜별 세션. 상세 가이드가 경로·파일을 생성하며 관찰 메모는 직접 기록 |
-| 2D 결과와 평가 | [계산 요약](records/20261005_base_2dlidar/calibration/calibration_report.md) · [001/002 평가](records/20261005_base_2dlidar/validation/validation_report.md) |
-| Mid360 원자료와 결과 | [학습·계산 기록](records/20261006_base_mid360/README.md) · [A/B 정확도 평가](records/20261006_base_mid360/validation_20261006_201607/README.md) |
-| Head–Mid360 원자료와 결과 | [과정·수치·파일·Ubuntu 열기 명령](records/20261006_head_mid360/README.md) |
-| Wrist D435 원자료와 결과 | [과정·수치·파일·Ubuntu 열기 명령](records/20261006_wrist_d435/README.md) |
-| Head/Wrist 공통 실행 증거 | [명령·목표각·측정 모델·계산 코드 스냅샷](records/20261006_camera_run/README.md) |
+```bash
+source "$HOME/miniforge3/etc/profile.d/conda.sh"
+conda activate ros_jazzy
+```
 
-각 기록의 README에서 보정 JSON → 별도 평가 → GT 비교 → 원자료 순서로 링크를 연다. 사진은 `images/`, Head 점군은 각 `train/`·`holdout/`의 압축 JSON/NPZ, 실제 자세와 촬영 연결은 dataset·`capture_record.json`에 있다. 원본 경로와 Git 경로의 대응 및 SHA-256은 각 manifest에 있다.
+The runtime launch publishes this URDF; it does not modify an already running Gazebo SDF. Gazebo generation continues to use the nominal CAD model. The TF publisher needs actual joint states for moving arm/Wrist/TCP frames.
 
-- [Mid360 Ubuntu 실행 가이드](BASE_MID360.md): 측정 → 계산 → 적용 → 이동·평가 → 기록까지 상세 명령.
-- [보정 모델 적용 방법](../robot_description/README.md#보정-urdf-적용하기): ROS·RViz 실행과 모델 선택.
-- [모델 변경·업로드 이력](../robot_description/README.md#모델-변경보정업로드-이력): 반영 날짜와 커밋.
-- [Mac 환경 차이](MAC.md): 기존 Mac 자료를 이어갈 때 참고.
+## Rebuild from recorded results
+
+```bash
+python3 -m venv SW/simulation/calibration/.venv
+SW/simulation/calibration/.venv/bin/python -m pip install -r SW/simulation/calibration/requirements.txt
+SW/simulation/calibration/.venv/bin/python SW/simulation/calibration/integrate_calibration.py --replace
+```
+
+`--replace` replaces the generated bundle and calibrated runtime only. It preserves all recorded input sessions. Model references are explicitly marked `urdf_nominal_reference`; derived transforms retain their source hashes and nominal-reference provenance. `add-tcp` accepts either a passed pivot result or this explicitly marked model reference.
+
+New Head–PiPER collection is available with a new, empty session directory:
+
+```bash
+SW/simulation/calibration/.venv/bin/python SW/simulation/calibration/collect_head_arm.py \
+  --session "$PWD/SW/simulation/calibration/data/head_piper_next"
+```
+
+This requires the native Gazebo Python transport/message bindings in addition to the numerical environment. The completed session is archived; rerunning the collector is optional. The actual run used the source snapshot in `records/head_piper/config/source/`.
+
+## Remaining independent measurements
+
+Physical arm mounting, TCP contact/pivot and tool axes, joint zero offsets/link geometry, gripper opening/zero, and real sensor calibration require independent measurements. None were inferred from generated URDF coordinates. The historical Head plane bias and the 9.871 mm route difference remain documented.
+
+The new hand-eye solver reports held-out errors during the requested calibration calculation. No additional post-work test, build, lint, ROS launch, or verification was run.
+
+## Historical records
+
+- [Base–2D LiDAR](records/20261005_base_2dlidar/calibration/calibration_report.md)
+- [Base–Mid360](records/20261006_base_mid360/README.md) and [A/B recorded evaluation](records/20261006_base_mid360/validation_20261006_201607/README.md)
+- [Head–Mid360 plane fit](records/20261006_head_mid360/README.md)
+- [Wrist D435](records/20261006_wrist_d435/README.md)
+- [Earlier camera run](records/20261006_camera_run/README.md)
+- [Mid360 runbook](BASE_MID360.md) · [Mac environment notes](MAC.md)

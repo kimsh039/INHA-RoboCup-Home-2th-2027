@@ -659,7 +659,7 @@
   <joint name="camera_link_joint" type="fixed">
     <parent link="rack_base_link" />
     <child link="camera_link" />
-    <origin xyz="-0.12495 -2.611244554e-15 1.27" rpy="0 0 0" />
+    <origin xyz="-0.12722342972197517 -0.001716274462443348 1.2689368986951095" rpy="0.0037066991262989625 -0.0043934350517067511 0.0014976471610455334" />
   </joint>
   <link name="cad_2D_LiDARMount_1" />
   <joint name="cad_2D_LiDARMount_1_joint" type="fixed">
@@ -1029,7 +1029,7 @@
   <joint name="rack_to_piper_base" type="fixed">
     <parent link="rack_base_link" />
     <child link="piper_base_link" />
-    <origin xyz="-0.0195 -2.00728322852e-15 0.79" rpy="0 0 0" />
+    <origin xyz="-0.0195 -2.0072832285199999e-15 0.79000000000000004" rpy="0 0 0" />
   </joint>
   <joint name="tracer_to_rack" type="fixed">
     <parent link="base_link" />
@@ -1092,7 +1092,7 @@
   <joint name="piper_to_wrist_camera_mount" type="fixed">
     <parent link="piper_gripper_base" />
     <child link="wrist_camera_mount_link" />
-    <origin xyz="1.4166402004356371e-05 2.7045737653415627e-05 0.00717003020070589" rpy="-1.5707995642548238 -1.2662970102272908e-05 1.6128249746224554" />
+    <origin xyz="0.00021057778731321184 0.00081284728291651563 0.0072422552841638725" rpy="-1.5721318918257796 -0.0019379665882315322 1.6152889735146658" />
   </joint>
   <gazebo reference="wrist_camera_link">
     <sensor name="wrist_d435f_depth" type="depth_camera">
@@ -1528,4 +1528,4 @@
     <child link="cad_bracket_36" />
     <origin xyz="-0.01 -0.0693408679762 0.761669546471" rpy="0 -1.57079632679 -2.66113378704e-16" />
   </joint>
-</robot>
+<link name="tcp" /><joint name="calibrated_tcp_joint" type="fixed"><parent link="piper_link6" /><child link="tcp" /><origin xyz="0.0 0.0 0.14250000000000002" rpy="0.0 0.0 0.0" /></joint></robot>

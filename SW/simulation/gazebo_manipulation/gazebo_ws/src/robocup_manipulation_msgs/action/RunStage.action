@@ -1,0 +1,13 @@
+string stage
+robocup_manipulation_msgs/TaskContext context
+float64 timeout_s
+# Zero means no additional floor; source observation must be newer when nonzero.
+builtin_interfaces/Time min_source_stamp
+---
+bool success
+string error_code
+string detail
+robocup_manipulation_msgs/TaskContext context
+---
+string state
+float64 elapsed_s

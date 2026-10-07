@@ -110,7 +110,7 @@ python run_mujoco_moveit_bridge.py --prepare-only
 **이후 각 터미널에서 공통 초기화**합니다. clone 위치가 다르면 첫 줄만 변경합니다.
 
 ```bash
-cd "$HOME/INHA-RoboCup-Home-2th-2027/simulation/mujoco"
+cd "$HOME/INHA-RoboCup-Home-2th-2027/SW/simulation/mujoco"
 source /opt/ros/humble/setup.bash
 source .ros_venv/bin/activate
 export ROS_LOG_DIR="$PWD/logs/ros"

@@ -145,13 +145,73 @@ def validate_planes(a):
     write(a.output,dict(status='passed_provisional_limits' if ok else 'failed_provisional_limits',result_sha256=sha(a.result),validation_sha256=sha(a.validation),refitted=False,normal_errors_deg=angles.tolist(),offset_errors_mm=offsets.tolist(),limits=dict(max_angle_deg=a.max_angle_deg,max_offset_mm=a.max_offset_mm)))
     if not ok: raise ValueError('Validation failed; report saved')
 def mount(a):
-    data={r['point_id']:np.array([float(r[k]) for k in ('x_m','y_m','z_m')]) for r in rows(a.points)}
+    required_points = ('origin', 'x_axis', 'y_axis')
+    coordinates = ('x_m', 'y_m', 'z_m')
+    with Path(a.points).open(encoding='utf-8-sig', newline='') as stream:
+        reader = csv.DictReader(stream)
+        missing_columns = set(('point_id',) + coordinates) - set(reader.fieldnames or ())
+        if missing_columns:
+            raise ValueError('Mount CSV is missing columns: ' + ', '.join(sorted(missing_columns)))
+        measured = list(reader)
+    data, missing_values = {}, []
+    for line, row in enumerate(measured, 2):
+        point = (row.get('point_id') or '').strip()
+        if point not in required_points:
+            raise ValueError(f'{a.points}: row {line}: point_id must be origin, x_axis, or y_axis')
+        if point in data:
+            raise ValueError(f'{a.points}: duplicate point_id: {point}')
+        values = []
+        for field in coordinates:
+            raw = (row.get(field) or '').strip()
+            if not raw:
+                missing_values.append(f'{point}.{field}')
+                values.append(np.nan)
+                continue
+            try:
+                value = float(raw)
+            except ValueError:
+                raise ValueError(f'{a.points}: row {line}: {point}.{field} must be a number in metres; got {raw!r}') from None
+            if not np.isfinite(value):
+                raise ValueError(f'{a.points}: row {line}: {point}.{field} must be finite')
+            values.append(value)
+        data[point] = np.array(values)
+    missing_points = [point for point in required_points if point not in data]
+    if missing_points:
+        raise ValueError('Mount CSV is missing point rows: ' + ', '.join(missing_points))
+    if missing_values:
+        raise ValueError(
+            'Missing measured coordinates in ' + str(a.points) + ': ' + ', '.join(missing_values) +
+            '. Fill all nine x_m/y_m/z_m values in metres, measured in the parent frame. '
+            'The blank template cannot produce a result JSON.'
+        )
     o,x,y=[data[k] for k in ('origin','x_axis','y_axis')]; x=x-o; y=y-o
     if not np.isfinite(np.r_[o,x,y]).all() or np.linalg.norm(x)<.01 or np.linalg.norm(y)<.01:raise ValueError('Invalid or too-close axis points')
     x/=np.linalg.norm(x); y=y-x*(x@y)
     if np.linalg.norm(y)<.01: raise ValueError('Axes nearly collinear')
     y/=np.linalg.norm(y); t=np.eye(4);t[:3,:3]=np.column_stack([x,y,np.cross(x,y)]);t[:3,3]=o
-    write(a.output,transform(t,a.parent,a.child,status='computed_validation_pending',points_sha256=sha(a.points),source=a.source))
+    metadata = dict(status='computed_validation_pending', input_kind='measured_points', points_sha256=sha(a.points), source=a.source)
+    source_path = Path(a.source)
+    if source_path.is_file():
+        source_lines = source_path.read_text(encoding='utf-8').splitlines()
+        if any(line.strip() == 'input_kind: urdf_reference' for line in source_lines):
+            metadata.update(status='urdf_nominal_reference', input_kind='urdf_reference', independent_measurement=False, method='URDF-derived axis points; no independent measurement')
+            for line in source_lines:
+                for key in ('reference_urdf', 'reference_urdf_sha256'):
+                    if line.startswith(key + ':'):
+                        metadata[key] = line.split(':', 1)[1].strip()
+    write(a.output,transform(t,a.parent,a.child,**metadata))
+def urdf_reference(a):
+    """Export a model reference without claiming independently measured calibration."""
+    root=ET.parse(a.urdf).getroot()
+    reference=a.reference_child or a.child
+    t=fixed_fk(root,a.parent,reference)
+    offset=np.eye(4);offset[:3,3]=a.offset_xyz
+    offset[:3,:3]=Rotation.from_euler('xyz',a.offset_rpy).as_matrix()
+    write(a.output,transform(t@offset,a.parent,a.child,status='urdf_nominal_reference',
+        input_kind='urdf_reference',independent_measurement=False,
+        reference_urdf=os.path.relpath(Path(a.urdf).resolve(),Path(a.output).resolve().parent),reference_urdf_sha256=sha(a.urdf),
+        reference_child=reference,offset_xyz_m=a.offset_xyz,offset_rpy_rad=a.offset_rpy,
+        definition=a.definition,method='Fixed URDF chain and explicitly defined tool offset'))
 def pivot(a):
     values=read(a.samples)
     if values.get('translation_unit')!='m': raise ValueError('Samples unit must be m')
@@ -164,10 +224,17 @@ def pivot(a):
     if max(errors)>a.max_mm: raise ValueError('Pivot validation failed; result saved')
 def compose(a):
     left,tl=result(a.left); right,tr=result(a.right)
+    if getattr(a,'inverse_left',False):
+        tl=np.linalg.inv(tl);left={**left,'parent_frame':left['child_frame'],'child_frame':left['parent_frame']}
     if a.inverse_right:
-        tr=np.linalg.inv(tr); right={'parent_frame':right['child_frame'],'child_frame':right['parent_frame']}
+        tr=np.linalg.inv(tr); right={**right,'parent_frame':right['child_frame'],'child_frame':right['parent_frame']}
     if left['child_frame']!=right['parent_frame']: raise ValueError('Frame names do not compose')
-    write(a.output,transform(tl@tr,left['parent_frame'],right['child_frame'],source_sha256=[sha(a.left),sha(a.right)]))
+    write(a.output,transform(tl@tr,left['parent_frame'],right['child_frame'],
+        status='derived_transform',method='Transform composition; no additional measurement',
+        sources=[dict(path=os.path.relpath(Path(a.left).resolve(),Path(a.output).resolve().parent),sha256=sha(a.left),status=left.get('status'),inverted=getattr(a,'inverse_left',False)),
+                 dict(path=os.path.relpath(Path(a.right).resolve(),Path(a.output).resolve().parent),sha256=sha(a.right),status=right.get('status'),inverted=a.inverse_right)],
+        contains_nominal_reference=any(v.get('status')=='urdf_nominal_reference' or v.get('contains_nominal_reference',False) for v in (left,right)),
+        independent_measurement=False,source_sha256=[sha(a.left),sha(a.right)]))
 def compare(a):
     l,tl=result(a.left);r,tr=result(a.right)
     if (l['parent_frame'],l['child_frame'])!=(r['parent_frame'],r['child_frame']): raise ValueError('Frames differ')
@@ -247,7 +314,8 @@ def patch(a):
     write(str(out)+'.application.json',dict(source_urdf_sha256=sha(a.urdf),result_sha256=sha(a.result),runtime_urdf_sha256=sha(out),joint=j.get('name'),origin_xyz=local[:3,3].tolist(),origin_rpy=Rotation.from_matrix(local[:3,:3]).as_euler('xyz').tolist(),composition_verified=True,acceptance='User must review held-out validation before launching'))
 def add_tcp(a):
     v,t=result(a.result)
-    if v.get('status')!='passed_provisional_limits' or v['parent_frame']!='piper_link6' or v['child_frame']!='tcp':raise ValueError('Expected passed piper_link6<-tcp pivot result')
+    nominal=v.get('status')=='urdf_nominal_reference' and v.get('input_kind')=='urdf_reference' and v.get('independent_measurement') is False
+    if (v.get('status')!='passed_provisional_limits' and not nominal) or v['parent_frame']!='piper_link6' or v['child_frame']!='tcp':raise ValueError('Expected passed pivot or explicitly marked URDF reference piper_link6<-tcp result')
     tree=ET.parse(a.urdf);root=tree.getroot()
     if root.find("link[@name='tcp']") is not None:raise ValueError('TCP already exists')
     ET.SubElement(root,'link',name='tcp');j=ET.SubElement(root,'joint',name='calibrated_tcp_joint',type='fixed');ET.SubElement(j,'parent',link='piper_link6');ET.SubElement(j,'child',link='tcp');ET.SubElement(j,'origin',xyz=' '.join(map(str,t[:3,3])),rpy=' '.join(map(str,Rotation.from_matrix(t[:3,:3]).as_euler('xyz'))))
@@ -257,7 +325,7 @@ def add_tcp(a):
             resolved=(Path(a.urdf).resolve().parent/name).resolve()
             mesh.set('filename',os.path.relpath(resolved,Path(a.output).resolve().parent) if getattr(a,'portable_meshes',False) else resolved.as_uri())
     with Path(a.output).open('xb') as f:tree.write(f,encoding='utf-8',xml_declaration=True)
-    write(str(a.output)+'.application.json',dict(result_sha256=sha(a.result),source_urdf_sha256=sha(a.urdf),runtime_urdf_sha256=sha(a.output),composition_verified=True))
+    write(str(a.output)+'.application.json',dict(result_sha256=sha(a.result),source_urdf_sha256=sha(a.urdf),runtime_urdf_sha256=sha(a.output),input_status=v['status'],independent_measurement=not nominal,application_only=True))
 
 def main():
     p=argparse.ArgumentParser(description=__doc__);sub=p.add_subparsers(dest='cmd',required=True)
@@ -270,8 +338,10 @@ def main():
     q=command('planes',planes);arg(q,'train');arg(q,'parent');arg(q,'child');arg(q,'output')
     q=command('validate-planes',validate_planes);arg(q,'result');arg(q,'validation');arg(q,'output');q.add_argument('--max-angle-deg',type=float,default=1);q.add_argument('--max-offset-mm',type=float,default=10)
     q=command('mount',mount);arg(q,'points');arg(q,'parent');arg(q,'child');arg(q,'source');arg(q,'output')
+    q=command('urdf-reference',urdf_reference);arg(q,'urdf');arg(q,'parent');arg(q,'child');arg(q,'definition');arg(q,'output');q.add_argument('--reference-child');q.add_argument('--offset-xyz',nargs=3,type=float,default=[0.,0.,0.]);q.add_argument('--offset-rpy',nargs=3,type=float,default=[0.,0.,0.])
     q=command('pivot',pivot);arg(q,'samples');arg(q,'parent');arg(q,'child');arg(q,'rpy',nargs=3,type=float);arg(q,'orientation-source');arg(q,'output');q.add_argument('--max-mm',type=float,default=5)
     q=command('compose',compose);arg(q,'left');arg(q,'right');arg(q,'output');q.add_argument('--inverse-right',action='store_true')
+    q.add_argument('--inverse-left',action='store_true')
     q=command('compare',compare);arg(q,'left');arg(q,'right');arg(q,'output')
     q=command('normalize-handeye',normalize);arg(q,'input');arg(q,'parent');arg(q,'child');arg(q,'output')
     q=command('validate-handeye',validate_handeye);arg(q,'result');arg(q,'dataset');arg(q,'output');q.add_argument('--max-mm',type=float,default=5);q.add_argument('--max-deg',type=float,default=1)
@@ -282,6 +352,7 @@ def main():
     q=command('pivot-sample',pivot_sample);arg(q,'pose');arg(q,'dataset');arg(q,'split',choices=['train','holdout']);arg(q,'contact-note')
     q=command('patch-urdf',patch);arg(q,'urdf');arg(q,'result');arg(q,'output');q.add_argument('--mount-child');q.add_argument('--portable-meshes',action='store_true',help='Keep mesh paths relative to the output URDF for sharing in Git')
     q=command('add-tcp',add_tcp);arg(q,'urdf');arg(q,'result');arg(q,'output')
+    q.add_argument('--portable-meshes',action='store_true',help='Keep mesh paths relative to the output URDF')
     from calibration_auto_planes import add_commands
     add_commands(command,arg)
     a=p.parse_args();a.fn(a)

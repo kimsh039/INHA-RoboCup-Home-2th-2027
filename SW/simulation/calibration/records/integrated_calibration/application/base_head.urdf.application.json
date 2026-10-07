@@ -1,0 +1,18 @@
+{
+  "source_urdf_sha256": "25cd5ce8562e22bfcef3e69977f799ab6c2a85fa10620f4e2e400813ea581769",
+  "result_sha256": "8217e5e1cac4ec32ffa4fc8bc2ce9bd6403ffa12add0035ac44b6d07d6e7cff0",
+  "runtime_urdf_sha256": "09e8102e079670eb0482c0fd8d52d6e28aabc35eb6191917d9203f6ae5d0f4c7",
+  "joint": "camera_link_joint",
+  "origin_xyz": [
+    -0.12722342972197517,
+    -0.001716274462443348,
+    1.2689368986951095
+  ],
+  "origin_rpy": [
+    0.0037066991262989625,
+    -0.004393435051706751,
+    0.0014976471610455334
+  ],
+  "composition_verified": true,
+  "acceptance": "User must review held-out validation before launching"
+}

@@ -1,0 +1,64 @@
+{
+  "parent_frame": "base_link",
+  "child_frame": "camera_optical_frame",
+  "translation_unit": "m",
+  "matrix4x4": [
+    [
+      0.0015139211414746546,
+      0.004387834291104274,
+      0.9999892274184815,
+      -0.12722342972197517
+    ],
+    [
+      -0.999991984344118,
+      0.0037132662276411167,
+      0.0014976319428809998,
+      -0.001716274462443348
+    ],
+    [
+      -0.003706654865383434,
+      -0.9999834791456089,
+      0.0043934207119805755,
+      1.2850468986951096
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "translation_xyz_m": [
+    -0.12722342972197517,
+    -0.001716274462443348,
+    1.2850468986951096
+  ],
+  "quaternion_xyzw": [
+    -0.4983490830236006,
+    0.4994511798900333,
+    -0.49979151486966655,
+    0.5023993949242713
+  ],
+  "status": "derived_transform",
+  "method": "Transform composition; no additional measurement",
+  "sources": [
+    {
+      "path": "base_piper.json",
+      "sha256": "99e47e2884cd9d71db27c311a22d3b00886132323a7432756c6a9b1aa858d0de",
+      "status": "urdf_nominal_reference",
+      "inverted": false
+    },
+    {
+      "path": "piper_head.json",
+      "sha256": "3ccf9199c79e54e413a62e3da447c5616d0bd2edf09d71c5f0a4c68136678e82",
+      "status": "computed_validation_pending",
+      "inverted": false
+    }
+  ],
+  "contains_nominal_reference": true,
+  "independent_measurement": false,
+  "source_sha256": [
+    "99e47e2884cd9d71db27c311a22d3b00886132323a7432756c6a9b1aa858d0de",
+    "3ccf9199c79e54e413a62e3da447c5616d0bd2edf09d71c5f0a4c68136678e82"
+  ]
+}

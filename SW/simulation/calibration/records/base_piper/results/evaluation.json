@@ -1,0 +1,79 @@
+{
+  "scope": "Base to PiPER fixed mount: numerical consistency and runtime URDF application",
+  "verdict": "nominal_mount_consistent",
+  "physical_accuracy": "not_evaluable_without_independent_measurements",
+  "translation_xyz_mm": [
+    -19.5,
+    -2.0072832285199998e-12,
+    806.11
+  ],
+  "roll_pitch_yaw_deg": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "fixed_joint_chain": [
+    "tracer_to_rack",
+    "rack_to_piper_base"
+  ],
+  "geometry": {
+    "x_axis_marker_distance_mm": 100.0,
+    "y_axis_marker_distance_mm": 100.0,
+    "axis_angle_deg": 90.0,
+    "rotation_determinant": 1.0,
+    "rotation_orthogonality_max_error": 0.0
+  },
+  "comparisons": {
+    "csv_reconstruction_vs_saved_result": {
+      "translation_mm": 0.0,
+      "rotation_deg": 0.0
+    },
+    "saved_result_vs_nominal_urdf": {
+      "translation_mm": 0.0,
+      "rotation_deg": 0.0
+    },
+    "runtime_urdf_vs_saved_result": {
+      "translation_mm": 0.0,
+      "rotation_deg": 0.0
+    }
+  },
+  "checks": {
+    "correct_parent_child_and_units": true,
+    "finite_4x4_transform": true,
+    "valid_homogeneous_bottom_row": true,
+    "proper_orthonormal_rotation": true,
+    "translation_field_matches_matrix": true,
+    "unit_quaternion_matches_matrix": true,
+    "points_hash_matches": true,
+    "nominal_urdf_hash_matches": true,
+    "application_result_hash_matches": true,
+    "application_source_hash_matches": true,
+    "application_runtime_hash_matches": true,
+    "nominal_provenance_recorded": true,
+    "csv_reconstruction_vs_saved_result": true,
+    "saved_result_vs_nominal_urdf": true,
+    "runtime_urdf_vs_saved_result": true,
+    "joint_set_preserved": true,
+    "only_target_joint_may_change": true,
+    "runtime_mesh_files_exist": true
+  },
+  "joint_count": 93,
+  "changed_joints": [
+    "rack_to_piper_base"
+  ],
+  "checked_mesh_references": 46,
+  "missing_mesh_files": [],
+  "not_evaluated": [
+    "physical mounting error",
+    "joint zero offsets and link geometry",
+    "TCP accuracy",
+    "ROS/Gazebo/RViz live behavior"
+  ],
+  "sources": {
+    "result": "/Users/seoneum/Desktop/RoboCup/calibration/project/calibration_data/sim/base_piper_01/results/base_piper.json",
+    "runtime": "/Users/seoneum/Desktop/RoboCup/calibration/project/calibration_data/sim/base_piper_01/results/runtime_01.urdf",
+    "points": "/Users/seoneum/Desktop/RoboCup/calibration/project/calibration_data/sim/base_piper_01/config/mount_points.csv",
+    "nominal_urdf": "/Users/seoneum/Desktop/RoboCup/repositories/development/work/INHA-RoboCup-Home-2th-2027/simulation/robot_description/robocup.urdf",
+    "applied_source": "/Users/seoneum/Desktop/RoboCup/repositories/development/work/INHA-RoboCup-Home-2th-2027/simulation/robot_description/robocup.calibrated.urdf"
+  }
+}
