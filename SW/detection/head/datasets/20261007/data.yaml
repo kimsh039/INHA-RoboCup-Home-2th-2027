@@ -1,0 +1,10 @@
+train: images/train
+val: images/val
+names:
+  0: apple
+  1: banana
+  2: fanta_can
+  3: green_apple
+  4: mug
+  5: peach
+  6: plate

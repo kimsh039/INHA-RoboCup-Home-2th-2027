@@ -1,0 +1,75 @@
+{
+  "image_counts": {
+    "train": 1087,
+    "val": 175
+  },
+  "class_instance_counts": {
+    "train": {
+      "apple": 998,
+      "banana": 1014,
+      "fanta_can": 1087,
+      "green_apple": 1026,
+      "mug": 1087,
+      "peach": 1028,
+      "plate": 1009
+    },
+    "val": {
+      "apple": 169,
+      "banana": 175,
+      "fanta_can": 149,
+      "green_apple": 175,
+      "mug": 148,
+      "peach": 146,
+      "plate": 175
+    }
+  },
+  "total_frames": 1262,
+  "total_boxes": 8386,
+  "flagged_frames": 341,
+  "issues": {
+    "banana:table_motion_fallback": 124,
+    "banana:edge_partial": 49,
+    "banana:weak_flow": 7,
+    "peach:table_motion_fallback": 125,
+    "peach:edge_partial": 38,
+    "banana:unidentifiable_edge_sliver": 2,
+    "peach:unidentifiable_edge_sliver": 1,
+    "green_apple:table_motion_fallback": 150,
+    "peach:weak_flow": 8,
+    "green_apple:edge_partial": 88,
+    "green_apple:weak_flow": 9,
+    "green_apple:unidentifiable_edge_sliver": 4,
+    "apple:table_motion_fallback": 119,
+    "apple:edge_partial": 23,
+    "apple:weak_flow": 9,
+    "plate:table_motion_fallback": 94,
+    "plate:weak_flow": 32,
+    "plate:edge_partial": 15,
+    "apple:unidentifiable_edge_sliver": 1,
+    "fanta_can:table_motion_fallback": 27,
+    "fanta_can:weak_flow": 11,
+    "mug:table_motion_fallback": 29,
+    "mug:weak_flow": 3,
+    "fanta_can:edge_partial": 1,
+    "mug:edge_partial": 2
+  },
+  "test_videos": [
+    {
+      "video": "WIN_20261006_23_49_36_Pro.mp4",
+      "sha256": "48f9788054c81d92c7ddbbde691147e12fc9b9f8813ff6d89f9f9c8f05ea513e",
+      "matches_source": true
+    },
+    {
+      "video": "WIN_20261006_23_52_09_Pro.mp4",
+      "sha256": "4b7b20af30b59a57930ebdb7cdbbadba63916f92a7f42869759972eaae4cb07e",
+      "matches_source": true
+    }
+  ],
+  "errors": [],
+  "annotation_status": "draft_unreviewed",
+  "frame_stride": 2,
+  "original_resolution": [
+    1920,
+    1080
+  ]
+}
