@@ -95,7 +95,7 @@ ros2 launch SW/simulation/ros2/sim.launch.py world:=room rviz:=false \
   detection_demo:=true target_image:=$PWD/SW/detection/head/demo_assets/bus.jpg
 ```
 
-로봇 앞 `(2.2, 0.25, 1.3)`에 표본 이미지를 붙인 정적 판을 생성한다. **실제 3D 버스가 아니라
+테이블 뒤 동쪽 벽 앞 `(4.4, 0.25, 1.3)`에 표본 이미지를 붙인 정적 판을 생성한다. **실제 3D 버스가 아니라
 이미지 판**이며, 이번 목적은 검출 좌표→지도 목표→주행 연결 확인이다. 실제 물체 인식·depth 품질과
 파지 가능성은 검증하지 않는다. 테스트 모드에서만 헤드 RGB/depth를 640×480, 10Hz로 줄이고 depth
 상한을 5m로 늘린다. 원본 URDF는 수정하지 않는다. RGB/depth의 다른 시야각은 각각 CameraInfo로
@@ -159,8 +159,8 @@ Nav2 거절·실패 시에는 이 handoff를 호출하지 않는다. 이 테스�
 
 ## 4. 테이블 위 물체 검출 (GPU)
 
-방 world의 두 테이블 위 물체(접시·컵·바나나·환타 캔·복숭아·사과·청사과)를 헤드 카메라로 검출해 map 좌표를 구한다.
-물체는 `sim/table-scene` 브랜치의 world가 필요하다. 표적 이미지 판(`target_image`)과 `detection_demo`는 쓰지 않는다.
+방 world 가운데 테이블 위 물체(접시·컵·바나나·환타 캔·복숭아·사과·청사과)를 헤드 카메라로 검출해 map 좌표를 구한다.
+표적 이미지 판(`target_image`)과 `detection_demo`는 쓰지 않는다.
 테이블 물체는 2~3 m에서 30~90 px로 작아 640×480·YOLO11n으로는 거의 검출되지 않으므로, 1920×1080 원본 해상도와
 **YOLO11m · 입력 1280 · GPU**를 사용한다.
 
@@ -185,7 +185,7 @@ __NV_PRIME_RENDER_OFFLOAD=1 __GLX_VENDOR_LIBRARY_NAME=nvidia \
 GZ_PARTITION=robocup_motion GZ_IP=127.0.0.1 gz sim -g
 ```
 
-SLAM·Nav2는 2절과 같다. 로봇을 0.5 m 정도 움직여 지도를 채운 뒤, 테이블이 모두 보이는 (-0.5, 0.4)·정면 방향에서 실행한다.
+SLAM·Nav2는 2절과 같다. 로봇을 0.5 m 정도 움직여 지도를 채운 뒤 실행한다. 헤드 카메라는 테이블 가장자리에서 약 1.4 m 이상 떨어져야 윗면이 보인다. 시작 위치(원점, +x)는 테이블 끝에서 1.2 m라 가까운 물체가 화면 아래로 잘릴 수 있다.
 
 ### 터미널 4: 테이블 물체 검출
 

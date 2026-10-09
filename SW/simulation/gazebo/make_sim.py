@@ -3,7 +3,7 @@
 
 The URDF is not modified on disk. For the simulation only, the wheel contacts are
 replaced (see set_wheel_contacts), drive/arm/joint-state plugins are added and the
-robot is placed in an empty world or the 6 x 6 m test room.
+robot is placed in an empty world or the 6 x 6 m task room (one table in the middle).
 """
 import argparse
 import math
@@ -40,28 +40,42 @@ JOINT_STATES_TOPIC = '/robocup/joint_states'
 MID360_SCAN = dict(horizontal=340, vertical=60)
 
 WALL_GREY = '0.75 0.75 0.75 1'
-# Test room: inner 6 x 6 m centred on the spawn point; walls 0.1 m thick, 1.0 m high.
-# The partition breaks the square's symmetry so scan matching has a unique fit.
-ROOM_WALLS = [('wall_north', '0 3.05 0.5 0 0 0', '6.2 0.1 1.0'), ('wall_south', '0 -3.05 0.5 0 0 0', '6.2 0.1 1.0'),
-              ('wall_east', '3.05 0 0.5 0 0 0', '0.1 6.0 1.0'), ('wall_west', '-3.05 0 0.5 0 0 0', '0.1 6.0 1.0'),
-              ('wall_partition', '-1.5 2.25 0.5 0 0 0', '0.1 1.5 1.0')]
-# Two identical tables 1.6 x 0.8 m, top 0.03 m thick with surface at 0.72 m; legs 0.05 m square inset 0.05 m.
-# Long sides face each other across a 2 m gap (edge to edge, y -0.6 .. 1.4).
-TABLE_CENTRES = [(1.8, -1.0), (1.8, 1.8)]
-TABLE_LEG_OFFSETS = [(.725, .325), (.725, -.325), (-.725, .325), (-.725, -.325)]
+# Task room: inner 6 x 6 m (x -1 .. 5, y -3 .. 3) with the table in the middle. The robot spawns at
+# the world origin, 1 m from the west wall facing the table, so map/odom start on world axes.
+# Walls 0.1 m thick, 1.0 m high; the partition breaks the symmetry so scan matching has a unique fit.
+ROOM_CENTRE = (2.0, 0.0)
+ROOM_WALLS = [('wall_north', (0, 3.05), '6.2 0.1 1.0'), ('wall_south', (0, -3.05), '6.2 0.1 1.0'),
+              ('wall_east', (3.05, 0), '0.1 6.0 1.0'), ('wall_west', (-3.05, 0), '0.1 6.0 1.0'),
+              ('wall_partition', (-1.5, 2.25), '0.1 1.5 1.0')]   # (x, y) from the room centre
+# One table, the team's DESKER computer desk 2.0 W1600 x D800 (DSDBB1608, colour MLWW), from the
+# maker's drawings (desker.co.kr/product/detail/615): top 28 mm E0 PB with LPM finish in maple,
+# surface at 720 mm; the front (+y, north) edge has a 470 mm wide, 60 mm deep cable notch;
+# powder-coated white steel legs at the corners, a 40 mm frame under the top (651 mm clear) and a
+# 520 x 122 mm cable tray under the notch, 581 mm clear. Long side along x (x 1.2 .. 2.8, y -0.4 .. 0.4).
+# Not on the drawings, so estimated from the product photos: 30 mm square legs, the frame on the
+# short sides and the back, the tray hanging just behind the notch.
+TABLE_CENTRES = [ROOM_CENTRE]
 TABLE_SURFACE_Z = 0.72
-# Objects on the tables (meshes in objects/, see objects/README.md): name -> (x, y, yaw, mass kg, collision).
+TABLE = dict(length=1.6, depth=0.8, top=0.028, leg=0.03, frame=0.04, frame_t=0.02,
+             notch_open=0.47, notch_bottom=0.32, notch_depth=0.06,
+             tray_length=0.52, tray_depth=0.122, tray_bottom_z=0.581, tray_lip=0.02, sheet=0.002)
+MAPLE = '0.80 0.69 0.55 1'
+STEEL_WHITE = '0.93 0.93 0.92 1'
+# Objects on the table (meshes in objects/, see objects/README.md): name -> (x, y, yaw, mass kg, collision).
+# Task: pick the object a person asks for and put it on the plate; the plate itself is never picked.
+# The plate is 0.22 m in from the south long side; the six objects lie about 0.2 m in from the long
+# sides, where the docked arm reaches.
 # Mesh origins sit on the supporting surface. Collision is a primitive around the mesh:
 # ('box', centre xyz, size xyz) / ('sphere', centre xyz, radius) / ('cylinder', centre xyz, radius, length).
 # Masses are of the real items (YCB fruit are light plastic replicas); the can holds 350 ml of soda.
 OBJECTS = {
-    'plate': (1.40, -0.85, 0.0, 0.279, ('cylinder', (-0.012, 0, 0.0105), 0.13, 0.027)),
-    'mug': (1.90, -0.80, 1.2, 0.118, ('box', (-0.0085, 0.0175, 0.040), (0.117, 0.093, 0.082))),
-    'banana': (2.30, -0.90, 0.5, 0.120, ('box', (0.0115, -0.0075, 0.018), (0.109, 0.178, 0.036))),
-    'fanta_can': (1.55, 1.62, 0.0, 0.377, ('cylinder', (0, 0, 0.061), 0.033, 0.122)),
-    'peach': (1.85, 1.72, 0.0, 0.130, ('sphere', (-0.0143, 0.0056, 0.0293), 0.0305)),
-    'apple': (2.10, 1.65, 0.0, 0.180, ('sphere', (0.001, -0.0035, 0.036), 0.036)),
-    'green_apple': (2.40, 1.60, 0.0, 0.180, ('sphere', (0.001, -0.0035, 0.036), 0.036)),
+    'plate': (2.00, -0.18, 0.0, 0.279, ('cylinder', (-0.012, 0, 0.0105), 0.13, 0.027)),
+    'mug': (1.50, -0.20, 1.2, 0.118, ('box', (-0.0085, 0.0175, 0.040), (0.117, 0.093, 0.082))),
+    'banana': (2.50, -0.22, 0.5, 0.120, ('box', (0.0115, -0.0075, 0.018), (0.109, 0.178, 0.036))),
+    'fanta_can': (1.45, 0.20, 0.0, 0.377, ('cylinder', (0, 0, 0.061), 0.033, 0.122)),
+    'peach': (1.85, 0.22, 0.0, 0.130, ('sphere', (-0.0143, 0.0056, 0.0293), 0.0305)),
+    'apple': (2.15, 0.20, 0.0, 0.180, ('sphere', (0.001, -0.0035, 0.036), 0.036)),
+    'green_apple': (2.50, 0.22, 0.0, 0.180, ('sphere', (0.001, -0.0035, 0.036), 0.036)),
 }
 OBJECT_DIR = HERE / 'objects'
 GUI_PLUGINS = ('GzSceneManager', 'InteractiveViewControl', 'SelectEntities', 'CameraTracking', 'WorldControl',
@@ -72,7 +86,7 @@ def parse_args():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--test-wall', action='store_true', help='Add a wall 2 m forward for sensor validation')
     parser.add_argument('--world', choices=['empty', 'room'], default='empty',
-                        help='room: walls, partition and two tables for SLAM/Nav2 tests (see README)')
+                        help='room: walls, partition and one table with objects for the pick-and-place task (see README)')
     parser.add_argument('--detection-demo', action='store_true', help='640x480 head sensors, 10 Hz, 5 m depth')
     parser.add_argument('--target-image', type=Path, help='Add a textured test billboard ahead of the robot')
     return parser.parse_args()
@@ -201,13 +215,110 @@ def add_test_wall(world):
 
 
 def add_room(world):
-    for name, pose, size in ROOM_WALLS:
-        static_box(world, name, pose, size)
+    for name, (dx, dy), size in ROOM_WALLS:
+        static_box(world, name, f'{ROOM_CENTRE[0] + dx:.3f} {ROOM_CENTRE[1] + dy:.3f} 0.5 0 0 0', size)
     for n, (tx, ty) in enumerate(TABLE_CENTRES, 1):
-        static_box(world, f'table{n}_top', f'{tx} {ty} 0.705 0 0 0', '1.6 0.8 0.03', '0.55 0.35 0.2 1')
-        for i, (dx, dy) in enumerate(TABLE_LEG_OFFSETS):
-            static_box(world, f'table{n}_leg{i}', f'{tx + dx} {ty + dy} 0.345 0 0 0', '0.05 0.05 0.69', '0.3 0.3 0.3 1')
+        add_table(world, f'table{n}', tx, ty)
     add_table_objects(world)
+
+
+def table_front_edge(x):
+    """y of the front edge at x (table frame): the notch is a flat bottom with cosine flanks."""
+    half_open, half_bottom = TABLE['notch_open']/2, TABLE['notch_bottom']/2
+    s, front = abs(x), TABLE['depth']/2
+    if s >= half_open:
+        return front
+    if s <= half_bottom:
+        return front - TABLE['notch_depth']
+    u = (half_open - s)/(half_open - half_bottom)
+    return front - TABLE['notch_depth']*(1 - math.cos(math.pi*u))/2
+
+
+def write_table_top_mesh(path):
+    """Top as an OBJ (surface at z=0): the outline is x-monotone, so it is a strip of quads."""
+    half, back, z0, z1 = TABLE['length']/2, -TABLE['depth']/2, -TABLE['top'], 0.0
+    ho, hb = TABLE['notch_open']/2, TABLE['notch_bottom']/2
+    flank = [ho - (ho - hb)*i/12 for i in range(13)]
+    xs = sorted({-half, half, *flank, *(-x for x in flank)})
+    v, vn, f = [], [], []
+
+    def quad(a, b, c, d, n):           # counter-clockwise seen from the normal side
+        vn.append(n)
+        f.append([(i, len(vn)) for i in (a, b, c, d)])
+
+    for x in xs:
+        y = table_front_edge(x)
+        v += [(x, back, z0), (x, y, z0), (x, back, z1), (x, y, z1)]
+    for i in range(len(xs) - 1):
+        a, b = 4*i + 1, 4*i + 5                       # OBJ indices start at 1
+        quad(a+2, b+2, b+3, a+3, (0, 0, 1))           # top
+        quad(a, a+1, b+1, b, (0, 0, -1))              # bottom
+        quad(a, b, b+2, a+2, (0, -1, 0))              # back
+        dx, dy = xs[i+1] - xs[i], table_front_edge(xs[i+1]) - table_front_edge(xs[i])
+        n = math.hypot(dx, dy)
+        quad(b+1, a+1, a+3, b+3, (-dy/n, dx/n, 0))    # front, following the notch
+    quad(1, 3, 4, 2, (-1, 0, 0))                      # left end
+    e = 4*(len(xs) - 1) + 1
+    quad(e, e+1, e+3, e+2, (1, 0, 0))                 # right end
+    lines = [f'v {x:.5f} {y:.5f} {z:.5f}' for x, y, z in v] + [f'vn {x:.5f} {y:.5f} {z:.5f}' for x, y, z in vn]
+    lines += ['f ' + ' '.join(f'{i}//{n}' for i, n in face) for face in f]
+    path.write_text('\n'.join(lines) + '\n')
+
+
+def add_table(world, name, tx, ty):
+    """Static table: mesh top (box collisions around the notch), steel legs, frame and cable tray."""
+    T = TABLE
+    half, front, z = T['length']/2, T['depth']/2, TABLE_SURFACE_Z
+    under = z - T['top']                                    # underside of the top
+    model = sub(world, 'model', name=name)
+    sub(model, 'static', 'true')
+    sub(model, 'pose', f'{tx} {ty} 0 0 0 0')
+    link = sub(model, 'link', name='link')
+    BUILD.mkdir(exist_ok=True)
+    mesh = BUILD / 'desker_desk_2_0_top.obj'                # Gazebo caches meshes by file name
+    write_table_top_mesh(mesh)
+    visual = sub(link, 'visual', name='top')
+    sub(visual, 'pose', f'0 0 {z} 0 0 0')
+    sub(sub(sub(visual, 'geometry'), 'mesh'), 'uri', mesh.as_uri())
+    material = sub(visual, 'material')
+    for key in ('ambient', 'diffuse'):
+        sub(material, key, MAPLE)
+
+    def box(part, centre, size, color, tags=('visual', 'collision')):
+        for tag in tags:
+            element = sub(link, tag, name=f'{part}_{tag}')
+            sub(element, 'pose', '{:.4f} {:.4f} {:.4f} 0 0 0'.format(*centre))
+            sub(sub(sub(element, 'geometry'), 'box'), 'size', '{:.4f} {:.4f} {:.4f}'.format(*size))
+            if tag == 'visual':
+                m = sub(element, 'material')
+                for key in ('ambient', 'diffuse'):
+                    sub(m, key, color)
+
+    # Top collision: the full-depth part behind the notch plus the two front strips beside it.
+    inner = front - T['notch_depth']
+    # The flanks of the notch are left out (objects do not stand there).
+    box('top_main', (0, (inner - front)/2, z - T['top']/2), (T['length'], inner + front, T['top']), MAPLE,
+        ('collision',))
+    strip = half - T['notch_open']/2
+    for side, sx in (('left', -1), ('right', 1)):
+        box(f'top_{side}', (sx*(half - strip/2), (inner + front)/2, z - T['top']/2), (strip, T['notch_depth'], T['top']),
+            MAPLE, ('collision',))
+    # Legs straight below the corners.
+    leg = T['leg']
+    for i, (sx, sy) in enumerate(((1, 1), (1, -1), (-1, 1), (-1, -1))):
+        box(f'leg{i}', (sx*(half - leg/2), sy*(front - leg/2), under/2), (leg, leg, under), STEEL_WHITE)
+    # Frame under the top: the two short sides and the back (the front stays open for the knees).
+    fz, ft = under - T['frame']/2, T['frame_t']
+    for side, sx in (('left', -1), ('right', 1)):
+        box(f'frame_{side}', (sx*(half - ft/2), 0, fz), (ft, 2*front - 2*leg, T['frame']), STEEL_WHITE)
+    box('frame_back', (0, -front + ft/2, fz), (2*half - 2*leg, ft, T['frame']), STEEL_WHITE)
+    # Cable tray: back plate hanging from the top, a floor and a front lip, behind the notch.
+    sh, lip_y = T['sheet'], inner - 0.005
+    plate_y = lip_y - T['tray_depth']
+    tz, length = T['tray_bottom_z'], T['tray_length']
+    box('tray_back', (0, plate_y + sh/2, (tz + under)/2), (length, sh, under - tz), STEEL_WHITE)
+    box('tray_floor', (0, (plate_y + lip_y)/2, tz + sh/2), (length, T['tray_depth'], sh), STEEL_WHITE)
+    box('tray_lip', (0, lip_y - sh/2, tz + T['tray_lip']/2), (length, sh, T['tray_lip']), STEEL_WHITE)
 
 
 def add_table_objects(world):
@@ -253,7 +364,7 @@ def add_lighting_and_gui(world):
     view = sub(gui, 'plugin', filename='MinimalScene', name='3D View')
     sub(view, 'engine', 'ogre2')
     sub(view, 'scene', 'scene')
-    sub(view, 'camera_pose', '2.2 2.2 1.9 0 0.32 -2.35619')
+    sub(view, 'camera_pose', '-0.6 -2.6 2.6 0 0.5 0.86')   # south-west corner, looking at robot and table
     for name in GUI_PLUGINS:
         sub(gui, 'plugin', filename=name, name=name)
 
@@ -301,7 +412,7 @@ def main():
         world = sdf.find('world')
         target = sub(world, 'model', name='detection_billboard')
         sub(target, 'static', 'true')
-        sub(target, 'pose', '2.2 0.25 1.3 0 0 0')
+        sub(target, 'pose', '4.4 0.25 1.3 0 0 0')       # behind the table, in front of the east wall
         link = sub(target, 'link', name='board')
         visual = sub(link, 'visual', name='image')
         # A plane with normal -x maps the image's up axis to +y; roll it upright.

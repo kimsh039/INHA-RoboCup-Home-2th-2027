@@ -21,7 +21,7 @@
 | Head/Wrist 보정 결과 | CONFIGURE_REQUIRED | 실제 충분한 자세/영상 및 TF 기반 계산 필요. publisher는 결과가 있을 때만 |
 | base↔arm / base↔2D LiDAR 실측 | CONFIGURE_REQUIRED | CAD/장착 좌표, 단위·축·quaternion 순서 확인 후 외부 TF 발행 |
 | flange↔TCP / pivot matrices / 지그 offset | CONFIGURE_REQUIRED | pivot은 위치 offset만 보정. orientation/지그 offset 별도 입력 |
-| 2D LiDAR 모델 | CONFIGURE_REQUIRED | 제품별 공식 Humble driver 선택에 필요 |
+| 2D LiDAR (YDLIDAR G2) driver | CONFIGURE_REQUIRED | 모델은 G2로 확정(2026-10-09). 공식 `ydlidar_ros2_driver` + YDLidar-SDK 미설치. 시리얼 포트·udev 규칙, baudrate, frame_id `laser_frame`, 스캔 영점(CAD yaw 약 8.81도)을 연결 시 확인 |
 | original TRACER driver 필요 여부 | CONFIGURE_REQUIRED | 해당 보정에 차체 odom이 필요한지 먼저 확인. standalone SDK와 Humble wrapper 조합 별도 검토 |
 | /odom 출처/적분/frame/TF 발행자 | CONFIGURE_REQUIRED | 바퀴 적분인지 다른 출처인지 확인. 내장 IMU/융합 odometry 가정 금지 |
 | 목표 물체 클래스/ID | CONFIGURE_REQUIRED | names 빈 템플릿 상태. 실제 class 목록 필요 |
