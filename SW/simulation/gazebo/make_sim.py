@@ -62,14 +62,13 @@ TABLE = dict(length=1.6, depth=0.8, top=0.028, leg=0.03, frame=0.04, frame_t=0.0
 MAPLE = '0.80 0.69 0.55 1'
 STEEL_WHITE = '0.93 0.93 0.92 1'
 # Objects on the table (meshes in objects/, see objects/README.md): name -> (x, y, yaw, mass kg, collision).
-# Task: pick the object a person asks for and put it on the plate; the plate itself is never picked.
-# The plate is 0.22 m in from the south long side; the six objects lie about 0.2 m in from the long
-# sides, where the docked arm reaches.
+# Task: pick the object a person asks for and place it on a free spot of the table. The six objects
+# lie about 0.2 m in from the long sides, where the docked arm reaches; the middle of the south side
+# is left free.
 # Mesh origins sit on the supporting surface. Collision is a primitive around the mesh:
 # ('box', centre xyz, size xyz) / ('sphere', centre xyz, radius) / ('cylinder', centre xyz, radius, length).
 # Masses are of the real items (YCB fruit are light plastic replicas); the can holds 350 ml of soda.
 OBJECTS = {
-    'plate': (2.00, -0.18, 0.0, 0.279, ('cylinder', (-0.012, 0, 0.0105), 0.13, 0.027)),
     'mug': (1.50, -0.20, 1.2, 0.118, ('box', (-0.0085, 0.0175, 0.040), (0.117, 0.093, 0.082))),
     'banana': (2.50, -0.22, 0.5, 0.120, ('box', (0.0115, -0.0075, 0.018), (0.109, 0.178, 0.036))),
     'fanta_can': (1.45, 0.20, 0.0, 0.377, ('cylinder', (0, 0, 0.061), 0.033, 0.122)),
