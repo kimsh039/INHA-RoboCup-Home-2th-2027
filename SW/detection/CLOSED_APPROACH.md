@@ -80,7 +80,7 @@ curl -L -o models/sam2.1_hiera_tiny.pt \
 
 `--no-build-isolation`이 없으면 빌드용으로 torch를 다시 내려받습니다. GPU 메모리가 2 GB면 헤드 YOLO11m(약 640 MB)과 SAM(약 600 MB)을 동시에 올리기 어렵습니다. 도킹 후 헤드 검출을 내리고 손목 단계를 시작합니다.
 
-## 확인 결과 (Gazebo 방, 2026-10-07)
+## 확인 결과 (Gazebo 방, 2026-10-07, 당시 테이블 2개 world)
 
 컵(머그)이 table1 통로 쪽 가장자리에서 0.2 m 안쪽에 있을 때, 관측 위치 (0.5, 0.4)에서 시작:
 

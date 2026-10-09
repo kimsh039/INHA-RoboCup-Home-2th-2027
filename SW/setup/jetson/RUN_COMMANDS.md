@@ -445,7 +445,7 @@ ros2 run tf2_ros static_transform_publisher --x "${MOUNT_X:?실측 m}" --y "${MO
 
 실측/보정 후 연결은 base_link→piper/base_link, piper/base_link→piper/link6(실제 feedback URDF), piper/base_link→head_link(Head 보정), piper/link6→wrist_link(Wrist 보정), camera optical→livox_frame(Koide 역변환), flange→TCP입니다. RealSense가 camera 내부 TF를 유지하며 각 child의 발행자는 하나로 정합니다.
 
-original TRACER driver/odom이 필요하면 `ros2 topic info -v /odom`, TF 발행자와 적분 방식을 먼저 기록합니다. ugv_sdk의 standalone CMake와 tracer_ros2 Humble 호환성은 별도로 확인합니다. 2D LiDAR 모델 미확정으로 제품 driver는 보류합니다. FAST-LIO/FAST-LIO2는 설치하지 않습니다.
+original TRACER driver/odom이 필요하면 `ros2 topic info -v /odom`, TF 발행자와 적분 방식을 먼저 기록합니다. ugv_sdk의 standalone CMake와 tracer_ros2 Humble 호환성은 별도로 확인합니다. 2D LiDAR는 YDLIDAR G2로 확정됐으며 공식 driver(`ydlidar_ros2_driver` + YDLidar-SDK)는 아직 설치하지 않았습니다. FAST-LIO/FAST-LIO2는 설치하지 않습니다.
 
 ## 11. known_objects YOLO detection 학습
 

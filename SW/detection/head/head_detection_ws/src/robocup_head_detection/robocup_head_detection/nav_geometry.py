@@ -1,4 +1,4 @@
-"""Gazebo RGB/depth projection and fixed Nav2 standoff goal geometry."""
+"""Head-camera target placement with lidar points, and fixed Nav2 standoff goal geometry."""
 from dataclasses import dataclass
 import math
 import numpy as np
@@ -28,34 +28,45 @@ def depth_array(msg):
     return np.ndarray((msg.height, msg.width), dtype=dtype, buffer=msg.data, strides=(msg.step, 4))
 
 
-def target_range(box, depth, color: Intrinsics, sensor: Intrinsics, minimum_points=20):
-    """Project central RGB bbox rays into co-located depth optical frame.
+def lidar_target(points, box, color: Intrinsics, cam_from_map, surfaces=(), shrink=.1, band=(.01, .35),
+                 cluster=.10, minimum_points=3):
+    """Locate a head-camera bbox with lidar points (e.g. Mid-360, accumulated in map).
 
-    The current Gazebo head sensors share pose/frame but have different FOVs.
-    This mapping is NOT valid for offset real RGB/depth cameras without alignment.
+    points: (N, 3) in map; cam_from_map: 4x4, map -> colour optical frame (z forward, x right,
+    y down). Points projecting inside the bbox (shrunk by `shrink` of its size per side) are kept.
+    With support surfaces [(corners (k, 2), z)], only points `band` above a surface they lie over
+    are kept, which drops the table top and the wall behind. The object is the nearest cluster:
+    points within `cluster` of the 20th range percentile. Returns (map xyz median, point count)
+    or (None, count). The lidar hits the side facing it, so the point is that side, not the centre.
     """
-    if not color.valid() or not sensor.valid() or depth.shape != (sensor.height, sensor.width):
-        raise ValueError('Invalid CameraInfo/depth shape')
+    if not color.valid() or len(points) == 0:
+        return None, 0
     x, y, width, height = box
     if not all(math.isfinite(v) for v in box) or width < 2 or height < 2:
-        return None
-    # Central 40% patch reduces background at the box boundaries.
-    left, right = x+width*.3, x+width*.7
-    top, bottom = y+height*.3, y+height*.7
-    project_x = lambda u: (u-color.cx)*sensor.fx/color.fx + sensor.cx
-    project_y = lambda v: (v-color.cy)*sensor.fy/color.fy + sensor.cy
-    x0, x1 = max(0, math.floor(project_x(left))), min(sensor.width, math.ceil(project_x(right)))
-    y0, y1 = max(0, math.floor(project_y(top))), min(sensor.height, math.ceil(project_y(bottom)))
-    if x1 <= x0 or y1 <= y0:
-        return None
-    patch = depth[y0:y1, x0:x1]
-    values = patch[np.isfinite(patch) & (patch >= .2) & (patch <= 5.0)]
-    if values.size < minimum_points or values.size < patch.size*.5:
-        return None
-    # Broad/bimodal background is rejected; this is a planar billboard test.
-    if np.percentile(values, 90)-np.percentile(values, 10) > .3:
-        return None
-    return float(np.median(values))
+        return None, 0
+    pts = np.asarray(points, float)
+    cam = pts @ cam_from_map[:3, :3].T + cam_from_map[:3, 3]
+    ahead = cam[:, 2] > .1
+    z = np.where(ahead, cam[:, 2], 1.0)
+    u, v = color.fx*cam[:, 0]/z + color.cx, color.fy*cam[:, 1]/z + color.cy
+    sx, sy = shrink*width, shrink*height
+    keep = ahead & (u > x+sx) & (u < x+width-sx) & (v > y+sy) & (v < y+height-sy)
+    if len(surfaces):
+        above = np.zeros(len(pts), bool)
+        for corners, surface_z in surfaces:
+            c = np.asarray(corners, float)
+            inside = np.ones(len(pts), bool)
+            for i in range(len(c)):                   # convex, counter-clockwise
+                a, d = c[i], c[(i+1) % len(c)]-c[i]
+                inside &= (d[0]*(pts[:, 1]-a[1]) - d[1]*(pts[:, 0]-a[0])) >= 0
+            above |= inside & (pts[:, 2] > surface_z+band[0]) & (pts[:, 2] < surface_z+band[1])
+        keep &= above
+    count = int(keep.sum())
+    if count < minimum_points:
+        return None, count
+    rng = cam[keep, 2]
+    near = rng < np.percentile(rng, 20)+cluster
+    return np.median(pts[keep][near], axis=0), count
 
 
 def standoff_goal(target_xy, robot_xy, distance=1.0):
