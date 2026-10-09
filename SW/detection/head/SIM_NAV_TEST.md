@@ -223,10 +223,10 @@ ros2 launch robocup_head_detection sim_detection.launch.py \
 | 상태 | 확인할 것 |
 |---|---|
 | WAITING_SLAM_MAP | SLAM 노드, `/map`, map frame |
-| WAITING_VERIFIED_RGB_DEPTH | 헤드 ROS 브리지, 검출 클래스 bus, 학습/사전학습 모델 경로 |
+| WAITING_VERIFIED_RGB_LIDAR | 헤드 ROS 브리지, 검출 클래스, 모델 경로, `/mid360/points` 수신 |
 | WAITING_MAP_TF | map→odom→base_link→camera_optical_frame, 촬영 시각 TF |
-| WAITING_SYNCHRONIZED_DEPTH | RGB/depth timestamp, 동일 광학 frame |
-| INVALID_TARGET_DEPTH | 32FC1 m 단위, bbox 중앙 유효 depth, 배경 혼입 |
+| WAITING_LIDAR | 영상 시각 이후의 Mid-360 점군, map←livox_frame TF |
+| TOO_FEW_LIDAR_POINTS:n | bbox 안·작업면 위 Mid-360 점 부족(작은 물체·먼 거리). 다른 관측 위치에서 재시도 |
 | GOAL_OCCUPIED_OR_UNKNOWN | 주변을 먼저 매핑, 목표 주변 여유 공간 |
 | WAITING_NAV2_ACTION_SERVER | Nav2 lifecycle 준비, `/navigate_to_pose` |
 | STALE_OBSERVATION | CPU 추론 지연·시뮬레이터 부하, 필요 시 호환 GPU 사용 |
