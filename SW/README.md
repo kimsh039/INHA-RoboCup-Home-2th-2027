@@ -74,14 +74,14 @@ Gazebo 기반 보정 결과입니다. Head/Wrist D435와 실물 센서는 별도
 | Head camera | **RealSense D435** | 넓은 공간 관측, RGB 검출, aligned depth |
 | Wrist camera | **RealSense D435** | 접근 후 재검출, 근거리 RGB-D와 정밀 분할 |
 | 고정 3D LiDAR | **Livox MID-360** | 3D 장애물 감지·작업면 기하·근접 접근 자세 생성; 이후 주변 충돌 장면 |
-| 주행용 2D LiDAR | **실물 모델 미확정** | 2D SLAM·위치 추정과 Nav2 기본 입력. 모델 확인 후 공식 드라이버 선택 |
+| 주행용 2D LiDAR | **YDLIDAR G2** | 2D SLAM·위치 추정과 Nav2 기본 입력. 공식 드라이버 `ydlidar_ros2_driver` + YDLidar-SDK 연결 필요 |
 
 ### CAD·시뮬레이션과 실기를 대조할 때
 
 | 항목 | 저장소의 기존 CAD / Gazebo | 현재 Jetson 실기 준비 |
 | --- | --- | --- |
 | 카메라 | Head / Wrist D435f 형상·핀홀 근사 | Head D435 / Wrist D435 |
-| LiDAR | YDLIDAR G2 / Mid-360S 모델 | 2D 모델 미확정 / MID-360 |
+| LiDAR | YDLIDAR G2 / Mid-360S 모델 | YDLIDAR G2 / MID-360 |
 | SAM | 기존 Detection 설계는 Small 평가안 | **SAM 2.1 Hiera Tiny GPU** 설치·추론 확인 |
 | 3D 위치 | 기존 설계는 LiDAR 영상 투영·융합 | 초기 실습은 **RealSense aligned depth** |
 | 관절 입력 | Gazebo `/joint_states` | 실기 `/piper/joint_states_feedback` |
@@ -332,7 +332,7 @@ Mid-360의 Nav2 장애물 소스와 자기 점 필터는 **시뮬레이션 코�
 1. **공통 apt 마무리:** RealSense / AprilTag / image tools 등 요청 패키지 15개가 미설치입니다. `.deb` cache 약 427 MiB는 로컬에 준비돼 있습니다. [설치 기록](setup/jetson/README_SETUP.md)의 남은 패키지 명령으로 진행합니다.
 2. **카메라:** Head/Wrist 두 D435의 실제 serial, USB 연결 속도, 지원 profile, topic/frame/QoS.
 3. **팔·차체:** PiPER / TRACER CAN 구분, PiPER 펌웨어와 old/new URDF, 실제 feedback.
-4. **LiDAR:** 실제 NIC / host IP / MID-360 IP, 2D LiDAR 모델. 기록된 `192.168.1.184`는 확인할 센서 후보이고, 관측된 host `eno1=192.168.50.184/24`와 구분합니다.
+4. **LiDAR:** 실제 NIC / host IP / MID-360 IP, G2 시리얼 포트·udev 규칙·driver 설정. 기록된 `192.168.1.184`는 확인할 센서 후보이고, 관측된 host `eno1=192.168.50.184/24`와 구분합니다.
 5. **보정·학습:** 태그 검은 외곽 한 변[m], 장착·TCP 실측, 독립 validation bag, 물체 class와 촬영 세션별 split.
 
 ### 지정 물체 학습 준비
