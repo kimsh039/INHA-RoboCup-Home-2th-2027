@@ -71,7 +71,7 @@ Gazebo 기반 보정 결과입니다. Head/Wrist D435와 실물 센서는 별도
 | 차체 | **AgileX original TRACER** | 이동 플랫폼. TRACER 2 / Mini와 구분 |
 | 상부 구조 | 프로파일로 제작한 플랫폼 | 팔과 고정 센서 장착 |
 | 매니퓰레이터 | **AgileX PiPER** | 손목 관측·파지 준비. 실제 CAN과 펌웨어 확인 필요 |
-| Head camera | **RealSense D435** | 넓은 공간 관측, RGB 검출, aligned depth |
+| Head camera | **RealSense D435** | 넓은 공간 관측, RGB 검출·추적 (거리는 MID-360 점으로 계산) |
 | Wrist camera | **RealSense D435** | 접근 후 재검출, 근거리 RGB-D와 정밀 분할 |
 | 고정 3D LiDAR | **Livox MID-360** | 3D 장애물 감지·작업면 기하·근접 접근 자세 생성; 이후 주변 충돌 장면 |
 | 주행용 2D LiDAR | **YDLIDAR G2** | 2D SLAM·위치 추정과 Nav2 기본 입력. 공식 드라이버 `ydlidar_ros2_driver` + YDLidar-SDK 연결 필요 |
@@ -83,7 +83,7 @@ Gazebo 기반 보정 결과입니다. Head/Wrist D435와 실물 센서는 별도
 | 카메라 | Head / Wrist D435f 형상·핀홀 근사 | Head D435 / Wrist D435 |
 | LiDAR | YDLIDAR G2 / Mid-360S 모델 | YDLIDAR G2 / MID-360 |
 | SAM | 기존 Detection 설계는 Small 평가안 | **SAM 2.1 Hiera Tiny GPU** 설치·추론 확인 |
-| 3D 위치 | 기존 설계는 LiDAR 영상 투영·융합 | 초기 실습은 **RealSense aligned depth** |
+| 3D 위치 (헤드 목표) | MID-360 점을 헤드 영상에 투영 | **MID-360 점 투영** (헤드 depth 미사용). Head↔MID-360 외부 보정 필요 |
 | 관절 입력 | Gazebo `/joint_states` | 실기 `/piper/joint_states_feedback` |
 | 외부 TF | CAD 배치값 | 실제 hand–eye·장착·TCP 보정값 필요 |
 
@@ -289,7 +289,7 @@ flowchart LR
     OBS --> NAV
     FILTER -. "후속 구현" .-> SURFACE["작업면 / 경계 / 접근 자세"]
     H["Head D435 RGB"] --> Y["YOLO / OpenCV / 목표 식별"]
-    D["Head aligned depth + CameraInfo"] -. "목표 위치 보조" .-> SURFACE
+    L -. "헤드 영상에 투영: 목표 거리" .-> Y
     Y -. "목표와 작업면 연결" .-> SURFACE
     NAV -. "이동·경로 검사" .-> A["Closed approach"]
     SURFACE -. "후속 연결" .-> A
@@ -305,7 +305,6 @@ Mid-360의 Nav2 장애물 소스와 자기 점 필터는 **시뮬레이션 코�
 | 입력 / 출력 | 준비할 이름 | 상태 / 주의 |
 | --- | --- | --- |
 | Head RGB | `/sensors/head/color/image_raw` | RealSense 연결 후 실제 이름·QoS 확인 |
-| Head aligned depth | `/sensors/head/aligned_depth_to_color/image_raw` | 해당 CameraInfo와 함께 사용 |
 | Wrist RGB / depth | `/sensors/wrist/color/image_raw`, `/sensors/wrist/aligned_depth_to_color/image_raw` | D435 profile·serial 확인 |
 | LiDAR | `/livox/lidar` / `livox_frame` | `PointCloud2` + `intensity` 확인 필요 |
 | PiPER feedback | `/piper/joint_states_feedback` | 제조사 읽기 노드 출력 remap. command 값과 구분 |

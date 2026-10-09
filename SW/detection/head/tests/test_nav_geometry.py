@@ -1,21 +1,48 @@
 import unittest
 from types import SimpleNamespace as NS
 import numpy as np
-from robocup_head_detection.nav_geometry import Intrinsics, target_range, standoff_goal, free_goal, depth_array
+from robocup_head_detection.nav_geometry import Intrinsics, lidar_target, standoff_goal, free_goal, depth_array
 from robocup_head_detection.closed_approach import ClosedApproachRequest, request_closed_approach
 
 
 class NavigationGeometryTests(unittest.TestCase):
-    def test_rgb_depth_different_fov_mapping(self):
-        color = Intrinsics(640, 480, 400, 400, 320, 240)
-        sensor = Intrinsics(320, 240, 150, 150, 160, 120)
-        depth = np.full((240, 320), 4, np.float32)
-        depth[110:132, 175:195] = 2
-        self.assertAlmostEqual(target_range((350, 200, 80, 80), depth, color, sensor), 2)
+    # Camera 1.4 m above the floor at x=0 looking along +x (optical z = +x, x = -y, y = -z).
+    CAM = np.array([[0, -1, 0, 0], [0, 0, -1, 1.4], [1, 0, 0, 0], [0, 0, 0, 1]], float)
+    COLOR = Intrinsics(640, 480, 400, 400, 320, 240)
+    TABLE = [(np.array([(1.6, -.4), (2.4, -.4), (2.4, .4), (1.6, .4)]), .72)]
 
-    def test_invalid_depth_and_stride(self):
-        info = Intrinsics(20, 20, 10, 10, 10, 10)
-        self.assertIsNone(target_range((2, 2, 16, 16), np.full((20, 20), np.nan), info, info))
+    def scene(self):
+        """Table top 0.72 m (x 1.6..2.4), a wall at x 3, an object side face at x 1.95, z .72-.80."""
+        g = np.mgrid[-.4:.4:.02, 1.6:2.4:.02].reshape(2, -1).T
+        top = np.c_[g[:, 1], g[:, 0], np.full(len(g), .72)]
+        wall = np.c_[np.full(400, 3.0), np.repeat(np.linspace(-1, 1, 20), 20), np.tile(np.linspace(0, 2, 20), 20)]
+        obj = np.c_[np.full(25, 1.95), np.repeat(np.linspace(-.03, .03, 5), 5), np.tile(np.linspace(.73, .79, 5), 5)]
+        return np.r_[top, wall, obj]
+
+    def box(self, x, y, z0, z1, half):
+        """Image bbox of an object at range x, lateral y (m), heights z0..z1 (m)."""
+        u0, u1 = sorted(400*(-(y+s*half))/x + 320 for s in (-1, 1))
+        v0, v1 = sorted(400*(1.4-z)/x + 240 for z in (z0, z1))
+        return (u0, v0, u1-u0, v1-v0)
+
+    def test_lidar_target_takes_the_object_not_table_or_wall(self):
+        found, count = lidar_target(self.scene(), self.box(1.95, 0, .72, .80, .04), self.COLOR, self.CAM, self.TABLE)
+        self.assertIsNotNone(found)
+        self.assertAlmostEqual(found[0], 1.95, places=2)
+        self.assertAlmostEqual(found[1], 0, places=2)
+        self.assertGreater(found[2], .72)
+
+    def test_lidar_target_needs_points(self):
+        found, count = lidar_target(self.scene(), self.box(1.95, .3, .72, .80, .04), self.COLOR, self.CAM, self.TABLE)
+        self.assertIsNone(found)                     # nothing above the table there
+        self.assertEqual(count, 0)
+        self.assertIsNone(lidar_target(np.empty((0, 3)), (2, 2, 16, 16), self.COLOR, self.CAM)[0])
+
+    def test_without_surfaces_the_nearest_cluster_wins(self):
+        found, _ = lidar_target(self.scene(), self.box(1.95, 0, .74, .80, .04), self.COLOR, self.CAM)
+        self.assertLess(found[0], 2.1)               # not the wall at 3 m
+
+    def test_depth_array_stride(self):
         msg = NS(encoding='32FC1', is_bigendian=False, width=2, height=1, step=12,
                  data=np.array([1, 2, 999], dtype='<f4').tobytes())
         self.assertEqual(depth_array(msg).tolist(), [[1, 2]])

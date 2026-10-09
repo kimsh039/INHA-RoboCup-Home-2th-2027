@@ -1,4 +1,10 @@
-"""One verified RGB-D target -> one fixed map goal -> Nav2 -> reserved handoff.
+"""One verified head target -> map position from Mid-360 points -> one fixed map goal -> Nav2.
+
+The head camera gives the bbox (RGB); its range comes from the Mid-360: lidar clouds accumulated
+in map over the last `accumulate_sec` are projected into the colour image and the points in the
+bbox just above a support surface are taken (nav_geometry.lidar_target). The head depth stream
+is not used. The raw cloud is used: the Nav2 self filter drops points alone in a 10 cm voxel,
+which are exactly the few hits a small object gets at 2-3 m; the bbox never covers the robot.
 
 No direct /cmd_vel control. Losing the RGB target after goal submission does not
 cancel navigation: Nav2 owns the fixed map goal and obstacle-aware motion.
@@ -17,13 +23,14 @@ from action_msgs.msg import GoalStatus
 from geometry_msgs.msg import PointStamped, PoseStamped
 from nav_msgs.msg import OccupancyGrid
 from nav2_msgs.action import NavigateToPose
-from sensor_msgs.msg import CameraInfo, Image
+from sensor_msgs.msg import CameraInfo, PointCloud2
+from sensor_msgs_py import point_cloud2
 from std_msgs.msg import String
 from tf2_ros import Buffer, TransformListener, TransformException
-from tf2_geometry_msgs import do_transform_point
-from robocup_detection_msgs.msg import HeadTarget
+from robocup_detection_msgs.msg import HeadTarget, SupportSurfaceArray
 
-from .nav_geometry import Intrinsics, depth_array, target_range, standoff_goal, free_goal
+from .nav_geometry import Intrinsics, lidar_target, standoff_goal, free_goal
+from .support_surface_node import matrix
 from .closed_approach import ClosedApproachRequest, request_closed_approach
 
 
@@ -42,10 +49,16 @@ class DetectionNavGoalNode(Node):
         self.standoff = self.get_parameter('standoff_distance').value
         if not math.isfinite(self.standoff) or self.standoff < .8:
             raise ValueError('standoff_distance must be >=0.8m')
-        self.color_info = self.depth_info = self.grid = None
-        self.depths, self.pending = deque(maxlen=30), deque(maxlen=10)
-        self.samples = deque(maxlen=3)
-        self.sample_id = ''
+        self.accumulate = self.declare_parameter('accumulate_sec', 1.0).value   # lidar points per estimate
+        self.min_points = self.declare_parameter('min_lidar_points', 3).value
+        self.color_info = self.grid = self.surfaces = None
+        self.clouds, self.pending = deque(maxlen=50), deque(maxlen=10)
+        # Confirmation: 3 measurements of the target class within confirm_sec that agree within
+        # 0.15 m. Not tied to one track id: on small objects the detector's ROI re-verification
+        # fails and it restarts the track about once a second.
+        self.confirm_window = self.declare_parameter('confirm_sec', 5.0).value
+        self.samples = deque(maxlen=3)            # (stamp s, x, y)
+        self.sample_id = self.sample_class = ''
         self.frozen = False
         self.goal_handle = self.frozen_point = self.frozen_goal = None
         self.last_status = ''
@@ -58,11 +71,12 @@ class DetectionNavGoalNode(Node):
         self.handoff_pub = self.create_publisher(PointStamped, '/detection/closed_approach/target', 10)
         self.handoff_id_pub = self.create_publisher(String, '/detection/closed_approach/target_id', 10)
         self.create_subscription(HeadTarget, '/detection/head/target', self.on_target, 10)
-        self.create_subscription(Image, '/head_camera/depth/image_raw', self.depths.append, qos_profile_sensor_data)
         self.create_subscription(CameraInfo, '/head_camera/color/camera_info',
                                  lambda msg: setattr(self, 'color_info', msg), qos_profile_sensor_data)
-        self.create_subscription(CameraInfo, '/head_camera/depth/camera_info',
-                                 lambda msg: setattr(self, 'depth_info', msg), qos_profile_sensor_data)
+        self.create_subscription(PointCloud2, self.declare_parameter('cloud_topic', '/mid360/points').value,
+                                 self.on_cloud, qos_profile_sensor_data)
+        self.create_subscription(SupportSurfaceArray, '/detection/support_surfaces',
+                                 lambda msg: setattr(self, 'surfaces', msg), 10)
         map_qos = QoSProfile(depth=1, reliability=ReliabilityPolicy.RELIABLE,
                              durability=DurabilityPolicy.TRANSIENT_LOCAL)
         self.create_subscription(OccupancyGrid, '/map', lambda msg: setattr(self, 'grid', msg), map_qos)
@@ -78,10 +92,21 @@ class DetectionNavGoalNode(Node):
         if self.frozen:
             return
         if not msg.valid:
-            self.samples.clear()
             self.pending.clear()
         elif msg.measured and not msg.reason:
             self.pending.append(msg)
+
+    def on_cloud(self, msg):
+        """Keep recent clouds in map, each transformed at its own stamp (the robot may move)."""
+        try:
+            transform = self.tf.lookup_transform('map', msg.header.frame_id, Time.from_msg(msg.header.stamp),
+                                                 timeout=Duration(seconds=0.05))
+        except TransformException:
+            return
+        rotation, translation = matrix(transform.transform)
+        raw = point_cloud2.read_points(msg, field_names=('x', 'y', 'z'), skip_nans=True)   # mixed field types
+        xyz = np.stack([raw['x'], raw['y'], raw['z']], axis=1).astype(float)
+        self.clouds.append((seconds(msg.header.stamp), xyz @ rotation.T + translation))
 
     @staticmethod
     def intrinsic(info):
@@ -92,53 +117,55 @@ class DetectionNavGoalNode(Node):
             return
         if not self.grid or self.grid.header.frame_id != 'map':
             return self.report('WAITING_SLAM_MAP')
-        if not self.color_info or not self.depth_info or not self.depths or not self.pending:
-            return self.report('WAITING_VERIFIED_RGB_DEPTH')
+        if not self.color_info or not self.clouds or not self.pending:
+            return self.report('WAITING_VERIFIED_RGB_LIDAR')
         target = self.pending[0]
         now = self.get_clock().now().nanoseconds/1e9
         age = now-seconds(target.header.stamp)
         if age < 0 or age > 1.0:
             self.pending.popleft()
-            self.samples.clear()
             return self.report('STALE_OBSERVATION')
-        frames = [target.header.frame_id, self.color_info.header.frame_id, self.depth_info.header.frame_id]
-        if not frames[0] or len(set(frames)) != 1:
+        frame = target.header.frame_id
+        if not frame or frame != self.color_info.header.frame_id:
             self.pending.popleft()
             return self.report('OPTICAL_FRAME_MISMATCH')
-        if any(abs(v) > 1e-8 for info in (self.color_info, self.depth_info) for v in info.d):
+        if any(abs(v) > 1e-8 for v in self.color_info.d):
             self.pending.popleft()
             return self.report('DISTORTED_IMAGE_UNSUPPORTED')
-        depth = min(self.depths, key=lambda msg: abs(seconds(msg.header.stamp)-seconds(target.header.stamp)))
-        if abs(seconds(depth.header.stamp)-seconds(target.header.stamp)) > .12 or depth.header.frame_id != frames[0]:
-            return self.report('WAITING_SYNCHRONIZED_DEPTH')
-        color = self.intrinsic(self.color_info)
-        try:
-            distance = target_range((target.x, target.y, target.width, target.height), depth_array(depth),
-                                    color, self.intrinsic(self.depth_info))
-        except ValueError:
-            distance = None
-        if distance is None:
-            self.pending.popleft()
-            return self.report('INVALID_TARGET_DEPTH')
-        point = PointStamped(header=target.header)
-        point.point.x = (target.x+target.width/2-color.cx)*distance/color.fx
-        point.point.y = (target.y+target.height/2-color.cy)*distance/color.fy
-        point.point.z = distance
+        t = seconds(target.header.stamp)
+        if self.clouds[-1][0] < t:
+            return self.report('WAITING_LIDAR')        # use clouds up to the image, not older only
         try:
             stamp = Time.from_msg(target.header.stamp)
-            transform = self.tf.lookup_transform('map', frames[0], stamp, timeout=Duration(seconds=0))
+            cam = self.tf.lookup_transform(frame, 'map', stamp, timeout=Duration(seconds=0))
             robot = self.tf.lookup_transform('map', 'base_link', stamp, timeout=Duration(seconds=0))
-            world_point = do_transform_point(point, transform)
         except TransformException:
             return self.report('WAITING_MAP_TF')
         self.pending.popleft()
-        if self.sample_id != target.target_id:
+        rotation, translation = matrix(cam.transform)
+        cam_from_map = np.eye(4)
+        cam_from_map[:3, :3], cam_from_map[:3, 3] = rotation, translation
+        recent = [pts for s, pts in self.clouds if t-self.accumulate <= s <= t+.15]
+        surfaces = [(np.array([(c.x, c.y) for c in s.corners]), s.z) for s in self.surfaces.surfaces] if self.surfaces else []
+        found, count = lidar_target(np.concatenate(recent) if recent else np.empty((0, 3)),
+                                    (target.x, target.y, target.width, target.height),
+                                    self.intrinsic(self.color_info), cam_from_map, surfaces,
+                                    minimum_points=self.min_points)
+        if found is None:
+            return self.report(f'TOO_FEW_LIDAR_POINTS:{count}')
+        world_point = PointStamped()
+        world_point.header.frame_id, world_point.header.stamp = 'map', target.header.stamp
+        world_point.point.x, world_point.point.y, world_point.point.z = map(float, found)
+        if self.sample_class != target.class_name:
             self.samples.clear()
-            self.sample_id = target.target_id
-        self.samples.append((world_point.point.x, world_point.point.y))
+            self.sample_class = target.class_name
+        self.sample_id = target.target_id
+        while self.samples and t-self.samples[0][0] > self.confirm_window:
+            self.samples.popleft()
+        self.samples.append((t, world_point.point.x, world_point.point.y))
         if len(self.samples) < 3:
             return self.report('CONFIRMING_MAP_POSITION')
-        samples = np.asarray(self.samples)
+        samples = np.asarray(self.samples)[:, 1:]
         median = np.median(samples, axis=0)
         if np.max(np.linalg.norm(samples-median, axis=1)) > .15:
             return self.report('UNSTABLE_MAP_POSITION')
