@@ -9,6 +9,11 @@
 
 ```text
 HW/                         # 하드웨어 자료
+├── URDF/                   # 로봇 모델·기구 구조
+└── calibration/            # 캘리브레이션 결과
+    └── camera_intrinsics/  # 카메라 내부 파라미터·오차 결과
+        ├── head/           # 헤드 카메라
+        └── wrist/          # 손목 카메라
 SW/
 ├── setup/                  # Jetson 설치와 실행
 ├── simulation/             # Gazebo·MuJoCo·보정
