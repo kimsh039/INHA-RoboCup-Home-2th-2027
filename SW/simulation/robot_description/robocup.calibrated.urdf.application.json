@@ -87,7 +87,7 @@
   "head_path_difference": {
     "translation_mm": 18.949824114299492,
     "rotation_deg": 3.6114652650283823,
-    "left_sha256": "7eddaf513de1f3e6ca7c83eb646b23f0129c52daa2eaca67c65f3a1063c4a6ea",
+    "left_sha256": "ec157873197a1f6f504caaa923f57e09e8432c9db0ad8d03e307e82bff8dfe22",
     "right_sha256": "58af754f25e3a1d003724438f97b11eab25c7ecba557827a470f47aed75949fe"
   },
   "head_paths_share_nominal_arm_mount": true,
@@ -157,7 +157,7 @@
     },
     {
       "source_urdf_sha256": "46a266994781d0da89f199b9234227c1b7d8e082fc8b07e2aa253ccc160f1271",
-      "result_sha256": "a5d588a7b0870ddad928825cef4a8c8d9b3ff543d1e6ad6a6c5990ed51b49cec",
+      "result_sha256": "d1f32e3cde756e6f7961c9ea707b6088134e177db7bbe3ecc355216a95982587",
       "runtime_urdf_sha256": "9ff9dd627a3ac56e6dd02e585fc6408138c807ca839953eae2bff42501d1a3b6",
       "joint": "livox_frame_joint",
       "origin_xyz": [

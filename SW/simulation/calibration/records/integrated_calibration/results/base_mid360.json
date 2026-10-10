@@ -319,6 +319,71 @@
     "pose03": 0.8548820696329394
   },
   "imu_note": "Mid-360S IMU gravity tilts the same way as the floor normal but differs by 0.5-0.9 deg; direction check only.",
+  "independent_check": {
+    "method": "Mid-360S-only in-place rotation centre (tools/mid_rotation_check.py, pose01-04 tilt-corrected maps); no G2 involved",
+    "result": {
+      "poses": [
+        "pose01",
+        "pose02",
+        "pose03",
+        "pose04"
+      ],
+      "registration": {
+        "pose02": {
+          "yaw_deg": 89.31745386734677,
+          "matched": 0.766962721285723,
+          "med_mm": 1.0110690292073867
+        },
+        "pose03": {
+          "yaw_deg": -142.35285544027775,
+          "matched": 0.8022880008208074,
+          "med_mm": 1.1410135419627063
+        },
+        "pose04": {
+          "yaw_deg": -28.435213235131602,
+          "matched": 0.8943874471937237,
+          "med_mm": 0.8886982038249047
+        }
+      },
+      "rotation_centre_base_mm": [
+        -23.017754077935077,
+        -3.355287440401488
+      ],
+      "fit_residual_max_mm": 13.622599565384688,
+      "loo_x_mm": [
+        -25.798762152152406,
+        -16.638448893837356
+      ],
+      "mid_relative_to_rotation_centre_mm": [
+        -156.98224592206492,
+        3.355287440401488
+      ]
+    },
+    "note": "Mid-360S x relative to the rotation centre -157.0 mm vs -158.8 mm from the G2 chain (1.8 mm)"
+  },
+  "physical_checks": {
+    "date": "2026-10-11",
+    "tape_straight_line_from_base_floor_point_cm": {
+      "mid360": 136,
+      "g2": 48,
+      "expected_from_calibration": {
+        "mid360": 136.4,
+        "g2": 48.5
+      }
+    },
+    "tape_fore_aft_robot_lying_on_side_mm": {
+      "mid360": -173.5,
+      "g2": 0.0,
+      "note": "measured with the robot laid on its side (mast resting on the floor); differs from the upright calibration by ~15 mm"
+    },
+    "phone_inclinometer_deg": {
+      "mast_forward_lean": 2.0,
+      "mid360_tilt": 2.0,
+      "resolution": "about +-0.5-1 deg"
+    },
+    "interpretation": "The Mid-360S tilt is confirmed by phone (~2 deg), IMU (2.29 deg, gravity) and floor plane (2.85 deg, floor; ~0.5 deg floor slope). A forward lean of the mast about the rack base moves the sensor forward: 1 deg -> x=-159.5 mm (matches the calibration), 0.3 deg -> -173.5 mm (lying-down tape). The lean is likely partly load-dependent, so the upright calibration is the operating value.",
+    "recommendation": "Stiffen the mast (diagonal brace / joint bolts); recalibrate the Mid-360S after any mechanical change; check for dynamic sway with /livox/imu while driving."
+  },
   "g2_record_sha256": "9548093a09a184a1c34d935c3cc72cf4fd1cf93a68f178aaf3185f5524b67201",
   "independent_measurement": true,
   "contains_nominal_reference": true

@@ -1,6 +1,6 @@
 {
   "source_urdf_sha256": "46a266994781d0da89f199b9234227c1b7d8e082fc8b07e2aa253ccc160f1271",
-  "result_sha256": "a5d588a7b0870ddad928825cef4a8c8d9b3ff543d1e6ad6a6c5990ed51b49cec",
+  "result_sha256": "d1f32e3cde756e6f7961c9ea707b6088134e177db7bbe3ecc355216a95982587",
   "runtime_urdf_sha256": "9ff9dd627a3ac56e6dd02e585fc6408138c807ca839953eae2bff42501d1a3b6",
   "joint": "livox_frame_joint",
   "origin_xyz": [
