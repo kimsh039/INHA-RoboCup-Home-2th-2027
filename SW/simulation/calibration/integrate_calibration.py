@@ -51,6 +51,14 @@ def main():
     lidar = workflow.read(lidar_input)
     if lidar.get('measurement') != 'physical_robot' or lidar.get('status') != 'physical_holdout_validated':
         raise ValueError('Expected the held-out validated physical Base–2D LiDAR record')
+    if (lidar.get('translation_unit') != 'm' or lidar.get('transform_direction') != 'base_link <- laser_frame'
+            or (lidar.get('parent_frame'), lidar.get('child_frame')) != ('base_link', 'laser_frame')):
+        raise ValueError('Base–2D LiDAR record must be base_link <- laser_frame in metres')
+    lidar_matrix = np.eye(4)
+    lidar_matrix[:3, :3] = workflow.Rotation.from_quat(lidar['quaternion_xyzw']).as_matrix()
+    lidar_matrix[:3, 3] = lidar['translation_m']
+    if not np.allclose(lidar_matrix, workflow.se3(lidar['matrix_4x4']), atol=1e-9, rtol=0):
+        raise ValueError('Base–2D LiDAR quaternion/translation and matrix_4x4 disagree')
     mid_input = RECORDS / '20261006_base_mid360/results/auto_room_20261006_031114/base_mid360.json'
     head_input = RECORDS / '20261006_head_mid360/results/automated_01/head_mid360.json'
     wrist_input = RECORDS / '20261006_wrist_d435/results/flange_wrist.json'
@@ -125,6 +133,9 @@ def main():
                 delta @ measured, recorded['parent_frame'], recorded['child_frame'],
                 status='cad_mount_delta_applied', independent_measurement=False,
                 method='Rigid CAD mount delta applied to historical Head hand-eye; not a new calibration',
+                # The CAD delta and the recorded route through the nominal PiPER mount are model references.
+                contains_nominal_reference=True,
+                source_sha256=workflow.sha(results / 'base_head_recorded.json'),
                 recorded_transform='base_head_recorded.json', mount_change=head_mount))
         # Express a coherent Head–Mid360 transform from the selected Head runtime chain.
         # Keep the independently fitted plane estimate under its recorded name.
@@ -157,7 +168,7 @@ def main():
             if head_mount:
                 head_selection = 'recorded_head_arm_handeye_with_cad_mount_delta' if head_arm_usable else 'recorded_head_lidar_with_cad_mount_delta'
             summary = {
-                'status': 'simulation_calibration_integrated',
+                'status': 'physical_and_simulation_calibration_integrated',
                 'transform_convention': 'parent <- child, metres',
                 'runtime': 'SW/simulation/robot_description/' + runtime.name, 'runtime_path_basis': 'repository_root', 'runtime_urdf_sha256': workflow.sha(staged_runtime),
                 'nominal_urdf_sha256': workflow.sha(nominal),
@@ -196,6 +207,8 @@ def main():
                 'applications': applications, 'tcp_application': tcp_application,
             }
             workflow.write(bundle / 'summary.json', summary)
+            if (output / 'README.md').exists():  # hand-written bundle description is not generated
+                shutil.copy2(output / 'README.md', bundle / 'README.md')
             if output.exists():
                 shutil.rmtree(output)
             shutil.copytree(bundle, output)

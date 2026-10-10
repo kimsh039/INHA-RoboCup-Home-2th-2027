@@ -1,7 +1,9 @@
 # Mid-360S(기준) <-> G2 정지 다자세 외부 파라미터 추정
 # - Mid-360S의 base_link 자세는 URDF 값으로 고정
 # - G2: base_link -> laser_frame 의 x, y, yaw 추정 (z, roll, pitch는 URDF 고정) + 6DoF 관측성 진단
-# 사용: python3 calib_g2_livox.py <bag_dir> <out_json>
+# 사용 (ROS 2 Humble 환경, 자세마다 별도 프로세스로 전처리):
+#   python3 calib_g2_livox.py prep <bags>/poseNN <prep>/poseNN.npz
+#   python3 calib_g2_livox.py <prep> <out_json>
 import sys, os, json, numpy as np
 import rosbag2_py
 from rclpy.serialization import deserialize_message

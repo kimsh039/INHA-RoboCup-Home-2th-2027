@@ -1,6 +1,6 @@
 {
   "source_urdf_sha256": "b341170740045376d696fe403063b850f10e8b7b82351419bbd071256a9754e3",
-  "result_sha256": "82cd97fef11fb5786c445adfd3838e7b016378942ae156ae7ebf1a72eaafa226",
+  "result_sha256": "1f4a2bb2ffc5a85e08bed7fbcfc4c2c1bdc343e973179fe99614899a056cb4d1",
   "runtime_urdf_sha256": "3082189fa54ad02ba14dce129c3116c4577f44d3f6886973eff9213f62604c33",
   "joint": "camera_link_joint",
   "origin_xyz": [

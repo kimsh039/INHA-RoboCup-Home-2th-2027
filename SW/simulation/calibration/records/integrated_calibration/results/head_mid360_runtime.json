@@ -44,7 +44,7 @@
   "sources": [
     {
       "path": "base_head.json",
-      "sha256": "82cd97fef11fb5786c445adfd3838e7b016378942ae156ae7ebf1a72eaafa226",
+      "sha256": "1f4a2bb2ffc5a85e08bed7fbcfc4c2c1bdc343e973179fe99614899a056cb4d1",
       "status": "cad_mount_delta_applied",
       "inverted": true
     },
@@ -55,10 +55,10 @@
       "inverted": false
     }
   ],
-  "contains_nominal_reference": false,
+  "contains_nominal_reference": true,
   "independent_measurement": false,
   "source_sha256": [
-    "82cd97fef11fb5786c445adfd3838e7b016378942ae156ae7ebf1a72eaafa226",
+    "1f4a2bb2ffc5a85e08bed7fbcfc4c2c1bdc343e973179fe99614899a056cb4d1",
     "53fd478d044b8db6b66723e1a517245cf57ca638ae2ffb6d270a0b394459796c"
   ]
 }
