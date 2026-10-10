@@ -725,13 +725,13 @@
   <joint name="laser_frame_joint" type="fixed">
     <parent link="g2_link" />
     <child link="laser_frame" />
-    <origin xyz="0.024073172308992453 0.0091594372740952668 0" rpy="0 0 0.049509674634016343" />
+    <origin xyz="0.0028733029026841292 0.0067586514684851492 0" rpy="0 0 0.021251994651100784" />
   </joint>
   <link name="livox_frame" />
   <joint name="livox_frame_joint" type="fixed">
     <parent link="mid360_link" />
     <child link="livox_frame" />
-    <origin xyz="3.773355003483525e-05 0.00015620113972823895 -0.00024318079626794997" rpy="3.1415281256409195 2.0508080655234906e-05 -2.7091518517184195e-05" />
+    <origin xyz="0.022032700644211894 5.7685849495536964e-05 -0.010564391472523305" rpy="-3.1395053590522144 0.050714699081705339 -0.028042824854912916" />
   </joint>
   <link name="camera_cad_frame" />
   <joint name="camera_cad_frame_joint" type="fixed">

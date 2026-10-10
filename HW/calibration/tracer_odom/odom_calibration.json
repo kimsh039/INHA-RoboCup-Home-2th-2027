@@ -1,0 +1,393 @@
+{
+  "schema": "tracer_odom_scale_bias/v1",
+  "status": "physical_measured",
+  "date": "2026-10-10",
+  "model": "v = linear_velocity_scale * v_reported; w = angular_velocity_scale * w_reported + angular_velocity_bias (only while |v_rep| or |w_rep| > 1e-3)",
+  "linear_velocity_scale": 1.112,
+  "angular_velocity_scale": 1.319,
+  "angular_velocity_bias_rad_s": 0.00378,
+  "fit": {
+    "k_v": 1.1116864643282933,
+    "k_w_scale_only": 1.322637770910422,
+    "k_w": 1.3187786724545223,
+    "bias_w_rad_s": 0.0037814038204215866,
+    "k_v_forward": 1.1078488098930719,
+    "k_v_reverse": 1.115618110663051,
+    "yaw_residual_rms_deg": {
+      "scale_only": {
+        "spin": 2.1,
+        "straight": 1.31
+      },
+      "scale_and_bias": {
+        "spin": 2.01,
+        "straight": 0.34
+      }
+    }
+  },
+  "reference": "Base motion between stops from G2 scan matching with base_link <- laser_frame of ../base_2dlidar",
+  "segments": [
+    {
+      "bag": "spin_cw",
+      "scan_dist_m": 0.003260020576733171,
+      "scan_yaw_rad": -0.7672295158356488,
+      "odom_dist_m": 0.00039930843730569564,
+      "odom_yaw_rad": -0.5719609542682449,
+      "motor_rev": [
+        -0.2600620985031128,
+        -0.25730796257654825
+      ]
+    },
+    {
+      "bag": "spin_cw",
+      "scan_dist_m": 0.003770151420538971,
+      "scan_yaw_rad": -0.7180841247584797,
+      "odom_dist_m": 0.002411922623306651,
+      "odom_yaw_rad": -0.5736404668159754,
+      "motor_rev": [
+        -0.2636505881945292,
+        -0.2520005623499552
+      ]
+    },
+    {
+      "bag": "spin_cw",
+      "scan_dist_m": 0.0005304532635990355,
+      "scan_yaw_rad": -0.7075771624716793,
+      "odom_dist_m": 0.0008351108282670577,
+      "odom_yaw_rad": -0.5453000743108621,
+      "motor_rev": [
+        -0.25001321236292523,
+        -0.24467742443084717
+      ]
+    },
+    {
+      "bag": "spin_cw",
+      "scan_dist_m": 0.002239657210350082,
+      "scan_yaw_rad": -0.9707322526177643,
+      "odom_dist_m": 0.000326345004942644,
+      "odom_yaw_rad": -0.751821097362758,
+      "motor_rev": [
+        -0.33734774192174277,
+        -0.34032933314641317
+      ]
+    },
+    {
+      "bag": "spin_cw",
+      "scan_dist_m": 0.0021377356978437875,
+      "scan_yaw_rad": -0.7452760790817159,
+      "odom_dist_m": 0.0020648558090689104,
+      "odom_yaw_rad": -0.6145998304672228,
+      "motor_rev": [
+        -0.2706608692804972,
+        -0.28299833138783775
+      ]
+    },
+    {
+      "bag": "spin_cw",
+      "scan_dist_m": 0.001764517181756057,
+      "scan_yaw_rad": -0.7951158627288802,
+      "odom_dist_m": 0.0009158162187666616,
+      "odom_yaw_rad": -0.6190805041371118,
+      "motor_rev": [
+        -0.27900420427322387,
+        -0.2820103446642558
+      ]
+    },
+    {
+      "bag": "spin_cw",
+      "scan_dist_m": 0.00417139851870837,
+      "scan_yaw_rad": -0.8362611184710731,
+      "odom_dist_m": 0.0026185535441681056,
+      "odom_yaw_rad": -0.5838194113377018,
+      "motor_rev": [
+        -0.2583813468615214,
+        -0.27165788412094116
+      ]
+    },
+    {
+      "bag": "spin_cw",
+      "scan_dist_m": 0.0021973534220774043,
+      "scan_yaw_rad": -0.22409779928891907,
+      "odom_dist_m": 0.0004209292688300055,
+      "odom_yaw_rad": -0.17882159678669754,
+      "motor_rev": [
+        -0.08199201424916586,
+        -0.07800285418828329
+      ]
+    },
+    {
+      "bag": "spin_ccw",
+      "scan_dist_m": 0.005485668658151413,
+      "scan_yaw_rad": 0.7639345654705316,
+      "odom_dist_m": 0.0010369456527278744,
+      "odom_yaw_rad": 0.5537396755586297,
+      "motor_rev": [
+        0.25300148328145344,
+        0.24900583028793336
+      ]
+    },
+    {
+      "bag": "spin_ccw",
+      "scan_dist_m": 0.0024898265060710944,
+      "scan_yaw_rad": 0.7778377536953444,
+      "odom_dist_m": 0.0013456873208576095,
+      "odom_yaw_rad": 0.5769396683529591,
+      "motor_rev": [
+        0.25700121323267616,
+        0.2623225490252177
+      ]
+    },
+    {
+      "bag": "spin_ccw",
+      "scan_dist_m": 0.003057186059059104,
+      "scan_yaw_rad": 0.7411118796656421,
+      "odom_dist_m": 0.0017846103614315584,
+      "odom_yaw_rad": 0.5399395785383168,
+      "motor_rev": [
+        0.23865058422088622,
+        0.2496589144070943
+      ]
+    },
+    {
+      "bag": "spin_ccw",
+      "scan_dist_m": 0.0012901649019782307,
+      "scan_yaw_rad": 0.8724224963031897,
+      "odom_dist_m": 0.0007772827601179626,
+      "odom_yaw_rad": 0.6770795970518864,
+      "motor_rev": [
+        0.30766586065292356,
+        0.3030221621195475
+      ]
+    },
+    {
+      "bag": "spin_ccw",
+      "scan_dist_m": 0.002105427258937889,
+      "scan_yaw_rad": 0.9001945811052603,
+      "odom_dist_m": 0.0028039707178895527,
+      "odom_yaw_rad": 0.7150197278184482,
+      "motor_rev": [
+        0.32701457738876344,
+        0.31400813659032184
+      ]
+    },
+    {
+      "bag": "spin_ccw",
+      "scan_dist_m": 0.0066761918362937284,
+      "scan_yaw_rad": 0.6577701110098233,
+      "odom_dist_m": 0.002179491685310312,
+      "odom_yaw_rad": 0.46456094235135736,
+      "motor_rev": [
+        0.20331116120020548,
+        0.2143179972966512
+      ]
+    },
+    {
+      "bag": "spin_ccw",
+      "scan_dist_m": 0.0022511782454118,
+      "scan_yaw_rad": 0.8757474698267237,
+      "odom_dist_m": 0.0002767366500921149,
+      "odom_yaw_rad": 0.6201198941250317,
+      "motor_rev": [
+        0.2823573271433512,
+        0.27968966563542685
+      ]
+    },
+    {
+      "bag": "spin_ccw",
+      "scan_dist_m": 0.0009096268066249027,
+      "scan_yaw_rad": 0.7926320013855802,
+      "odom_dist_m": 0.0018682236404366007,
+      "odom_yaw_rad": 0.5967400417567688,
+      "motor_rev": [
+        0.27528732220331825,
+        0.2629882653554281
+      ]
+    },
+    {
+      "bag": "straight_forward",
+      "scan_dist_m": 0.3286096355888928,
+      "scan_yaw_rad": 0.0060992117190466245,
+      "odom_dist_m": 0.30025709444368326,
+      "odom_yaw_rad": -0.010480076637751601,
+      "motor_rev": [
+        -0.7984025160471598,
+        0.7904073079427083
+      ]
+    },
+    {
+      "bag": "straight_forward",
+      "scan_dist_m": 0.3060970031074042,
+      "scan_yaw_rad": -0.0029787844118505232,
+      "odom_dist_m": 0.27875860714510264,
+      "odom_yaw_rad": -0.012659529270212166,
+      "motor_rev": [
+        -0.74069318373998,
+        0.727660338083903
+      ]
+    },
+    {
+      "bag": "straight_forward",
+      "scan_dist_m": 0.3100228291882104,
+      "scan_yaw_rad": -0.0010441375302190708,
+      "odom_dist_m": 0.2734356565119312,
+      "odom_yaw_rad": -0.018418872701286483,
+      "motor_rev": [
+        -0.7353051582972209,
+        0.7206832687060039
+      ]
+    },
+    {
+      "bag": "straight_forward",
+      "scan_dist_m": 0.2947484385083805,
+      "scan_yaw_rad": -0.0030356218843266324,
+      "odom_dist_m": 0.26973863070719334,
+      "odom_yaw_rad": -0.010759867572021582,
+      "motor_rev": [
+        -0.7196057836214701,
+        0.7096153020858764
+      ]
+    },
+    {
+      "bag": "straight_forward",
+      "scan_dist_m": 0.2986357804294051,
+      "scan_yaw_rad": -0.0033212123052699014,
+      "odom_dist_m": 0.27037713001373437,
+      "odom_yaw_rad": -0.018019707247689472,
+      "motor_rev": [
+        -0.723327640692393,
+        0.706351081530253
+      ]
+    },
+    {
+      "bag": "straight_forward",
+      "scan_dist_m": 0.282813818786477,
+      "scan_yaw_rad": -0.0039048225722857124,
+      "odom_dist_m": 0.25109354078092627,
+      "odom_yaw_rad": -0.024300944176426805,
+      "motor_rev": [
+        -0.6773675958315531,
+        0.6550345937410991
+      ]
+    },
+    {
+      "bag": "straight_reverse",
+      "scan_dist_m": 0.28471547636204264,
+      "scan_yaw_rad": 0.01292187195008312,
+      "odom_dist_m": 0.2531014851314439,
+      "odom_yaw_rad": -0.006626457104997038,
+      "motor_rev": [
+        0.6663258751233418,
+        -0.6726750731468201
+      ]
+    },
+    {
+      "bag": "straight_reverse",
+      "scan_dist_m": 0.24940818995485986,
+      "scan_yaw_rad": -0.003984641610008414,
+      "odom_dist_m": 0.22633870326147792,
+      "odom_yaw_rad": -0.019619512640940914,
+      "motor_rev": [
+        0.5909890214602153,
+        -0.6086694717407226
+      ]
+    },
+    {
+      "bag": "straight_reverse",
+      "scan_dist_m": 0.3074993870946238,
+      "scan_yaw_rad": -0.0021007021767010616,
+      "odom_dist_m": 0.2810191080610781,
+      "odom_yaw_rad": -0.018219529486996674,
+      "motor_rev": [
+        0.7347014665603637,
+        -0.7547127922375997
+      ]
+    },
+    {
+      "bag": "straight_reverse",
+      "scan_dist_m": 0.31423467256448434,
+      "scan_yaw_rad": -0.0024795514413733476,
+      "odom_dist_m": 0.2714937754267343,
+      "odom_yaw_rad": -0.02666018570172792,
+      "motor_rev": [
+        0.70929460922877,
+        -0.731645131111145
+      ]
+    },
+    {
+      "bag": "straight_reverse",
+      "scan_dist_m": 0.3222006029757291,
+      "scan_yaw_rad": -0.002284553360062548,
+      "odom_dist_m": 0.29061742035115506,
+      "odom_yaw_rad": -0.021333407114641715,
+      "motor_rev": [
+        0.7630118131637573,
+        -0.7816832621892293
+      ]
+    },
+    {
+      "bag": "straight_reverse",
+      "scan_dist_m": 0.31180198068234083,
+      "scan_yaw_rad": -0.005026759520664343,
+      "odom_dist_m": 0.2817959953023654,
+      "odom_yaw_rad": -0.02204127657279709,
+      "motor_rev": [
+        0.7293700774510702,
+        -0.7507227540016175
+      ]
+    }
+  ],
+  "moving_time_s": [
+    4.160001039505005,
+    3.7400035858154297,
+    3.8999993801116943,
+    4.659968852996826,
+    3.500000476837158,
+    4.20000147819519,
+    5.4599974155426025,
+    1.360001802444458,
+    4.300001621246338,
+    4.8800048828125,
+    3.979992389678955,
+    4.0199971199035645,
+    4.040006399154663,
+    3.580003261566162,
+    4.460002183914185,
+    4.059996128082275,
+    4.1600072383880615,
+    3.9800004959106445,
+    5.399999380111694,
+    3.2599985599517822,
+    4.179991722106934,
+    5.139997482299805,
+    4.359994173049927,
+    3.899998664855957,
+    3.939997673034668,
+    6.400014400482178,
+    5.139991521835327,
+    4.459996223449707
+  ],
+  "bags": {
+    "spin_cw": {
+      "file": "spin_cw/spin_cw_0.db3",
+      "sha256": "d55dcf637eed0236f4a815119b5bbf4676dfca3bc5ac28f113cf1a4cce16ecf8",
+      "bytes": 8241152
+    },
+    "spin_ccw": {
+      "file": "spin_ccw/spin_ccw_0.db3",
+      "sha256": "444f833853dbc2d3d6c8b716decf7e2c40623ca97442912eb8bad67bbb776a20",
+      "bytes": 6639616
+    },
+    "straight_forward": {
+      "file": "straight_forward/straight_forward_0.db3",
+      "sha256": "3cc35c055a6234220227dec89175509d2000f35cc6a4ea87dfdec14874161e20",
+      "bytes": 5111808
+    },
+    "straight_reverse": {
+      "file": "straight_reverse/straight_reverse_0.db3",
+      "sha256": "5269bd11ec7bd81b3535fd25baa8b18ee07348bd2907d7700d8f722f1594168f",
+      "bytes": 6156288
+    }
+  },
+  "bag_storage": "Jetson sparo@ubuntu:~/tracer_ws/calibration_bags/g2_scan_only_20261010_230526 (rosbag2 sqlite3; /scan /odom /tf /tracer_status; recorded by the team, stop-and-go)",
+  "applied_in": "tracer_ros2 (agilexrobotics) local branch odom-correction on the Jetson, commit c10aa90; see 0001-tracer-odom-correction.patch",
+  "not_corrected": "Commanded /cmd_vel is passed to the firmware unchanged, so the robot still moves ~11 % faster and turns ~32 % more than commanded."
+}

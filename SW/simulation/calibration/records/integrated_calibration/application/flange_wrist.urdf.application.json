@@ -1,7 +1,7 @@
 {
-  "source_urdf_sha256": "3082189fa54ad02ba14dce129c3116c4577f44d3f6886973eff9213f62604c33",
+  "source_urdf_sha256": "50dc08eb46d7cdac4be73bca4948715f139b9df9465e5d3ebf5f78a06d50ec5c",
   "result_sha256": "48010d828e095cceaebfc7e4872170d6649143023161584e861382866f483afb",
-  "runtime_urdf_sha256": "62101e0d816416aaf1cddfca6186a52b67aae81dda9e3db5a8687eadd1dd7607",
+  "runtime_urdf_sha256": "221d215882b06d45543cb1238468c40ea5a68ad7c85a1b2276768f9474cccd11",
   "joint": "piper_to_wrist_camera_mount",
   "origin_xyz": [
     0.00021057778731321808,

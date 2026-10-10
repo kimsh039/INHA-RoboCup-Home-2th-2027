@@ -10,14 +10,14 @@
 
 | Stage | Result | Runtime status / evidence |
 |---|---|---|
-| Base–2D LiDAR | **Physical (2026-10-10):** x=24.248 mm, y=9.159 mm, yaw=2.8367°; z/roll/pitch fixed. Relative to the Mid-360S | Applied. 6 train / 2 held-out static poses: held-out G2→Mid-360S wall distance median 7.0/6.7 mm (CAD 42/70 mm), 90–92% within 20 mm. [Record](../../../HW/calibration/base_2dlidar/README.md). Gazebo estimate (x=0.124 mm, y=0.521 mm, yaw=8.844783°) kept as history |
-| Base–Mid360 | xyz≈(-0.179962, 0.000156, 1.198867) m; roll≈180° | Applied. Recorded A/B maximum plane offsets: 3.594/3.167 mm |
+| Base–2D LiDAR | **Physical (2026-10-10):** x=3.05 mm, y=6.76 mm, yaw=1.2176°; z/roll/pitch fixed. Motion geometry (in-place rotation centre + straight-line direction) from G2 scan matching | Applied. CW/CCW centre difference 2.7 mm, forward/reverse yaw 1.208°/1.227°. [Record](../../../HW/calibration/base_2dlidar/README.md). Gazebo estimate (x=0.124 mm, y=0.521 mm, yaw=8.844783°) kept as history |
+| Base–Mid360 | **Physical (2026-10-10):** xyz=(-0.15797, 0.00006, 1.18855) m; rpy=(-179.88°, 2.906°, -1.607°). Floor plane (roll/pitch/z) + G2 chain (x/y/yaw) | Applied. Held-out G2→Mid-360S wall distance median 6.8 mm. [Record](../../../HW/calibration/base_mid360/README.md). Gazebo estimate xyz≈(-0.179962, 0.000156, 1.198867) m kept as history |
 | Head–Mid360 | Recorded plane fit; held-out maximum 4.247 mm / 0.814° | Preserved. Historical Gazebo GT position error 11.720 mm; not used as the current Head mount |
 | Base–PiPER | xyz=(-0.0195, 0, 0.80611) m; RPY=0 | Applied as `urdf_nominal_reference`; no independent measurement |
 | PiPER–Head | New eye-on-base image PnP + measured-joint FK, 25 train / 10 holdout | Applied through Base–PiPER. Solver held-out maximum 0.272 mm / 0.203° |
 | Link6–Wrist | Recorded eye-in-hand hand-eye, 25 train / 10 holdout | Applied. Recorded maximum 0.339 mm / 0.294° |
 | Link6–TCP | Simulated point-constrained pivot, 25 train / 10 holdout; xyz≈(0, 0, 0.1425) m | Applied. Intrinsic held-out residual 3.210513e-06 mm; axes defined, hardware accuracy not established |
-| Head path comparison | LiDAR route versus new arm route | Difference 9.871 mm / 0.414°; numerical comparison, not proof of physical accuracy |
+| Head path comparison | LiDAR route versus new arm route | Difference 20.751 mm / 3.659° since the LiDAR route now combines the Gazebo Head–Mid360 plane fit with the physical Mid-360S (was 9.871 mm / 0.414° with Gazebo Mid360). The arm route is used; numerical comparison only |
 | TF integration | All above transforms in one URDF | Generated and recorded. ROS/RViz was not launched in this update |
 
 [Completed TCP pivot](records/link6_tcp/README.md) · [Integrated results and application history](records/integrated_calibration/README.md) · [New Head–PiPER observations](records/head_piper/README.md) · [URDF mount inputs and prior requested evaluation](records/base_piper/README.md)
@@ -78,7 +78,7 @@ This requires the native Gazebo Python transport/message bindings in addition to
 
 ## Physical measurement scope
 
-Physical arm mounting, physical TCP contact/pivot and tool axes, joint zero offsets/link geometry, gripper opening/zero, and real sensor calibration require independent measurements. The physical Base–2D LiDAR x/y/yaw (2026-10-10) is the first real sensor calibration and is relative to the uncalibrated Mid-360S mount. None were inferred from generated URDF coordinates. The historical Head plane bias and the 9.871 mm route difference remain documented.
+Physical arm mounting, physical TCP contact/pivot and tool axes, joint zero offsets/link geometry, gripper opening/zero, and real sensor calibration require independent measurements. Base–2D LiDAR (x/y/yaw) and Base–Mid360 (6 DoF) were physically calibrated on 2026-10-10; cameras are not. Tracer odometry scale/bias: [HW/calibration/tracer_odom](../../../HW/calibration/tracer_odom/README.md). None were inferred from generated URDF coordinates. The historical Head plane bias and the 9.871 mm route difference remain documented.
 
 The new hand-eye and pivot solvers report held-out errors during their requested calibration calculations. Stage 06 simulation collection, calculation and runtime application are complete. The near-zero TCP residual follows from shared CAD kinematics and the imposed socket constraint; it is not a physical accuracy estimate. No additional post-work test, build, lint, ROS launch, or verification was run.
 

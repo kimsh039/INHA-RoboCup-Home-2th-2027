@@ -1,7 +1,7 @@
 {
-  "source_urdf_sha256": "b341170740045376d696fe403063b850f10e8b7b82351419bbd071256a9754e3",
+  "source_urdf_sha256": "a35cc955f31257d5c8b76532b1b03c2010ebfc4810c78fed1028c4cda364b111",
   "result_sha256": "1f4a2bb2ffc5a85e08bed7fbcfc4c2c1bdc343e973179fe99614899a056cb4d1",
-  "runtime_urdf_sha256": "3082189fa54ad02ba14dce129c3116c4577f44d3f6886973eff9213f62604c33",
+  "runtime_urdf_sha256": "50dc08eb46d7cdac4be73bca4948715f139b9df9465e5d3ebf5f78a06d50ec5c",
   "joint": "camera_link_joint",
   "origin_xyz": [
     -0.1231374351388152,

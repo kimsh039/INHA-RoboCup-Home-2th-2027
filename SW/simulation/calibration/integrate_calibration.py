@@ -45,12 +45,12 @@ def main():
     # The hand-eye solver already reports held-out residuals as part of calibration.
     # Use those recorded values, without reprocessing images or launching a validation job.
     head_arm_usable = handeye['max_holdout_translation_m'] <= 0.005 and handeye['max_holdout_rotation_deg'] <= 1.0
-    # Physical G2 estimate against the Mid-360S (2026-10-10). The Gazebo record
-    # records/20261005_base_2dlidar is preserved as history.
+    # Physical G2 and Mid-360S estimates (2026-10-10). The Gazebo records
+    # records/20261005_base_2dlidar and records/20261006_base_mid360 are preserved as history.
     lidar_input = HW_CALIBRATION / 'base_2dlidar/calibration.json'
     lidar = workflow.read(lidar_input)
-    if lidar.get('measurement') != 'physical_robot' or lidar.get('status') != 'physical_holdout_validated':
-        raise ValueError('Expected the held-out validated physical Base–2D LiDAR record')
+    if lidar.get('measurement') != 'physical_robot' or lidar.get('status') != 'physical_cross_validated':
+        raise ValueError('Expected the cross-validated physical Base–2D LiDAR record')
     if (lidar.get('translation_unit') != 'm' or lidar.get('transform_direction') != 'base_link <- laser_frame'
             or (lidar.get('parent_frame'), lidar.get('child_frame')) != ('base_link', 'laser_frame')):
         raise ValueError('Base–2D LiDAR record must be base_link <- laser_frame in metres')
@@ -59,7 +59,18 @@ def main():
     lidar_matrix[:3, 3] = lidar['translation_m']
     if not np.allclose(lidar_matrix, workflow.se3(lidar['matrix_4x4']), atol=1e-9, rtol=0):
         raise ValueError('Base–2D LiDAR quaternion/translation and matrix_4x4 disagree')
-    mid_input = RECORDS / '20261006_base_mid360/results/auto_room_20261006_031114/base_mid360.json'
+    mid_input = HW_CALIBRATION / 'base_mid360/base_mid360.json'
+    mid = workflow.read(mid_input)
+    if (mid.get('measurement') != 'physical_robot' or mid.get('status') != 'physical_cross_validated'
+            or mid.get('transform_direction') != 'base_link <- livox_frame'
+            or (mid.get('parent_frame'), mid.get('child_frame')) != ('base_link', 'livox_frame')):
+        raise ValueError('Expected the cross-validated physical base_link <- livox_frame record')
+    _, mid_matrix = workflow.result(mid_input)
+    mid_check = np.eye(4)
+    mid_check[:3, :3] = workflow.Rotation.from_quat(mid['quaternion_xyzw']).as_matrix()
+    mid_check[:3, 3] = mid['translation_xyz_m']
+    if not np.allclose(mid_check, mid_matrix, atol=1e-9, rtol=0):
+        raise ValueError('Base–Mid360 quaternion/translation and matrix4x4 disagree')
     head_input = RECORDS / '20261006_head_mid360/results/automated_01/head_mid360.json'
     wrist_input = RECORDS / '20261006_wrist_d435/results/flange_wrist.json'
     tcp_input = RECORDS / 'link6_tcp/results/flange_tcp.json'
@@ -184,8 +195,11 @@ def main():
                 'head_path_difference': workflow.read(results / 'head_path_difference.json'),
                 'head_paths_share_nominal_arm_mount': True,
                 'base_lidar_input': os.path.relpath(lidar_input, HERE.parents[2]).replace(os.sep, '/'),
-                'base_lidar_input_kind': 'physical_static_multipose_vs_mid360',
-                'base_lidar_holdout': {k: lidar['metrics']['holdout']['est'][k] for k in ('med_cm', 'p90_cm', 'in2cm')},
+                'base_lidar_input_kind': 'physical_motion_geometry',
+                'base_lidar_consistency': lidar['consistency'],
+                'base_mid360_input': os.path.relpath(mid_input, HERE.parents[2]).replace(os.sep, '/'),
+                'base_mid360_input_kind': 'physical_floor_plane_and_g2_chain',
+                'base_mid360_g2_holdout_mm': {k.replace('_cm', '_mm'): mid['g2_relative_tilt_corrected']['holdout'][k] * 10 for k in ('med_cm', 'p90_cm')},
                 'base_piper_input_kind': 'urdf_reference', 'tcp_input_kind': tcp['input_kind'],
                 'tcp_definition': workflow.read(results / 'flange_tcp.json')['definition'],
                 'tcp_solver_holdout': {
@@ -202,7 +216,7 @@ def main():
                 'post_work_verification_run': False,
                 'remaining_independent_measurements': ['physical arm mount', 'physical TCP contact/pivot and tool axes',
                     'joint zero offsets, axes and link geometry', 'gripper opening/zero',
-                    'real sensor calibration (Base–2D LiDAR x/y/yaw done relative to Mid-360S; Mid-360S and cameras pending)'],
+                    'real camera calibration (Base–2D LiDAR and Base–Mid360 are physical since 2026-10-10)'],
                 'historical_head_plane_bias': 'Recorded Head–Mid360 plane estimate has 11.720 mm Gazebo GT position error; retained and not silently corrected.',
                 'applications': applications, 'tcp_application': tcp_application,
             }

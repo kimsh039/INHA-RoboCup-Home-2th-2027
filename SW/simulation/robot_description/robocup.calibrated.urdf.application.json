@@ -3,7 +3,7 @@
   "transform_convention": "parent <- child, metres",
   "runtime": "SW/simulation/robot_description/robocup.calibrated.urdf",
   "runtime_path_basis": "repository_root",
-  "runtime_urdf_sha256": "7a2207ea6bcca1adbf17ff8f2b63c9bc3dbd95eed966d08bf93dbff161ec88b2",
+  "runtime_urdf_sha256": "6a578183f5621e54827eaa7cc6abbda758b1d93634b87b03955cc8fbdd0fa34c",
   "nominal_urdf_sha256": "5b7d47200d819cf7cde8b334d1f2b3d57f7bf604ba82cbb5898fd66c4dea616e",
   "head_selection": "recorded_head_arm_handeye_with_cad_mount_delta",
   "head_mount_change": {
@@ -85,18 +85,23 @@
     "additional_validation_run": false
   },
   "head_path_difference": {
-    "translation_mm": 9.871364148017674,
-    "rotation_deg": 0.4136798030855448,
-    "left_sha256": "c0dd054bc18ef8094c32bab77cf0b48757e687d5861868f228de132ac915e978",
+    "translation_mm": 20.750927060622843,
+    "rotation_deg": 3.6594146163145203,
+    "left_sha256": "2c8ac30b74839b8401e30584dc709ddbc7f5cd0d8cd7eee0dc891fd598f71668",
     "right_sha256": "58af754f25e3a1d003724438f97b11eab25c7ecba557827a470f47aed75949fe"
   },
   "head_paths_share_nominal_arm_mount": true,
   "base_lidar_input": "HW/calibration/base_2dlidar/calibration.json",
-  "base_lidar_input_kind": "physical_static_multipose_vs_mid360",
-  "base_lidar_holdout": {
-    "med_cm": 0.6873261843874962,
-    "p90_cm": 1.8781369925971034,
-    "in2cm": 0.9144215530903328
+  "base_lidar_input_kind": "physical_motion_geometry",
+  "base_lidar_consistency": {
+    "cw_ccw_centre_difference_mm": 2.7267553546371985,
+    "forward_reverse_yaw_difference_deg": 0.019173067988731418
+  },
+  "base_mid360_input": "HW/calibration/base_mid360/base_mid360.json",
+  "base_mid360_input_kind": "physical_floor_plane_and_g2_chain",
+  "base_mid360_g2_holdout_mm": {
+    "med_mm": 6.809016807702974,
+    "p90_mm": 16.016724008472877
   },
   "base_piper_input_kind": "urdf_reference",
   "tcp_input_kind": "simulated_constrained_joint_observations",
@@ -128,50 +133,50 @@
     "physical TCP contact/pivot and tool axes",
     "joint zero offsets, axes and link geometry",
     "gripper opening/zero",
-    "real sensor calibration (Base\u20132D LiDAR x/y/yaw done relative to Mid-360S; Mid-360S and cameras pending)"
+    "real camera calibration (Base\u20132D LiDAR and Base\u2013Mid360 are physical since 2026-10-10)"
   ],
   "historical_head_plane_bias": "Recorded Head\u2013Mid360 plane estimate has 11.720 mm Gazebo GT position error; retained and not silently corrected.",
   "applications": [
     {
       "source_urdf_sha256": "5b7d47200d819cf7cde8b334d1f2b3d57f7bf604ba82cbb5898fd66c4dea616e",
-      "result_sha256": "5560f265bd68e5e7e94a7fd5e83295c173d6611d386168605d251f3250063946",
-      "runtime_urdf_sha256": "09ee55e4a2951b4671591f3dd00ae7c942d77cf7298777f9bc6579b813a60de6",
+      "result_sha256": "80c6543b5aca5a0ea3bb2c33632519663eafc0e3cb4e465b528b5fa701a875ff",
+      "runtime_urdf_sha256": "46a266994781d0da89f199b9234227c1b7d8e082fc8b07e2aa253ccc160f1271",
       "joint": "laser_frame_joint",
       "origin_xyz": [
-        0.024073172308992453,
-        0.009159437274095267,
+        0.002873302902684129,
+        0.006758651468485149,
         0.0
       ],
       "origin_rpy": [
         0.0,
         0.0,
-        0.04950967463401634
+        0.021251994651100784
       ],
       "composition_verified": true,
       "acceptance": "User must review held-out validation before launching"
     },
     {
-      "source_urdf_sha256": "09ee55e4a2951b4671591f3dd00ae7c942d77cf7298777f9bc6579b813a60de6",
-      "result_sha256": "53fd478d044b8db6b66723e1a517245cf57ca638ae2ffb6d270a0b394459796c",
-      "runtime_urdf_sha256": "7b66e9e027750d80af5c251690d643243d46f5d8bda9bfdb7b5016bf8aa03e93",
+      "source_urdf_sha256": "46a266994781d0da89f199b9234227c1b7d8e082fc8b07e2aa253ccc160f1271",
+      "result_sha256": "33683ec603fcddf0f43cc5667fbb2d1af287d16995662d9bc4e2243d6e660bf2",
+      "runtime_urdf_sha256": "0778613fc3e5b0b446667db3eb37bd689683aa06a07b8930b8866eb7883a9c26",
       "joint": "livox_frame_joint",
       "origin_xyz": [
-        3.773355003483525e-05,
-        0.00015620113972823895,
-        -0.00024318079626794997
+        0.022032700644211894,
+        5.7685849495536964e-05,
+        -0.010564391472523305
       ],
       "origin_rpy": [
-        3.1415281256409195,
-        2.0508080655234906e-05,
-        -2.7091518517184195e-05
+        -3.1395053590522144,
+        0.05071469908170534,
+        -0.028042824854912916
       ],
       "composition_verified": true,
       "acceptance": "User must review held-out validation before launching"
     },
     {
-      "source_urdf_sha256": "7b66e9e027750d80af5c251690d643243d46f5d8bda9bfdb7b5016bf8aa03e93",
+      "source_urdf_sha256": "0778613fc3e5b0b446667db3eb37bd689683aa06a07b8930b8866eb7883a9c26",
       "result_sha256": "b62ef81579382715fd90617467776cb84146d7aa079f435d41b45b38f97f0fd3",
-      "runtime_urdf_sha256": "b341170740045376d696fe403063b850f10e8b7b82351419bbd071256a9754e3",
+      "runtime_urdf_sha256": "a35cc955f31257d5c8b76532b1b03c2010ebfc4810c78fed1028c4cda364b111",
       "joint": "rack_to_piper_base",
       "origin_xyz": [
         -0.0195,
@@ -187,9 +192,9 @@
       "acceptance": "User must review held-out validation before launching"
     },
     {
-      "source_urdf_sha256": "b341170740045376d696fe403063b850f10e8b7b82351419bbd071256a9754e3",
+      "source_urdf_sha256": "a35cc955f31257d5c8b76532b1b03c2010ebfc4810c78fed1028c4cda364b111",
       "result_sha256": "1f4a2bb2ffc5a85e08bed7fbcfc4c2c1bdc343e973179fe99614899a056cb4d1",
-      "runtime_urdf_sha256": "3082189fa54ad02ba14dce129c3116c4577f44d3f6886973eff9213f62604c33",
+      "runtime_urdf_sha256": "50dc08eb46d7cdac4be73bca4948715f139b9df9465e5d3ebf5f78a06d50ec5c",
       "joint": "camera_link_joint",
       "origin_xyz": [
         -0.1231374351388152,
@@ -205,9 +210,9 @@
       "acceptance": "User must review held-out validation before launching"
     },
     {
-      "source_urdf_sha256": "3082189fa54ad02ba14dce129c3116c4577f44d3f6886973eff9213f62604c33",
+      "source_urdf_sha256": "50dc08eb46d7cdac4be73bca4948715f139b9df9465e5d3ebf5f78a06d50ec5c",
       "result_sha256": "48010d828e095cceaebfc7e4872170d6649143023161584e861382866f483afb",
-      "runtime_urdf_sha256": "62101e0d816416aaf1cddfca6186a52b67aae81dda9e3db5a8687eadd1dd7607",
+      "runtime_urdf_sha256": "221d215882b06d45543cb1238468c40ea5a68ad7c85a1b2276768f9474cccd11",
       "joint": "piper_to_wrist_camera_mount",
       "origin_xyz": [
         0.00021057778731321808,
@@ -225,8 +230,8 @@
   ],
   "tcp_application": {
     "result_sha256": "007aeca338208cc39d690a1b724eadc4d3b5586020f7f235031c4b07929edb1e",
-    "source_urdf_sha256": "62101e0d816416aaf1cddfca6186a52b67aae81dda9e3db5a8687eadd1dd7607",
-    "runtime_urdf_sha256": "7a2207ea6bcca1adbf17ff8f2b63c9bc3dbd95eed966d08bf93dbff161ec88b2",
+    "source_urdf_sha256": "221d215882b06d45543cb1238468c40ea5a68ad7c85a1b2276768f9474cccd11",
+    "runtime_urdf_sha256": "6a578183f5621e54827eaa7cc6abbda758b1d93634b87b03955cc8fbdd0fa34c",
     "input_status": "passed_provisional_limits",
     "input_kind": "simulated_constrained_joint_observations",
     "simulation": true,

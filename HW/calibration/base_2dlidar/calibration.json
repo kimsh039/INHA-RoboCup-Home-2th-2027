@@ -1,6 +1,6 @@
 {
-  "schema": "base_lidar_static_multipose_vs_mid360/v1",
-  "status": "physical_holdout_validated",
+  "schema": "base_lidar_motion_geometry/v1",
+  "status": "physical_cross_validated",
   "measurement": "physical_robot",
   "date": "2026-10-10",
   "parent_frame": "base_link",
@@ -13,39 +13,39 @@
     "yaw_rad"
   ],
   "estimated_xy_yaw": [
-    0.024248171845592453,
-    0.009159437264886989,
-    0.04950967463401634
+    0.003048302439284129,
+    0.006758651459276871,
+    0.021251994651100774
   ],
-  "yaw_deg": 2.836695401595045,
+  "yaw_deg": 1.2176495997426748,
   "translation_m": [
-    0.024248171845592453,
-    0.009159437264886989,
+    0.003048302439284129,
+    0.006758651459276871,
     0.34271
   ],
   "quaternion_xyzw": [
     0.0,
     0.0,
-    0.02475230909229288,
-    0.9996936146613119
+    0.01062579735989791,
+    0.9999435446216284
   ],
   "matrix_4x4": [
     [
-      0.9987746463891991,
-      -0.04948945069537665,
+      0.9997741848609326,
+      -0.021250394952974906,
       0.0,
-      0.024248171845592453
+      0.003048302439284129
     ],
     [
-      0.04948945069537665,
-      0.9987746463891991,
+      0.021250394952974906,
+      0.9997741848609326,
       0.0,
-      0.009159437264886989
+      0.006758651459276871
     ],
     [
       0.0,
       0.0,
-      1.0,
+      0.9999999999999999,
       0.34271
     ],
     [
@@ -60,352 +60,112 @@
     0.0,
     0.0
   ],
-  "fixed_input_source": "z/roll/pitch from CAD URDF (base->rack 0.01611 m + rack->g2_link 0.3266 m, level mount); not observable from vertical walls",
-  "sensors": {
-    "lidar_2d": "YDLIDAR G2: /scan, frame laser_frame, ~9.7 Hz, tracer_ws ydlidar_ros2_driver/params/G2.yaml",
-    "reference_3d": "Livox Mid-360S: /livox/lidar PointCloud2, 10 Hz, ~20k points/frame, IP 192.168.1.184"
-  },
-  "reference_transform": {
-    "note": "Mid-360S is the reference; base_link <- livox_frame fixed to the CAD nominal pose during estimation",
-    "base_livox_used": [
-      [
-        1.0,
-        0.0,
-        0.0,
-        -0.18
+  "fixed_input_source": "CAD URDF; z/roll/pitch are not observable from planar motion",
+  "definition": "base_link origin = in-place rotation centre of the differential drive; base_link +x = straight-line motion direction",
+  "method": "Stop-and-go bags. Per stop: per-beam median G2 scan (range 0.45-8 m, no motion distortion). Consecutive stops registered by 2D point-to-line ICP (odometry used only as initial guess) and refined against the first stop. Spin: least-squares fixed point [R_i p + t_i = q] gives the base origin p in laser_frame. Straight: direction of base-origin displacement between stops gives yaw.",
+  "spin": {
+    "spin_cw": {
+      "p_laser_mm": [
+        -2.087097841486977,
+        -7.492143210370523
       ],
-      [
-        0.0,
-        -1.0,
-        -1.2246467991473532e-16,
-        0.0
-      ],
-      [
-        0.0,
-        1.2246467991473532e-16,
-        -1.0,
-        1.1991100000000001
-      ],
-      [
-        0.0,
-        0.0,
-        0.0,
-        1.0
+      "resid_mm_med": 1.9863866243683757,
+      "resid_mm_max": 5.677363615184998,
+      "scan_total_deg": -330.6499531983384,
+      "odom_total_deg": -254.338482576524,
+      "n": 9,
+      "boot_std_mm": [
+        0.7820542731928604,
+        0.5954759009473349
       ]
-    ],
-    "vs_current_runtime_base_livox": {
-      "translation_mm": 0.2914781578838143,
-      "rotation_deg": 0.004178411179580508
     },
-    "vs_nominal_urdf_base_livox": {
-      "translation_mm": 2.575717417e-12,
-      "rotation_deg": 2.3503128651892875e-08
+    "spin_ccw": {
+      "p_laser_mm": [
+        -4.2953783571210575,
+        -5.892552035003044
+      ],
+      "resid_mm_med": 2.452384522983201,
+      "resid_mm_max": 4.28277831532598,
+      "scan_total_deg": 366.1142005691542,
+      "odom_total_deg": 271.8191493170946,
+      "n": 9,
+      "boot_std_mm": [
+        0.8632499895396007,
+        0.617090635799714
+      ]
     }
   },
-  "method": "Robot stationary at each pose; ~10 s of Mid-360S accumulated (non-repetitive scan), voxel 15 mm, band z 0.13-0.56 m in base_link, PCA normals (k=40), planar and near-vertical points kept. G2: per-beam median of ~105 scans, range 0.7-6 m. Joint point-to-plane ICP over train poses (Huber 10 mm, correspondence gate 300 -> 30 mm), parameters x/y/yaw.",
-  "uncertainty": {
-    "formal_sigma": {
-      "x_mm": 0.3227490820495217,
-      "y_mm": 0.3964361537137853,
-      "yaw_deg": 0.017912153693070098
+  "straight": {
+    "straight_forward": {
+      "yaw_deg": 1.2080630657483091,
+      "yaw_total_deg": 1.1467296267544116,
+      "seg_std_deg": 0.17909247025930214,
+      "n_seg": 6,
+      "dist_m": 1.8209226716186195,
+      "heading_change_deg": -0.4689869820007927
     },
-    "leave_one_out_range": {
-      "x_mm": 1.7869266681041254,
-      "y_mm": 2.55810415770218,
-      "yaw_deg": 0.1161815511353041
-    },
-    "per_pose_train_std": {
-      "x_mm": 3.2668294088332677,
-      "y_mm": 4.707180534222275,
-      "yaw_deg": 0.15886161974446647
+    "straight_reverse": {
+      "yaw_deg": 1.2272361337370405,
+      "yaw_total_deg": 0.9016992939747169,
+      "seg_std_deg": 0.38568192264583895,
+      "n_seg": 6,
+      "dist_m": 1.7898009418811571,
+      "heading_change_deg": -0.1692709931579249
     }
   },
-  "metrics": {
-    "train": {
-      "urdf": {
-        "n": 2192,
-        "matched": 0.9708029197080292,
-        "med_cm": 4.9409429440036865,
-        "p90_cm": 10.980825397390273,
-        "in2cm": 0.21898496240601503
-      },
-      "est": {
-        "n": 2192,
-        "matched": 0.9712591240875912,
-        "med_cm": 0.646332554656009,
-        "p90_cm": 1.7524766078306468,
-        "in2cm": 0.9206200093940817
-      }
-    },
-    "holdout": {
-      "urdf": {
-        "n": 656,
-        "matched": 0.9527439024390244,
-        "med_cm": 5.234308441339979,
-        "p90_cm": 12.766570452933154,
-        "in2cm": 0.1792
-      },
-      "est": {
-        "n": 656,
-        "matched": 0.961890243902439,
-        "med_cm": 0.6873261843874962,
-        "p90_cm": 1.8781369925971034,
-        "in2cm": 0.9144215530903328
-      }
-    },
-    "holdout_per_pose": {
-      "pose04": {
-        "urdf": {
-          "n": 387,
-          "matched": 0.958656330749354,
-          "med_cm": 4.248746466240153,
-          "p90_cm": 9.678858602249111,
-          "in2cm": 0.23180592991913745
-        },
-        "est": {
-          "n": 387,
-          "matched": 0.9612403100775194,
-          "med_cm": 0.6972569828930613,
-          "p90_cm": 1.7645826221028516,
-          "in2cm": 0.9247311827956989
-        }
-      },
-      "pose08": {
-        "urdf": {
-          "n": 269,
-          "matched": 0.9442379182156134,
-          "med_cm": 7.002614522044438,
-          "p90_cm": 15.516076387788821,
-          "in2cm": 0.10236220472440945
-        },
-        "est": {
-          "n": 269,
-          "matched": 0.9628252788104089,
-          "med_cm": 0.6669747087052968,
-          "p90_cm": 1.9707318110113705,
-          "in2cm": 0.8996138996138996
-        }
-      },
-      "trial_pose01_first": {
-        "urdf": {
-          "n": 391,
-          "matched": 0.9718670076726342,
-          "med_cm": 4.339569098516989,
-          "p90_cm": 10.112732063209743,
-          "in2cm": 0.21842105263157896
-        },
-        "est": {
-          "n": 391,
-          "matched": 0.9667519181585678,
-          "med_cm": 0.7179042331431119,
-          "p90_cm": 1.561556141666507,
-          "in2cm": 0.9470899470899471
-        }
-      }
-    }
+  "consistency": {
+    "cw_ccw_centre_difference_mm": 2.7267553546371985,
+    "forward_reverse_yaw_difference_deg": 0.019173067988731418
   },
-  "six_dof_diagnostic": {
-    "x_mm": 23.429099270378767,
-    "y_mm": 9.444738713855406,
-    "z_mm": 361.30069235790904,
-    "roll_deg": -0.3255628921875037,
-    "pitch_deg": -2.9065791376771433,
-    "yaw_deg": 2.8468871170877725,
-    "scaled_singular_values": [
-      4.954377118028886,
-      2.570665030794707,
-      2.0311668895643336,
-      0.3161203482101825,
-      0.19887724234203344,
-      0.11658188937553804
-    ],
-    "condition": 42.49697053776215,
-    "applied": false,
-    "note": "z/roll/pitch weakly observable (vertical walls only); diagnostic only"
-  },
-  "previous_runtime_value": {
-    "source": "SW/simulation/calibration/records/20261005_base_2dlidar (Gazebo)",
-    "x_mm": 0.12360970169123957,
-    "y_mm": 0.5205163463867296,
-    "yaw_deg": 8.844783411613543
-  },
-  "poses": [
-    {
-      "name": "pose01",
-      "role": "train",
-      "odom_xy_m": [
-        -1.005,
-        -1.638
-      ],
-      "odom_yaw_deg": 143.1,
-      "single_pose_estimate": {
-        "x_mm": 19.68010234045348,
-        "y_mm": 8.84979936414993,
-        "yaw_deg": 2.7381990027608416
-      },
-      "bag": {
-        "file": "pose01/pose01_0.db3",
-        "sha256": "63142997e1ad9c4fc96f64bc3504926b7e42e33d511ccda06d863a88e12ff8d4",
-        "bytes": 58675200
-      }
-    },
-    {
-      "name": "pose02",
-      "role": "train",
-      "odom_xy_m": [
-        -1.004,
-        -1.637
-      ],
-      "odom_yaw_deg": 204.8,
-      "single_pose_estimate": {
-        "x_mm": 24.296794416818383,
-        "y_mm": 10.249240372579473,
-        "yaw_deg": 2.7486935850636995
-      },
-      "bag": {
-        "file": "pose02/pose02_0.db3",
-        "sha256": "abeb398489ca4d19b775772896effcadebe6f0380c20860608579b101df523d2",
-        "bytes": 58699776
-      }
-    },
-    {
-      "name": "pose03",
-      "role": "train",
-      "odom_xy_m": [
-        -1.005,
-        -1.638
-      ],
-      "odom_yaw_deg": 303.0,
-      "single_pose_estimate": {
-        "x_mm": 22.879413056475574,
-        "y_mm": 2.521342284476839,
-        "yaw_deg": 3.131935470736174
-      },
-      "bag": {
-        "file": "pose03/pose03_0.db3",
-        "sha256": "5b1cc4ba364841917264943f8d8d4737029936f2d9d6bed59bda7c2e9e1bb085",
-        "bytes": 60821504
-      }
-    },
-    {
-      "name": "pose05",
-      "role": "train",
-      "odom_xy_m": [
-        -0.85,
-        -1.953
-      ],
-      "odom_yaw_deg": 96.0,
-      "single_pose_estimate": {
-        "x_mm": 26.287541029938644,
-        "y_mm": 5.963110871995193,
-        "yaw_deg": 2.91053874692702
-      },
-      "bag": {
-        "file": "pose05/pose05_0.db3",
-        "sha256": "4e9ea0e580d2056daff5809eef46c6967390d07f4bfce88211b44f8fc931a1b8",
-        "bytes": 58687488
-      }
-    },
-    {
-      "name": "pose06",
-      "role": "train",
-      "odom_xy_m": [
-        -0.671,
-        -1.765
-      ],
-      "odom_yaw_deg": 42.3,
-      "single_pose_estimate": {
-        "x_mm": 21.92566081853277,
-        "y_mm": 12.207893282468442,
-        "yaw_deg": 2.714880183587739
-      },
-      "bag": {
-        "file": "pose06/pose06_0.db3",
-        "sha256": "8100c5b1ce872405d36e7e04e24bd92bb5e8ec3933884a57a1dabdf98c674265",
-        "bytes": 60837888
-      }
-    },
-    {
-      "name": "pose07",
-      "role": "train",
-      "odom_xy_m": [
-        -0.731,
-        -2.766
-      ],
-      "odom_yaw_deg": 62.5,
-      "single_pose_estimate": {
-        "x_mm": 28.880598523554237,
-        "y_mm": 15.944082047257002,
-        "yaw_deg": 2.7996235076856624
-      },
-      "bag": {
-        "file": "pose07/pose07_0.db3",
-        "sha256": "4207f91c0031d8515eabf50e13fcd01946fa27f22248949d8defeca4789d564b",
-        "bytes": 60321792
-      }
-    },
-    {
-      "name": "pose04",
-      "role": "holdout",
-      "odom_xy_m": [
-        -1.009,
-        -1.637
-      ],
-      "odom_yaw_deg": 75.3,
-      "single_pose_estimate": {
-        "x_mm": 19.686278222735226,
-        "y_mm": 7.117254986279873,
-        "yaw_deg": 2.6512462267336256
-      },
-      "bag": {
-        "file": "pose04/pose04_0.db3",
-        "sha256": "a7b3172aa8de58cd9e4098d5c8aa40f70a66cb2bd009ce369efab45c2664dc28",
-        "bytes": 60846080
-      }
-    },
-    {
-      "name": "pose08",
-      "role": "holdout",
-      "odom_xy_m": [
-        -1.646,
-        -1.674
-      ],
-      "odom_yaw_deg": 46.6,
-      "single_pose_estimate": {
-        "x_mm": 38.14427207221202,
-        "y_mm": 8.775909400071598,
-        "yaw_deg": 2.606306988279673
-      },
-      "bag": {
-        "file": "pose08/pose08_0.db3",
-        "sha256": "1f871255312e01303e26635ced0597609c9d9d96f0495eb939357d5ea58447f3",
-        "bytes": 58707968
-      }
-    },
-    {
-      "name": "trial_pose01_first",
-      "role": "extra_holdout",
-      "odom_xy_m": [
-        -1.13,
-        -1.545
-      ],
-      "odom_yaw_deg": 143.5,
-      "single_pose_estimate": {
-        "x_mm": 20.18403275053553,
-        "y_mm": 6.968456088554803,
-        "yaw_deg": 2.6792462000523485
-      },
-      "bag": {
-        "file": "trial_pose01_first/trial_pose01_first_0.db3",
-        "sha256": "82466e8ae584bb702a23af26117c1f59a1e9be15e547b808810409b24b129ad7",
-        "bytes": 58691584
-      }
-    }
+  "assumptions": [
+    "In-place rotation centre equals the drive-axle midpoint (URDF base_link origin).",
+    "Odometry magnitudes are not used (they are biased, see ../tracer_odom)."
   ],
-  "bag_storage": "Jetson sparo@ubuntu:~/livox_g2_calib/bags (rosbag2 sqlite3; /livox/lidar /livox/imu /scan /odom). Not committed (about 0.5 GB).",
+  "cross_check": {
+    "odom_hand_eye_candidates_yaw_deg": "about 1.0-1.15 (tracer_ws/calibration_results/g2_dynamic_20261010_194143, team)",
+    "vs_mid360_relative": "vs_mid360/ is G2 relative to the CAD-nominal (untilted) Mid-360S and is superseded; the tilt-corrected relative estimate is in ../base_mid360"
+  },
+  "bags": {
+    "spin_cw": {
+      "file": "spin_cw/spin_cw_0.db3",
+      "sha256": "d55dcf637eed0236f4a815119b5bbf4676dfca3bc5ac28f113cf1a4cce16ecf8",
+      "bytes": 8241152
+    },
+    "spin_ccw": {
+      "file": "spin_ccw/spin_ccw_0.db3",
+      "sha256": "444f833853dbc2d3d6c8b716decf7e2c40623ca97442912eb8bad67bbb776a20",
+      "bytes": 6639616
+    },
+    "straight_forward": {
+      "file": "straight_forward/straight_forward_0.db3",
+      "sha256": "3cc35c055a6234220227dec89175509d2000f35cc6a4ea87dfdec14874161e20",
+      "bytes": 5111808
+    },
+    "straight_reverse": {
+      "file": "straight_reverse/straight_reverse_0.db3",
+      "sha256": "5269bd11ec7bd81b3535fd25baa8b18ee07348bd2907d7700d8f722f1594168f",
+      "bytes": 6156288
+    }
+  },
+  "bag_storage": "Jetson sparo@ubuntu:~/tracer_ws/calibration_bags/g2_scan_only_20261010_230526 (rosbag2 sqlite3; /scan /odom /tf /tracer_status; recorded by the team, stop-and-go)",
   "tools": [
-    "tools/calib_g2_livox.py",
-    "tools/rec.sh"
+    "tools/base_g2_motion.py"
   ],
-  "accuracy_scope": "Relative to Mid-360S. Absolute base_link accuracy is bounded by the unmeasured Mid-360S mount."
+  "previous": {
+    "cad": {
+      "x_mm": 0.175,
+      "y_mm": 0.0,
+      "yaw_deg": 8.8095
+    },
+    "gazebo_runtime": {
+      "x_mm": 0.124,
+      "y_mm": 0.521,
+      "yaw_deg": 8.8448
+    },
+    "relative_to_cad_mid360": {
+      "x_mm": 24.248171845592452,
+      "y_mm": 9.15943726488699,
+      "yaw_deg": 2.836695401595045
+    }
+  }
 }

@@ -725,7 +725,7 @@
   <joint name="laser_frame_joint" type="fixed">
     <parent link="g2_link" />
     <child link="laser_frame" />
-    <origin xyz="0.024073172308992453 0.0091594372740952668 0" rpy="0 0 0.049509674634016343" />
+    <origin xyz="0.0028733029026841292 0.0067586514684851492 0" rpy="0 0 0.021251994651100784" />
   </joint>
   <link name="livox_frame" />
   <joint name="livox_frame_joint" type="fixed">

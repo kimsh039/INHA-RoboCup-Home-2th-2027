@@ -10,8 +10,8 @@ The runtime has 95 links and 94 joints, including the new fixed `tcp` frame. Det
 
 | Transform | Source |
 |---|---|
-| Base←2D LiDAR | **Physical** G2↔Mid-360S static multi-pose estimate (2026-10-10), x/y/yaw; z/roll/pitch fixed. [Record](../../../HW/calibration/base_2dlidar/README.md) |
-| Base←Mid360 | Recorded 3D room-plane estimate |
+| Base←2D LiDAR | **Physical** motion-geometry estimate (2026-10-10), x/y/yaw; z/roll/pitch fixed. [Record](../../../HW/calibration/base_2dlidar/README.md) |
+| Base←Mid360 | **Physical** floor plane + G2 chain (2026-10-10), 6 DoF incl. 2.9° pitch. [Record](../../../HW/calibration/base_mid360/README.md) |
 | Base←PiPER | URDF reference: xyz=(-0.0195, 0, 0.80611) m, no rotation |
 | Base←Head | Recorded Head–PiPER hand-eye composed through the PiPER mount, then moved by the selected 15° CAD mount delta |
 | Link6←Wrist optical | Recorded Wrist hand-eye estimate |
