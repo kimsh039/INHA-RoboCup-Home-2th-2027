@@ -1,0 +1,26 @@
+image_width: 640
+image_height: 480
+camera_name: d435_rgb
+camera_matrix:
+  rows: 3
+  cols: 3
+  data: [619.88157,   0.     , 338.06437,
+           0.     , 618.92987, 245.83783,
+           0.     ,   0.     ,   1.     ]
+distortion_model: plumb_bob
+distortion_coefficients:
+  rows: 1
+  cols: 5
+  data: [0.214474, -0.370789, -0.006668, 0.010270, 0.000000]
+rectification_matrix:
+  rows: 3
+  cols: 3
+  data: [1., 0., 0.,
+         0., 1., 0.,
+         0., 0., 1.]
+projection_matrix:
+  rows: 3
+  cols: 4
+  data: [639.01129,   0.     , 343.06657,   0.     ,
+           0.     , 641.90076, 242.7876 ,   0.     ,
+           0.     ,   0.     ,   1.     ,   0.     ]

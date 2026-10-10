@@ -1,0 +1,113 @@
+{
+  "scope": "in_sample_reprojection_with_fixed_saved_K_D_and_per_image_fitted_pose",
+  "image_size": [
+    640,
+    480
+  ],
+  "inner_corners": [
+    10,
+    7
+  ],
+  "square_size_m": 0.025,
+  "K": [
+    [
+      605.53244,
+      0.0,
+      331.95871
+    ],
+    [
+      0.0,
+      608.06854,
+      243.32325
+    ],
+    [
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "D": [
+    0.082175,
+    -0.163474,
+    -0.001177,
+    0.005889,
+    0.0
+  ],
+  "total_images": 43,
+  "used_images": 43,
+  "skipped_images": 0,
+  "total_corners": 3010,
+  "global_rms_px": 0.5263167854517881,
+  "median_image_rms_px": 0.35260123014450073,
+  "corner_distance_p95_px": 1.0249779702564248,
+  "worst_five_images": [
+    {
+      "image": "left-0029.png",
+      "status": "ok",
+      "corners": 70,
+      "rms_px": 1.5198900699615479,
+      "mean_distance_px": 1.3716061115264893,
+      "max_distance_px": 2.913464307785034,
+      "sha256": "9d7672376e4774a4ca88f97a9e8b4a73dd00a194d2847d9cf953f7bc36aad303"
+    },
+    {
+      "image": "left-0028.png",
+      "status": "ok",
+      "corners": 70,
+      "rms_px": 1.427428960800171,
+      "mean_distance_px": 1.3152625560760498,
+      "max_distance_px": 2.9414260387420654,
+      "sha256": "b28d2b1fc90584a16665a647c92c01fcc1c50843dfd05b0d73ab1650986d60fd"
+    },
+    {
+      "image": "left-0032.png",
+      "status": "ok",
+      "corners": 70,
+      "rms_px": 0.8678149580955505,
+      "mean_distance_px": 0.7466407418251038,
+      "max_distance_px": 2.0623128414154053,
+      "sha256": "e43416c6f8a7f0feffb4f3d7ac39cc972b74d9af7b267eec3ac9c130a1c6e186"
+    },
+    {
+      "image": "left-0004.png",
+      "status": "ok",
+      "corners": 70,
+      "rms_px": 0.8132550120353699,
+      "mean_distance_px": 0.681083619594574,
+      "max_distance_px": 1.9679311513900757,
+      "sha256": "36cb91f052f7d7fba58e1613c236983627ed6accee95b95bd68c0443d0ee11d0"
+    },
+    {
+      "image": "left-0035.png",
+      "status": "ok",
+      "corners": 70,
+      "rms_px": 0.7186995148658752,
+      "mean_distance_px": 0.6547402739524841,
+      "max_distance_px": 1.4405516386032104,
+      "sha256": "f6e4b9501454c7145cad210cc1e0f4a8e78bdbaa0da8529059f32fb0b78fa27a"
+    }
+  ],
+  "versions": {
+    "opencv": "4.5.4",
+    "numpy": "1.21.5",
+    "pyyaml": "5.4.1"
+  },
+  "intrinsics_sha256": "80a8e457f4716d612b424db3f891b2ff44d52221fca5faab8d6ff4d9c6c2af49",
+  "method": {
+    "detector": "findChessboardCorners",
+    "subpixel_window": [
+      5,
+      5
+    ],
+    "subpixel_max_iterations": 30,
+    "subpixel_epsilon": 0.001,
+    "pose": "solvePnP SOLVEPNP_ITERATIVE",
+    "projection": "projectPoints",
+    "intrinsics_refitted": false
+  },
+  "limitations": [
+    "Calibration images reused; no held-out validation.",
+    "Not robot positioning error, millimetre error, or hand-eye accuracy.",
+    "Corners redetected independently; not the original ROS solver RMS."
+  ]
+}
