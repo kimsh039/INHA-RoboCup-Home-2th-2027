@@ -1,4 +1,6 @@
 # 팀원 stop-and-go bag(G2 + odom)으로 base_link <- laser_frame 추정
+# 사용 (ROS 2 Humble): python3 base_g2_motion.py <bag_root> <out_json>
+#   bag_root 아래 spin_cw, spin_ccw, straight_forward, straight_reverse rosbag2 폴더
 #  - 정지 구간마다 빔별 중앙값 스캔 (모션 왜곡 없음)
 #  - 정지 스캔끼리 2D point-to-line ICP (odom은 초기값으로만 사용)
 #  - spin: 회전 중심 = base 원점 -> laser 좌표의 base 위치 p
@@ -10,7 +12,8 @@ from nav_msgs.msg import Odometry
 from sensor_msgs.msg import LaserScan
 from scipy.spatial import cKDTree
 from scipy.optimize import least_squares
-B = '/mnt/c/Users/wwoo5/AppData/Local/Temp/claude/C--Users-wwoo5-Desktop/86e0cee9-4ec4-4ef9-b02e-3f093e6ded4c/scratchpad/tm/g2_scan_only_20261010_230526/'
+B = (sys.argv[1].rstrip('/') + '/') if len(sys.argv) > 1 else './'
+OUT_JSON = sys.argv[2] if len(sys.argv) > 2 else 'base_g2_motion.json'
 RMIN, RMAX = 0.45, 8.0
 
 def se2(x, y, th):
@@ -142,4 +145,4 @@ t = -(Rb @ pc)
 print(f'\n=== base_link <- laser_frame (G2 + 운동 기하, odom 크기 미사용) ===')
 print(f'x = {t[0]*1000:.1f} mm, y = {t[1]*1000:.1f} mm, yaw = {math.degrees(yb):.3f}°  (전진 {yaws["straight_forward"]["yaw_deg"]:.3f}°, 후진 {yaws["straight_reverse"]["yaw_deg"]:.3f}°)')
 json.dump(dict(spin=res, straight=yaws, result=dict(x_mm=t[0] * 1000, y_mm=t[1] * 1000, yaw_deg=math.degrees(yb)), p_center_laser_mm=(pc * 1000).tolist()),
-          open('/home/wwoo5241/livox_g2_calib/base_g2_motion.json', 'w'), indent=2)
+          open(OUT_JSON, 'w'), indent=2)

@@ -1,11 +1,16 @@
+# 사용: python3 odom_scale.py <bag_root> <base_g2_motion.json> <out_odom_scale.json>  (tracer_msgs 필요)
 # Tracer odom 배율 보정: 정지 구간 사이의 스캔 기반 base 운동 vs odom(펌웨어 v, w 적분) / 모터 RPM
 import math, json, numpy as np
-src = open('/mnt/c/Users/wwoo5/AppData/Local/Temp/claude/C--Users-wwoo5-Desktop/86e0cee9-4ec4-4ef9-b02e-3f093e6ded4c/scratchpad/base_g2_motion.py').read().split('res = {}')[0]
+import sys
+from pathlib import Path
+ARGS = sys.argv[1:]
+sys.argv = [sys.argv[0], ARGS[0]]          # base_g2_motion.py reads the bag root from argv[1]
+src = (Path(__file__).resolve().parents[1] / 'base_2dlidar/tools/base_g2_motion.py').read_text().split('res = {}')[0]
 exec(src)
 import rosbag2_py
 from rclpy.serialization import deserialize_message
 from tracer_msgs.msg import TracerStatus
-m = json.load(open('/home/wwoo5241/livox_g2_calib/base_g2_motion.json'))
+m = json.load(open(ARGS[1]))
 pc = np.array(m['p_center_laser_mm']) / 1000                       # base 원점 (laser 좌표)
 yb = math.radians(m['result']['yaw_deg'])
 T_bl = se2(m['result']['x_mm'] / 1000, m['result']['y_mm'] / 1000, yb)   # base <- laser
@@ -58,4 +63,4 @@ if rev_lin.sum() > 0 and rev_rot.sum() > 0:
     track = 2 * r_eff * 2 * math.pi * np.sum(rev_rot) / np.sum(np.abs(b[:, 1]))  # b = 2 r Δφ / Δθ
     print(f'모터 RPM 기준(기어비 포함 등가): 유효 반지름 {r_eff*1000:.2f} mm/rad-of-motor, 유효 바퀴 간격 {track*1000:.1f} mm (URDF 바퀴 간격 340 mm)')
 json.dump(dict(k_w=k_w, k_v=k_v, segments=[dict(bag=n, scan_dist_m=r[0], scan_yaw_rad=r[1], odom_dist_m=r[2], odom_yaw_rad=r[3], motor_rev=[r[4], r[5]]) for n, r in zip(names, R)]),
-          open('/home/wwoo5241/livox_g2_calib/odom_scale.json', 'w'), indent=2)
+          open(ARGS[2], 'w'), indent=2)

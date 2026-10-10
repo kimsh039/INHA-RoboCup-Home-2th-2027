@@ -11,7 +11,7 @@
 | Stage | Result | Runtime status / evidence |
 |---|---|---|
 | Base–2D LiDAR | **Physical (2026-10-10):** x=3.05 mm, y=6.76 mm, yaw=1.2176°; z/roll/pitch fixed. Motion geometry (in-place rotation centre + straight-line direction) from G2 scan matching | Applied. CW/CCW centre difference 2.7 mm, forward/reverse yaw 1.208°/1.227°. [Record](../../../HW/calibration/base_2dlidar/README.md). Gazebo estimate (x=0.124 mm, y=0.521 mm, yaw=8.844783°) kept as history |
-| Base–Mid360 | **Physical (2026-10-10):** xyz=(-0.15797, 0.00006, 1.18855) m; rpy=(-179.88°, 2.906°, -1.607°). Floor plane (roll/pitch/z) + G2 chain (x/y/yaw) | Applied. Held-out G2→Mid-360S wall distance median 6.8 mm. [Record](../../../HW/calibration/base_mid360/README.md). Gazebo estimate xyz≈(-0.179962, 0.000156, 1.198867) m kept as history |
+| Base–Mid360 | **Physical (2026-10-10):** xyz=(-0.15877, 0.00083, 1.19060) m; rpy=(-179.92°, 2.847°, -1.609°). Floor plane (roll/pitch/z) + G2 chain (x/y/yaw) | Applied. Held-out G2→Mid-360S wall distance median 6.6 mm with the deployed transforms; absolute z not independently verified (tape −22 mm). [Record](../../../HW/calibration/base_mid360/README.md). Gazebo estimate xyz≈(-0.179962, 0.000156, 1.198867) m kept as history |
 | Head–Mid360 | Recorded plane fit; held-out maximum 4.247 mm / 0.814° | Preserved. Historical Gazebo GT position error 11.720 mm; not used as the current Head mount |
 | Base–PiPER | xyz=(-0.0195, 0, 0.80611) m; RPY=0 | Applied as `urdf_nominal_reference`; no independent measurement |
 | PiPER–Head | New eye-on-base image PnP + measured-joint FK, 25 train / 10 holdout | Applied through Base–PiPER. Solver held-out maximum 0.272 mm / 0.203° |
@@ -78,7 +78,7 @@ This requires the native Gazebo Python transport/message bindings in addition to
 
 ## Physical measurement scope
 
-Physical arm mounting, physical TCP contact/pivot and tool axes, joint zero offsets/link geometry, gripper opening/zero, and real sensor calibration require independent measurements. Base–2D LiDAR (x/y/yaw) and Base–Mid360 (6 DoF) were physically calibrated on 2026-10-10; cameras are not. Tracer odometry scale/bias: [HW/calibration/tracer_odom](../../../HW/calibration/tracer_odom/README.md). None were inferred from generated URDF coordinates. The historical Head plane bias and the 9.871 mm route difference remain documented.
+Physical arm mounting, physical TCP contact/pivot and tool axes, joint zero offsets/link geometry, gripper opening/zero, and real sensor calibration require independent measurements. Base–2D LiDAR (x/y/yaw) and Base–Mid360 (6 DoF) were physically calibrated on 2026-10-10; cameras are not. The Mid-360S z uses the URDF drive-wheel geometry for the ground height. Tracer odometry scale/bias: [HW/calibration/tracer_odom](../../../HW/calibration/tracer_odom/README.md). Apart from that ground height, none were inferred from generated URDF coordinates. The historical Head plane bias and the 9.871 mm route difference remain documented.
 
 The new hand-eye and pivot solvers report held-out errors during their requested calibration calculations. Stage 06 simulation collection, calculation and runtime application are complete. The near-zero TCP residual follows from shared CAD kinematics and the imposed socket constraint; it is not a physical accuracy estimate. No additional post-work test, build, lint, ROS launch, or verification was run.
 

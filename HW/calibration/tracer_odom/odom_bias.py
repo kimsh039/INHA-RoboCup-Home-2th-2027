@@ -1,7 +1,12 @@
+# 사용: python3 odom_bias.py <bag_root> <odom_scale.json> <out_odom_bias.json>
 import math, json, numpy as np
-src = open('/mnt/c/Users/wwoo5/AppData/Local/Temp/claude/C--Users-wwoo5-Desktop/86e0cee9-4ec4-4ef9-b02e-3f093e6ded4c/scratchpad/base_g2_motion.py').read().split('res = {}')[0]
+import sys
+from pathlib import Path
+ARGS = sys.argv[1:]
+sys.argv = [sys.argv[0], ARGS[0]]          # base_g2_motion.py reads the bag root from argv[1]
+src = (Path(__file__).resolve().parents[1] / 'base_2dlidar/tools/base_g2_motion.py').read_text().split('res = {}')[0]
 exec(src)
-seg = json.load(open('/home/wwoo5241/livox_g2_calib/odom_scale.json'))['segments']
+seg = json.load(open(ARGS[1]))['segments']
 # 구간별 이동 시간(odom 기준 moving) 다시 계산
 tm = []
 for name in ['spin_cw', 'spin_ccw', 'straight_forward', 'straight_reverse']:
@@ -19,4 +24,4 @@ print(f'  펌웨어 보고 각속도 기준 치우침 = {b_w/k_w:+.5f} rad/s  (�
 cw = np.arange(8); ccw = np.arange(8, 16)
 for nm, ix in [('cw', cw), ('ccw', ccw)]:
     print(f'  spin_{nm}: 치우침 반영 시 구간별 k = {np.round((th_s[ix]-b_w*T[ix])/th_o[ix],3).tolist()}')
-json.dump(dict(k_w=k_w, bias_w_rad_s=b_w, k_w_scale_only=k0, moving_time_s=tm), open('/home/wwoo5241/livox_g2_calib/odom_bias.json', 'w'), indent=2)
+json.dump(dict(k_w=k_w, bias_w_rad_s=b_w, k_w_scale_only=k0, moving_time_s=tm), open(ARGS[2], 'w'), indent=2)

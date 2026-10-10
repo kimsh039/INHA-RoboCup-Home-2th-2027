@@ -4,22 +4,22 @@
   "translation_unit": "m",
   "matrix4x4": [
     [
-      0.9983216165174645,
-      -0.028144857903657026,
-      -0.050614394864893136,
-      -0.1579672993557881
+      0.9983714685240425,
+      -0.028151636076883594,
+      -0.049617499164520525,
+      -0.15877478898076916
     ],
     [
-      -0.028003099171712762,
-      -0.999601681359833,
-      0.0035078568063477565,
-      5.7685849492961246e-05
+      -0.028051757040677302,
+      -0.9996028030605087,
+      0.002708327990613944,
+      0.000828000745307947
     ],
     [
-      -0.05069296233931872,
-      -0.002084609358507051,
-      -0.9987121096557741,
-      1.1885456085274768
+      -0.04967403510967577,
+      -0.0013120593617048737,
+      -0.9987646212877956,
+      1.1905994327024527
     ],
     [
       0.0,
@@ -29,30 +29,30 @@
     ]
   ],
   "translation_xyz_m": [
-    -0.1579672993557881,
-    5.7685849492961246e-05,
-    1.1885456085274768
+    -0.15877478898076916,
+    0.000828000745307947,
+    1.1905994327024527
   ],
   "quaternion_xyzw": [
-    0.9995793374631491,
-    -0.01404289658934646,
-    -0.025337497837170604,
-    -0.0013987049239753274
+    0.9995922784906288,
+    -0.01405657944917984,
+    -0.024833008520265185,
+    -0.0010055068048318535
   ],
-  "schema": "base_mid360_floor_chain/v1",
+  "schema": "base_mid360_floor_chain/v2",
   "status": "physical_cross_validated",
   "measurement": "physical_robot",
   "date": "2026-10-10",
   "transform_direction": "base_link <- livox_frame",
   "sources": {
-    "roll_pitch": "Real floor plane in the Mid-360S cloud (RANSAC, 0.8-3 m ring), mean normal of 4 headings at one spot (pose01-04)",
-    "xy_yaw": "G2 base pose from motion geometry (../base_2dlidar/calibration.json) composed with the tilt-corrected G2-Mid360S relative estimate",
-    "z": "Floor plane placed at the URDF ground height (drive wheel r=60.5 mm at z=-0.082 m -> ground z=-0.1425 m)"
+    "roll_pitch": "Real floor plane in the Mid-360S cloud (RANSAC, 0.8-3 m ring), mean normal of pose01-03 (one spot, 3 headings); hold-out poses excluded",
+    "xy_yaw": "G2 base pose (../base_2dlidar/calibration.json, motion geometry) composed with the G2-Mid360S relative estimate re-fitted on the tilt-corrected maps (train pose01,02,03,05,06,07)",
+    "z": "URDF ground (drive wheel r=60.5 mm, axle z=-0.082 m -> -0.1425 m) + mean Mid-360S origin to floor-plane distance"
   },
   "rpy_deg": [
-    -179.88040683239603,
-    2.9057382166577077,
-    -1.6067355098110752
+    -179.92473159436258,
+    2.847284333168433,
+    -1.609445561330181
   ],
   "cad": {
     "xyz_m": [
@@ -67,14 +67,19 @@
     ]
   },
   "delta_vs_cad": {
-    "x_mm": 22.032700644211893,
-    "y_mm": 0.057685849492961246,
-    "z_mm": -10.564391472523305,
-    "roll_deg": 0.11959316760399698,
-    "pitch_deg": 2.9057382166577077,
-    "yaw_deg": -1.6067355098110738
+    "x_mm": 21.225211019230834,
+    "y_mm": 0.8280007453079471,
+    "z_mm": -8.5105672975474,
+    "tilt_roll_deg": 0.07526840563743276,
+    "tilt_pitch_deg": 2.847284333168433,
+    "yaw_deg": -1.6094455613301761
   },
   "floor": {
+    "poses": [
+      "pose01",
+      "pose02",
+      "pose03"
+    ],
     "per_pose": {
       "pose01": {
         "height_at_origin_mm": -125.30087600630691,
@@ -90,8 +95,15 @@
         ],
         "roll_deg": 0.2701732906828388,
         "pitch_deg": 2.8399779713577766,
+        "sensor_to_plane_mm": 1331.6878790974474,
         "n": 13250,
-        "inlier": 0.47316358961539834
+        "inlier": 0.47316358961539834,
+        "imu_gravity_base": [
+          -0.04060916208473797,
+          0.001539361849696474,
+          0.9991739219574695
+        ],
+        "imu_angle_to_floor_normal_deg": 0.543830533793839
       },
       "pose02": {
         "height_at_origin_mm": -126.61988759759232,
@@ -107,8 +119,15 @@
         ],
         "roll_deg": 0.04783738558146437,
         "pitch_deg": 2.628351626619289,
+        "sensor_to_plane_mm": 1332.5890714341685,
         "n": 12538,
-        "inlier": 0.5118595631761584
+        "inlier": 0.5118595631761584,
+        "imu_gravity_base": [
+          -0.033004268583316086,
+          -0.0016076114576101586,
+          0.9994539178174657
+        ],
+        "imu_angle_to_floor_normal_deg": 0.7501601645381952
       },
       "pose03": {
         "height_at_origin_mm": -128.17115244346297,
@@ -124,127 +143,177 @@
         ],
         "roll_deg": -0.09223575187917282,
         "pitch_deg": 3.073530950245018,
+        "sensor_to_plane_mm": 1335.0213475757423,
         "n": 12719,
-        "inlier": 0.6016556291390729
-      },
-      "pose04": {
-        "height_at_origin_mm": -125.17028913449266,
-        "centroid_mm": [
-          -444.28226375899754,
-          -696.8151138143857,
-          -146.01291233483673
+        "inlier": 0.6016556291390729,
+        "imu_gravity_base": [
+          -0.0413084785114376,
+          -0.010022940283110106,
+          0.999096166678239
         ],
-        "normal": [
-          -0.053749220153021235,
-          0.004402219355137821,
-          0.9985447620400858
-        ],
-        "roll_deg": 0.2525945406130315,
-        "pitch_deg": 3.0811181003272567,
-        "n": 14493,
-        "inlier": 0.5336942112240389
+        "imu_angle_to_floor_normal_deg": 0.8548820696329394
       }
     },
     "mean": {
-      "height_at_origin_mm": -126.3155512954637,
-      "roll_deg": 0.11959236624954046,
-      "pitch_deg": 2.9057446621373355
+      "height_at_origin_mm": -126.69730534912073,
+      "roll_deg": 0.07525830812837679,
+      "pitch_deg": 2.8472868494073613,
+      "sensor_to_plane_mm": 1333.0994327024528
     },
     "std": {
-      "height_at_origin_mm": 1.399650857062457,
-      "roll_deg": 0.17357430884132524,
-      "pitch_deg": 0.21616369959633128
+      "height_at_origin_mm": 1.4367034619614842,
+      "roll_deg": 0.18275395694121457,
+      "pitch_deg": 0.22267964055953393,
+      "sensor_to_plane_mm": 1.7243417561695582
     },
     "ground_z_m": -0.14250000000000002,
     "note": "An earlier fit used a +-8 cm band around the CAD base_link and locked onto another horizontal surface ~14 cm above the floor; superseded."
   },
   "g2_relative_tilt_corrected": {
-    "x_mm": -19.23618861046181,
-    "y_mm": 11.221582287795885,
-    "yaw_deg": 2.8274183265502,
-    "train": {
-      "n": 2192,
-      "matched": 0.9730839416058394,
-      "med_cm": 0.5444048747870069,
-      "p90_cm": 1.58700856704822,
-      "in2cm": 0.9287388654477262
+    "x_mm": -18.40766087608495,
+    "y_mm": 10.478619713285894,
+    "yaw_deg": 2.8289657586958685
+  },
+  "per_pose_relative": {
+    "pose01": {
+      "x_mm": -19.587830305816436,
+      "y_mm": 9.573137829159998,
+      "yaw_deg": 2.7282651196281433
     },
-    "holdout": {
-      "n": 656,
-      "matched": 0.9542682926829268,
-      "med_cm": 0.6809016807702973,
-      "p90_cm": 1.6016724008472878,
-      "in2cm": 0.9424920127795527
+    "pose02": {
+      "x_mm": -19.28622295762658,
+      "y_mm": 11.925069231606429,
+      "yaw_deg": 2.7354487210886806
     },
-    "holdout_without_tilt": {
-      "n": 656,
-      "matched": 0.9435975609756098,
-      "med_cm": 2.2752593558566407,
-      "p90_cm": 4.523432668030091,
-      "in2cm": 0.4281098546042003
+    "pose03": {
+      "x_mm": -17.94502766954184,
+      "y_mm": 7.657572863735463,
+      "yaw_deg": 2.986827547721824
     },
-    "per_pose": {
-      "pose01": {
-        "x_mm": -20.145642860655666,
-        "y_mm": 10.215501345446938,
-        "yaw_deg": 2.7203441485763817
-      },
-      "pose02": {
-        "x_mm": -20.24386091384558,
-        "y_mm": 12.293201760214343,
-        "yaw_deg": 2.7407111869223875
-      },
-      "pose03": {
-        "x_mm": -18.862594527704825,
-        "y_mm": 8.366041011102173,
-        "yaw_deg": 2.97862746236064
-      },
-      "pose05": {
-        "x_mm": -18.37191788723391,
-        "y_mm": 9.370355115014076,
-        "yaw_deg": 2.877454491615884
-      },
-      "pose06": {
-        "x_mm": -20.56778749777943,
-        "y_mm": 11.346406214937774,
-        "yaw_deg": 2.7469562892733306
-      },
-      "pose07": {
-        "x_mm": -16.40380955524847,
-        "y_mm": 17.892404225888363,
-        "yaw_deg": 2.7914549255161742
-      },
-      "pose04": {
-        "x_mm": -22.178492428418494,
-        "y_mm": 10.105000935135642,
-        "yaw_deg": 2.67295852556851
-      },
-      "pose08": {
-        "x_mm": -8.760032098274264,
-        "y_mm": 10.645439600464263,
-        "yaw_deg": 2.6929859003241594
-      },
-      "trial_pose01_first": {
-        "x_mm": -24.0814292360492,
-        "y_mm": 9.04211924206869,
-        "yaw_deg": 2.722242764639737
-      }
+    "pose05": {
+      "x_mm": -17.595642415852353,
+      "y_mm": 8.724599545739359,
+      "yaw_deg": 2.8707247997396066
     },
-    "six_dof_diag": {
-      "z_mm": 353.76262376218233,
-      "roll_deg": -0.14562691750700385,
-      "pitch_deg": 0.020325887542934813
+    "pose06": {
+      "x_mm": -20.115570156525344,
+      "y_mm": 11.350802539909877,
+      "yaw_deg": 2.731773052855802
+    },
+    "pose07": {
+      "x_mm": -15.752600632067349,
+      "y_mm": 17.13830443430958,
+      "yaw_deg": 2.8004647342200646
+    },
+    "pose04": {
+      "x_mm": -21.41973511893687,
+      "y_mm": 9.082931597946661,
+      "yaw_deg": 2.679737780320956
+    },
+    "pose08": {
+      "x_mm": -7.6668628506204275,
+      "y_mm": 10.09851746414021,
+      "yaw_deg": 2.6949880548839262
+    },
+    "trial_pose01_first": {
+      "x_mm": -23.10031254444883,
+      "y_mm": 8.768593300158448,
+      "yaw_deg": 2.709334090216803
     }
   },
+  "six_dof_diag": {
+    "x_mm": -18.429517682432998,
+    "y_mm": 10.497996307795054,
+    "z_mm": 350.2589617507148,
+    "roll_deg": -0.0698634485316704,
+    "pitch_deg": -0.07353126512325991,
+    "yaw_deg": 2.854294162791023
+  },
+  "holdout": {
+    "poses": [
+      "pose04",
+      "pose08"
+    ],
+    "untilted_cad": {
+      "n": 656,
+      "matched": 0.961890243902439,
+      "med_cm": 0.6873261843874962,
+      "p90_cm": 1.8781369925971034,
+      "in2cm": 0.9144215530903328
+    },
+    "tilted_refit": {
+      "n": 656,
+      "matched": 0.9542682926829268,
+      "med_cm": 0.6745786155823487,
+      "p90_cm": 1.620658175525096,
+      "in2cm": 0.9408945686900958
+    },
+    "final_deployed": {
+      "n": 656,
+      "matched": 0.9603658536585366,
+      "med_cm": 0.6579207466752639,
+      "p90_cm": 1.6424781432492392,
+      "in2cm": 0.9380952380952381
+    },
+    "final_deployed_per_pose": {
+      "pose04": {
+        "n": 387,
+        "matched": 0.958656330749354,
+        "med_cm": 0.6925978750748362,
+        "p90_cm": 1.6627127912359703,
+        "in2cm": 0.9353099730458221
+      },
+      "pose08": {
+        "n": 269,
+        "matched": 0.9628252788104089,
+        "med_cm": 0.5967863496026089,
+        "p90_cm": 1.6026614807818977,
+        "in2cm": 0.9420849420849421
+      },
+      "trial_pose01_first": {
+        "n": 391,
+        "matched": 0.9718670076726342,
+        "med_cm": 0.5428159844786572,
+        "p90_cm": 1.4691635596359938,
+        "in2cm": 0.9578947368421052
+      }
+    },
+    "note": "final_deployed = G2 points with base_link <- laser_frame and Mid-360S points with this base_link <- livox_frame; point-to-plane, matches within 20 cm"
+  },
+  "train_final_deployed": {
+    "n": 2192,
+    "matched": 0.9735401459854015,
+    "med_cm": 0.5547532145892968,
+    "p90_cm": 1.6173402828839194,
+    "in2cm": 0.9287722586691659
+  },
+  "z_detail": {
+    "method": "ground (URDF) + mean Mid-360S origin to floor-plane distance",
+    "ground_z_m": -0.14250000000000002,
+    "sensor_to_plane_mm": [
+      1331.6878790974474,
+      1332.5890714341685,
+      1335.0213475757423
+    ],
+    "mean_mm": 1333.0994327024528,
+    "std_mm": 1.7243417561695187,
+    "uncertainty": "floor-consistent; absolute sensor origin not independently verified"
+  },
   "tape": {
-    "mid360_above_floor_m": 1.355,
+    "mid360_housing_centre_above_floor_m": 1.355,
     "g2_above_floor_m": 0.4811,
     "drive_axle_above_floor_m": 0.06,
     "mid360_z_from_tape_m": 1.2125,
-    "difference_floor_minus_tape_mm": -23.954391472523096,
-    "note": "Tape was taken to the housing centre; the Livox point origin need not coincide. The floor-consistent z is applied."
+    "difference_floor_minus_tape_mm": -21.90056729754719,
+    "note": "Tape was taken to the housing centre; the Livox point origin offset from it is not documented here. The floor-consistent z is applied; the difference remains open."
   },
-  "imu_check": "Mid-360S IMU gravity pitch +2.3 deg (mean 9 poses) agrees in sign/magnitude with the floor tilt +2.9 deg.",
+  "imu_check": {
+    "pose01": 0.543830533793839,
+    "pose02": 0.7501601645381952,
+    "pose03": 0.8548820696329394
+  },
+  "imu_note": "Mid-360S IMU gravity tilts the same way as the floor normal but differs by 0.5-0.9 deg; direction check only.",
+  "g2_record_sha256": "9548093a09a184a1c34d935c3cc72cf4fd1cf93a68f178aaf3185f5524b67201",
   "independent_measurement": true,
   "contains_nominal_reference": true
 }

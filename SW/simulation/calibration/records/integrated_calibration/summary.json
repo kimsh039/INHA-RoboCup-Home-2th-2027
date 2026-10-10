@@ -3,7 +3,7 @@
   "transform_convention": "parent <- child, metres",
   "runtime": "SW/simulation/robot_description/robocup.calibrated.urdf",
   "runtime_path_basis": "repository_root",
-  "runtime_urdf_sha256": "6a578183f5621e54827eaa7cc6abbda758b1d93634b87b03955cc8fbdd0fa34c",
+  "runtime_urdf_sha256": "8c360495d560f6ad96d0cb1a7f437232b805be64ef3b5841c7dd270a36c973e2",
   "nominal_urdf_sha256": "5b7d47200d819cf7cde8b334d1f2b3d57f7bf604ba82cbb5898fd66c4dea616e",
   "head_selection": "recorded_head_arm_handeye_with_cad_mount_delta",
   "head_mount_change": {
@@ -85,9 +85,9 @@
     "additional_validation_run": false
   },
   "head_path_difference": {
-    "translation_mm": 20.750927060622843,
-    "rotation_deg": 3.6594146163145203,
-    "left_sha256": "2c8ac30b74839b8401e30584dc709ddbc7f5cd0d8cd7eee0dc891fd598f71668",
+    "translation_mm": 18.949824114299492,
+    "rotation_deg": 3.6114652650283823,
+    "left_sha256": "add7fa170114f4dff72f36eb614f07244d4d48bc4c4f634dbef100c6f208afe0",
     "right_sha256": "58af754f25e3a1d003724438f97b11eab25c7ecba557827a470f47aed75949fe"
   },
   "head_paths_share_nominal_arm_mount": true,
@@ -99,9 +99,9 @@
   },
   "base_mid360_input": "HW/calibration/base_mid360/base_mid360.json",
   "base_mid360_input_kind": "physical_floor_plane_and_g2_chain",
-  "base_mid360_g2_holdout_mm": {
-    "med_mm": 6.809016807702974,
-    "p90_mm": 16.016724008472877
+  "base_mid360_holdout_final_mm": {
+    "med_mm": 6.579207466752639,
+    "p90_mm": 16.42478143249239
   },
   "base_piper_input_kind": "urdf_reference",
   "tcp_input_kind": "simulated_constrained_joint_observations",
@@ -157,26 +157,26 @@
     },
     {
       "source_urdf_sha256": "46a266994781d0da89f199b9234227c1b7d8e082fc8b07e2aa253ccc160f1271",
-      "result_sha256": "33683ec603fcddf0f43cc5667fbb2d1af287d16995662d9bc4e2243d6e660bf2",
-      "runtime_urdf_sha256": "0778613fc3e5b0b446667db3eb37bd689683aa06a07b8930b8866eb7883a9c26",
+      "result_sha256": "990386225ed22a5c645b5fad91ad68139a652a8161f39aff7088b6f498e26c42",
+      "runtime_urdf_sha256": "9ff9dd627a3ac56e6dd02e585fc6408138c807ca839953eae2bff42501d1a3b6",
       "joint": "livox_frame_joint",
       "origin_xyz": [
-        0.022032700644211894,
-        5.7685849495536964e-05,
-        -0.010564391472523305
+        0.021225211019230833,
+        0.0008280007453105228,
+        -0.0085105672975474
       ],
       "origin_rpy": [
-        -3.1395053590522144,
-        0.05071469908170534,
-        -0.028042824854912916
+        -3.1402789720886934,
+        0.04969448635424034,
+        -0.028090124176819987
       ],
       "composition_verified": true,
       "acceptance": "User must review held-out validation before launching"
     },
     {
-      "source_urdf_sha256": "0778613fc3e5b0b446667db3eb37bd689683aa06a07b8930b8866eb7883a9c26",
+      "source_urdf_sha256": "9ff9dd627a3ac56e6dd02e585fc6408138c807ca839953eae2bff42501d1a3b6",
       "result_sha256": "b62ef81579382715fd90617467776cb84146d7aa079f435d41b45b38f97f0fd3",
-      "runtime_urdf_sha256": "a35cc955f31257d5c8b76532b1b03c2010ebfc4810c78fed1028c4cda364b111",
+      "runtime_urdf_sha256": "84d828df669c2589aef9ba70706d930e9683066975233fd5e011608f200b26f9",
       "joint": "rack_to_piper_base",
       "origin_xyz": [
         -0.0195,
@@ -192,9 +192,9 @@
       "acceptance": "User must review held-out validation before launching"
     },
     {
-      "source_urdf_sha256": "a35cc955f31257d5c8b76532b1b03c2010ebfc4810c78fed1028c4cda364b111",
+      "source_urdf_sha256": "84d828df669c2589aef9ba70706d930e9683066975233fd5e011608f200b26f9",
       "result_sha256": "1f4a2bb2ffc5a85e08bed7fbcfc4c2c1bdc343e973179fe99614899a056cb4d1",
-      "runtime_urdf_sha256": "50dc08eb46d7cdac4be73bca4948715f139b9df9465e5d3ebf5f78a06d50ec5c",
+      "runtime_urdf_sha256": "bc9ba93753637e7d3cc4adac445633052ab39c0404fb5c686275b838cae54f1a",
       "joint": "camera_link_joint",
       "origin_xyz": [
         -0.1231374351388152,
@@ -210,9 +210,9 @@
       "acceptance": "User must review held-out validation before launching"
     },
     {
-      "source_urdf_sha256": "50dc08eb46d7cdac4be73bca4948715f139b9df9465e5d3ebf5f78a06d50ec5c",
+      "source_urdf_sha256": "bc9ba93753637e7d3cc4adac445633052ab39c0404fb5c686275b838cae54f1a",
       "result_sha256": "48010d828e095cceaebfc7e4872170d6649143023161584e861382866f483afb",
-      "runtime_urdf_sha256": "221d215882b06d45543cb1238468c40ea5a68ad7c85a1b2276768f9474cccd11",
+      "runtime_urdf_sha256": "a59ade17a287980f35af46a7421d880c4d3c70f29e440dd414e14a6a3bece642",
       "joint": "piper_to_wrist_camera_mount",
       "origin_xyz": [
         0.00021057778731321808,
@@ -230,8 +230,8 @@
   ],
   "tcp_application": {
     "result_sha256": "007aeca338208cc39d690a1b724eadc4d3b5586020f7f235031c4b07929edb1e",
-    "source_urdf_sha256": "221d215882b06d45543cb1238468c40ea5a68ad7c85a1b2276768f9474cccd11",
-    "runtime_urdf_sha256": "6a578183f5621e54827eaa7cc6abbda758b1d93634b87b03955cc8fbdd0fa34c",
+    "source_urdf_sha256": "a59ade17a287980f35af46a7421d880c4d3c70f29e440dd414e14a6a3bece642",
+    "runtime_urdf_sha256": "8c360495d560f6ad96d0cb1a7f437232b805be64ef3b5841c7dd270a36c973e2",
     "input_status": "passed_provisional_limits",
     "input_kind": "simulated_constrained_joint_observations",
     "simulation": true,

@@ -1,7 +1,7 @@
 From c10aa902f74186ed41923f13b43ba422335bc6ab Mon Sep 17 00:00:00 2001
 From: Patrick-SCH03 <wwoo5241@gmail.com>
 Date: Sat, 10 Oct 2026 23:34:47 +0900
-Subject: [PATCH] Add odometry velocity scale/bias parameters (measured
+Subject: [PATCH 1/2] Add odometry velocity scale/bias parameters (measured
  defaults in launch)
 
 ---
@@ -159,6 +159,189 @@ index 12ff0bd..69a51a3 100644
    messenger->SetOdometryTopicName(odom_topic_name_);
 +  messenger->SetOdometryCorrection(linear_velocity_scale_, angular_velocity_scale_,
 +                                   angular_velocity_bias_);
+   if (simulated_robot_) messenger->SetSimulationMode(sim_control_rate_);
+ 
+   // connect to robot and setup ROS subscription
+-- 
+2.34.1
+
+
+From ad784401e2589a94fdff52103dcf8bf3fb6a37ec Mon Sep 17 00:00:00 2001
+From: Patrick-SCH03 <wwoo5241@gmail.com>
+Date: Sun, 11 Oct 2026 00:01:35 +0900
+Subject: [PATCH 2/2] Odometry: offset model (cross-validated), typed launch
+ parameters
+
+---
+ .../include/tracer_base/tracer_base_ros.hpp   |  3 ++
+ .../include/tracer_base/tracer_messenger.hpp  | 18 +++++++++++
+ tracer_base/launch/tracer_base.launch.py      | 32 +++++++++++++------
+ tracer_base/src/tracer_base_ros.cpp           | 11 +++++++
+ 4 files changed, 55 insertions(+), 9 deletions(-)
+
+diff --git a/tracer_base/include/tracer_base/tracer_base_ros.hpp b/tracer_base/include/tracer_base/tracer_base_ros.hpp
+index 1a1f03e..572491c 100644
+--- a/tracer_base/include/tracer_base/tracer_base_ros.hpp
++++ b/tracer_base/include/tracer_base/tracer_base_ros.hpp
+@@ -42,6 +42,9 @@ class TracerBaseRos : public rclcpp::Node {
+   double linear_velocity_scale_ = 1.0;
+   double angular_velocity_scale_ = 1.0;
+   double angular_velocity_bias_ = 0.0;
++  double linear_velocity_offset_ = 0.0;
++  double angular_velocity_offset_ = 0.0;
++  double angular_offset_threshold_ = 0.0;
+ 
+ 
+   std::shared_ptr<TracerRobot> robot_;
+diff --git a/tracer_base/include/tracer_base/tracer_messenger.hpp b/tracer_base/include/tracer_base/tracer_messenger.hpp
+index fc0720f..e9d2269 100644
+--- a/tracer_base/include/tracer_base/tracer_messenger.hpp
++++ b/tracer_base/include/tracer_base/tracer_messenger.hpp
+@@ -44,6 +44,12 @@ class TracerMessenger {
+     angular_velocity_scale_ = angular_scale;
+     angular_velocity_bias_ = angular_bias;
+   }
++  void SetOdometryOffset(double linear_offset, double angular_offset,
++                         double angular_threshold) {
++    linear_velocity_offset_ = linear_offset;
++    angular_velocity_offset_ = angular_offset;
++    angular_offset_threshold_ = angular_threshold;
++  }
+ 
+   void SetSimulationMode(int loop_rate) {
+     simulated_robot_ = true;
+@@ -183,6 +189,10 @@ class TracerMessenger {
+   double linear_velocity_scale_ = 1.0;
+   double angular_velocity_scale_ = 1.0;
+   double angular_velocity_bias_ = 0.0;
++  // offset model: |v| += linear_offset while moving, |w| += angular_offset while |w| > threshold
++  double linear_velocity_offset_ = 0.0;
++  double angular_velocity_offset_ = 0.0;
++  double angular_offset_threshold_ = 0.0;
+ 
+   // speed variables
+   double position_x_ = 0.0;
+@@ -283,6 +293,14 @@ class TracerMessenger {
+         std::fabs(msg.angular_velocity) > 1e-3) {
+       angular_speed += angular_velocity_bias_;
+     }
++    // The reported speeds are short by a roughly constant amount while moving.
++    if (std::fabs(msg.linear_velocity) > 1e-3) {
++      linear_speed += std::copysign(linear_velocity_offset_, msg.linear_velocity);
++    }
++    if (std::fabs(msg.angular_velocity) > angular_offset_threshold_ &&
++        std::fabs(msg.angular_velocity) > 1e-3) {
++      angular_speed += std::copysign(angular_velocity_offset_, msg.angular_velocity);
++    }
+ 
+     // if (std::is_base_of<TracerMiniOmniRobot, TracerType>::value) {
+     //   lateral_speed = msg.lateral_velocity;
+diff --git a/tracer_base/launch/tracer_base.launch.py b/tracer_base/launch/tracer_base.launch.py
+index 355f3a2..f729292 100644
+--- a/tracer_base/launch/tracer_base.launch.py
++++ b/tracer_base/launch/tracer_base.launch.py
+@@ -7,6 +7,7 @@ from launch import LaunchDescription
+ from launch.actions import DeclareLaunchArgument, ExecuteProcess
+ from launch.substitutions import LaunchConfiguration, Command
+ from launch_ros.actions import Node
++from launch_ros.parameter_descriptions import ParameterValue
+ 
+ 
+ def generate_launch_description():
+@@ -27,15 +28,22 @@ def generate_launch_description():
+                                                    description='Whether running with simulator')
+     sim_control_rate_arg = DeclareLaunchArgument('control_rate', default_value='50',
+                                                  description='Simulation control loop update rate')
+-    # Odometry correction measured on this robot (2026-10-10, G2 scan matching of
+-    # stop-and-go spin/straight bags g2_scan_only_20261010_230526).
+-    # Set 1.0 / 1.0 / 0.0 to get the uncorrected firmware odometry.
+-    linear_scale_arg = DeclareLaunchArgument('linear_velocity_scale', default_value='1.112',
++    # Odometry correction measured on this robot (2026-10-10, G2 scan matching of two
++    # stop-and-go sessions; cross-validated). The firmware-reported speeds are short by a
++    # roughly constant amount while moving: offset model, scale 1.0, bias 0.0.
++    # Set the offsets to 0.0 to get the uncorrected firmware odometry.
++    linear_scale_arg = DeclareLaunchArgument('linear_velocity_scale', default_value='1.0',
+                                              description='Scale on reported linear velocity')
+-    angular_scale_arg = DeclareLaunchArgument('angular_velocity_scale', default_value='1.319',
++    angular_scale_arg = DeclareLaunchArgument('angular_velocity_scale', default_value='1.0',
+                                               description='Scale on reported angular velocity')
+-    angular_bias_arg = DeclareLaunchArgument('angular_velocity_bias', default_value='0.00378',
++    angular_bias_arg = DeclareLaunchArgument('angular_velocity_bias', default_value='0.0',
+                                              description='Yaw-rate offset added while moving [rad/s]')
++    linear_offset_arg = DeclareLaunchArgument('linear_velocity_offset', default_value='0.00443',
++                                              description='Added to |v| while moving [m/s]')
++    angular_offset_arg = DeclareLaunchArgument('angular_velocity_offset', default_value='0.0523',
++                                               description='Added to |w| while |w| > threshold [rad/s]')
++    angular_threshold_arg = DeclareLaunchArgument('angular_offset_threshold', default_value='0.04',
++                                                  description='|w| threshold for the angular offset [rad/s]')
+     
+     tracer_base_node = launch_ros.actions.Node(
+         package='tracer_base',
+@@ -51,9 +59,12 @@ def generate_launch_description():
+                 'is_tracer_mini': launch.substitutions.LaunchConfiguration('is_tracer_mini'),
+                 'simulated_robot': launch.substitutions.LaunchConfiguration('simulated_robot'),
+                 'control_rate': launch.substitutions.LaunchConfiguration('control_rate'),
+-                'linear_velocity_scale': launch.substitutions.LaunchConfiguration('linear_velocity_scale'),
+-                'angular_velocity_scale': launch.substitutions.LaunchConfiguration('angular_velocity_scale'),
+-                'angular_velocity_bias': launch.substitutions.LaunchConfiguration('angular_velocity_bias'),
++                'linear_velocity_scale': ParameterValue(LaunchConfiguration('linear_velocity_scale'), value_type=float),
++                'angular_velocity_scale': ParameterValue(LaunchConfiguration('angular_velocity_scale'), value_type=float),
++                'angular_velocity_bias': ParameterValue(LaunchConfiguration('angular_velocity_bias'), value_type=float),
++                'linear_velocity_offset': ParameterValue(LaunchConfiguration('linear_velocity_offset'), value_type=float),
++                'angular_velocity_offset': ParameterValue(LaunchConfiguration('angular_velocity_offset'), value_type=float),
++                'angular_offset_threshold': ParameterValue(LaunchConfiguration('angular_offset_threshold'), value_type=float),
+         }])
+ 
+     return LaunchDescription([
+@@ -68,5 +79,8 @@ def generate_launch_description():
+         linear_scale_arg,
+         angular_scale_arg,
+         angular_bias_arg,
++        linear_offset_arg,
++        angular_offset_arg,
++        angular_threshold_arg,
+         tracer_base_node
+     ])
+diff --git a/tracer_base/src/tracer_base_ros.cpp b/tracer_base/src/tracer_base_ros.cpp
+index 69a51a3..9ccde9a 100644
+--- a/tracer_base/src/tracer_base_ros.cpp
++++ b/tracer_base/src/tracer_base_ros.cpp
+@@ -29,6 +29,9 @@ TracerBaseRos::TracerBaseRos(std::string node_name)
+   this->declare_parameter("linear_velocity_scale", rclcpp::ParameterValue(1.0));
+   this->declare_parameter("angular_velocity_scale", rclcpp::ParameterValue(1.0));
+   this->declare_parameter("angular_velocity_bias", rclcpp::ParameterValue(0.0));
++  this->declare_parameter("linear_velocity_offset", rclcpp::ParameterValue(0.0));
++  this->declare_parameter("angular_velocity_offset", rclcpp::ParameterValue(0.0));
++  this->declare_parameter("angular_offset_threshold", rclcpp::ParameterValue(0.0));
+  /***update for humble***/
+   LoadParameters();
+ }
+@@ -46,6 +49,9 @@ void TracerBaseRos::LoadParameters() {
+   this->get_parameter_or<double>("linear_velocity_scale", linear_velocity_scale_, 1.0);
+   this->get_parameter_or<double>("angular_velocity_scale", angular_velocity_scale_, 1.0);
+   this->get_parameter_or<double>("angular_velocity_bias", angular_velocity_bias_, 0.0);
++  this->get_parameter_or<double>("linear_velocity_offset", linear_velocity_offset_, 0.0);
++  this->get_parameter_or<double>("angular_velocity_offset", angular_velocity_offset_, 0.0);
++  this->get_parameter_or<double>("angular_offset_threshold", angular_offset_threshold_, 0.0);
+ 
+   std::cout << "Loading parameters: " << std::endl;
+   std::cout << "- port name: " << port_name_ << std::endl;
+@@ -63,6 +69,9 @@ void TracerBaseRos::LoadParameters() {
+   std::cout << "- odom linear velocity scale: " << linear_velocity_scale_ << std::endl;
+   std::cout << "- odom angular velocity scale: " << angular_velocity_scale_ << std::endl;
+   std::cout << "- odom angular velocity bias (moving): " << angular_velocity_bias_ << std::endl;
++  std::cout << "- odom linear velocity offset: " << linear_velocity_offset_ << std::endl;
++  std::cout << "- odom angular velocity offset: " << angular_velocity_offset_
++            << " (|w| > " << angular_offset_threshold_ << ")" << std::endl;
+   std::cout << "----------------------------" << std::endl;
+ }
+ 
+@@ -107,6 +116,8 @@ void TracerBaseRos::Run() {
+   messenger->SetOdometryTopicName(odom_topic_name_);
+   messenger->SetOdometryCorrection(linear_velocity_scale_, angular_velocity_scale_,
+                                    angular_velocity_bias_);
++  messenger->SetOdometryOffset(linear_velocity_offset_, angular_velocity_offset_,
++                               angular_offset_threshold_);
    if (simulated_robot_) messenger->SetSimulationMode(sim_control_rate_);
  
    // connect to robot and setup ROS subscription

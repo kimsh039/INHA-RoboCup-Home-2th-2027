@@ -731,7 +731,7 @@
   <joint name="livox_frame_joint" type="fixed">
     <parent link="mid360_link" />
     <child link="livox_frame" />
-    <origin xyz="0.022032700644211894 5.7685849495536964e-05 -0.010564391472523305" rpy="-3.1395053590522144 0.050714699081705339 -0.028042824854912916" />
+    <origin xyz="0.021225211019230833 0.00082800074531052279 -0.0085105672975474" rpy="-3.1402789720886934 0.049694486354240341 -0.028090124176819987" />
   </joint>
   <link name="camera_cad_frame" />
   <joint name="camera_cad_frame_joint" type="fixed">

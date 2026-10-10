@@ -71,6 +71,14 @@ def main():
     mid_check[:3, 3] = mid['translation_xyz_m']
     if not np.allclose(mid_check, mid_matrix, atol=1e-9, rtol=0):
         raise ValueError('Base–Mid360 quaternion/translation and matrix4x4 disagree')
+    # The Mid-360S x/y/yaw are chained through the G2 record; it must be the same file.
+    if mid.get('g2_record_sha256') != workflow.sha(lidar_input):
+        raise ValueError('Base–Mid360 record was derived from a different Base–2D LiDAR record; regenerate it')
+    # Provisional physical quality limits (mm / deg).
+    consistency, holdout = lidar['consistency'], mid['holdout']['final_deployed']
+    if (consistency['cw_ccw_centre_difference_mm'] > 5.0 or consistency['forward_reverse_yaw_difference_deg'] > 0.2
+            or holdout['med_cm'] * 10 > 10.0 or holdout['p90_cm'] * 10 > 25.0 or mid['floor']['std']['pitch_deg'] > 0.5):
+        raise ValueError('Physical LiDAR calibration is outside the provisional quality limits')
     head_input = RECORDS / '20261006_head_mid360/results/automated_01/head_mid360.json'
     wrist_input = RECORDS / '20261006_wrist_d435/results/flange_wrist.json'
     tcp_input = RECORDS / 'link6_tcp/results/flange_tcp.json'
@@ -199,7 +207,7 @@ def main():
                 'base_lidar_consistency': lidar['consistency'],
                 'base_mid360_input': os.path.relpath(mid_input, HERE.parents[2]).replace(os.sep, '/'),
                 'base_mid360_input_kind': 'physical_floor_plane_and_g2_chain',
-                'base_mid360_g2_holdout_mm': {k.replace('_cm', '_mm'): mid['g2_relative_tilt_corrected']['holdout'][k] * 10 for k in ('med_cm', 'p90_cm')},
+                'base_mid360_holdout_final_mm': {k.replace('_cm', '_mm'): mid['holdout']['final_deployed'][k] * 10 for k in ('med_cm', 'p90_cm')},
                 'base_piper_input_kind': 'urdf_reference', 'tcp_input_kind': tcp['input_kind'],
                 'tcp_definition': workflow.read(results / 'flange_tcp.json')['definition'],
                 'tcp_solver_holdout': {
