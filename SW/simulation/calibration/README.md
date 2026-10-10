@@ -10,7 +10,7 @@
 
 | Stage | Result | Runtime status / evidence |
 |---|---|---|
-| Base–2D LiDAR | x=0.124 mm, y=0.521 mm, yaw=8.844783°; z/roll/pitch fixed | Applied. Recorded independent scans: RMS 6.737/6.846 mm |
+| Base–2D LiDAR | **Physical (2026-10-10):** x=24.248 mm, y=9.159 mm, yaw=2.8367°; z/roll/pitch fixed. Relative to the Mid-360S | Applied. 6 train / 2 held-out static poses: held-out G2→Mid-360S wall distance median 7.0/6.7 mm (CAD 42/70 mm), 90–92% within 20 mm. [Record](../../../HW/calibration/base_2dlidar/README.md). Gazebo estimate (x=0.124 mm, y=0.521 mm, yaw=8.844783°) kept as history |
 | Base–Mid360 | xyz≈(-0.179962, 0.000156, 1.198867) m; roll≈180° | Applied. Recorded A/B maximum plane offsets: 3.594/3.167 mm |
 | Head–Mid360 | Recorded plane fit; held-out maximum 4.247 mm / 0.814° | Preserved. Historical Gazebo GT position error 11.720 mm; not used as the current Head mount |
 | Base–PiPER | xyz=(-0.0195, 0, 0.80611) m; RPY=0 | Applied as `urdf_nominal_reference`; no independent measurement |
@@ -78,7 +78,7 @@ This requires the native Gazebo Python transport/message bindings in addition to
 
 ## Physical measurement scope
 
-Physical arm mounting, physical TCP contact/pivot and tool axes, joint zero offsets/link geometry, gripper opening/zero, and real sensor calibration require independent measurements. None were inferred from generated URDF coordinates. The historical Head plane bias and the 9.871 mm route difference remain documented.
+Physical arm mounting, physical TCP contact/pivot and tool axes, joint zero offsets/link geometry, gripper opening/zero, and real sensor calibration require independent measurements. The physical Base–2D LiDAR x/y/yaw (2026-10-10) is the first real sensor calibration and is relative to the uncalibrated Mid-360S mount. None were inferred from generated URDF coordinates. The historical Head plane bias and the 9.871 mm route difference remain documented.
 
 The new hand-eye and pivot solvers report held-out errors during their requested calibration calculations. Stage 06 simulation collection, calculation and runtime application are complete. The near-zero TCP residual follows from shared CAD kinematics and the imposed socket constraint; it is not a physical accuracy estimate. No additional post-work test, build, lint, ROS launch, or verification was run.
 

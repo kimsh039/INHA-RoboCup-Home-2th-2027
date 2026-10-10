@@ -659,7 +659,7 @@
   <joint name="camera_link_joint" type="fixed">
     <parent link="rack_base_link" />
     <child link="camera_link" />
-    <origin xyz="-0.123137435139 -0.000466274462443 1.26025054702" rpy="0.00410752431423 0.257405652603 0.00154865523456" />
+    <origin xyz="-0.1231374351388152 -0.00046627446244331891 1.2602505470202274" rpy="0.0041075243142279123 0.25740565260292736 0.0015486552345582768" />
   </joint>
   <link name="cad_2D_LiDARMount_1" />
   <joint name="cad_2D_LiDARMount_1_joint" type="fixed">
@@ -725,13 +725,13 @@
   <joint name="laser_frame_joint" type="fixed">
     <parent link="g2_link" />
     <child link="laser_frame" />
-    <origin xyz="-5.1389834908760446e-05 0.00052051635559500814 0" rpy="0 0 0.15437059215843318" />
+    <origin xyz="0.024073172308992453 0.0091594372740952668 0" rpy="0 0 0.049509674634016343" />
   </joint>
   <link name="livox_frame" />
   <joint name="livox_frame_joint" type="fixed">
     <parent link="mid360_link" />
     <child link="livox_frame" />
-    <origin xyz="3.773355003483525e-05 0.00015620113972823895 -0.00024318079626794997" rpy="3.1415281256409191 2.0508080655012861e-05 -2.7091518517208257e-05" />
+    <origin xyz="3.773355003483525e-05 0.00015620113972823895 -0.00024318079626794997" rpy="3.1415281256409195 2.0508080655234906e-05 -2.7091518517184195e-05" />
   </joint>
   <link name="camera_cad_frame" />
   <joint name="camera_cad_frame_joint" type="fixed">
@@ -1092,7 +1092,7 @@
   <joint name="piper_to_wrist_camera_mount" type="fixed">
     <parent link="piper_gripper_base" />
     <child link="wrist_camera_mount_link" />
-    <origin xyz="0.00021057778731321184 0.00081284728291651563 0.0072422552841638725" rpy="-1.5721318918257796 -0.0019379665882315322 1.6152889735146658" />
+    <origin xyz="0.00021057778731321808 0.00081284728291651596 0.0072422552841638725" rpy="-1.5721318918257798 -0.0019379665882315322 1.6152889735146665" />
   </joint>
   <gazebo reference="wrist_camera_link">
     <sensor name="wrist_d435f_depth" type="depth_camera">
@@ -1528,10 +1528,4 @@
     <child link="cad_bracket_36" />
     <origin xyz="-0.01 -0.0693408679762 0.761669546471" rpy="0 -1.57079632679 -2.66113378704e-16" />
   </joint>
-  <link name="tcp" />
-  <joint name="calibrated_tcp_joint" type="fixed">
-    <parent link="piper_link6" />
-    <child link="tcp" />
-    <origin xyz="3.1410601675219113e-09 -6.041407414281427e-10 0.14250000226360077" rpy="0.0 0.0 0.0" />
-  </joint>
-</robot>
+<link name="tcp" /><joint name="calibrated_tcp_joint" type="fixed"><parent link="piper_link6" /><child link="tcp" /><origin xyz="3.1410601675219113e-09 -6.041407414281427e-10 0.14250000226360077" rpy="0.0 0.0 0.0" /></joint></robot>

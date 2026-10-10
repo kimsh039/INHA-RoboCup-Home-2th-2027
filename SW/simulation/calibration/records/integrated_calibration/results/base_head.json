@@ -4,22 +4,22 @@
   "translation_unit": "m",
   "matrix4x4": [
     [
-      0.0015139211414746546,
-      0.004387834291104274,
-      0.9999892274184815,
-      -0.12722342972197517
+      0.0005029826567322141,
+      -0.2545764467275086,
+      0.9670525217277721,
+      -0.1231374351388152
     ],
     [
-      -0.999991984344118,
-      0.0037132662276411167,
-      0.0014976319428809998,
-      -0.001716274462443348
+      -0.9999919843441178,
+      0.0037132662276411162,
+      0.0014976319428809995,
+      -0.0004662744624433189
     ],
     [
-      -0.003706654865383434,
-      -0.9999834791456089,
-      0.0043934207119805755,
-      1.2850468986951096
+      -0.00397218528781089,
+      -0.967045523450431,
+      -0.2545725384218036,
+      1.2763605470202275
     ],
     [
       0.0,
@@ -29,36 +29,87 @@
     ]
   ],
   "translation_xyz_m": [
-    -0.12722342972197517,
-    -0.001716274462443348,
-    1.2850468986951096
+    -0.1231374351388152,
+    -0.0004662744624433189,
+    1.2763605470202275
   ],
   "quaternion_xyzw": [
-    -0.4983490830236006,
-    0.4994511798900333,
-    -0.49979151486966655,
-    0.5023993949242713
+    -0.559321520873928,
+    0.5607545858021834,
+    -0.43046812097233805,
+    0.4329098377441225
   ],
-  "status": "derived_transform",
-  "method": "Transform composition; no additional measurement",
-  "sources": [
-    {
-      "path": "base_piper.json",
-      "sha256": "99e47e2884cd9d71db27c311a22d3b00886132323a7432756c6a9b1aa858d0de",
-      "status": "urdf_nominal_reference",
-      "inverted": false
-    },
-    {
-      "path": "piper_head.json",
-      "sha256": "3ccf9199c79e54e413a62e3da447c5616d0bd2edf09d71c5f0a4c68136678e82",
-      "status": "computed_validation_pending",
-      "inverted": false
-    }
-  ],
-  "contains_nominal_reference": true,
+  "status": "cad_mount_delta_applied",
   "independent_measurement": false,
-  "source_sha256": [
-    "99e47e2884cd9d71db27c311a22d3b00886132323a7432756c6a9b1aa858d0de",
-    "3ccf9199c79e54e413a62e3da447c5616d0bd2edf09d71c5f0a4c68136678e82"
-  ]
+  "method": "Rigid CAD mount delta applied to historical Head hand-eye; not a new calibration",
+  "recorded_transform": "base_head_recorded.json",
+  "mount_change": {
+    "baseline_commit": "3618afc",
+    "source_document": "final_assembly_fix",
+    "rotation_deg": 15.000000000000018,
+    "camera_new_rack_frame": [
+      [
+        0.9659258262890682,
+        2.775557561563215e-17,
+        0.2588190451025208,
+        -0.12066631979152745
+      ],
+      [
+        3.3986645259148207e-71,
+        0.9999999999999999,
+        -4.26296566734869e-31,
+        0.0012499999999974198
+      ],
+      [
+        -0.25881904510252085,
+        1.3877787807826542e-17,
+        0.9659258262890681,
+        1.260689017116834
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "old_to_new_rack_transform": [
+      [
+        0.9659258262890682,
+        2.775557561563215e-17,
+        0.2588190451025208,
+        -0.32867407507690954
+      ],
+      [
+        3.3986645259148207e-71,
+        0.9999999999999999,
+        -4.26296566734869e-31,
+        0.0012500000000000289
+      ],
+      [
+        -0.25881904510252085,
+        1.3877787807826542e-17,
+        0.9659258262890681,
+        0.0016237780441570315
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "camera_translation_delta_m": [
+      0.004283680208472862,
+      0.0012500000000000289,
+      -0.009310982883166341
+    ],
+    "calibration_status": "Experimental rigid CAD delta applied to previous calibration; new head mount has NOT been recalibrated.",
+    "frame": "rack_base_link",
+    "head_measurement_sources": {
+      "head_piper/results/piper_head.json": "71c34c3c43a805973cd22d4195e6b221ac0e300cc3d7cfd099992c4c17c48e7b",
+      "20261006_head_mid360/results/automated_01/head_mid360.json": "728e77495b651e0a3b34e4ba58ac57c0f183f4fcb3fcdd3ecf5ad109d0d1ec3a"
+    },
+    "head_measurement_hash_basis": "canonical_json"
+  }
 }

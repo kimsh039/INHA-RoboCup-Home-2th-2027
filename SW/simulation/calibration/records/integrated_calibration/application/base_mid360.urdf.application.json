@@ -1,7 +1,7 @@
 {
-  "source_urdf_sha256": "c3411b742cbf540a0bff010cea112b39661ac737330f932ad78560e4e428877d",
+  "source_urdf_sha256": "09ee55e4a2951b4671591f3dd00ae7c942d77cf7298777f9bc6579b813a60de6",
   "result_sha256": "53fd478d044b8db6b66723e1a517245cf57ca638ae2ffb6d270a0b394459796c",
-  "runtime_urdf_sha256": "74ecd6952dd62dd33ff0d84f8d10c5c2e7a77af8c3106701d151cba1ae9bfd2c",
+  "runtime_urdf_sha256": "7b66e9e027750d80af5c251690d643243d46f5d8bda9bfdb7b5016bf8aa03e93",
   "joint": "livox_frame_joint",
   "origin_xyz": [
     3.773355003483525e-05,
@@ -9,9 +9,9 @@
     -0.00024318079626794997
   ],
   "origin_rpy": [
-    3.141528125640919,
-    2.050808065501286e-05,
-    -2.7091518517208257e-05
+    3.1415281256409195,
+    2.0508080655234906e-05,
+    -2.7091518517184195e-05
   ],
   "composition_verified": true,
   "acceptance": "User must review held-out validation before launching"

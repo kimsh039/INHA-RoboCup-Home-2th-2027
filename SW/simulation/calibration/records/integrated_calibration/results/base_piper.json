@@ -43,7 +43,7 @@
   "input_kind": "urdf_reference",
   "independent_measurement": false,
   "reference_urdf": "../../../../robot_description/robocup.urdf",
-  "reference_urdf_sha256": "19d65a7e711138d4be9b10abc0ebb1de185e8ccb41eaee54d8cdc41562bba414",
+  "reference_urdf_sha256": "5b7d47200d819cf7cde8b334d1f2b3d57f7bf604ba82cbb5898fd66c4dea616e",
   "reference_child": "piper_base_link",
   "offset_xyz_m": [
     0.0,

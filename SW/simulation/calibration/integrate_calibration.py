@@ -20,6 +20,7 @@ import calibration_workflow as workflow
 HERE = Path(__file__).resolve().parent
 DESCRIPTION = HERE.parent / 'robot_description'
 RECORDS = HERE / 'records'
+HW_CALIBRATION = HERE.parents[2] / 'HW' / 'calibration'
 
 
 def invoke(name, **kwargs):
@@ -44,7 +45,12 @@ def main():
     # The hand-eye solver already reports held-out residuals as part of calibration.
     # Use those recorded values, without reprocessing images or launching a validation job.
     head_arm_usable = handeye['max_holdout_translation_m'] <= 0.005 and handeye['max_holdout_rotation_deg'] <= 1.0
-    lidar_input = RECORDS / '20261005_base_2dlidar/calibration/calibration.json'
+    # Physical G2 estimate against the Mid-360S (2026-10-10). The Gazebo record
+    # records/20261005_base_2dlidar is preserved as history.
+    lidar_input = HW_CALIBRATION / 'base_2dlidar/calibration.json'
+    lidar = workflow.read(lidar_input)
+    if lidar.get('measurement') != 'physical_robot' or lidar.get('status') != 'physical_holdout_validated':
+        raise ValueError('Expected the held-out validated physical Base–2D LiDAR record')
     mid_input = RECORDS / '20261006_base_mid360/results/auto_room_20261006_031114/base_mid360.json'
     head_input = RECORDS / '20261006_head_mid360/results/automated_01/head_mid360.json'
     wrist_input = RECORDS / '20261006_wrist_d435/results/flange_wrist.json'
@@ -166,6 +172,9 @@ def main():
                 },
                 'head_path_difference': workflow.read(results / 'head_path_difference.json'),
                 'head_paths_share_nominal_arm_mount': True,
+                'base_lidar_input': os.path.relpath(lidar_input, HERE.parents[2]).replace(os.sep, '/'),
+                'base_lidar_input_kind': 'physical_static_multipose_vs_mid360',
+                'base_lidar_holdout': {k: lidar['metrics']['holdout']['est'][k] for k in ('med_cm', 'p90_cm', 'in2cm')},
                 'base_piper_input_kind': 'urdf_reference', 'tcp_input_kind': tcp['input_kind'],
                 'tcp_definition': workflow.read(results / 'flange_tcp.json')['definition'],
                 'tcp_solver_holdout': {
@@ -181,7 +190,8 @@ def main():
                 'hardware_accuracy_established': False, 'ros_runtime_launched': False,
                 'post_work_verification_run': False,
                 'remaining_independent_measurements': ['physical arm mount', 'physical TCP contact/pivot and tool axes',
-                    'joint zero offsets, axes and link geometry', 'gripper opening/zero', 'real sensor calibration'],
+                    'joint zero offsets, axes and link geometry', 'gripper opening/zero',
+                    'real sensor calibration (Base–2D LiDAR x/y/yaw done relative to Mid-360S; Mid-360S and cameras pending)'],
                 'historical_head_plane_bias': 'Recorded Head–Mid360 plane estimate has 11.720 mm Gazebo GT position error; retained and not silently corrected.',
                 'applications': applications, 'tcp_application': tcp_application,
             }

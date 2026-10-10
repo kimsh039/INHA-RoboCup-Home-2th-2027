@@ -10,7 +10,7 @@ The runtime has 95 links and 94 joints, including the new fixed `tcp` frame. Det
 
 | Transform | Source |
 |---|---|
-| Base←2D LiDAR | Recorded room scan estimate, x/y/yaw; z/roll/pitch fixed |
+| Base←2D LiDAR | **Physical** G2↔Mid-360S static multi-pose estimate (2026-10-10), x/y/yaw; z/roll/pitch fixed. [Record](../../../HW/calibration/base_2dlidar/README.md) |
 | Base←Mid360 | Recorded 3D room-plane estimate |
 | Base←PiPER | URDF reference: xyz=(-0.0195, 0, 0.80611) m, no rotation |
 | Base←Head | Recorded Head–PiPER hand-eye composed through the PiPER mount, then moved by the selected 15° CAD mount delta |
@@ -58,7 +58,7 @@ Rebuild the recorded runtime with `SW/simulation/calibration/.venv/bin/python SW
 
 ## Historical measurements
 
-- 2026-10-05: [2D LiDAR calculation and held-out scans](../calibration/records/20261005_base_2dlidar/calibration/calibration_report.md).
+- 2026-10-05: [2D LiDAR calculation and held-out scans](../calibration/records/20261005_base_2dlidar/calibration/calibration_report.md) (Gazebo; replaced in the runtime by the 2026-10-10 [physical record](../../../HW/calibration/base_2dlidar/README.md)).
 - 2026-10-06: [Mid360 calculation](../calibration/records/20261006_base_mid360/README.md), [A/B accuracy records](../calibration/records/20261006_base_mid360/validation_20261006_201607/README.md), [Head plane fit](../calibration/records/20261006_head_mid360/README.md), [Wrist hand-eye](../calibration/records/20261006_wrist_d435/README.md).
 - 2026-10-07: [Head–PiPER image/joint collection](../calibration/records/head_piper/README.md), [Base–PiPER reference](../calibration/records/base_piper/README.md), [integrated runtime](../calibration/records/integrated_calibration/README.md).
 
