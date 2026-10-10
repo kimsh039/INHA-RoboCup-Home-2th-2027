@@ -1,0 +1,22 @@
+{
+    "camera": "RealSense D435if",
+    "camera_serial": "243222070076",
+    "target": "6x6 AprilTag 36h11 board",
+    "tag_size_m": 0.075,
+    "tag_pitch_m": 0.114,
+    "num_samples": 100,
+    "mean_xyz_mm": [
+        -272.38688231615913,
+        112.30358877696243,
+        666.4590457724983
+    ],
+    "std_xyz_mm": [
+        0.16521168948160525,
+        0.1133235634777051,
+        0.5917538898660056
+    ],
+    "mean_rotation_deviation_deg": 0.17645800690397817,
+    "max_rotation_deviation_deg": 0.4981604421658315,
+    "mean_reprojection_rms_px": 1.938951349235973,
+    "notes": "Stationary multi-AprilTag pose repeatability. Not an independent absolute accuracy measurement."
+}

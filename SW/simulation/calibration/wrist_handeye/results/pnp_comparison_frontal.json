@@ -1,0 +1,47 @@
+{
+    "camera": "RealSense D435if",
+    "camera_serial": "243222070076",
+    "tag_family": "AprilTag 36h11",
+    "tag_id": 0,
+    "tag_size_m": 0.075,
+    "num_paired_samples": 100,
+    "intrinsics_source": "HW/calibration/camera_intrinsics/wrist/ost.yaml",
+    "ippe_square": {
+        "mean_xyz_mm": [
+            1.5051061651347024,
+            -2.344844401084741,
+            355.9901073171814
+        ],
+        "std_xyz_mm": [
+            0.14088889496977397,
+            0.15048037642342815,
+            0.2765526720809257
+        ],
+        "mean_rotation_deviation_deg": 2.0844854534831545,
+        "max_rotation_deviation_deg": 7.454110153150735,
+        "mean_reprojection_rms_px": 0.42696854117514504
+    },
+    "iterative": {
+        "mean_xyz_mm": [
+            1.3445046062830497,
+            -2.4352710823133235,
+            356.4598433170997
+        ],
+        "std_xyz_mm": [
+            0.09249908960926059,
+            0.091726750217814,
+            0.3814213534269995
+        ],
+        "mean_rotation_deviation_deg": 0.8466585712491204,
+        "max_rotation_deviation_deg": 3.1045111078697283,
+        "mean_reprojection_rms_px": 0.170871229507373
+    },
+    "paired_translation_difference_mm": {
+        "mean": 0.5276819569734377,
+        "max": 1.992404530882648
+    },
+    "paired_rotation_difference_deg": {
+        "mean": 3.1958593874796533,
+        "max": 6.963516883583946
+    }
+}

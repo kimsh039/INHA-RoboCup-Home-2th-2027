@@ -1,0 +1,26 @@
+{
+    "camera": "RealSense D435if",
+    "camera_serial": "243222070076",
+    "marker_family": "AprilTag 36h11",
+    "marker_id": 0,
+    "tag_size_m": 0.075,
+    "intrinsics_source": "HW/calibration/camera_intrinsics/wrist/ost.yaml",
+    "num_samples": 100,
+    "mean_xyz_mm": [
+        1.496879538229632,
+        -2.3671408928191267,
+        355.97119416335073
+    ],
+    "std_xyz_mm": [
+        0.1406668481705644,
+        0.11141984950282932,
+        0.3763695169823633
+    ],
+    "min_z_mm": 354.6406481066607,
+    "max_z_mm": 357.4634551174539,
+    "mean_reprojection_rms_px": 0.3866794549064053,
+    "notes": "Stationary AprilTag repeatability test; not absolute accuracy validation.",
+    "mean_rotation_deviation_deg": 1.8867627634717292,
+    "std_rotation_deviation_deg": 1.6550448406337535,
+    "max_rotation_deviation_deg": 7.1735392959695385
+}
