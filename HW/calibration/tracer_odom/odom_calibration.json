@@ -1,250 +1,372 @@
 {
-  "schema": "tracer_odom_offset/v2",
+  "schema": "tracer_odom_offset/v3",
   "status": "physical_cross_validated",
-  "date": "2026-10-10",
-  "model": "v = v_rep + linear_velocity_offset * sign(v_rep) while |v_rep| > 1e-3; w = w_rep + angular_velocity_offset * sign(w_rep) while |w_rep| > angular_offset_threshold",
-  "linear_velocity_offset_m_s": 0.00443,
-  "angular_velocity_offset_rad_s": 0.0523,
-  "angular_offset_threshold_rad_s": 0.04,
+  "date": "2026-10-11",
+  "model": "v = v_rep + linear_velocity_offset * sign(v_rep) while |v_rep| > 1e-3; w = w_rep + angular_velocity_offset * sign(w_rep) while |w_rep| > angular_offset_threshold; integrated in SE(2) like the driver",
+  "linear_velocity_offset_m_s": 0.00756,
+  "angular_velocity_offset_rad_s": 0.0527,
+  "angular_offset_threshold_rad_s": 0.06,
   "linear_velocity_scale": 1.0,
   "angular_velocity_scale": 1.0,
   "angular_velocity_bias_rad_s": 0.0,
   "reasoning": "Firmware speeds are quantised (w steps ~0.0185 rad/s, v steps 0.003 m/s) and short by a roughly constant amount while moving. A pure scale fitted on one session over-corrects the other (spin speed 0.148 vs 0.241 rad/s).",
-  "cross_validation": {
-    "sessions": [
-      "team g2_scan_only_20261010_230526 (spin ~0.148 rad/s, 40 deg steps)",
-      "val_20261010_235250 (spin ~0.241 rad/s, 90 deg steps)"
-    ],
-    "models": {
-      "yaw:scale": {
-        "fit_team": {
-          "params": [
-            1.3191118758559022
-          ],
-          "rms_in": 1.7988343729060343,
-          "rms_out": 6.174104198942238
+  "fit": {
+    "method": "odom_fit_se2.py: c_w closed form on yaw, c_v 1-D search on SE(2) translation error; fit on one session, test on the other, then both",
+    "thresholds": {
+      "0.02": {
+        "team_to_val": {
+          "c_v": 0.007379712543806737,
+          "c_w": 0.0490018196712584,
+          "train": {
+            "trans_rms_mm": 4.326899313583961,
+            "trans_rms_straight_mm": 4.329663493545881,
+            "yaw_rms_rot_deg": 1.3084496535743007,
+            "yaw_rms_straight_deg": 1.370844494180461
+          },
+          "test": {
+            "trans_rms_mm": 7.522888197036861,
+            "trans_rms_straight_mm": 9.995982820951399,
+            "yaw_rms_rot_deg": 1.9944866833803336,
+            "yaw_rms_straight_deg": 1.8110514350610138
+          }
         },
-        "fit_val": {
-          "params": [
-            1.2110242787303203
-          ],
-          "rms_in": 1.844958393373647,
-          "rms_out": 3.284561045263633
+        "val_to_team": {
+          "c_v": 0.008008432901468,
+          "c_w": 0.05410492877424893,
+          "train": {
+            "trans_rms_mm": 7.584247576246653,
+            "trans_rms_straight_mm": 10.051364747320308,
+            "yaw_rms_rot_deg": 1.2262039590372782,
+            "yaw_rms_straight_deg": 1.888768500589122
+          },
+          "test": {
+            "trans_rms_mm": 4.6857765699992,
+            "trans_rms_straight_mm": 4.86938569029095,
+            "yaw_rms_rot_deg": 1.7014346202050068,
+            "yaw_rms_straight_deg": 1.41588963104762
+          }
         },
-        "fit_both": {
-          "params": [
-            1.2422414248986708
-          ],
-          "rms": 2.6061464279726154
+        "both": {
+          "c_v": 0.007559524883645549,
+          "c_w": 0.051376478329177896,
+          "team": {
+            "trans_rms_mm": 4.373595430744225,
+            "trans_rms_straight_mm": 4.355381056922917,
+            "yaw_rms_rot_deg": 1.3947251701132897,
+            "yaw_rms_straight_deg": 1.3917414585739654
+          },
+          "val": {
+            "trans_rms_mm": 7.546531776298094,
+            "trans_rms_straight_mm": 10.022764877756535,
+            "yaw_rms_rot_deg": 1.5083344198999267,
+            "yaw_rms_straight_deg": 1.8471423855995206
+          },
+          "all": {
+            "trans_rms_mm": 5.685243165385732,
+            "trans_rms_straight_mm": 6.999333954687423,
+            "yaw_rms_rot_deg": 1.4335956336603357,
+            "yaw_rms_straight_deg": 1.5749164789702859
+          }
         }
       },
-      "yaw:scale+bias": {
-        "fit_team": {
-          "params": [
-            1.3187784641562863,
-            0.0037813145958391883
-          ],
-          "rms_in": 1.5357121040019566,
-          "rms_out": 5.99547390680418
+      "0.04": {
+        "team_to_val": {
+          "c_v": 0.00737985877190739,
+          "c_w": 0.0505696262787761,
+          "train": {
+            "trans_rms_mm": 4.224277391150222,
+            "trans_rms_straight_mm": 4.0860633125934145,
+            "yaw_rms_rot_deg": 1.2613229034114366,
+            "yaw_rms_straight_deg": 1.1856260013994824
+          },
+          "test": {
+            "trans_rms_mm": 6.6440805251087465,
+            "trans_rms_straight_mm": 8.557357028439284,
+            "yaw_rms_rot_deg": 1.6880826649031002,
+            "yaw_rms_straight_deg": 1.3843290979443288
+          }
         },
-        "fit_val": {
-          "params": [
-            1.2103113423890746,
-            0.0056425952119156285
-          ],
-          "rms_in": 0.9276220290515604,
-          "rms_out": 3.1864817312254563
+        "val_to_team": {
+          "c_v": 0.008014492707153499,
+          "c_w": 0.0540891538239263,
+          "train": {
+            "trans_rms_mm": 6.534296665301675,
+            "trans_rms_straight_mm": 8.319208466604215,
+            "yaw_rms_rot_deg": 1.318353224081952,
+            "yaw_rms_straight_deg": 1.404299363809896
+          },
+          "test": {
+            "trans_rms_mm": 4.574413849621085,
+            "trans_rms_straight_mm": 4.614452075929637,
+            "yaw_rms_rot_deg": 1.4598814640832296,
+            "yaw_rms_straight_deg": 1.2036639500802513
+          }
         },
-        "fit_both": {
-          "params": [
-            1.2417192633337375,
-            0.0045278019556563845
-          ],
-          "rms": 2.3241207254744003
+        "both": {
+          "c_v": 0.007561238342113479,
+          "c_w": 0.052263686092034696,
+          "team": {
+            "trans_rms_mm": 4.261810940864002,
+            "trans_rms_straight_mm": 4.088321732365862,
+            "yaw_rms_rot_deg": 1.3069768641919854,
+            "yaw_rms_straight_deg": 1.1942631908045946
+          },
+          "val": {
+            "trans_rms_mm": 6.589858337042062,
+            "trans_rms_straight_mm": 8.452624651906062,
+            "yaw_rms_rot_deg": 1.4315649859774195,
+            "yaw_rms_straight_deg": 1.3939249036973762
+          },
+          "all": {
+            "trans_rms_mm": 5.19382102344285,
+            "trans_rms_straight_mm": 6.072806251470527,
+            "yaw_rms_rot_deg": 1.3497845946844953,
+            "yaw_rms_straight_deg": 1.2714757544093034
+          }
         }
       },
-      "yaw:offset": {
-        "fit_team": {
-          "params": [
-            0.04583820752757722
-          ],
-          "rms_in": 2.411769212933162,
-          "rms_out": 2.911551042856466
+      "0.06": {
+        "team_to_val": {
+          "c_v": 0.00737966619593086,
+          "c_w": 0.05199956408823339,
+          "train": {
+            "trans_rms_mm": 4.134695269622916,
+            "trans_rms_straight_mm": 3.8638595083040155,
+            "yaw_rms_rot_deg": 1.268540208540937,
+            "yaw_rms_straight_deg": 1.080227737132828
+          },
+          "test": {
+            "trans_rms_mm": 6.310962001296039,
+            "trans_rms_straight_mm": 8.000009418890546,
+            "yaw_rms_rot_deg": 1.3335407331816664,
+            "yaw_rms_straight_deg": 1.1996171508655988
+          }
         },
-        "fit_val": {
-          "params": [
-            0.05264466151086907
-          ],
-          "rms_in": 2.5127353525674394,
-          "rms_out": 2.6853705335006386
+        "val_to_team": {
+          "c_v": 0.008015748636545465,
+          "c_w": 0.05336654695709106,
+          "train": {
+            "trans_rms_mm": 6.145601576095129,
+            "trans_rms_straight_mm": 7.656897917681833,
+            "yaw_rms_rot_deg": 1.2682326337134955,
+            "yaw_rms_straight_deg": 1.201912745769356
+          },
+          "test": {
+            "trans_rms_mm": 4.477782029798909,
+            "trans_rms_straight_mm": 4.386890831183731,
+            "yaw_rms_rot_deg": 1.29835501273853,
+            "yaw_rms_straight_deg": 1.0834810422664924
+          }
         },
-        "fit_both": {
-          "params": [
-            0.04892732810373013
-          ],
-          "rms": 2.53026061333353
+        "both": {
+          "c_v": 0.007561448487119919,
+          "c_w": 0.052686114746839215,
+          "team": {
+            "trans_rms_mm": 4.165334048313633,
+            "trans_rms_straight_mm": 3.8476281620102375,
+            "yaw_rms_rot_deg": 1.275611941217752,
+            "yaw_rms_straight_deg": 1.0818586643227328
+          },
+          "val": {
+            "trans_rms_mm": 6.230610843071806,
+            "trans_rms_straight_mm": 7.847228372683557,
+            "yaw_rms_rot_deg": 1.2851933904179682,
+            "yaw_rms_straight_deg": 1.2007695396297986
+          },
+          "all": {
+            "trans_rms_mm": 4.983946061338375,
+            "trans_rms_straight_mm": 5.660127679462253,
+            "yaw_rms_rot_deg": 1.2788137341469599,
+            "yaw_rms_straight_deg": 1.1271284064046474
+          }
         }
       },
-      "yaw:scale+offset": {
-        "fit_team": {
-          "params": [
-            1.2721074997614583,
-            0.007088384460344871
-          ],
-          "rms_in": 1.7752724193196683,
-          "rms_out": 5.165454522985663
+      "0.08": {
+        "team_to_val": {
+          "c_v": 0.007379537593556954,
+          "c_w": 0.053435004953082156,
+          "train": {
+            "trans_rms_mm": 4.042748182372357,
+            "trans_rms_straight_mm": 3.630465248154477,
+            "yaw_rms_rot_deg": 1.3844813044107482,
+            "yaw_rms_straight_deg": 0.9764622942834881
+          },
+          "test": {
+            "trans_rms_mm": 6.118114668907004,
+            "trans_rms_straight_mm": 7.672028960305165,
+            "yaw_rms_rot_deg": 1.301911497351111,
+            "yaw_rms_straight_deg": 1.1303261220076521
+          }
         },
-        "fit_val": {
-          "params": [
-            1.1769118730000057,
-            0.008748758061436556
-          ],
-          "rms_in": 1.8131657329917212,
-          "rms_out": 2.781687351456767
+        "val_to_team": {
+          "c_v": 0.008016929942553923,
+          "c_w": 0.05380011787110267,
+          "train": {
+            "trans_rms_mm": 5.937466814537299,
+            "trans_rms_straight_mm": 7.294755873366018,
+            "yaw_rms_rot_deg": 1.297368089386571,
+            "yaw_rms_straight_deg": 1.1304362087844904
+          },
+          "test": {
+            "trans_rms_mm": 4.39097067634403,
+            "trans_rms_straight_mm": 4.178302934641897,
+            "yaw_rms_rot_deg": 1.3864734267941823,
+            "yaw_rms_straight_deg": 0.9764622942834881
+          }
         },
-        "fit_both": {
-          "params": [
-            1.1197130121229226,
-            0.026135646523656998
-          ],
-          "rms": 2.0391335505300012
+        "both": {
+          "c_v": 0.00756169842851003,
+          "c_w": 0.05362201123511609,
+          "team": {
+            "trans_rms_mm": 4.07236716491274,
+            "trans_rms_straight_mm": 3.6090867517631766,
+            "yaw_rms_rot_deg": 1.3850041871979784,
+            "yaw_rms_straight_deg": 0.9764622942834881
+          },
+          "val": {
+            "trans_rms_mm": 6.0303170137068,
+            "trans_rms_straight_mm": 7.503527152816006,
+            "yaw_rms_rot_deg": 1.298471651277827,
+            "yaw_rms_straight_deg": 1.130382489078719
+          },
+          "all": {
+            "trans_rms_mm": 4.846067046947835,
+            "trans_rms_straight_mm": 5.38236166279,
+            "yaw_rms_rot_deg": 1.356773356937214,
+            "yaw_rms_straight_deg": 1.0358341501875135
+          }
         }
       },
-      "dist:scale": {
-        "fit_team": {
-          "params": [
-            1.076287107589089
-          ],
-          "rms_in": 7.5982256297327835,
-          "rms_out": 23.737841677227156
+      "0.1": {
+        "team_to_val": {
+          "c_v": 0.007379665987823147,
+          "c_w": 0.05590497650666698,
+          "train": {
+            "trans_rms_mm": 4.04094740249064,
+            "trans_rms_straight_mm": 3.630396759129332,
+            "yaw_rms_rot_deg": 1.6826737971086307,
+            "yaw_rms_straight_deg": 0.9764622942834881
+          },
+          "test": {
+            "trans_rms_mm": 5.994610148380397,
+            "trans_rms_straight_mm": 7.459531007296129,
+            "yaw_rms_rot_deg": 1.4078227443922258,
+            "yaw_rms_straight_deg": 1.0945334727504648
+          }
         },
-        "fit_val": {
-          "params": [
-            1.0279917676037895
-          ],
-          "rms_in": 6.785526038896121,
-          "rms_out": 15.51618600350546
+        "val_to_team": {
+          "c_v": 0.008017400835061694,
+          "c_w": 0.05446276059427391,
+          "train": {
+            "trans_rms_mm": 5.807875041760228,
+            "trans_rms_straight_mm": 7.064693676783906,
+            "yaw_rms_rot_deg": 1.343312275381119,
+            "yaw_rms_straight_deg": 1.0950668288467897
+          },
+          "test": {
+            "trans_rms_mm": 4.389080180193758,
+            "trans_rms_straight_mm": 4.179278028729312,
+            "yaw_rms_rot_deg": 1.705716656923215,
+            "yaw_rms_straight_deg": 0.9764622942834881
+          }
         },
-        "fit_both": {
-          "params": [
-            1.0462216982279868
-          ],
-          "rms": 11.197562668061268
-        }
-      },
-      "dist:offset": {
-        "fit_team": {
-          "params": [
-            0.0048413965920897735
-          ],
-          "rms_in": 4.309613486729306,
-          "rms_out": 7.689216386903452
-        },
-        "fit_val": {
-          "params": [
-            0.0034719856625437806
-          ],
-          "rms_in": 5.432419306980271,
-          "rms_out": 7.63159780547725
-        },
-        "fit_both": {
-          "params": [
-            0.004425971151729926
-          ],
-          "rms": 5.495729917217544
-        }
-      },
-      "dist:scale+offset": {
-        "fit_team": {
-          "params": [
-            0.9519156271488411,
-            0.0077162986895351745
-          ],
-          "rms_in": 3.4615997934116924,
-          "rms_out": 8.790029154243838
-        },
-        "fit_val": {
-          "params": [
-            0.9930708741831789,
-            0.004268396488578908
-          ],
-          "rms_in": 5.3736008247905165,
-          "rms_out": 6.117928358535681
-        },
-        "fit_both": {
-          "params": [
-            0.9775603394016289,
-            0.006143018822818293
-          ],
-          "rms": 4.542478112949727
+        "both": {
+          "c_v": 0.007561941203182406,
+          "c_w": 0.05513986050906675,
+          "team": {
+            "trans_rms_mm": 4.070300791655628,
+            "trans_rms_straight_mm": 3.6091600738129035,
+            "yaw_rms_rot_deg": 1.6891908866640026,
+            "yaw_rms_straight_deg": 0.9764622942834881
+          },
+          "val": {
+            "trans_rms_mm": 5.903829134336708,
+            "trans_rms_straight_mm": 7.283024913159963,
+            "yaw_rms_rot_deg": 1.3578886461515824,
+            "yaw_rms_straight_deg": 1.0948163248430551
+          },
+          "all": {
+            "trans_rms_mm": 4.790285071089708,
+            "trans_rms_straight_mm": 5.2696229789277425,
+            "yaw_rms_rot_deg": 1.5864628663082343,
+            "yaw_rms_straight_deg": 1.0216628046548342
+          }
         }
       }
     },
-    "offset_threshold_0p04": {
-      "team_to_val": {
-        "rotation_rms_deg": 1.69,
-        "straight_yaw_rms_deg": 1.38
+    "uncorrected": {
+      "team": {
+        "trans_rms_mm": 20.244826356133437,
+        "trans_rms_straight_mm": 30.7620269732423,
+        "yaw_rms_rot_deg": 10.961336149540777,
+        "yaw_rms_straight_deg": 0.9764622942834881
       },
-      "val_to_team": {
-        "rotation_rms_deg": 1.46,
-        "straight_yaw_rms_deg": 1.2
-      },
-      "uncorrected": {
-        "val_rotation_rms_deg": 15.92,
-        "val_straight_yaw_rms_deg": 1.12,
-        "team_rotation_rms_deg": 10.96,
-        "team_straight_yaw_rms_deg": 0.98
-      },
-      "both": {
-        "rotation_rms_deg": 1.35,
-        "straight_yaw_rms_deg": 1.27,
-        "distance_rms_mm": 5.5
+      "val": {
+        "trans_rms_mm": 19.499605864910787,
+        "trans_rms_straight_mm": 28.271823054071834,
+        "yaw_rms_rot_deg": 15.918560807483301,
+        "yaw_rms_straight_deg": 1.1157899958948065
       }
+    },
+    "selected_threshold": 0.06,
+    "selection": "lowest mean cross-validated rotation yaw error with straight-line yaw and translation errors not worse than neighbours"
+  },
+  "model_comparison": "model_cross_validation.json (scale / scale+bias / offset on yaw; its distance models compare path length with net displacement and are indicative only)",
+  "previous_models": {
+    "scale_bias": {
+      "linear_velocity_scale": 1.112,
+      "angular_velocity_scale": 1.319,
+      "angular_velocity_bias_rad_s": 0.00378,
+      "driver_commit": "c10aa90",
+      "validated_on": "val_20261010_235250",
+      "validation": {
+        "rotation": {
+          "n": 8,
+          "scan_total_deg": 723.21755813503,
+          "odom_ratio": 1.0890061138739875,
+          "raw_ratio": 0.8250791991898228,
+          "odom_yaw_err_rms_deg": 8.192294923038832,
+          "raw_yaw_err_rms_deg": 15.918560807483296
+        },
+        "straight": {
+          "n": 7,
+          "scan_total_m": 3.096945781934449,
+          "odom_ratio": 1.0458143663667427,
+          "raw_ratio": 0.940476573188625,
+          "odom_yaw_drift_rms_deg": 0.7965076636872624,
+          "raw_yaw_drift_rms_deg": 1.1157899958948072,
+          "odom_pos_err_mean_mm": 20.66596109486562,
+          "raw_pos_err_mean_mm": 26.86276510896673
+        },
+        "endpoint": {
+          "scan": {
+            "x_mm": 603.2809840615283,
+            "y_mm": 32.20343021084346,
+            "yaw_deg": 3.4458136251153175
+          },
+          "odom_err": {
+            "pos_mm": 162.631416902571,
+            "yaw_deg": -10.239819087894848
+          },
+          "raw_err": {
+            "pos_mm": 275.60997783639186,
+            "yaw_deg": -20.29517660814028
+          }
+        }
+      },
+      "note": "val_20261010_235250 was recorded with this model active; tools invert it."
+    },
+    "offset_v2": {
+      "linear_velocity_offset_m_s": 0.00443,
+      "angular_velocity_offset_rad_s": 0.0523,
+      "angular_offset_threshold_rad_s": 0.04,
+      "driver_commit": "ad78440",
+      "note": "linear offset was fitted on path length vs net displacement (wrong objective); superseded"
     }
   },
-  "previous_scale_model": {
-    "linear_velocity_scale": 1.112,
-    "angular_velocity_scale": 1.319,
-    "angular_velocity_bias_rad_s": 0.00378,
-    "driver_commit": "c10aa90",
-    "fit_on": "team session only",
-    "validated_on": "val_20261010_235250",
-    "validation": {
-      "rotation": {
-        "n": 8,
-        "scan_total_deg": 723.21755813503,
-        "odom_ratio": 1.0890061138739875,
-        "raw_ratio": 0.8250791991898228,
-        "odom_yaw_err_rms_deg": 8.192294923038832,
-        "raw_yaw_err_rms_deg": 15.918560807483296
-      },
-      "straight": {
-        "n": 7,
-        "scan_total_m": 3.096945781934449,
-        "odom_ratio": 1.0458143663667427,
-        "raw_ratio": 0.940476573188625,
-        "odom_yaw_drift_rms_deg": 0.7965076636872624,
-        "raw_yaw_drift_rms_deg": 1.1157899958948072,
-        "odom_pos_err_mean_mm": 20.66596109486562,
-        "raw_pos_err_mean_mm": 26.86276510896673
-      },
-      "endpoint": {
-        "scan": {
-          "x_mm": 603.2809840615283,
-          "y_mm": 32.20343021084346,
-          "yaw_deg": 3.4458136251153175
-        },
-        "odom_err": {
-          "pos_mm": 162.631416902571,
-          "yaw_deg": -10.239819087894848
-        },
-        "raw_err": {
-          "pos_mm": 275.60997783639186,
-          "yaw_deg": -20.29517660814028
-        }
-      }
-    },
-    "note": "val_20261010_235250 was recorded with this model active; tools invert it to recover the firmware speeds."
+  "driver_state": {
+    "running": "ad78440 launch defaults (offset_v2) until the Jetson is updated",
+    "pending": "set launch defaults to the values above"
   },
   "reference": "Base motion between stops from G2 scan matching with base_link <- laser_frame of ../base_2dlidar",
   "team_segments_scale_fit": [
@@ -588,6 +710,6 @@
     }
   },
   "bag_storage": "Jetson sparo@ubuntu:~/tracer_ws/calibration_bags/g2_scan_only_20261010_230526 (rosbag2 sqlite3; /scan /odom /tf /tracer_status; recorded by the team, stop-and-go)",
-  "applied_in": "tracer_ros2 (agilexrobotics) local branch odom-correction on the Jetson, commits c10aa90 + ad78440; see 0001-tracer-odom-correction.patch",
-  "not_corrected": "Commanded /cmd_vel is passed to the firmware unchanged; the robot moves faster/turns more than commanded by about the same offsets."
+  "applied_in": "tracer_ros2 (agilexrobotics) local branch odom-correction on the Jetson; see 0001-tracer-odom-correction.patch",
+  "not_corrected": "Commanded /cmd_vel is passed to the firmware unchanged; command-to-motion was not measured."
 }

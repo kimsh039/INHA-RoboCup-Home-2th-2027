@@ -76,8 +76,9 @@ def main():
         raise ValueError('Base–Mid360 record was derived from a different Base–2D LiDAR record; regenerate it')
     # Provisional physical quality limits (mm / deg).
     consistency, holdout = lidar['consistency'], mid['holdout']['final_deployed']
-    if (consistency['cw_ccw_centre_difference_mm'] > 5.0 or consistency['forward_reverse_yaw_difference_deg'] > 0.2
-            or holdout['med_cm'] * 10 > 10.0 or holdout['p90_cm'] * 10 > 25.0 or mid['floor']['std']['pitch_deg'] > 0.5):
+    checks = [(consistency['cw_ccw_centre_difference_mm'], 5.0), (consistency['forward_reverse_yaw_difference_deg'], 0.2),
+              (holdout['med_cm'] * 10, 10.0), (holdout['p90_cm'] * 10, 25.0), (mid['floor']['std']['pitch_deg'], 0.5)]
+    if not all(np.isfinite(value) and value <= limit for value, limit in checks):
         raise ValueError('Physical LiDAR calibration is outside the provisional quality limits')
     head_input = RECORDS / '20261006_head_mid360/results/automated_01/head_mid360.json'
     wrist_input = RECORDS / '20261006_wrist_d435/results/flange_wrist.json'

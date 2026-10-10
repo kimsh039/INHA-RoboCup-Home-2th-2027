@@ -1113,5 +1113,71 @@
         "rms": 4.542478112949727
       }
     }
+  },
+  "angular_offset_thresholds": {
+    "0.001": {
+      "team": {
+        "c_w": 0.045838207527577224,
+        "rot_rms_deg": 2.7585647860510596,
+        "straight_rms_deg": 3.0770928928048584,
+        "uncorr_rot_rms_deg": 15.918560807483301,
+        "uncorr_straight_rms_deg": 1.1157899958948065
+      },
+      "val": {
+        "c_w": 0.05264466151086906,
+        "rot_rms_deg": 1.6232381421852615,
+        "straight_rms_deg": 3.648693649804646,
+        "uncorr_rot_rms_deg": 10.961336149540777,
+        "uncorr_straight_rms_deg": 0.9764622942834881
+      }
+    },
+    "0.02": {
+      "team": {
+        "c_w": 0.0490018196712584,
+        "rot_rms_deg": 1.9944866833803399,
+        "straight_rms_deg": 1.8110514350610134,
+        "uncorr_rot_rms_deg": 15.918560807483301,
+        "uncorr_straight_rms_deg": 1.1157899958948065
+      },
+      "val": {
+        "c_w": 0.05410492877424893,
+        "rot_rms_deg": 1.701434620204995,
+        "straight_rms_deg": 1.41588963104762,
+        "uncorr_rot_rms_deg": 10.961336149540777,
+        "uncorr_straight_rms_deg": 0.9764622942834881
+      }
+    },
+    "0.03": {
+      "team": {
+        "c_w": 0.0490018196712584,
+        "rot_rms_deg": 1.9944866833803399,
+        "straight_rms_deg": 1.8110514350610134,
+        "uncorr_rot_rms_deg": 15.918560807483301,
+        "uncorr_straight_rms_deg": 1.1157899958948065
+      },
+      "val": {
+        "c_w": 0.05410492877424893,
+        "rot_rms_deg": 1.701434620204995,
+        "straight_rms_deg": 1.41588963104762,
+        "uncorr_rot_rms_deg": 10.961336149540777,
+        "uncorr_straight_rms_deg": 0.9764622942834881
+      }
+    },
+    "0.04": {
+      "team": {
+        "c_w": 0.0505696262787761,
+        "rot_rms_deg": 1.688082664903108,
+        "straight_rms_deg": 1.3843290979443288,
+        "uncorr_rot_rms_deg": 15.918560807483301,
+        "uncorr_straight_rms_deg": 1.1157899958948065
+      },
+      "val": {
+        "c_w": 0.0540891538239263,
+        "rot_rms_deg": 1.4598814640832318,
+        "straight_rms_deg": 1.2036639500802513,
+        "uncorr_rot_rms_deg": 10.961336149540777,
+        "uncorr_straight_rms_deg": 0.9764622942834881
+      }
+    }
   }
 }

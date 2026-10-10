@@ -79,11 +79,11 @@ for kind, models in [('yaw', ['scale', 'scale+bias', 'offset', 'scale+offset']),
         u = '°' if kind == 'yaw' else 'mm'
         print(f"{kind:4s} {model:13s} | team->val: params {np.round(row['fit_team']['params'],5).tolist()} in {row['fit_team']['rms_in']:.2f}{u} out {row['fit_team']['rms_out']:.2f}{u} "
               f"| val->team: params {np.round(row['fit_val']['params'],5).tolist()} in {row['fit_val']['rms_in']:.2f}{u} out {row['fit_val']['rms_out']:.2f}{u} | both {np.round(pj,5).tolist()} rms {row['fit_both']['rms']:.2f}{u}")
-json.dump(dict(team_segments=team, val_segments=val, models=res), open(ARGS[2], 'w'), indent=2)
 
 # angular offset only above a |w_rep| threshold (straight-line blips of one step excluded); per motion type
 print()
 print('angular offset with threshold (fit on one session, test on the other), RMS per segment [rotation | straight]:')
+thr_res = {}
 for t in THRS:
     out = {}
     for tr_name, tr, te in [('team', team, val), ('val', val, team)]:
@@ -92,5 +92,10 @@ for t in THRS:
         e = lambda S: float(np.degrees(np.sqrt(np.mean([(s['th_rep'] + c * s['Tw_thr'][str(t)] - s['th_scan']) ** 2 for s in S])))) if S else float('nan')
         e0 = lambda S: float(np.degrees(np.sqrt(np.mean([(s['th_rep'] - s['th_scan']) ** 2 for s in S])))) if S else float('nan')
         out[tr_name] = (c, e(rot), e(stg), e0(rot), e0(stg))
+    thr_res[str(t)] = {k: dict(zip(('c_w', 'rot_rms_deg', 'straight_rms_deg', 'uncorr_rot_rms_deg', 'uncorr_straight_rms_deg'), v)) for k, v in out.items()}
     print(f"  thr {t:.3f}: team->val c={out['team'][0]:.4f} rot {out['team'][1]:.2f}° str {out['team'][2]:.2f}°  |  val->team c={out['val'][0]:.4f} rot {out['val'][1]:.2f}° str {out['val'][2]:.2f}°"
           f"   (uncorrected: val rot {out['team'][3]:.2f}° str {out['team'][4]:.2f}° / team rot {out['val'][3]:.2f}° str {out['val'][4]:.2f}°)")
+
+# Note: the distance models above compare the path length with the net scan displacement and are only
+# indicative; the deployed linear offset is fitted by SE(2) integration in odom_fit_se2.py.
+json.dump(dict(team_segments=team, val_segments=val, models=res, angular_offset_thresholds=thr_res), open(ARGS[2], 'w'), indent=2)

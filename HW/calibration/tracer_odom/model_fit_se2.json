@@ -1,0 +1,298 @@
+{
+  "uncorrected": {
+    "team": {
+      "trans_rms_mm": 20.244826356133437,
+      "trans_rms_straight_mm": 30.7620269732423,
+      "yaw_rms_rot_deg": 10.961336149540777,
+      "yaw_rms_straight_deg": 0.9764622942834881
+    },
+    "val": {
+      "trans_rms_mm": 19.499605864910787,
+      "trans_rms_straight_mm": 28.271823054071834,
+      "yaw_rms_rot_deg": 15.918560807483301,
+      "yaw_rms_straight_deg": 1.1157899958948065
+    }
+  },
+  "thresholds": {
+    "0.02": {
+      "team_to_val": {
+        "c_v": 0.007379712543806737,
+        "c_w": 0.0490018196712584,
+        "train": {
+          "trans_rms_mm": 4.326899313583961,
+          "trans_rms_straight_mm": 4.329663493545881,
+          "yaw_rms_rot_deg": 1.3084496535743007,
+          "yaw_rms_straight_deg": 1.370844494180461
+        },
+        "test": {
+          "trans_rms_mm": 7.522888197036861,
+          "trans_rms_straight_mm": 9.995982820951399,
+          "yaw_rms_rot_deg": 1.9944866833803336,
+          "yaw_rms_straight_deg": 1.8110514350610138
+        }
+      },
+      "val_to_team": {
+        "c_v": 0.008008432901468,
+        "c_w": 0.05410492877424893,
+        "train": {
+          "trans_rms_mm": 7.584247576246653,
+          "trans_rms_straight_mm": 10.051364747320308,
+          "yaw_rms_rot_deg": 1.2262039590372782,
+          "yaw_rms_straight_deg": 1.888768500589122
+        },
+        "test": {
+          "trans_rms_mm": 4.6857765699992,
+          "trans_rms_straight_mm": 4.86938569029095,
+          "yaw_rms_rot_deg": 1.7014346202050068,
+          "yaw_rms_straight_deg": 1.41588963104762
+        }
+      },
+      "both": {
+        "c_v": 0.007559524883645549,
+        "c_w": 0.051376478329177896,
+        "team": {
+          "trans_rms_mm": 4.373595430744225,
+          "trans_rms_straight_mm": 4.355381056922917,
+          "yaw_rms_rot_deg": 1.3947251701132897,
+          "yaw_rms_straight_deg": 1.3917414585739654
+        },
+        "val": {
+          "trans_rms_mm": 7.546531776298094,
+          "trans_rms_straight_mm": 10.022764877756535,
+          "yaw_rms_rot_deg": 1.5083344198999267,
+          "yaw_rms_straight_deg": 1.8471423855995206
+        },
+        "all": {
+          "trans_rms_mm": 5.685243165385732,
+          "trans_rms_straight_mm": 6.999333954687423,
+          "yaw_rms_rot_deg": 1.4335956336603357,
+          "yaw_rms_straight_deg": 1.5749164789702859
+        }
+      }
+    },
+    "0.04": {
+      "team_to_val": {
+        "c_v": 0.00737985877190739,
+        "c_w": 0.0505696262787761,
+        "train": {
+          "trans_rms_mm": 4.224277391150222,
+          "trans_rms_straight_mm": 4.0860633125934145,
+          "yaw_rms_rot_deg": 1.2613229034114366,
+          "yaw_rms_straight_deg": 1.1856260013994824
+        },
+        "test": {
+          "trans_rms_mm": 6.6440805251087465,
+          "trans_rms_straight_mm": 8.557357028439284,
+          "yaw_rms_rot_deg": 1.6880826649031002,
+          "yaw_rms_straight_deg": 1.3843290979443288
+        }
+      },
+      "val_to_team": {
+        "c_v": 0.008014492707153499,
+        "c_w": 0.0540891538239263,
+        "train": {
+          "trans_rms_mm": 6.534296665301675,
+          "trans_rms_straight_mm": 8.319208466604215,
+          "yaw_rms_rot_deg": 1.318353224081952,
+          "yaw_rms_straight_deg": 1.404299363809896
+        },
+        "test": {
+          "trans_rms_mm": 4.574413849621085,
+          "trans_rms_straight_mm": 4.614452075929637,
+          "yaw_rms_rot_deg": 1.4598814640832296,
+          "yaw_rms_straight_deg": 1.2036639500802513
+        }
+      },
+      "both": {
+        "c_v": 0.007561238342113479,
+        "c_w": 0.052263686092034696,
+        "team": {
+          "trans_rms_mm": 4.261810940864002,
+          "trans_rms_straight_mm": 4.088321732365862,
+          "yaw_rms_rot_deg": 1.3069768641919854,
+          "yaw_rms_straight_deg": 1.1942631908045946
+        },
+        "val": {
+          "trans_rms_mm": 6.589858337042062,
+          "trans_rms_straight_mm": 8.452624651906062,
+          "yaw_rms_rot_deg": 1.4315649859774195,
+          "yaw_rms_straight_deg": 1.3939249036973762
+        },
+        "all": {
+          "trans_rms_mm": 5.19382102344285,
+          "trans_rms_straight_mm": 6.072806251470527,
+          "yaw_rms_rot_deg": 1.3497845946844953,
+          "yaw_rms_straight_deg": 1.2714757544093034
+        }
+      }
+    },
+    "0.06": {
+      "team_to_val": {
+        "c_v": 0.00737966619593086,
+        "c_w": 0.05199956408823339,
+        "train": {
+          "trans_rms_mm": 4.134695269622916,
+          "trans_rms_straight_mm": 3.8638595083040155,
+          "yaw_rms_rot_deg": 1.268540208540937,
+          "yaw_rms_straight_deg": 1.080227737132828
+        },
+        "test": {
+          "trans_rms_mm": 6.310962001296039,
+          "trans_rms_straight_mm": 8.000009418890546,
+          "yaw_rms_rot_deg": 1.3335407331816664,
+          "yaw_rms_straight_deg": 1.1996171508655988
+        }
+      },
+      "val_to_team": {
+        "c_v": 0.008015748636545465,
+        "c_w": 0.05336654695709106,
+        "train": {
+          "trans_rms_mm": 6.145601576095129,
+          "trans_rms_straight_mm": 7.656897917681833,
+          "yaw_rms_rot_deg": 1.2682326337134955,
+          "yaw_rms_straight_deg": 1.201912745769356
+        },
+        "test": {
+          "trans_rms_mm": 4.477782029798909,
+          "trans_rms_straight_mm": 4.386890831183731,
+          "yaw_rms_rot_deg": 1.29835501273853,
+          "yaw_rms_straight_deg": 1.0834810422664924
+        }
+      },
+      "both": {
+        "c_v": 0.007561448487119919,
+        "c_w": 0.052686114746839215,
+        "team": {
+          "trans_rms_mm": 4.165334048313633,
+          "trans_rms_straight_mm": 3.8476281620102375,
+          "yaw_rms_rot_deg": 1.275611941217752,
+          "yaw_rms_straight_deg": 1.0818586643227328
+        },
+        "val": {
+          "trans_rms_mm": 6.230610843071806,
+          "trans_rms_straight_mm": 7.847228372683557,
+          "yaw_rms_rot_deg": 1.2851933904179682,
+          "yaw_rms_straight_deg": 1.2007695396297986
+        },
+        "all": {
+          "trans_rms_mm": 4.983946061338375,
+          "trans_rms_straight_mm": 5.660127679462253,
+          "yaw_rms_rot_deg": 1.2788137341469599,
+          "yaw_rms_straight_deg": 1.1271284064046474
+        }
+      }
+    },
+    "0.08": {
+      "team_to_val": {
+        "c_v": 0.007379537593556954,
+        "c_w": 0.053435004953082156,
+        "train": {
+          "trans_rms_mm": 4.042748182372357,
+          "trans_rms_straight_mm": 3.630465248154477,
+          "yaw_rms_rot_deg": 1.3844813044107482,
+          "yaw_rms_straight_deg": 0.9764622942834881
+        },
+        "test": {
+          "trans_rms_mm": 6.118114668907004,
+          "trans_rms_straight_mm": 7.672028960305165,
+          "yaw_rms_rot_deg": 1.301911497351111,
+          "yaw_rms_straight_deg": 1.1303261220076521
+        }
+      },
+      "val_to_team": {
+        "c_v": 0.008016929942553923,
+        "c_w": 0.05380011787110267,
+        "train": {
+          "trans_rms_mm": 5.937466814537299,
+          "trans_rms_straight_mm": 7.294755873366018,
+          "yaw_rms_rot_deg": 1.297368089386571,
+          "yaw_rms_straight_deg": 1.1304362087844904
+        },
+        "test": {
+          "trans_rms_mm": 4.39097067634403,
+          "trans_rms_straight_mm": 4.178302934641897,
+          "yaw_rms_rot_deg": 1.3864734267941823,
+          "yaw_rms_straight_deg": 0.9764622942834881
+        }
+      },
+      "both": {
+        "c_v": 0.00756169842851003,
+        "c_w": 0.05362201123511609,
+        "team": {
+          "trans_rms_mm": 4.07236716491274,
+          "trans_rms_straight_mm": 3.6090867517631766,
+          "yaw_rms_rot_deg": 1.3850041871979784,
+          "yaw_rms_straight_deg": 0.9764622942834881
+        },
+        "val": {
+          "trans_rms_mm": 6.0303170137068,
+          "trans_rms_straight_mm": 7.503527152816006,
+          "yaw_rms_rot_deg": 1.298471651277827,
+          "yaw_rms_straight_deg": 1.130382489078719
+        },
+        "all": {
+          "trans_rms_mm": 4.846067046947835,
+          "trans_rms_straight_mm": 5.38236166279,
+          "yaw_rms_rot_deg": 1.356773356937214,
+          "yaw_rms_straight_deg": 1.0358341501875135
+        }
+      }
+    },
+    "0.1": {
+      "team_to_val": {
+        "c_v": 0.007379665987823147,
+        "c_w": 0.05590497650666698,
+        "train": {
+          "trans_rms_mm": 4.04094740249064,
+          "trans_rms_straight_mm": 3.630396759129332,
+          "yaw_rms_rot_deg": 1.6826737971086307,
+          "yaw_rms_straight_deg": 0.9764622942834881
+        },
+        "test": {
+          "trans_rms_mm": 5.994610148380397,
+          "trans_rms_straight_mm": 7.459531007296129,
+          "yaw_rms_rot_deg": 1.4078227443922258,
+          "yaw_rms_straight_deg": 1.0945334727504648
+        }
+      },
+      "val_to_team": {
+        "c_v": 0.008017400835061694,
+        "c_w": 0.05446276059427391,
+        "train": {
+          "trans_rms_mm": 5.807875041760228,
+          "trans_rms_straight_mm": 7.064693676783906,
+          "yaw_rms_rot_deg": 1.343312275381119,
+          "yaw_rms_straight_deg": 1.0950668288467897
+        },
+        "test": {
+          "trans_rms_mm": 4.389080180193758,
+          "trans_rms_straight_mm": 4.179278028729312,
+          "yaw_rms_rot_deg": 1.705716656923215,
+          "yaw_rms_straight_deg": 0.9764622942834881
+        }
+      },
+      "both": {
+        "c_v": 0.007561941203182406,
+        "c_w": 0.05513986050906675,
+        "team": {
+          "trans_rms_mm": 4.070300791655628,
+          "trans_rms_straight_mm": 3.6091600738129035,
+          "yaw_rms_rot_deg": 1.6891908866640026,
+          "yaw_rms_straight_deg": 0.9764622942834881
+        },
+        "val": {
+          "trans_rms_mm": 5.903829134336708,
+          "trans_rms_straight_mm": 7.283024913159963,
+          "yaw_rms_rot_deg": 1.3578886461515824,
+          "yaw_rms_straight_deg": 1.0948163248430551
+        },
+        "all": {
+          "trans_rms_mm": 4.790285071089708,
+          "trans_rms_straight_mm": 5.2696229789277425,
+          "yaw_rms_rot_deg": 1.5864628663082343,
+          "yaw_rms_straight_deg": 1.0216628046548342
+        }
+      }
+    }
+  }
+}

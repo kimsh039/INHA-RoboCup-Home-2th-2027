@@ -297,15 +297,21 @@
     ],
     "mean_mm": 1333.0994327024528,
     "std_mm": 1.7243417561695187,
-    "uncertainty": "floor-consistent; absolute sensor origin not independently verified"
+    "uncertainty": "floor-consistent; agrees with tape + documented Livox origin offset within ~5 mm"
   },
   "tape": {
     "mid360_housing_centre_above_floor_m": 1.355,
     "g2_above_floor_m": 0.4811,
     "drive_axle_above_floor_m": 0.06,
-    "mid360_z_from_tape_m": 1.2125,
-    "difference_floor_minus_tape_mm": -21.90056729754719,
-    "note": "Tape was taken to the housing centre; the Livox point origin offset from it is not documented here. The floor-consistent z is applied; the difference remains open."
+    "livox_origin": {
+      "source": "Livox Mid-360 User Manual v1.2 (Appendix) and Mid-360S User Manual v1.0 p.16: point-cloud origin 47.0 mm from the mounting face, housing height 60 mm",
+      "offset_from_housing_centre_mm": 17.0,
+      "mounting": "upside down: origin 17 mm below the housing centre"
+    },
+    "mid360_origin_above_floor_from_tape_m": 1.338,
+    "mid360_z_from_tape_m": 1.1955,
+    "difference_floor_minus_tape_mm": -4.900567297547287,
+    "note": "With the documented origin offset the floor-derived z agrees with the tape within ~5 mm (tape centring / plane-fit level). The floor-consistent z is applied."
   },
   "imu_check": {
     "pose01": 0.543830533793839,

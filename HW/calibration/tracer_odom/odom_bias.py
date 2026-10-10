@@ -1,3 +1,4 @@
+# 이전 배율+치우침 모델(c10aa90) 계산용. 이동 판정 0.004/0.008은 그 모델의 값이며 현재 offset 모델과 다릅니다.
 # 사용: python3 odom_bias.py <bag_root> <odom_scale.json> <out_odom_bias.json>
 import math, json, numpy as np
 import sys

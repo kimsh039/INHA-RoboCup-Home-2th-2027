@@ -44,7 +44,7 @@
   "sources": [
     {
       "path": "base_mid360.json",
-      "sha256": "990386225ed22a5c645b5fad91ad68139a652a8161f39aff7088b6f498e26c42",
+      "sha256": "a5d588a7b0870ddad928825cef4a8c8d9b3ff543d1e6ad6a6c5990ed51b49cec",
       "status": "physical_cross_validated",
       "inverted": false
     },
@@ -58,7 +58,7 @@
   "contains_nominal_reference": true,
   "independent_measurement": false,
   "source_sha256": [
-    "990386225ed22a5c645b5fad91ad68139a652a8161f39aff7088b6f498e26c42",
+    "a5d588a7b0870ddad928825cef4a8c8d9b3ff543d1e6ad6a6c5990ed51b49cec",
     "3e29ded5bc3506d0004eebe230515793d76280b2f584d83e962343ae82d56e16"
   ]
 }
