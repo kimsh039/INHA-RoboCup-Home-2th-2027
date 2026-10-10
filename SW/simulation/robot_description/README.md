@@ -1,6 +1,8 @@
 # Robot description and integrated runtime
 
-**Current runtime: [robocup.calibrated.urdf](robocup.calibrated.urdf), updated 2026-10-07.** It combines recorded Gazebo sensor estimates, the explicit URDF arm mount reference and the completed MuJoCo TCP pivot. [robocup.urdf](robocup.urdf) remains the nominal CAD model used by the Gazebo generator.
+**Current runtime: [robocup.calibrated.urdf](robocup.calibrated.urdf), updated 2026-10-10 with the selected 15° downward Head camera mount.** [robocup.urdf](robocup.urdf), the nominal CAD model used by the Gazebo generator, uses the same actual Fusion mount geometry and camera pose. Both models also update the rack mass/inertia, mount collision box and Gazebo RGB/depth poses. Arm, wrist camera, LiDAR and other robot parts are preserved.
+
+Nominal rack→Head: xyz=(-0.120666320, 0.001250000, 1.260689017) m, pitch=+0.261799387799 rad. The calibrated runtime applies the same CAD rigid delta to the previous Head hand-eye estimate; it is **not a new 15° hand-eye calibration**. Original solver residuals below remain historical. [Fusion export, application and validation](../../../HW/URDF/sensor_rack_description/camera_mount_15/README.md) record the selected model and the previous revision.
 
 The runtime has 95 links and 94 joints, including the new fixed `tcp` frame. Detailed numerical results, source hashes, application history and limits are in the [calibration summary](../calibration/README.md) and [integration bundle](../calibration/records/integrated_calibration/README.md).
 
@@ -11,7 +13,7 @@ The runtime has 95 links and 94 joints, including the new fixed `tcp` frame. Det
 | Base←2D LiDAR | Recorded room scan estimate, x/y/yaw; z/roll/pitch fixed |
 | Base←Mid360 | Recorded 3D room-plane estimate |
 | Base←PiPER | URDF reference: xyz=(-0.0195, 0, 0.80611) m, no rotation |
-| Base←Head | New measured Head–PiPER hand-eye composed through the nominal PiPER mount |
+| Base←Head | Recorded Head–PiPER hand-eye composed through the PiPER mount, then moved by the selected 15° CAD mount delta |
 | Link6←Wrist optical | Recorded Wrist hand-eye estimate |
 | Link6←TCP | Actual stepped MuJoCo joints + fixed-point pivot, 25 train / 10 holdout; xyz≈(0, 0, 0.1425) m, axes defined parallel to Link6 |
 
@@ -52,7 +54,7 @@ conda activate ros_jazzy
 
 Use one robot-state publisher for this robot. `joints:=true` reads actual Gazebo joint states; changing the ROS URDF does not change an already running Gazebo world. This launch does not start sensor bridges, SLAM, Nav2 or Gazebo. Nominal simulation generation and calibrated ROS estimation are separate model uses.
 
-Rebuild the recorded runtime with `SW/simulation/calibration/.venv/bin/python SW/simulation/calibration/integrate_calibration.py --replace`. Input sessions are preserved. No ROS/RViz launch or post-work verification was performed in the current update.
+Rebuild the recorded runtime with `SW/simulation/calibration/.venv/bin/python SW/simulation/calibration/integrate_calibration.py --replace`. Input sessions are preserved. [head_mount_delta.json](head_mount_delta.json) keeps the selected 15° mount when applying the older Head observations. The script verifies the observation identities and nominal camera pose to prevent applying this delta to a new calibration. After collecting a new Head calibration on this mount, update/remove this delta record before rebuilding. Static model checks and actual regeneration passed; ROS/RViz was not launched on Windows.
 
 ## Historical measurements
 

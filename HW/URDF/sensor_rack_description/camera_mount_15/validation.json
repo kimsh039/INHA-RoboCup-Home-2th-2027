@@ -1,0 +1,27 @@
+{
+  "baseline": "3618afc",
+  "status": "PASS",
+  "checks": {
+    "robocup.urdf": {
+      "links": 94,
+      "joints": 93,
+      "tree": "PASS",
+      "meshes": "PASS",
+      "positive_inertias": "PASS",
+      "camera_sensor_agreement": "PASS",
+      "other_links_and_joints_preserved": "PASS"
+    },
+    "robocup.calibrated.urdf": {
+      "links": 95,
+      "joints": 94,
+      "tree": "PASS",
+      "meshes": "PASS",
+      "positive_inertias": "PASS",
+      "camera_sensor_agreement": "PASS",
+      "other_links_and_joints_preserved": "PASS"
+    }
+  },
+  "unchanged_mesh_files": 30,
+  "fusion_delta_deg": 15.000000000000018,
+  "preserved_rack_bodies": 50
+}

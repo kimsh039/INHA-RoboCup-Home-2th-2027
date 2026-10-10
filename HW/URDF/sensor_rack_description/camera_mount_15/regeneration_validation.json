@@ -1,0 +1,9 @@
+{
+  "status": "PASS",
+  "all_joint_and_sensor_coordinates_match": true,
+  "maximum_absolute_component_difference": 2.2737367544323206e-13,
+  "historical_measurement_records_preserved": true,
+  "new_head_calibration_performed": false,
+  "changed_head_observations_rejected": true,
+  "mismatched_nominal_mount_rejected": true
+}

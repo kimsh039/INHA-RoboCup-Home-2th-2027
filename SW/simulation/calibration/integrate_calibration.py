@@ -5,6 +5,7 @@ This performs the requested transform composition/application. It does not run R
 Gazebo, tests, or an independent accuracy check. Original measurements are preserved.
 """
 import argparse
+import hashlib
 import json
 from pathlib import Path
 from types import SimpleNamespace
@@ -94,6 +95,31 @@ def main():
                output=results / 'head_path_difference.json')
         selected_head = 'base_head_via_arm.json' if head_arm_usable else 'base_head_via_lidar.json'
         shutil.copy2(results / selected_head, results / 'base_head.json')
+        # Recorded hand-eye observations predate the selected CAD mount. Move their
+        # Head frame by the same rack-space rigid delta used for the nominal model.
+        # Verify the observation identities so a future new calibration is never
+        # silently tilted a second time.
+        head_mount = None
+        mount_path = DESCRIPTION / 'head_mount_delta.json'
+        if mount_path.exists():
+            head_mount = workflow.read(mount_path)
+            for relative, expected in head_mount['head_measurement_sources'].items():
+                canonical = json.dumps(workflow.read(RECORDS / relative), sort_keys=True,
+                                       separators=(',', ':'), allow_nan=False).encode()
+                if hashlib.sha256(canonical).hexdigest() != expected:
+                    raise ValueError('Head measurements changed; update/remove head_mount_delta.json for the new mount calibration')
+            camera = workflow.fixed_fk(root, 'rack_base_link', 'camera_link')
+            if not np.allclose(camera, workflow.se3(head_mount['camera_new_rack_frame']), atol=1e-9, rtol=0):
+                raise ValueError('Nominal Head mount differs from head_mount_delta.json')
+            rack = workflow.fixed_fk(root, 'base_link', 'rack_base_link')
+            delta = rack @ workflow.se3(head_mount['old_to_new_rack_transform']) @ np.linalg.inv(rack)
+            recorded, measured = workflow.result(results / 'base_head.json')
+            (results / 'base_head.json').rename(results / 'base_head_recorded.json')
+            workflow.write(results / 'base_head.json', workflow.transform(
+                delta @ measured, recorded['parent_frame'], recorded['child_frame'],
+                status='cad_mount_delta_applied', independent_measurement=False,
+                method='Rigid CAD mount delta applied to historical Head hand-eye; not a new calibration',
+                recorded_transform='base_head_recorded.json', mount_change=head_mount))
         # Express a coherent Head–Mid360 transform from the selected Head runtime chain.
         # Keep the independently fitted plane estimate under its recorded name.
         invoke('compose', left=results / 'base_head.json', right=results / 'base_mid360.json',
@@ -121,12 +147,17 @@ def main():
             tree.write(staged_runtime, encoding='utf-8', xml_declaration=True)
             tcp_application = workflow.read(str(staged_runtime) + '.application.json')
             tcp_application['runtime_urdf_sha256'] = workflow.sha(staged_runtime)
+            head_selection = 'independent_head_arm_handeye' if head_arm_usable else 'recorded_head_lidar_plane_estimate'
+            if head_mount:
+                head_selection = 'recorded_head_arm_handeye_with_cad_mount_delta' if head_arm_usable else 'recorded_head_lidar_with_cad_mount_delta'
             summary = {
                 'status': 'simulation_calibration_integrated',
                 'transform_convention': 'parent <- child, metres',
                 'runtime': 'SW/simulation/robot_description/' + runtime.name, 'runtime_path_basis': 'repository_root', 'runtime_urdf_sha256': workflow.sha(staged_runtime),
                 'nominal_urdf_sha256': workflow.sha(nominal),
-                'head_selection': 'independent_head_arm_handeye' if head_arm_usable else 'recorded_head_lidar_plane_estimate',
+                'head_selection': head_selection,
+                'head_mount_change': head_mount,
+                'head_solver_metrics_basis': 'Historical original-mount measurements; no new mount calibration.' if head_mount else 'Recorded selected Head measurements.',
                 'head_arm_solver_holdout': {
                     'train_count': handeye['training_count'], 'holdout_count': handeye['holdout_count'],
                     'max_translation_mm': handeye['max_holdout_translation_m'] * 1000,

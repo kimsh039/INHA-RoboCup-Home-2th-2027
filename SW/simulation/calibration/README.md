@@ -1,5 +1,7 @@
 # Calibration summary
 
+2026-10-10: the default nominal and calibrated URDFs now use the selected **15° downward Head mount** from Fusion. The calibrated Head pose applies its CAD rigid delta to the historical observations below; these solver residuals are not a new 15° calibration. [Current model and regeneration behavior](../robot_description/README.md) · [Mount provenance and validation](../../../HW/URDF/sensor_rack_description/camera_mount_15/README.md).
+
 2026-10-07 · Gazebo sensor calibration + MuJoCo TCP pivot · Head/Wrist cameras: D435
 
 `robocup.calibrated.urdf` now includes both LiDAR estimates, the URDF PiPER mount reference, the newly measured Head–PiPER hand-eye estimate, the existing Wrist hand-eye estimate, and a TCP estimated from actual stepped MuJoCo joint states in a fixed virtual socket. This is a combination of simulation measurements and model references. Physical calibration is not established.

@@ -256,9 +256,9 @@
   </material>
   <link name="rack_base_link">
     <inertial>
-      <origin xyz="-0.0613449679927 1.95799984958e-06 0.483339112315" rpy="0 0 0" />
-      <mass value="15.6463681034" />
-      <inertia ixx="2.70719432602" iyy="2.4886657896" izz="0.712004088347" ixy="-1.15004984566e-07" iyz="-2.91411524787e-06" ixz="0.359336877927" />
+      <origin xyz="-0.0615964826734 1.9524221084e-06 0.485636652647" rpy="0 0 0" />
+      <mass value="15.6921304573" />
+      <inertia ixx="2.73555362212" iyy="2.5173319428" izz="0.712378403485" ixy="-1.22525520479e-07" iyz="-2.84531857896e-06" ixz="0.362436108289" />
     </inertial>
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0" />
@@ -568,9 +568,9 @@
       </geometry>
     </collision>
     <collision name="3D_LiDAR_Camera_mount_1_body1">
-      <origin xyz="-0.18 -2.61249355482e-15 1.26025" rpy="0 0 0" />
+      <origin xyz="-0.1763125 -3.16413562018e-15 1.26025" rpy="0 0 0" />
       <geometry>
-        <box size="0.065 0.12 0.0605" />
+        <box size="0.072375 0.12 0.0605" />
       </geometry>
     </collision>
   </link>
@@ -659,7 +659,7 @@
   <joint name="camera_link_joint" type="fixed">
     <parent link="rack_base_link" />
     <child link="camera_link" />
-    <origin xyz="-0.12722342972197517 -0.001716274462443348 1.2689368986951095" rpy="0.0037066991262989625 -0.0043934350517067511 0.0014976471610455334" />
+    <origin xyz="-0.123137435139 -0.000466274462443 1.26025054702" rpy="0.00410752431423 0.257405652603 0.00154865523456" />
   </joint>
   <link name="cad_2D_LiDARMount_1" />
   <joint name="cad_2D_LiDARMount_1_joint" type="fixed">
@@ -719,7 +719,7 @@
   <joint name="cad_D435f_Solid_v1_1_joint" type="fixed">
     <parent link="rack_base_link" />
     <child link="cad_D435f_Solid_v1_1" />
-    <origin xyz="-0.12495 -2.611244554e-15 1.27" rpy="1.57079632679 1.25108409187e-29 1.57079632679" />
+    <origin xyz="-0.120666319792 0.00125 1.26068901712" rpy="1.83259571459 1.2669865157e-12 1.57079632679" />
   </joint>
   <link name="laser_frame" />
   <joint name="laser_frame_joint" type="fixed">
@@ -1194,7 +1194,7 @@
       </lidar>
     </sensor>
     <sensor name="d435f_depth" type="depth_camera">
-      <pose>-0.12495 0 1.27 0 0 0</pose>
+      <pose>-0.120666319792 0.00125 1.26068901712 5.29217496717e-18 0.261799387799 -1.34215948492e-17</pose>
       <topic>/robocup/camera/depth/image</topic>
       <gz_frame_id>camera_optical_frame</gz_frame_id>
       <always_on>true</always_on>
@@ -1214,7 +1214,7 @@
       </camera>
     </sensor>
     <sensor name="d435f_color" type="camera">
-      <pose>-0.12495 0 1.27 0 0 0</pose>
+      <pose>-0.120666319792 0.00125 1.26068901712 5.29217496717e-18 0.261799387799 -1.34215948492e-17</pose>
       <topic>/robocup/camera/color/image</topic>
       <gz_frame_id>camera_optical_frame</gz_frame_id>
       <always_on>true</always_on>
@@ -1528,4 +1528,10 @@
     <child link="cad_bracket_36" />
     <origin xyz="-0.01 -0.0693408679762 0.761669546471" rpy="0 -1.57079632679 -2.66113378704e-16" />
   </joint>
-<link name="tcp" /><joint name="calibrated_tcp_joint" type="fixed"><parent link="piper_link6" /><child link="tcp" /><origin xyz="3.1410601675219113e-09 -6.041407414281427e-10 0.14250000226360077" rpy="0.0 0.0 0.0" /></joint></robot>
+  <link name="tcp" />
+  <joint name="calibrated_tcp_joint" type="fixed">
+    <parent link="piper_link6" />
+    <child link="tcp" />
+    <origin xyz="3.1410601675219113e-09 -6.041407414281427e-10 0.14250000226360077" rpy="0.0 0.0 0.0" />
+  </joint>
+</robot>

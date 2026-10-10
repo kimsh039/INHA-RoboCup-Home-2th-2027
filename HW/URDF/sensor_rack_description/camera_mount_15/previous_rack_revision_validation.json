@@ -1,0 +1,52 @@
+{
+  "date": "2026-10-06",
+  "status": "PASS",
+  "links": 94,
+  "joints": 93,
+  "unique_meshes": 32,
+  "inertial_links": 28,
+  "total_mass_kg": 50.96143334150711,
+  "rack_solid_bodies": 51,
+  "rack_mass_kg": 15.64636810338113,
+  "rack_mesh_triangles": 546644,
+  "rack_mesh_bounds_m": [
+    [
+      -0.21250000596046448,
+      -0.23499999940395355,
+      0.0
+    ],
+    [
+      0.20000000298023224,
+      0.23499999940395355,
+      1.2905000448226929
+    ]
+  ],
+  "rack_mesh_sha256": "a93ff6f19c28c98043b8a0d95e822354f114b0ce1dd8d53d554a2a0eb8af9c9e",
+  "piper_base_rack_m": [
+    -0.019500000000000187,
+    -2.0072832285222832e-15,
+    0.7900000000000003
+  ],
+  "piper_translation_change_m": [
+    -0.026251615090999998,
+    -7.638711048682558e-16,
+    -0.009000000000000008
+  ],
+  "preserved": "All Gazebo blocks; lidar/head camera world transforms; Piper and wrist relative transforms/rotation; internal joint origins/limits; other visual/inertial definitions. Non-target links and joints compared during update.",
+  "runtime_validation": "Not run: ROS/Gazebo on Windows. Prior simulation results are historical.",
+  "recheck": {
+    "status": "PASS",
+    "unchanged_non_target_elements": {
+      "link": 44,
+      "joint": 43
+    },
+    "dae_viewer_issue": "Local Three.js viewer added a -90 degree X rotation for all Z_UP DAE files, including Tracer and Piper. Undoing that loader rotation restores native mesh coordinates; URDF/DAE files were correct and unchanged for this issue.",
+    "tracer_visual_dimensions_m": [
+      0.6850168,
+      0.5699998192711457,
+      0.1302898741977636
+    ],
+    "browser_visual_check": "All 28 visual meshes loaded. Chassis horizontal and Piper links connected after viewer fix.",
+    "sensor_control_scripts": "No diff in simulation/tools, simulation/gazebo, simulation/ros2 or detection."
+  }
+}

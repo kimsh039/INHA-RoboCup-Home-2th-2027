@@ -3,9 +3,9 @@
   "transform_convention": "parent <- child, metres",
   "runtime": "SW/simulation/robot_description/robocup.calibrated.urdf",
   "runtime_path_basis": "repository_root",
-  "runtime_urdf_sha256": "9a13651e4459e3f16b925196347c6003e778930f26a16a07a3d790f1c2db773c",
-  "nominal_urdf_sha256": "19d65a7e711138d4be9b10abc0ebb1de185e8ccb41eaee54d8cdc41562bba414",
-  "head_selection": "independent_head_arm_handeye",
+  "runtime_urdf_sha256": "8298ae61332b40603122de0c470e9eeea7f620328662fca563777484fdfc58f6",
+  "nominal_urdf_sha256": "5b7d47200d819cf7cde8b334d1f2b3d57f7bf604ba82cbb5898fd66c4dea616e",
+  "head_selection": "recorded_head_arm_handeye_with_cad_mount_delta",
   "head_arm_solver_holdout": {
     "train_count": 25,
     "holdout_count": 10,
@@ -53,7 +53,7 @@
     "gripper opening/zero",
     "real sensor calibration"
   ],
-  "historical_head_plane_bias": "Recorded Head\u2013Mid360 plane estimate has 11.720 mm Gazebo GT position error; retained and not silently corrected.",
+  "historical_head_plane_bias": "Recorded Head–Mid360 plane estimate has 11.720 mm Gazebo GT position error; retained and not silently corrected.",
   "applications": [
     {
       "source_urdf_sha256": "19d65a7e711138d4be9b10abc0ebb1de185e8ccb41eaee54d8cdc41562bba414",
@@ -157,5 +157,77 @@
     "hardware_accuracy_established": false,
     "orientation_estimated": false,
     "application_only": true
-  }
+  },
+  "previous_runtime_urdf_sha256": "9a13651e4459e3f16b925196347c6003e778930f26a16a07a3d790f1c2db773c",
+  "head_mount_change": {
+    "baseline_commit": "3618afc",
+    "source_document": "final_assembly_fix",
+    "rotation_deg": 15.000000000000018,
+    "camera_new_rack_frame": [
+      [
+        0.9659258262890682,
+        2.775557561563215e-17,
+        0.2588190451025208,
+        -0.12066631979152745
+      ],
+      [
+        3.3986645259148207e-71,
+        0.9999999999999999,
+        -4.26296566734869e-31,
+        0.0012499999999974198
+      ],
+      [
+        -0.25881904510252085,
+        1.3877787807826542e-17,
+        0.9659258262890681,
+        1.260689017116834
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "old_to_new_rack_transform": [
+      [
+        0.9659258262890682,
+        2.775557561563215e-17,
+        0.2588190451025208,
+        -0.32867407507690954
+      ],
+      [
+        3.3986645259148207e-71,
+        0.9999999999999999,
+        -4.26296566734869e-31,
+        0.0012500000000000289
+      ],
+      [
+        -0.25881904510252085,
+        1.3877787807826542e-17,
+        0.9659258262890681,
+        0.0016237780441570315
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "camera_translation_delta_m": [
+      0.004283680208472862,
+      0.0012500000000000289,
+      -0.009310982883166341
+    ],
+    "calibration_status": "Experimental rigid CAD delta applied to previous calibration; new head mount has NOT been recalibrated.",
+    "frame": "rack_base_link",
+    "head_measurement_sources": {
+      "head_piper/results/piper_head.json": "71c34c3c43a805973cd22d4195e6b221ac0e300cc3d7cfd099992c4c17c48e7b",
+      "20261006_head_mid360/results/automated_01/head_mid360.json": "728e77495b651e0a3b34e4ba58ac57c0f183f4fcb3fcdd3ecf5ad109d0d1ec3a"
+    },
+    "head_measurement_hash_basis": "canonical_json"
+  },
+  "head_solver_metrics_basis": "Historical original-mount measurements; no new 15-degree hand-eye calibration.",
+  "model_static_verification_run": true
 }

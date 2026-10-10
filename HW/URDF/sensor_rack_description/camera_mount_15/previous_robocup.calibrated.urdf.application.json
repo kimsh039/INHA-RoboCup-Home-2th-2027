@@ -1,0 +1,161 @@
+{
+  "status": "simulation_calibration_integrated",
+  "transform_convention": "parent <- child, metres",
+  "runtime": "SW/simulation/robot_description/robocup.calibrated.urdf",
+  "runtime_path_basis": "repository_root",
+  "runtime_urdf_sha256": "9a13651e4459e3f16b925196347c6003e778930f26a16a07a3d790f1c2db773c",
+  "nominal_urdf_sha256": "19d65a7e711138d4be9b10abc0ebb1de185e8ccb41eaee54d8cdc41562bba414",
+  "head_selection": "independent_head_arm_handeye",
+  "head_arm_solver_holdout": {
+    "train_count": 25,
+    "holdout_count": 10,
+    "max_translation_mm": 0.2719070938268114,
+    "max_rotation_deg": 0.20290887718515954,
+    "within_provisional_limits": true,
+    "additional_validation_run": false
+  },
+  "head_path_difference": {
+    "translation_mm": 9.871364148017657,
+    "rotation_deg": 0.41367980308554475,
+    "left_sha256": "2366ac874178b0bf32c1463a89069ff4c3e4d8c3de46c7815b8d5dd2241ac5db",
+    "right_sha256": "8217e5e1cac4ec32ffa4fc8bc2ce9bd6403ffa12add0035ac44b6d07d6e7cff0"
+  },
+  "head_paths_share_nominal_arm_mount": true,
+  "base_piper_input_kind": "urdf_reference",
+  "tcp_input_kind": "simulated_constrained_joint_observations",
+  "tcp_definition": "Virtual probe at the symmetric CAD jaw-tip centre, attached rigidly to Link6 and seated in a fixed simulated point socket. TCP axes are defined parallel to Link6; orientation is not fitted.",
+  "tcp_solver_holdout": {
+    "train_count": 25,
+    "holdout_count": 10,
+    "max_translation_mm": 3.2105125636744076e-06,
+    "max_allowed_mm": 5.0,
+    "condition_number": 6.640699986712954,
+    "orientation_estimated": false,
+    "within_provisional_limits": true,
+    "additional_validation_run": false
+  },
+  "tcp_translation_xyz_m": [
+    3.1410601675219113e-09,
+    -6.041407414281427e-10,
+    0.14250000226360077
+  ],
+  "tcp_result_source_sha256": "909c49bc999fc587fbc65daa95e3ddefcc21df90dc738b17a3cd3d7d42d69982",
+  "tcp_simulation": true,
+  "tcp_independent_measurement": false,
+  "tcp_fixture_kind": "site-to-site point equality; virtual ball socket, not frictional surface contact",
+  "hardware_accuracy_established": false,
+  "ros_runtime_launched": false,
+  "post_work_verification_run": false,
+  "remaining_independent_measurements": [
+    "physical arm mount",
+    "physical TCP contact/pivot and tool axes",
+    "joint zero offsets, axes and link geometry",
+    "gripper opening/zero",
+    "real sensor calibration"
+  ],
+  "historical_head_plane_bias": "Recorded Head\u2013Mid360 plane estimate has 11.720 mm Gazebo GT position error; retained and not silently corrected.",
+  "applications": [
+    {
+      "source_urdf_sha256": "19d65a7e711138d4be9b10abc0ebb1de185e8ccb41eaee54d8cdc41562bba414",
+      "result_sha256": "9b76f0c73a539e1058aa18ec0ddda65f89831199e8548bc508cf383cb1fc5276",
+      "runtime_urdf_sha256": "c3411b742cbf540a0bff010cea112b39661ac737330f932ad78560e4e428877d",
+      "joint": "laser_frame_joint",
+      "origin_xyz": [
+        -5.1389834908760446e-05,
+        0.0005205163555950081,
+        0.0
+      ],
+      "origin_rpy": [
+        0.0,
+        0.0,
+        0.15437059215843318
+      ],
+      "composition_verified": true,
+      "acceptance": "User must review held-out validation before launching"
+    },
+    {
+      "source_urdf_sha256": "c3411b742cbf540a0bff010cea112b39661ac737330f932ad78560e4e428877d",
+      "result_sha256": "53fd478d044b8db6b66723e1a517245cf57ca638ae2ffb6d270a0b394459796c",
+      "runtime_urdf_sha256": "74ecd6952dd62dd33ff0d84f8d10c5c2e7a77af8c3106701d151cba1ae9bfd2c",
+      "joint": "livox_frame_joint",
+      "origin_xyz": [
+        3.773355003483525e-05,
+        0.00015620113972823895,
+        -0.00024318079626794997
+      ],
+      "origin_rpy": [
+        3.141528125640919,
+        2.050808065501286e-05,
+        -2.7091518517208257e-05
+      ],
+      "composition_verified": true,
+      "acceptance": "User must review held-out validation before launching"
+    },
+    {
+      "source_urdf_sha256": "74ecd6952dd62dd33ff0d84f8d10c5c2e7a77af8c3106701d151cba1ae9bfd2c",
+      "result_sha256": "99e47e2884cd9d71db27c311a22d3b00886132323a7432756c6a9b1aa858d0de",
+      "runtime_urdf_sha256": "25cd5ce8562e22bfcef3e69977f799ab6c2a85fa10620f4e2e400813ea581769",
+      "joint": "rack_to_piper_base",
+      "origin_xyz": [
+        -0.0195,
+        -2.00728322852e-15,
+        0.79
+      ],
+      "origin_rpy": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "composition_verified": true,
+      "acceptance": "User must review held-out validation before launching"
+    },
+    {
+      "source_urdf_sha256": "25cd5ce8562e22bfcef3e69977f799ab6c2a85fa10620f4e2e400813ea581769",
+      "result_sha256": "8217e5e1cac4ec32ffa4fc8bc2ce9bd6403ffa12add0035ac44b6d07d6e7cff0",
+      "runtime_urdf_sha256": "09e8102e079670eb0482c0fd8d52d6e28aabc35eb6191917d9203f6ae5d0f4c7",
+      "joint": "camera_link_joint",
+      "origin_xyz": [
+        -0.12722342972197517,
+        -0.001716274462443348,
+        1.2689368986951095
+      ],
+      "origin_rpy": [
+        0.0037066991262989625,
+        -0.004393435051706751,
+        0.0014976471610455334
+      ],
+      "composition_verified": true,
+      "acceptance": "User must review held-out validation before launching"
+    },
+    {
+      "source_urdf_sha256": "09e8102e079670eb0482c0fd8d52d6e28aabc35eb6191917d9203f6ae5d0f4c7",
+      "result_sha256": "48010d828e095cceaebfc7e4872170d6649143023161584e861382866f483afb",
+      "runtime_urdf_sha256": "fed3c1450cd868a4dd7bb31371838ab0755e6ecc74e3c734eccea922fad4dfb2",
+      "joint": "piper_to_wrist_camera_mount",
+      "origin_xyz": [
+        0.00021057778731321184,
+        0.0008128472829165156,
+        0.0072422552841638725
+      ],
+      "origin_rpy": [
+        -1.5721318918257796,
+        -0.0019379665882315322,
+        1.6152889735146658
+      ],
+      "composition_verified": true,
+      "acceptance": "User must review held-out validation before launching"
+    }
+  ],
+  "tcp_application": {
+    "result_sha256": "007aeca338208cc39d690a1b724eadc4d3b5586020f7f235031c4b07929edb1e",
+    "source_urdf_sha256": "fed3c1450cd868a4dd7bb31371838ab0755e6ecc74e3c734eccea922fad4dfb2",
+    "runtime_urdf_sha256": "9a13651e4459e3f16b925196347c6003e778930f26a16a07a3d790f1c2db773c",
+    "input_status": "passed_provisional_limits",
+    "input_kind": "simulated_constrained_joint_observations",
+    "simulation": true,
+    "independent_measurement": false,
+    "hardware_accuracy_established": false,
+    "orientation_estimated": false,
+    "application_only": true
+  }
+}
