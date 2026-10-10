@@ -365,8 +365,8 @@
     }
   },
   "driver_state": {
-    "running": "ad78440 launch defaults (offset_v2) until the Jetson is updated",
-    "pending": "set launch defaults to the values above"
+    "launch_defaults": "v3 (this record), tracer_ros2 commit 39c32a7, applied 2026-10-11 with set_launch_defaults.py",
+    "running_check": "printed at tracer_base start-up"
   },
   "reference": "Base motion between stops from G2 scan matching with base_link <- laser_frame of ../base_2dlidar",
   "team_segments_scale_fit": [

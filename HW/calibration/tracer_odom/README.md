@@ -32,9 +32,9 @@
 
 ## 적용
 
-Jetson `~/tracer_ws/src/tracer_ros2`(agilexrobotics 원본)의 로컬 브랜치 `odom-correction`, 커밋 `c10aa90`(배율·치우침 파라미터) + `ad78440`(offset 파라미터, launch 타입). 변경 내용은 [0001-tracer-odom-correction.patch](0001-tracer-odom-correction.patch)에 있습니다.
+Jetson `~/tracer_ws/src/tracer_ros2`(agilexrobotics 원본)의 로컬 브랜치 `odom-correction`, 커밋 `c10aa90`(배율·치우침 파라미터) + `ad78440`(offset 파라미터, launch 타입) + `39c32a7`(v3 기본값). 변경 내용은 [0001-tracer-odom-correction.patch](0001-tracer-odom-correction.patch)에 있습니다.
 
-> **현재 로봇의 launch 기본값은 v2(0.00443 / 0.0523 / 0.04)입니다.** v3로 바꾸려면 로봇에서 `python3 set_launch_defaults.py odom_calibration.json ~/tracer_ws/src/tracer_ros2/tracer_base/launch/tracer_base.launch.py` 후 커밋하고 `tracer_base`를 재시작합니다.
+> 2026-10-11 로봇의 launch 기본값을 v3로 바꿨습니다(커밋 `39c32a7`). 계수를 바꿀 때는 이 기록을 고친 뒤 로봇에서 `python3 set_launch_defaults.py odom_calibration.json ~/tracer_ws/src/tracer_ros2/tracer_base/launch/tracer_base.launch.py`, 커밋, `tracer_base` 재시작 순서로 합니다.
 
 - 파라미터: `linear_velocity_offset`, `angular_velocity_offset`, `angular_offset_threshold` (+ `linear_velocity_scale`, `angular_velocity_scale`, `angular_velocity_bias`). C++ 기본값은 모두 보정 없음입니다.
 - `tracer_base.launch.py` 기본값은 **이 로봇의 측정값**이라 평소 실행 명령으로 보정이 켜집니다(로봇 전용 작업공간). 공용 기본값을 끄고 로봇별 설정으로 켜는 방식으로 바꿀 수도 있습니다. launch 인자는 `float`로 고정해 `:=0`, `:=1`도 쓸 수 있습니다.
