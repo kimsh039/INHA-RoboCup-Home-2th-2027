@@ -1,164 +1,11 @@
 {
-  "status": "simulation_calibration_integrated",
+  "status": "physical_and_simulation_calibration_integrated",
   "transform_convention": "parent <- child, metres",
   "runtime": "SW/simulation/robot_description/robocup.calibrated.urdf",
   "runtime_path_basis": "repository_root",
-  "runtime_urdf_sha256": "8298ae61332b40603122de0c470e9eeea7f620328662fca563777484fdfc58f6",
+  "runtime_urdf_sha256": "7a2207ea6bcca1adbf17ff8f2b63c9bc3dbd95eed966d08bf93dbff161ec88b2",
   "nominal_urdf_sha256": "5b7d47200d819cf7cde8b334d1f2b3d57f7bf604ba82cbb5898fd66c4dea616e",
   "head_selection": "recorded_head_arm_handeye_with_cad_mount_delta",
-  "head_arm_solver_holdout": {
-    "train_count": 25,
-    "holdout_count": 10,
-    "max_translation_mm": 0.2719070938268114,
-    "max_rotation_deg": 0.20290887718515954,
-    "within_provisional_limits": true,
-    "additional_validation_run": false
-  },
-  "head_path_difference": {
-    "translation_mm": 9.871364148017657,
-    "rotation_deg": 0.41367980308554475,
-    "left_sha256": "2366ac874178b0bf32c1463a89069ff4c3e4d8c3de46c7815b8d5dd2241ac5db",
-    "right_sha256": "8217e5e1cac4ec32ffa4fc8bc2ce9bd6403ffa12add0035ac44b6d07d6e7cff0"
-  },
-  "head_paths_share_nominal_arm_mount": true,
-  "base_piper_input_kind": "urdf_reference",
-  "tcp_input_kind": "simulated_constrained_joint_observations",
-  "tcp_definition": "Virtual probe at the symmetric CAD jaw-tip centre, attached rigidly to Link6 and seated in a fixed simulated point socket. TCP axes are defined parallel to Link6; orientation is not fitted.",
-  "tcp_solver_holdout": {
-    "train_count": 25,
-    "holdout_count": 10,
-    "max_translation_mm": 3.2105125636744076e-06,
-    "max_allowed_mm": 5.0,
-    "condition_number": 6.640699986712954,
-    "orientation_estimated": false,
-    "within_provisional_limits": true,
-    "additional_validation_run": false
-  },
-  "tcp_translation_xyz_m": [
-    3.1410601675219113e-09,
-    -6.041407414281427e-10,
-    0.14250000226360077
-  ],
-  "tcp_result_source_sha256": "909c49bc999fc587fbc65daa95e3ddefcc21df90dc738b17a3cd3d7d42d69982",
-  "tcp_simulation": true,
-  "tcp_independent_measurement": false,
-  "tcp_fixture_kind": "site-to-site point equality; virtual ball socket, not frictional surface contact",
-  "hardware_accuracy_established": false,
-  "ros_runtime_launched": false,
-  "post_work_verification_run": false,
-  "remaining_independent_measurements": [
-    "physical arm mount",
-    "physical TCP contact/pivot and tool axes",
-    "joint zero offsets, axes and link geometry",
-    "gripper opening/zero",
-    "real sensor calibration"
-  ],
-  "historical_head_plane_bias": "Recorded Head–Mid360 plane estimate has 11.720 mm Gazebo GT position error; retained and not silently corrected.",
-  "applications": [
-    {
-      "source_urdf_sha256": "19d65a7e711138d4be9b10abc0ebb1de185e8ccb41eaee54d8cdc41562bba414",
-      "result_sha256": "9b76f0c73a539e1058aa18ec0ddda65f89831199e8548bc508cf383cb1fc5276",
-      "runtime_urdf_sha256": "c3411b742cbf540a0bff010cea112b39661ac737330f932ad78560e4e428877d",
-      "joint": "laser_frame_joint",
-      "origin_xyz": [
-        -5.1389834908760446e-05,
-        0.0005205163555950081,
-        0.0
-      ],
-      "origin_rpy": [
-        0.0,
-        0.0,
-        0.15437059215843318
-      ],
-      "composition_verified": true,
-      "acceptance": "User must review held-out validation before launching"
-    },
-    {
-      "source_urdf_sha256": "c3411b742cbf540a0bff010cea112b39661ac737330f932ad78560e4e428877d",
-      "result_sha256": "53fd478d044b8db6b66723e1a517245cf57ca638ae2ffb6d270a0b394459796c",
-      "runtime_urdf_sha256": "74ecd6952dd62dd33ff0d84f8d10c5c2e7a77af8c3106701d151cba1ae9bfd2c",
-      "joint": "livox_frame_joint",
-      "origin_xyz": [
-        3.773355003483525e-05,
-        0.00015620113972823895,
-        -0.00024318079626794997
-      ],
-      "origin_rpy": [
-        3.141528125640919,
-        2.050808065501286e-05,
-        -2.7091518517208257e-05
-      ],
-      "composition_verified": true,
-      "acceptance": "User must review held-out validation before launching"
-    },
-    {
-      "source_urdf_sha256": "74ecd6952dd62dd33ff0d84f8d10c5c2e7a77af8c3106701d151cba1ae9bfd2c",
-      "result_sha256": "99e47e2884cd9d71db27c311a22d3b00886132323a7432756c6a9b1aa858d0de",
-      "runtime_urdf_sha256": "25cd5ce8562e22bfcef3e69977f799ab6c2a85fa10620f4e2e400813ea581769",
-      "joint": "rack_to_piper_base",
-      "origin_xyz": [
-        -0.0195,
-        -2.00728322852e-15,
-        0.79
-      ],
-      "origin_rpy": [
-        0.0,
-        0.0,
-        0.0
-      ],
-      "composition_verified": true,
-      "acceptance": "User must review held-out validation before launching"
-    },
-    {
-      "source_urdf_sha256": "25cd5ce8562e22bfcef3e69977f799ab6c2a85fa10620f4e2e400813ea581769",
-      "result_sha256": "8217e5e1cac4ec32ffa4fc8bc2ce9bd6403ffa12add0035ac44b6d07d6e7cff0",
-      "runtime_urdf_sha256": "09e8102e079670eb0482c0fd8d52d6e28aabc35eb6191917d9203f6ae5d0f4c7",
-      "joint": "camera_link_joint",
-      "origin_xyz": [
-        -0.12722342972197517,
-        -0.001716274462443348,
-        1.2689368986951095
-      ],
-      "origin_rpy": [
-        0.0037066991262989625,
-        -0.004393435051706751,
-        0.0014976471610455334
-      ],
-      "composition_verified": true,
-      "acceptance": "User must review held-out validation before launching"
-    },
-    {
-      "source_urdf_sha256": "09e8102e079670eb0482c0fd8d52d6e28aabc35eb6191917d9203f6ae5d0f4c7",
-      "result_sha256": "48010d828e095cceaebfc7e4872170d6649143023161584e861382866f483afb",
-      "runtime_urdf_sha256": "fed3c1450cd868a4dd7bb31371838ab0755e6ecc74e3c734eccea922fad4dfb2",
-      "joint": "piper_to_wrist_camera_mount",
-      "origin_xyz": [
-        0.00021057778731321184,
-        0.0008128472829165156,
-        0.0072422552841638725
-      ],
-      "origin_rpy": [
-        -1.5721318918257796,
-        -0.0019379665882315322,
-        1.6152889735146658
-      ],
-      "composition_verified": true,
-      "acceptance": "User must review held-out validation before launching"
-    }
-  ],
-  "tcp_application": {
-    "result_sha256": "007aeca338208cc39d690a1b724eadc4d3b5586020f7f235031c4b07929edb1e",
-    "source_urdf_sha256": "fed3c1450cd868a4dd7bb31371838ab0755e6ecc74e3c734eccea922fad4dfb2",
-    "runtime_urdf_sha256": "9a13651e4459e3f16b925196347c6003e778930f26a16a07a3d790f1c2db773c",
-    "input_status": "passed_provisional_limits",
-    "input_kind": "simulated_constrained_joint_observations",
-    "simulation": true,
-    "independent_measurement": false,
-    "hardware_accuracy_established": false,
-    "orientation_estimated": false,
-    "application_only": true
-  },
-  "previous_runtime_urdf_sha256": "9a13651e4459e3f16b925196347c6003e778930f26a16a07a3d790f1c2db773c",
   "head_mount_change": {
     "baseline_commit": "3618afc",
     "source_document": "final_assembly_fix",
@@ -228,6 +75,164 @@
     },
     "head_measurement_hash_basis": "canonical_json"
   },
-  "head_solver_metrics_basis": "Historical original-mount measurements; no new 15-degree hand-eye calibration.",
-  "model_static_verification_run": true
+  "head_solver_metrics_basis": "Historical original-mount measurements; no new mount calibration.",
+  "head_arm_solver_holdout": {
+    "train_count": 25,
+    "holdout_count": 10,
+    "max_translation_mm": 0.2719070938268114,
+    "max_rotation_deg": 0.20290887718515954,
+    "within_provisional_limits": true,
+    "additional_validation_run": false
+  },
+  "head_path_difference": {
+    "translation_mm": 9.871364148017674,
+    "rotation_deg": 0.4136798030855448,
+    "left_sha256": "c0dd054bc18ef8094c32bab77cf0b48757e687d5861868f228de132ac915e978",
+    "right_sha256": "58af754f25e3a1d003724438f97b11eab25c7ecba557827a470f47aed75949fe"
+  },
+  "head_paths_share_nominal_arm_mount": true,
+  "base_lidar_input": "HW/calibration/base_2dlidar/calibration.json",
+  "base_lidar_input_kind": "physical_static_multipose_vs_mid360",
+  "base_lidar_holdout": {
+    "med_cm": 0.6873261843874962,
+    "p90_cm": 1.8781369925971034,
+    "in2cm": 0.9144215530903328
+  },
+  "base_piper_input_kind": "urdf_reference",
+  "tcp_input_kind": "simulated_constrained_joint_observations",
+  "tcp_definition": "Virtual probe at the symmetric CAD jaw-tip centre, attached rigidly to Link6 and seated in a fixed simulated point socket. TCP axes are defined parallel to Link6; orientation is not fitted.",
+  "tcp_solver_holdout": {
+    "train_count": 25,
+    "holdout_count": 10,
+    "max_translation_mm": 3.2105125636744076e-06,
+    "max_allowed_mm": 5.0,
+    "condition_number": 6.640699986712954,
+    "orientation_estimated": false,
+    "within_provisional_limits": true,
+    "additional_validation_run": false
+  },
+  "tcp_translation_xyz_m": [
+    3.1410601675219113e-09,
+    -6.041407414281427e-10,
+    0.14250000226360077
+  ],
+  "tcp_result_source_sha256": "909c49bc999fc587fbc65daa95e3ddefcc21df90dc738b17a3cd3d7d42d69982",
+  "tcp_simulation": true,
+  "tcp_independent_measurement": false,
+  "tcp_fixture_kind": "site-to-site point equality; virtual ball socket, not frictional surface contact",
+  "hardware_accuracy_established": false,
+  "ros_runtime_launched": false,
+  "post_work_verification_run": false,
+  "remaining_independent_measurements": [
+    "physical arm mount",
+    "physical TCP contact/pivot and tool axes",
+    "joint zero offsets, axes and link geometry",
+    "gripper opening/zero",
+    "real sensor calibration (Base\u20132D LiDAR x/y/yaw done relative to Mid-360S; Mid-360S and cameras pending)"
+  ],
+  "historical_head_plane_bias": "Recorded Head\u2013Mid360 plane estimate has 11.720 mm Gazebo GT position error; retained and not silently corrected.",
+  "applications": [
+    {
+      "source_urdf_sha256": "5b7d47200d819cf7cde8b334d1f2b3d57f7bf604ba82cbb5898fd66c4dea616e",
+      "result_sha256": "5560f265bd68e5e7e94a7fd5e83295c173d6611d386168605d251f3250063946",
+      "runtime_urdf_sha256": "09ee55e4a2951b4671591f3dd00ae7c942d77cf7298777f9bc6579b813a60de6",
+      "joint": "laser_frame_joint",
+      "origin_xyz": [
+        0.024073172308992453,
+        0.009159437274095267,
+        0.0
+      ],
+      "origin_rpy": [
+        0.0,
+        0.0,
+        0.04950967463401634
+      ],
+      "composition_verified": true,
+      "acceptance": "User must review held-out validation before launching"
+    },
+    {
+      "source_urdf_sha256": "09ee55e4a2951b4671591f3dd00ae7c942d77cf7298777f9bc6579b813a60de6",
+      "result_sha256": "53fd478d044b8db6b66723e1a517245cf57ca638ae2ffb6d270a0b394459796c",
+      "runtime_urdf_sha256": "7b66e9e027750d80af5c251690d643243d46f5d8bda9bfdb7b5016bf8aa03e93",
+      "joint": "livox_frame_joint",
+      "origin_xyz": [
+        3.773355003483525e-05,
+        0.00015620113972823895,
+        -0.00024318079626794997
+      ],
+      "origin_rpy": [
+        3.1415281256409195,
+        2.0508080655234906e-05,
+        -2.7091518517184195e-05
+      ],
+      "composition_verified": true,
+      "acceptance": "User must review held-out validation before launching"
+    },
+    {
+      "source_urdf_sha256": "7b66e9e027750d80af5c251690d643243d46f5d8bda9bfdb7b5016bf8aa03e93",
+      "result_sha256": "b62ef81579382715fd90617467776cb84146d7aa079f435d41b45b38f97f0fd3",
+      "runtime_urdf_sha256": "b341170740045376d696fe403063b850f10e8b7b82351419bbd071256a9754e3",
+      "joint": "rack_to_piper_base",
+      "origin_xyz": [
+        -0.0195,
+        -2.00728322852e-15,
+        0.79
+      ],
+      "origin_rpy": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "composition_verified": true,
+      "acceptance": "User must review held-out validation before launching"
+    },
+    {
+      "source_urdf_sha256": "b341170740045376d696fe403063b850f10e8b7b82351419bbd071256a9754e3",
+      "result_sha256": "1f4a2bb2ffc5a85e08bed7fbcfc4c2c1bdc343e973179fe99614899a056cb4d1",
+      "runtime_urdf_sha256": "3082189fa54ad02ba14dce129c3116c4577f44d3f6886973eff9213f62604c33",
+      "joint": "camera_link_joint",
+      "origin_xyz": [
+        -0.1231374351388152,
+        -0.0004662744624433189,
+        1.2602505470202274
+      ],
+      "origin_rpy": [
+        0.004107524314227912,
+        0.25740565260292736,
+        0.0015486552345582768
+      ],
+      "composition_verified": true,
+      "acceptance": "User must review held-out validation before launching"
+    },
+    {
+      "source_urdf_sha256": "3082189fa54ad02ba14dce129c3116c4577f44d3f6886973eff9213f62604c33",
+      "result_sha256": "48010d828e095cceaebfc7e4872170d6649143023161584e861382866f483afb",
+      "runtime_urdf_sha256": "62101e0d816416aaf1cddfca6186a52b67aae81dda9e3db5a8687eadd1dd7607",
+      "joint": "piper_to_wrist_camera_mount",
+      "origin_xyz": [
+        0.00021057778731321808,
+        0.000812847282916516,
+        0.0072422552841638725
+      ],
+      "origin_rpy": [
+        -1.5721318918257798,
+        -0.0019379665882315322,
+        1.6152889735146665
+      ],
+      "composition_verified": true,
+      "acceptance": "User must review held-out validation before launching"
+    }
+  ],
+  "tcp_application": {
+    "result_sha256": "007aeca338208cc39d690a1b724eadc4d3b5586020f7f235031c4b07929edb1e",
+    "source_urdf_sha256": "62101e0d816416aaf1cddfca6186a52b67aae81dda9e3db5a8687eadd1dd7607",
+    "runtime_urdf_sha256": "7a2207ea6bcca1adbf17ff8f2b63c9bc3dbd95eed966d08bf93dbff161ec88b2",
+    "input_status": "passed_provisional_limits",
+    "input_kind": "simulated_constrained_joint_observations",
+    "simulation": true,
+    "independent_measurement": false,
+    "hardware_accuracy_established": false,
+    "orientation_estimated": false,
+    "application_only": true
+  }
 }

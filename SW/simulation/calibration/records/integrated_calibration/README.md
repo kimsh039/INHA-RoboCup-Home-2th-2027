@@ -1,18 +1,20 @@
 # Integrated calibration results
 
-This bundle applies recorded Gazebo sensor estimates, the nominal PiPER mounting
-reference and the completed MuJoCo simulated TCP pivot to
-`SW/simulation/robot_description/robocup.calibrated.urdf`.
+This bundle applies the physical Base–2D LiDAR estimate (2026-10-10), recorded
+Gazebo sensor estimates, the nominal PiPER mounting reference and the completed
+MuJoCo simulated TCP pivot to `SW/simulation/robot_description/robocup.calibrated.urdf`.
 
 | File | Meaning |
 |---|---|
 | `summary.json` | Selected Head route, Head/TCP intrinsic held-out statistics, hashes and measurement scope |
-| `results/base_lidar.json`, `base_mid360.json` | Recorded sensor estimates |
+| `results/base_lidar.json` | Physical G2 estimate against the Mid-360S: x=24.248 mm, y=9.159 mm, yaw=2.8367°; z/roll/pitch fixed. [Record](../../../../../HW/calibration/base_2dlidar/README.md) |
+| `results/base_mid360.json` | Recorded Gazebo Mid360 estimate |
+| `results/base_head_recorded.json` | Historical Head route before the 15° CAD mount delta |
 | `results/base_piper.json` | URDF-only arm mounting reference |
 | `results/piper_head.json`, `base_head_via_arm.json` | Head hand-eye and composition through the nominal arm mount |
 | `results/head_mid360_recorded.json`, `base_head_via_lidar.json` | Preserved earlier Head plane fit and its Base–Head composition |
 | `results/head_path_difference.json` | Route difference: 9.871 mm / 0.414°; no physical accuracy claim |
-| `results/base_head.json` | Selected arm route |
+| `results/base_head.json` | Selected arm route moved by the 15° CAD mount delta (`head_mount_delta.json`) |
 | `results/head_mid360_runtime.json` | Derived Head–Mid360 relation from selected mounts |
 | `results/flange_wrist.json` | Recorded Wrist hand-eye result |
 | `results/flange_tcp.json` | Selected simulated pivot result: 25 train / 10 holdout, Link6 z≈142.5 mm |

@@ -1,17 +1,17 @@
 {
-  "source_urdf_sha256": "09e8102e079670eb0482c0fd8d52d6e28aabc35eb6191917d9203f6ae5d0f4c7",
+  "source_urdf_sha256": "3082189fa54ad02ba14dce129c3116c4577f44d3f6886973eff9213f62604c33",
   "result_sha256": "48010d828e095cceaebfc7e4872170d6649143023161584e861382866f483afb",
-  "runtime_urdf_sha256": "fed3c1450cd868a4dd7bb31371838ab0755e6ecc74e3c734eccea922fad4dfb2",
+  "runtime_urdf_sha256": "62101e0d816416aaf1cddfca6186a52b67aae81dda9e3db5a8687eadd1dd7607",
   "joint": "piper_to_wrist_camera_mount",
   "origin_xyz": [
-    0.00021057778731321184,
-    0.0008128472829165156,
+    0.00021057778731321808,
+    0.000812847282916516,
     0.0072422552841638725
   ],
   "origin_rpy": [
-    -1.5721318918257796,
+    -1.5721318918257798,
     -0.0019379665882315322,
-    1.6152889735146658
+    1.6152889735146665
   ],
   "composition_verified": true,
   "acceptance": "User must review held-out validation before launching"
