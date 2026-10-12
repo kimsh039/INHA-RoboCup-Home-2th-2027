@@ -6,6 +6,7 @@ import cv2
 import numpy as np
 
 from .core import Box
+from .class_schema import class_mapping
 
 
 class YoloDetector:
@@ -53,9 +54,13 @@ class YoloDetector:
         # rasterize there, then embed into the ORIGINAL RGB grid.
         polygons = result.masks.xy if result.masks is not None else None
         output = []
+        mapping = class_mapping(result.names)
         for index, item in enumerate(result.boxes):
             left, top, right, bottom = item.xyxy[0].tolist()
-            class_id = int(item.cls[0])
+            identity = mapping[int(item.cls[0])]
+            if identity is None:
+                continue
+            class_id, class_name = identity
             mask = None
             if polygons is not None and index < len(polygons):
                 points = np.asarray(polygons[index])
@@ -65,7 +70,7 @@ class YoloDetector:
                     mask = np.zeros((height, width), np.uint8)
                     mask[y0:y1, x0:x1] = local_mask
             output.append(Box(left+x0, top+y0, right-left, bottom-top,
-                              class_id, str(result.names[class_id]), float(item.conf[0]), mask))
+                              class_id, class_name, float(item.conf[0]), mask))
         return output
 
 

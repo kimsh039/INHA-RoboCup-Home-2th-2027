@@ -15,7 +15,7 @@ ARMS의 이전 `arms_detection_node.py`(`45af414` 직전)의 detect-then-track �
 ROI 재검증, 재초기화 흐름을 참고해 새로 작성했다. 현재 ARMS main은 추적기 드리프트로
 CSRT/KCF를 제거한 버전이다. 빨간 풍선용 HSV와 ARMS 메시지·제어 의존성은 가져오지 않았다.
 
-2026-10-07의 7개 클래스 YOLO11n 학습·두 테스트 영상 평가 기록은 [training/README.md](training/README.md)에서 관리한다. ROS 노드의 실기 통합 검증과 객체 검출 모델의 영상 평가는 각각 기록한다.
+현재 6클래스는 `green_apple`, `peach`, `tomato`, `fanta_can`, `cup`, `banana`다. 기존 apple은 tomato로 정정하고 mug는 cup으로 통일하고 plate는 제외했다. [데이터·재학습 설정](training/README.md)과 기존 7클래스 실험 기록을 구분해 관리한다. 기존 체크포인트를 이 노드에 연결하면 YOLO adapter가 현재 ID·이름으로 변환하고 접시 출력을 제외한다. 체크포인트 자체는 7출력 모델이며 새 6클래스 학습은 아직 실행하지 않았다. ROS 노드의 실기 통합 검증과 객체 검출 모델의 영상 평가는 각각 기록한다.
 
 ## 범위와 현재 상태
 

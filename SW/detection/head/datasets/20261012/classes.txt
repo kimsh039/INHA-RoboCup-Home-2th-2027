@@ -1,0 +1,6 @@
+green_apple
+peach
+tomato
+fanta_can
+cup
+banana

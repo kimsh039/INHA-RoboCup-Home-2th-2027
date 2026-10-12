@@ -1,0 +1,24 @@
+{
+  "images_checked": 1262,
+  "coordinates_preserved": true,
+  "label_boxes": 7202,
+  "removed_plate_boxes": 1184,
+  "per_class_boxes": {
+    "tomato": 1167,
+    "banana": 1189,
+    "fanta_can": 1236,
+    "green_apple": 1201,
+    "cup": 1235,
+    "peach": 1174
+  },
+  "source_images_and_test_videos_byte_identical": true,
+  "all_dataset_sha256_verified": true,
+  "object_table_assignment_rows": 7202,
+  "test_videos_excluded_from_training_zip": true,
+  "notebook_code_syntax_valid": true,
+  "legacy_model_frames_replayed": 739,
+  "output_ids_names_verified": true,
+  "unit_tests_passed": 51,
+  "ros_test_skipped": 1,
+  "six_class_training_started": false
+}
