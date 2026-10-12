@@ -208,7 +208,7 @@ colcon build --symlink-install
 SW/detection/head/head_detection_ws/install/local_setup.bash
 ```
 
-기본 모델은 `SW/detection/head/models/head_yolo11n_20261007.pt`, 기본 GPU Python은 `~/detection_ws/src/yolo_ros/yolo_ros/.venv/bin/python`입니다. 다른 환경은 시작 전에 지정합니다.
+기본 모델은 `SW/detection/head/models/head_yolo11n_20261013.pt` (native 6클래스, cup=0.70 / 나머지=0.25), 기본 GPU Python은 `~/detection_ws/src/yolo_ros/yolo_ros/.venv/bin/python`입니다. 다른 환경은 시작 전에 지정합니다.
 
 ```bash
 ROBOCUP_MODEL=/절대/경로/model.pt \

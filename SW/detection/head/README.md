@@ -1,6 +1,6 @@
 # 헤드 검출·추적 구현
 
-실물 Head RGB를 받아 브라우저에 모든 객체를 표시하고 SSH 터미널에 FPS를 출력하는 준비된 실행기는 [Jetson 실시간 화면·FPS 안내](LIVE_JETSON.md)에 있다. 실기 실행과 FPS 측정은 아직 수행하지 않았다.
+현재 모델은 [20261013 native 6클래스 YOLO11n](models/head_yolo11n_20261013.pt)이다. cup 신뢰도 0.70 / 다른 클래스 0.25를 채택했다. [우분투 작업 인수인계](UBUNTU_HANDOFF_20261013.md)에 pull, 카메라, 화면·FPS, 관제센터 실행 명령을 정리했다. [Jetson 실시간 화면·FPS 안내](LIVE_JETSON.md)와 실제 대상 장치에서 이어서 검증한다.
 
 Gazebo에서 검출한 목표를 SLAM 지도 좌표로 변환해 Nav2로 이동하는 테스트는
 [시뮬레이션 검출·주행 가이드](SIM_NAV_TEST.md)를 참고한다. 도착 후 closed approach 연결 자리도 남겨두었다.
@@ -17,13 +17,13 @@ ARMS의 이전 `arms_detection_node.py`(`45af414` 직전)의 detect-then-track �
 ROI 재검증, 재초기화 흐름을 참고해 새로 작성했다. 현재 ARMS main은 추적기 드리프트로
 CSRT/KCF를 제거한 버전이다. 빨간 풍선용 HSV와 ARMS 메시지·제어 의존성은 가져오지 않았다.
 
-현재 6클래스는 `green_apple`, `peach`, `tomato`, `fanta_can`, `cup`, `banana`다. 기존 apple은 tomato로 정정하고 mug는 cup으로 통일하고 plate는 제외했다. [데이터·재학습 설정](training/README.md)과 기존 7클래스 실험 기록을 구분해 관리한다. 기존 체크포인트를 이 노드에 연결하면 YOLO adapter가 현재 ID·이름으로 변환하고 접시 출력을 제외한다. 체크포인트 자체는 7출력 모델이며 새 6클래스 학습은 아직 실행하지 않았다. ROS 노드의 실기 통합 검증과 객체 검출 모델의 영상 평가는 각각 기록한다.
+현재 6클래스는 `green_apple`, `peach`, `tomato`, `fanta_can`, `cup`, `banana`다. 기존 apple은 tomato로 정정하고 mug는 cup으로 통일하고 plate는 제외했다. [데이터·재학습 설정](training/README.md)과 기존 7클래스 실험 기록을 구분해 관리한다. 기존 체크포인트를 이 노드에 연결하면 YOLO adapter가 현재 ID·이름으로 변환하고 접시 출력을 제외한다. 이전 체크포인트는 7출력 모델이며, 새 기본 체크포인트는 6클래스를 직접 출력한다. ROS 노드의 실기 통합 검증과 객체 검출 모델의 영상 평가는 각각 기록한다.
 
 ## 범위와 현재 상태
 
 - 포함: 순수 Python 상태 머신, YOLO adapter, CSRT/KCF adapter, ROS 2 노드·커스텀 메시지,
   raw/JPEG 입력, 디버그 영상, 파라미터·launch·Docker CPU/GPU 설정, 모델 없이 실행하는 테스트.
-- 가중치: [7개 클래스 YOLO11n 초안](models/head_yolo11n_20261007.pt)을 포함한다. [실제 학습·영상 평가](training/experiments/20261007/TRAINING_RESULTS.md)에 누락과 한계를 기록했다. 모델 경로를 명시해 노드에 연결하며 빈 경로/없는 파일이면 `WAITING_MODEL`로 무효 결과를 발행한다.
+- 가중치: [현재 6클래스 YOLO11n](models/head_yolo11n_20261013.pt), [실제 재학습·추가 영상 결과](training/experiments/20261013/TRAINING_RESULTS.md)를 사용한다. 이전 [7클래스 초안](models/head_yolo11n_20261007.pt)과 당시 실험은 보존한다. 모델 경로를 명시해 노드에 연결하며 빈 경로/없는 파일이면 `WAITING_MODEL`로 무효 결과를 발행한다.
 - 후속 구현: Mid-360 작업면·경계·접근 자세, D435 목표 위치와 작업면 연결, Wrist D435의 SAM 분할·depth 점군, GraspNet·주변 충돌 장면·팔 제어.
 - 실제 센서·학습 모델의 성능과 ROS/Docker 전체 구동은 대상 PC에서 검증해야 한다.
 
@@ -43,7 +43,7 @@ SW/detection/head/
 │       ├── config/head_detection.yaml
 │       └── launch/head_detection.launch.py
 ├── docker/                        # Dockerfile, CPU Compose, GPU override
-├── models/                        # 7개 클래스 학습 가중치 + 사용자 모델
+├── models/                        # 현재 6클래스 + 이전 7클래스 가중치
 └── tests/                         # 모델 없이 상태/좌표/추적 검증
 ```
 
@@ -119,6 +119,7 @@ crop 격자에서 복원해 원본 RGB 크기의 `mono8` 마스크로 발행한�
 
 | 설정 | 기본 | 의미 |
 |---|---:|---|
+| confidence / cup_confidence | 0.25 / 0.70 | YOLO 최소 신뢰도; cup에는 두 값 중 큰 값을 적용 |
 | target_class | 빈 문자열 | 모델의 클래스 이름. 빈 값이면 최초 최고 confidence 후보 선택 |
 | confirm_frames | 3 | 동일 클래스·IoU 연속 확인 횟수 |
 | tracker_type | CSRT | CSRT/KCF 중 선택 |
@@ -151,10 +152,10 @@ docker compose -f compose.yaml logs -f head_detection
 게시된 모델을 연결하려면 다음처럼 실행한다. 이미지 크기와 임계값은 실기 입력에서 별도 조정한다.
 
 ```bash
-ROBOCUP_MODEL=/models/head_yolo11n_20261007.pt docker compose -f compose.yaml up -d --force-recreate
+ROBOCUP_MODEL=/models/head_yolo11n_20261013.pt docker compose -f compose.yaml up -d --force-recreate
 ```
 
-컨테이너 내부 경로 `/models/head_yolo11n_20261007.pt`는 호스트 `SW/detection/head/models/head_yolo11n_20261007.pt`에 대응한다.
+컨테이너 내부 경로 `/models/head_yolo11n_20261013.pt`는 호스트 `SW/detection/head/models/head_yolo11n_20261013.pt`에 대응한다.
 코드·YAML은 읽기 전용 bind mount로 연결했다. 이를 수정한 뒤에는 다음 명령으로 재시작한다.
 
 ```bash
@@ -179,7 +180,7 @@ docker compose -f compose.yaml down
 ```bash
 cd /home/projectsh/Documents/INHA/RoboCup/INHA-RoboCup-Home-2th-2027/SW/detection/head/docker
 docker compose -f compose.yaml -f compose.gpu.yaml build
-ROBOCUP_MODEL=/models/head_yolo11n_20261007.pt docker compose -f compose.yaml -f compose.gpu.yaml up -d --force-recreate
+ROBOCUP_MODEL=/models/head_yolo11n_20261013.pt docker compose -f compose.yaml -f compose.gpu.yaml up -d --force-recreate
 docker compose -f compose.yaml -f compose.gpu.yaml logs -f head_detection
 ```
 
@@ -232,7 +233,7 @@ ROS pub/sub 테스트를 포함하려면 Humble과 빌드한 workspace를 source
 2026-10-05 로컬 검증: ROS 패키지 두 개 colcon build 성공, 상태 머신·실제 CSRT/KCF adapter·
 ROS pub/sub를 포함한 **18개 테스트 통과**, 모델 없이 ROS launch 기동 확인.
 Docker 실행 도구가 없는 환경이므로 이미지 빌드·CPU/GPU 컨테이너 실행은 미검증이다.
-학습 모델 및 실센서를 연결한 추론 성능도 아직 검증하지 않았다.
+학습 모델의 저장 영상 추론은 [20261013 실험](training/experiments/20261013/TRAINING_RESULTS.md)에 기록했다. 실제 센서·Jetson 추론 FPS와 ROS 통합은 대상 장치에서 추가 검증한다.
 
 ## 참고
 

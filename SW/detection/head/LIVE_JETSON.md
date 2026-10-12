@@ -1,11 +1,11 @@
 # Jetson Head 실시간 디텍션 화면·FPS
 
-준비한 실행기이며 **아직 Jetson에서 실행하지 않았다.** 기존 Head ROS RGB 토픽을 구독해 모든 6클래스를 검출하고 브라우저 화면과 SSH 터미널 FPS를 제공한다. 카메라나 로봇 구동 노드를 새로 시작하지 않는다.
+현재 20261013 모델과 cup=0.70을 반영했다. [우분투 인수인계](UBUNTU_HANDOFF_20261013.md)를 먼저 참고한다. **새 모델의 Jetson FPS는 아직 측정하지 않았다.** 기존 Head ROS RGB 토픽을 구독해 모든 6클래스를 검출하고 브라우저 화면과 SSH 터미널 FPS를 제공한다. 카메라나 로봇 구동 노드를 새로 시작하지 않는다.
 
 Jetson SSH 셸에서 저장소 상태를 먼저 확인하고 최신 main을 받는다. 로컬 수정이 있으면 그 내용을 보존한 상태로 처리한다.
 
 ```bash
-cd ~/robocup
+cd ~/INHA-RoboCup-Home-2th-2027
 git status --short
 git pull --ff-only
 source /opt/ros/humble/setup.bash
@@ -15,7 +15,7 @@ python SW/detection/head/scripts/live_ros_viewer.py
 
 물리 센서 실행기의 `/head/calibrated/color/image_raw`가 기본 입력이다. 센서 노드와 같은 `ROS_DOMAIN_ID`를 사용한다. 보정 토픽이 없고 원본 Head 카메라가 실행 중이라면 `--topic /head/camera/color/image_raw`를 추가한다. 입력이 없으면 터미널에 waiting for camera input이 출력된다.
 
-YOLO GPU venv와 ROS source를 함께 사용한다. checkpoint는 저장소의 `models/head_yolo11n_20261007.pt`로 기본 설정한다. 기존 7출력 모델에 현재 6클래스 변환을 적용하며 새 학습 모델로 표시하지 않는다. 출력 이름은 green_apple, peach, tomato, fanta_can, cup, banana다.
+YOLO GPU venv와 ROS source를 함께 사용한다. checkpoint는 저장소의 `models/head_yolo11n_20261013.pt`가 기본값이며 새 6클래스 재학습 모델이다. 출력 이름은 green_apple, peach, tomato, fanta_can, cup, banana다.
 
 Windows에서 화면을 보려면 **별도 PowerShell**에 기존 SSH 로그인 방법으로 포트 전달을 연결한다. 인증은 사용자가 수행한다.
 
@@ -33,6 +33,6 @@ Camera FPS=... | Detection FPS=... | detect=... ms | callback-to-preview=... ms
 
 Camera FPS는 이 구독 콜백에 도착한 이미지 수, Detection FPS는 실제 처리하고 JPEG로 만든 프레임 수다. detect 시간은 YOLO adapter 호출 전체의 wall time이며 순수 GPU 커널 시간과 다르다. callback-to-preview는 해당 프레임 콜백부터 JPEG 준비까지의 시간으로, 카메라 캡처·네트워크·브라우저 렌더링 지연은 포함하지 않는다. 오래된 입력은 쌓지 않고 가장 최신 프레임으로 교체한다.
 
-기본 imgsz 640, confidence 0.35, IoU 0.45다. 작은 객체 검출 비교에는 `--imgsz 960`을 사용할 수 있다. 기본 물리 Head 드라이버는 현재 15fps 설정이므로 디텍션 FPS도 입력 속도의 영향을 받는다. 이 실행기는 카메라 fps·전력 모드·센서 설정을 바꾸지 않는다. Jetson 실측 성능은 실행 후 확인한다.
+기본 imgsz 640, confidence 0.25, **cup 전용 confidence 0.70**, IoU 0.7이다. `--cup-conf`로 컵 기준만 변경한다. 작은 객체 검출 비교에는 `--imgsz 960`을 사용할 수 있다. 기본 물리 Head 드라이버는 현재 15fps 설정이므로 디텍션 FPS도 입력 속도의 영향을 받는다. 이 실행기는 카메라 fps·전력 모드·센서 설정을 바꾸지 않는다. Jetson 실측 성능은 실행 후 확인한다.
 
 디텍션 종료는 실행 SSH 터미널에서 **Ctrl+C**, 포트 전달 종료는 별도 PowerShell에서 **Ctrl+C**다. 사용 중인 다른 센서·로봇 프로세스에는 종료 명령을 보내지 않는다.

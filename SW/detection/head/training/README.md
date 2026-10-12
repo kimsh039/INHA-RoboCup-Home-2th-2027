@@ -1,5 +1,7 @@
 # Head YOLO11n · 현재 6클래스
 
+**2026-10-13 재학습 완료.** [새 모델 결과](experiments/20261013/TRAINING_RESULTS.md), [실제 학습 데이터 2,155장](../datasets/20261013/README.md), [우분투 인수인계](../UBUNTU_HANDOFF_20261013.md)를 사용한다. 현재 가중치는 `../models/head_yolo11n_20261013.pt`이며 cup 신뢰도 0.70 / 나머지 0.25다. 아래 20261012 데이터·Colab 설명은 이전 준비 기록이다.
+
 2026-10-12 정정한 검출 대상은 **green_apple, peach, tomato, fanta_can, cup, banana**다. 이전 `apple` 객체는 토마토였으며, `mug`는 `cup`으로 이름을 통일하고 접시는 제외한다.
 
 | ID | 클래스 | 대상 |
@@ -8,12 +10,12 @@
 | 1 | peach | 복숭아 |
 | 2 | tomato | 토마토 |
 | 3 | fanta_can | 환타 캔 |
-| 4 | cup | 손잡이 포함 컵 |
+| 4 | cup | 손잡이 포함 **빨간 머그컵만** |
 | 5 | banana | 바나나 송이 |
 
 [현재 데이터셋](../datasets/20261012/README.md)은 train 1,087장 / val 175장, bbox 7,202개다. 기존 접시 bbox 1,184개를 제외하고 좌표와 영상 단위 분할을 유지했다. 환타 캔은 로고가 보이지 않는 방향도 포함하고, 식별 가능한 모든 대상에 라벨을 달며 박스 겹침을 허용한다. 라벨 초안은 사용자 검토가 필요하다. 두 원본 테스트 영상은 학습 ZIP에 포함하지 않는다.
 
-**새 6클래스 학습은 아직 시작하지 않았다.** [상태](run_status.json)에 이전 7클래스 학습과 현재 재학습 준비 상태를 구분해 기록한다. 기존 [가중치](../models/head_yolo11n_20261007.pt)는 수정하지 않았다. Head `YoloDetector`와 `evaluate_holdout.py`가 이 모델의 정확한 7클래스 스키마를 인식하면 이름·ID를 현재 6클래스로 변환하고 접시 결과를 제외한다. 일반 COCO 모델의 `apple`은 그대로 유지한다. Ultralytics `YOLO(...).predict()`를 직접 호출하는 다른 코드는 자동 변환되지 않는다.
+**20261012 준비 당시에는 학습 전이었으며 현재는 새 6클래스 학습이 완료됐다.** [상태](run_status.json)에 이전 7클래스 학습과 현재 재학습 준비 상태를 구분해 기록한다. 기존 [가중치](../models/head_yolo11n_20261007.pt)는 수정하지 않았다. Head `YoloDetector`와 `evaluate_holdout.py`가 이 모델의 정확한 7클래스 스키마를 인식하면 이름·ID를 현재 6클래스로 변환하고 접시 결과를 제외한다. 일반 COCO 모델의 `apple`은 그대로 유지한다. Ultralytics `YOLO(...).predict()`를 직접 호출하는 다른 코드는 자동 변환되지 않는다.
 
 기존 모델로 두 보관 영상 **739프레임**을 다시 실행해 변환된 출력과 주석 영상을 확인했다. [현재 이름을 적용한 결과](experiments/20261012/holdout/TEST_RESULTS.md)는 기존 모델의 추론이며 새 학습 성능이 아니다. 영상 bbox 정답이 없어서 테스트 precision·recall·mAP와 테이블 선택 정확도를 계산하지 않는다.
 

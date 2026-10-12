@@ -1,0 +1,2 @@
+*.jpg -text
+labels/**/*.txt -text

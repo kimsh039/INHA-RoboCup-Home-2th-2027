@@ -12,6 +12,23 @@ from robocup_head_detection.images import decode_raw, decode_compressed
 
 
 class AdapterTests(unittest.TestCase):
+    def test_cup_threshold_preserves_other_classes_roi_and_mask_alignment(self):
+        for names, cup_id, other_id in ((CLASSES, 4, 5), (LEGACY_CLASSES, 4, 1)):
+            items = [SimpleNamespace(xyxy=np.array([[2, 3, 12, 13]]), cls=[cls], conf=[score])
+                     for cls, score in ((cup_id, 0.69), (cup_id, 0.70), (other_id, 0.26))]
+            polygons = [np.array([[x, 3], [x+2, 3], [x+2, 5], [x, 5]]) for x in (2, 12, 22)]
+            result = SimpleNamespace(boxes=items, names=dict(enumerate(names)),
+                                     masks=SimpleNamespace(xy=polygons))
+            detector = YoloDetector("", confidence=0.25, cup_confidence=0.70)
+            detector.model = SimpleNamespace(predict=lambda *args, **kwargs: [result])
+            boxes = detector.detect(np.zeros((100, 200, 3), np.uint8), (50, 20, 90, 60))
+            self.assertEqual([(b.class_name, b.confidence) for b in boxes],
+                             [("cup", 0.70), ("banana", 0.26)])
+            self.assertEqual(boxes[0].x, 52)
+            self.assertEqual(boxes[0].mask[24, 63], 255)
+            self.assertEqual(boxes[0].mask[24, 53], 0)
+            self.assertEqual(boxes[1].mask[24, 73], 255)
+
     def test_legacy_head_outputs_use_six_current_ids_and_exclude_plate(self):
         items = [SimpleNamespace(xyxy=np.array([[i, 3, i+12, 13]]), cls=[i], conf=[0.8])
                  for i in range(7)]

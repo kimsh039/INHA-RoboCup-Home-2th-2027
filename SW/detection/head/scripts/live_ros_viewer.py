@@ -83,15 +83,19 @@ def make_server(preview, host, port):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--model', type=Path, default=Path(__file__).resolve().parents[1] /
-                        'models/head_yolo11n_20261007.pt')
+                        'models/head_yolo11n_20261013.pt')
     parser.add_argument('--topic', default='/head/calibrated/color/image_raw')
     parser.add_argument('--device', default='0')
     parser.add_argument('--imgsz', type=int, default=640)
-    parser.add_argument('--conf', type=float, default=0.35)
-    parser.add_argument('--iou', type=float, default=0.45)
+    parser.add_argument('--conf', type=float, default=0.25)
+    parser.add_argument('--cup-conf', type=float, default=0.70,
+                        help='Additional minimum confidence only for cup')
+    parser.add_argument('--iou', type=float, default=0.7)
     parser.add_argument('--host', default='127.0.0.1')
     parser.add_argument('--port', type=int, default=8787)
     args = parser.parse_args()
+    if not 0 < args.conf <= 1 or not 0 <= args.cup_conf <= 1 or not 0 < args.iou <= 1:
+        parser.error('conf/iou must be in (0,1] and cup-conf in [0,1]')
     import cv2
     import rclpy
     from rclpy.executors import SingleThreadedExecutor
@@ -102,7 +106,7 @@ def main():
     from robocup_head_detection.images import decode_raw
 
     detector = YoloDetector(str(args.model), confidence=args.conf, nms_iou=args.iou,
-                            imgsz=args.imgsz, device=args.device)
+                            imgsz=args.imgsz, device=args.device, cup_confidence=args.cup_conf)
     if not detector.ready:
         raise SystemExit(detector.error)
     names = tuple(detector.model.names[i] for i in range(len(detector.model.names)))
@@ -133,6 +137,7 @@ def main():
     threading.Thread(target=server.serve_forever, daemon=True).start()
     print(f'Preview: http://{args.host}:{args.port}/ | topic={args.topic}', flush=True)
     print(f'Classes: {", ".join(CLASSES)} | device={args.device} | imgsz={args.imgsz}', flush=True)
+    print(f'Confidence: other={args.conf:.2f} | cup={max(args.conf, args.cup_conf):.2f} | NMS IoU={args.iou:.2f}', flush=True)
     print(('Existing 7-output checkpoint adapted to six classes; no new training. '
            if names == LEGACY_CLASSES else 'Native six-class checkpoint. ') +
           'Ctrl+C to stop.', flush=True)

@@ -1,0 +1,47 @@
+{
+  "model_sha256": "99a059d9b4afb8c45587ca7d031f49d3b05c787d919e6d855bf5ccb326c26b06",
+  "source_video_sha256": "c131ec0464b1c1769917b91a85d79b33847799baa289ae53b8373f67ee5d515c",
+  "classes": [
+    "green_apple",
+    "peach",
+    "tomato",
+    "fanta_can",
+    "cup",
+    "banana"
+  ],
+  "dataset": {
+    "images": 2155,
+    "splits": {
+      "train": 1786,
+      "val": 369
+    },
+    "boxes": 12205,
+    "boxes_by_class": {
+      "green_apple": 2035,
+      "banana": 2021,
+      "cup": 2058,
+      "tomato": 1995,
+      "fanta_can": 2064,
+      "peach": 2032
+    },
+    "saved_frames": 315,
+    "reviewed_frames": 209,
+    "review_status": "partially_human_reviewed",
+    "source_zip_sha256": "125197d879d93d2bc9c2f025213268a4c0d2fd7fc20ef7b08cc3f56e3da33b3f"
+  },
+  "training_environment": {
+    "python": "3.12.14",
+    "torch": "2.11.0+cu128",
+    "ultralytics": "8.4.174",
+    "gpu": "NVIDIA GeForce RTX 5070 Laptop GPU"
+  },
+  "frames_evaluated": 961,
+  "thresholds": {
+    "confidence": 0.25,
+    "cup_confidence": 0.7,
+    "nms_iou": 0.7,
+    "imgsz": 640
+  },
+  "jetson_tested": false,
+  "ground_truth_video_available": false
+}
