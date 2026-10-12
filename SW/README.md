@@ -16,7 +16,7 @@ TRACER × PiPER · Calibration · Detection · Simulation
 
 </div>
 
-[저장소 첫 페이지](../README.md) · [HW](../HW/README.md) · [Head/Wrist 인지](detection/README.md) · [Head 학습 실험](detection/head/training/README.md)
+[웹 관제센터 — Jetson 실행 / Mac localhost](control_center/README.md) · [저장소 첫 페이지](../README.md) · [HW](../HW/README.md) · [Head/Wrist 인지](detection/README.md) · [Head 학습 실험](detection/head/training/README.md)
 
 이 문서는 소프트웨어와 기존 Jetson 운영 기록의 상세 안내입니다. 저장소 루트에서 실행하는 명령은 `SW/` 경로를 사용합니다. Jetson 홈 디렉터리의 독립 워크스페이스 경로는 기존 설치 기록을 유지합니다.
 
@@ -45,6 +45,7 @@ Gazebo 기반 보정 결과입니다. Head/Wrist D435와 실물 센서는 별도
 
 | 알고 싶은 것 | 읽을 문서 |
 | --- | --- |
+| 웹에서 실시간 지도·영상·검출 보기, 카메라/LiDAR 켜기·끄기 | [웹 관제센터](control_center/README.md) |
 | 이 로봇과 저장소의 전체 구성 | 아래 [로봇 구성](#로봇-구성)과 [파일 구조](#파일-구조) |
 | 어떤 Python / 가상환경을 사용할지 | [가상환경 선택](#가상환경-선택) → [환경별 상세 사용법](setup/jetson/VIRTUAL_ENVIRONMENTS.md) |
 | 오늘 바로 모델을 실행하는 방법 | [Jetson 빠른 시작](#jetson-빠른-시작) |
@@ -134,6 +135,7 @@ INHA-RoboCup-Home-2th-2027/
 ├── HW/URDF/                           # CAD·메시·하드웨어 원본
 └── SW/
     ├── README.md                      # 소프트웨어 상세 안내
+    ├── control_center/                # Jetson 웹 관제 / Mac SSH 터널
     ├── setup/                         # 개발 PC / Jetson 설치·운영
     ├── simulation/
     │   ├── robot_description/         # 명목 / 보정 통합 URDF

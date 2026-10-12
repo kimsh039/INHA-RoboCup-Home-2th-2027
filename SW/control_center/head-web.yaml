@@ -1,0 +1,7 @@
+head_detection_node:
+  ros__parameters:
+    input_topic: /head/calibrated/color/image_raw
+    target_topic: /detection/head/target
+    debug_topic: /detection/head/debug_image
+    task: detect
+    confidence: 0.35
