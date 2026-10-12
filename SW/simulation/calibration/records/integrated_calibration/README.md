@@ -1,3 +1,7 @@
+# Final Head selection: 2026-10-12 physical Koide
+
+The current runtime/summary includes the accepted physical four-bag Koide overlay. Final Head transforms are in `results/base_head_koide.json` and `results/head_mid360_koide.json`. `results/base_head.json`, arm/CAD-delta results and `application/` remain the previous integration stages. Regeneration reapplies the physical overlay last. [Physical record and Jetson execution](../../../../../HW/calibration/head_mid360/README.md). No additional verification was run for this overlay.
+
 # Integrated calibration results
 
 This bundle applies the physical Base–2D LiDAR estimate (2026-10-10), recorded

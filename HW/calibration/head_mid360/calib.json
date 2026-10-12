@@ -1,0 +1,51 @@
+{
+  "camera": {
+    "camera_model": "plumb_bob",
+    "distortion_coeffs": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "intrinsics": [
+      608.9269409179688,
+      607.6072387695313,
+      326.0560607910156,
+      249.5940399169922
+    ]
+  },
+  "meta": {
+    "bag_names": [
+      "mid360_camera_20261012_004405",
+      "mid360_camera_20261012_004712",
+      "mid360_camera_20261012_005323",
+      "mid360_camera_20261012_005418"
+    ],
+    "camera_info_topic": "/camera/camera/color/camera_info",
+    "data_path": "/home/sparo/vlcal_data",
+    "image_topic": "/camera/camera/color/image_raw",
+    "intensity_channel": "intensity",
+    "points_topic": "/livox/lidar"
+  },
+  "results": {
+    "T_lidar_camera": [
+      0.03621342108120821,
+      -0.026786900107094835,
+      -0.08070957488472164,
+      0.436295004181045,
+      0.4425071265873687,
+      0.5487692846319301,
+      0.5591836768814089
+    ],
+    "init_T_lidar_camera": [
+      0.016506286337971687,
+      0.02961830422282219,
+      -0.062018949538469315,
+      0.44182000992605097,
+      0.43909867908032457,
+      0.5460356482037744,
+      0.560207553333715
+    ]
+  }
+}

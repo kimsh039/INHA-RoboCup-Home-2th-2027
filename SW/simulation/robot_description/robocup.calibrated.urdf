@@ -659,7 +659,7 @@
   <joint name="camera_link_joint" type="fixed">
     <parent link="rack_base_link" />
     <child link="camera_link" />
-    <origin xyz="-0.1231374351388152 -0.00046627446244331891 1.2602505470202274" rpy="0.0041075243142279123 0.25740565260292736 0.0015486552345582768" />
+    <origin xyz="-0.14374646438775088 0.026947328083129878 1.2634639227319704" rpy="-0.016534346952430324 0.229703005248273 0.0022884913799309371" />
   </joint>
   <link name="cad_2D_LiDARMount_1" />
   <joint name="cad_2D_LiDARMount_1_joint" type="fixed">

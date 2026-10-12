@@ -1,5 +1,7 @@
 # Calibration summary
 
+2026-10-12: **the accepted physical koide3 four-bag Head–Mid360 result is now selected for the Head runtime**, replacing the historical arm/CAD-delta route. [Record, URDF composition and Jetson launch](../../../HW/calibration/head_mid360/README.md). The measurements and solver residuals below describe the previous simulation integration unless explicitly marked physical.
+
 2026-10-10: the default nominal and calibrated URDFs now use the selected **15° downward Head mount** from Fusion. The calibrated Head pose applies its CAD rigid delta to the historical observations below; these solver residuals are not a new 15° calibration. [Current model and regeneration behavior](../robot_description/README.md) · [Mount provenance and validation](../../../HW/URDF/sensor_rack_description/camera_mount_15/README.md).
 
 2026-10-07 · Gazebo sensor calibration + MuJoCo TCP pivot · Head/Wrist cameras: D435
@@ -12,9 +14,9 @@
 |---|---|---|
 | Base–2D LiDAR | **Physical (2026-10-10):** x=24.248 mm, y=9.159 mm, yaw=2.8367°; z/roll/pitch fixed. Relative to the Mid-360S | Applied. 6 train / 2 held-out static poses: held-out G2→Mid-360S wall distance median 7.0/6.7 mm (CAD 42/70 mm), 90–92% within 20 mm. [Record](../../../HW/calibration/base_2dlidar/README.md). Gazebo estimate (x=0.124 mm, y=0.521 mm, yaw=8.844783°) kept as history |
 | Base–Mid360 | xyz≈(-0.179962, 0.000156, 1.198867) m; roll≈180° | Applied. Recorded A/B maximum plane offsets: 3.594/3.167 mm |
-| Head–Mid360 | Recorded plane fit; held-out maximum 4.247 mm / 0.814° | Preserved. Historical Gazebo GT position error 11.720 mm; not used as the current Head mount |
+| Head–Mid360 | Physical Koide four-bag RGB optical estimate, accepted 2026-10-12 | Applied. Previous simulation plane fit and metrics preserved as history |
 | Base–PiPER | xyz=(-0.0195, 0, 0.80611) m; RPY=0 | Applied as `urdf_nominal_reference`; no independent measurement |
-| PiPER–Head | New eye-on-base image PnP + measured-joint FK, 25 train / 10 holdout | Applied through Base–PiPER. Solver held-out maximum 0.272 mm / 0.203° |
+| PiPER–Head | Historical eye-on-base image PnP + measured-joint FK, 25 train / 10 holdout | Superseded for Head runtime. Historical solver held-out maximum 0.272 mm / 0.203° |
 | Link6–Wrist | Recorded eye-in-hand hand-eye, 25 train / 10 holdout | Applied. Recorded maximum 0.339 mm / 0.294° |
 | Link6–TCP | Simulated point-constrained pivot, 25 train / 10 holdout; xyz≈(0, 0, 0.1425) m | Applied. Intrinsic held-out residual 3.210513e-06 mm; axes defined, hardware accuracy not established |
 | Head path comparison | LiDAR route versus new arm route | Difference 9.871 mm / 0.414°; numerical comparison, not proof of physical accuracy |
@@ -28,7 +30,7 @@ Every transform is `parent ← child`, in metres. A point is mapped by `p_parent
 
 - LiDAR Head route: `T_base_head = T_base_mid × inverse(T_head_mid_recorded)`.
 - Arm Head route: `T_base_head = T_base_piper × T_piper_head_measured`.
-- The current runtime selects the new arm route because its solver-reported held-out residuals meet the existing 5 mm / 1° provisional limits. This is not a GT-based correction of the plane result.
+- The current Head runtime selects the user-accepted physical Koide route: `T_base_rgb = T_base_livox × T_livox_rgb_koide`. The arm route and its residuals remain historical.
 - `head_mid360_runtime.json = inverse(T_base_head_selected) × T_base_mid` is a derived relation, not an independently refitted Head–Mid360 calibration.
 - The Base–PiPER reference shares the URDF with FK. The route comparison is therefore not an independent physical arm calibration.
 - TCP now comes from a fixed-point pivot fit of actual stepped joint observations. The simulated probe is placed at the symmetric CAD jaw-tip centre; the old 142.5 mm jaw-origin reference is preserved separately. The fixture uses an imposed point equality, not physical surface contact. Rotation is a separate CAD-axis definition.
@@ -65,7 +67,7 @@ SW/simulation/calibration/.venv/bin/python -m pip install -r SW/simulation/calib
 SW/simulation/calibration/.venv/bin/python SW/simulation/calibration/integrate_calibration.py --replace
 ```
 
-`--replace` replaces the generated bundle and calibrated runtime only. It preserves all recorded input sessions. Model references are explicitly marked `urdf_nominal_reference`; derived transforms retain their source hashes and nominal-reference provenance. `add-tcp` accepts either a passed pivot result or this explicitly marked model reference.
+`--replace` replaces the generated bundle and calibrated runtime only. Its final step reapplies the accepted physical Koide Head overlay and writes `base_head_koide.json`, `head_mid360_koide.json` and the final summary. Older `base_head.json` is the pre-overlay stage. It preserves all recorded input sessions. Model references are explicitly marked `urdf_nominal_reference`; derived transforms retain their source hashes and nominal-reference provenance. `add-tcp` accepts either a passed pivot result or this explicitly marked model reference.
 
 New Head–PiPER collection is available with a new, empty session directory:
 

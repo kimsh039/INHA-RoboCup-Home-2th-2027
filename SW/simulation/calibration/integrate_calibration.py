@@ -216,6 +216,14 @@ def main():
             application = runtime.with_name(runtime.name + '.application.json')
             application.write_text(json.dumps(summary, indent=2, allow_nan=False) + '\n')
         print(json.dumps({k: summary[k] for k in ('status', 'head_selection', 'head_arm_solver_holdout', 'tcp_solver_holdout', 'tcp_translation_xyz_m', 'runtime')}, indent=2))
+        # Final physical Head overlay: do not reapply the historical 15-degree
+        # CAD delta to the newly accepted Koide observations.
+        koide_record = HW_CALIBRATION / 'head_mid360/calib.json'
+        if koide_record.exists():
+            import subprocess
+            import sys
+            subprocess.run([sys.executable, str(koide_record.parent / 'tools/apply_koide.py'),
+                            '--urdf', str(runtime), '--bundle', str(output)], check=True)
 
 
 if __name__ == '__main__':
