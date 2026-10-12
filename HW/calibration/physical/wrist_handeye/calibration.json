@@ -1,0 +1,26 @@
+{
+  "measurement": "physical_robot",
+  "parent_frame": "piper_link6",
+  "child_frame": "wrist_camera_optical_frame",
+  "driver_optical_frame": "wrist_color_optical_frame",
+  "camera_serial": "243222070076",
+  "translation_unit": "m",
+  "translation_xyz_m": [
+    -0.063877,
+    0.028728,
+    -0.012631
+  ],
+  "quaternion_xyzw": [
+    0.018698,
+    -0.005325,
+    -0.705684,
+    0.70826
+  ],
+  "method": "PARK",
+  "sample_count": 15,
+  "source_commit": "0bac1e558075600d21c6b7273f26a6858266ea0d",
+  "source_path": "SW/simulation/calibration/wrist_handeye/wrist_handeye_calibration.yaml",
+  "source_sha256": "16ccafef8257a40e524f75ab7b239d290e3f765638bf6c68f282bf6fc84a2e8d",
+  "source_note": "Original YAML has malformed validation indentation; transform fields above it are transcribed without changing the source.",
+  "post_work_verification_run": false
+}

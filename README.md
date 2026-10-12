@@ -1,5 +1,7 @@
 # INHA United @Home · 2027
 
+**실물 로봇 실행:** [Jetson에서 실물 캘리브레이션을 적용하는 방법](SW/robot/README.md). 최신 G2·Base–Mid360·Head–Mid360·Wrist hand-eye·RGB 내부 보정·Tracer 오도메트리를 사용합니다.
+
 인하 유나이티드 앳홈 2기 · TRACER × PiPER · ROS 2 Humble · Jetson AGX Orin
 
 | 영역 | 내용 | 시작 문서 |

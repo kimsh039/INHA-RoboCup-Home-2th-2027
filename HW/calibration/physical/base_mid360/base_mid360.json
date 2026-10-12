@@ -1,0 +1,329 @@
+{
+  "parent_frame": "base_link",
+  "child_frame": "livox_frame",
+  "translation_unit": "m",
+  "matrix4x4": [
+    [
+      0.9992406659654968,
+      -0.03353016926897358,
+      -0.019844879178890638,
+      -0.15647343152029147
+    ],
+    [
+      -0.03360395023290865,
+      -0.9994294578394118,
+      -0.0033960759066138206,
+      0.00540383411963044
+    ],
+    [
+      -0.01971968583864826,
+      0.004060363482899699,
+      -0.9997973031764049,
+      1.1872549671135342
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "translation_xyz_m": [
+    -0.15647343152029147,
+    0.00540383411963044,
+    1.1872549671135342
+  ],
+  "quaternion_xyzw": [
+    0.9998084100193039,
+    -0.01678674604782181,
+    -0.009893036661087649,
+    0.0018644670605865265
+  ],
+  "schema": "base_mid360_motion_floor/v3",
+  "status": "physical_cross_validated",
+  "measurement": "physical_robot",
+  "date": "2026-10-12",
+  "transform_direction": "base_link <- livox_frame",
+  "session": "Automated stop-and-go on /cmd_vel (CAN control mode only), 4 sessions, 108 still periods, 2026-10-12 00:11-00:24, robot configuration with the head D435 connected",
+  "sources": {
+    "roll_pitch": "Floor plane in the Mid-360S cloud (RANSAC 12 mm, 0.8-3 m ring) in the 29 stills of the spin session; the mean normal over 16 headings cancels the room floor slope",
+    "xy_yaw": "Mid-360S motion geometry (rotation centre of the spins, driving direction of 36 + 36 straight steps) in the levelled sensor frame, independent of the G2; then moved by the common frame correction that splits the G2 / Mid-360S motion-geometry difference",
+    "z": "URDF ground (-0.1425 m) + mean Mid-360S origin to floor-plane distance (29 stills)"
+  },
+  "rpy_deg": [
+    179.7673124231003,
+    1.1299280117148112,
+    -1.926101744621324
+  ],
+  "cad": {
+    "xyz_m": [
+      -0.18,
+      0.0,
+      1.19911
+    ],
+    "rpy_deg": [
+      180.0,
+      0.0,
+      0.0
+    ]
+  },
+  "delta_vs_cad": {
+    "x_mm": 23.52656847970852,
+    "y_mm": 5.40383411963044,
+    "z_mm": -11.855032886465722,
+    "tilt_roll_deg": -0.23268757689970698,
+    "tilt_pitch_deg": 1.1299280117148112,
+    "yaw_deg": -1.9261017446213202
+  },
+  "floor": {
+    "n": 29,
+    "normal_sensor": [
+      -0.019719685838648263,
+      0.0040603634828996985,
+      -0.9997973031764047
+    ],
+    "distance_mean_m": 1.329754967113534,
+    "distance_std_mm": 0.89635074856712,
+    "std": {
+      "roll_deg": 0.054142415311941444,
+      "pitch_deg": 0.11737221120389225,
+      "sensor_to_plane_mm": 0.89635074856712
+    },
+    "ground_z_m": -0.14250000000000002,
+    "note": "per-still floor normal in the levelled frame; its spread over 16 headings includes the room floor slope"
+  },
+  "motion_geometry": {
+    "only_mid": {
+      "translation_m": [
+        -0.15454872807110392,
+        0.0054607990316942676,
+        1.187254967113534
+      ],
+      "rpy_deg": [
+        179.7673124231003,
+        1.1299280117148112,
+        -1.9751486904766438
+      ]
+    },
+    "consistency": {
+      "cw_ccw_centre_difference_mm": 1.2575878089770438,
+      "forward_reverse_yaw_difference_deg": 0.08948286314675369,
+      "spin_fit_resid_max_mm": 4.074027870819755,
+      "straight_seg_std_deg": 0.300328513905531
+    },
+    "spins": {
+      "ccw": {
+        "centre_L_mm": [
+          154.04753009584797,
+          0.05857658171731783
+        ],
+        "resid_max_mm": 3.1247489227550647,
+        "turn_deg": 337.02198710576795
+      },
+      "cw": {
+        "centre_L_mm": [
+          155.24269533544384,
+          -0.33271250240007877
+        ],
+        "resid_max_mm": 4.074027870819755,
+        "turn_deg": -337.50507514384
+      }
+    },
+    "straights": {
+      "fwd": {
+        "phi_deg": 1.9281127697088718,
+        "seg_std_deg": 0.300328513905531,
+        "n": 36,
+        "sem_deg": 0.0500547523175885,
+        "first_session_phi_deg": 1.9253645238895136,
+        "steps_m": [
+          0.14670452608713694,
+          0.14441476929321553,
+          0.14431482401269347,
+          0.1436896229293043,
+          0.14186199992888762,
+          0.14483757322904697,
+          0.14220145435872258,
+          0.14972816530932992,
+          0.14388885245587502,
+          0.1429818464390165,
+          0.14418705506724572,
+          0.14533918377174776,
+          0.14346505906437784,
+          0.14839612274716063,
+          0.1451139865337618,
+          0.14209386463131135,
+          0.1439374350428312,
+          0.14637784639255785,
+          0.14473436910639223,
+          0.1468977772830567,
+          0.144076738792756,
+          0.14123560072724362,
+          0.14544425140017853,
+          0.14398235912243956,
+          0.14279830276683192,
+          0.14866591982130367,
+          0.14478821025426894,
+          0.14240129655293876,
+          0.1431332968646703,
+          0.14391069643623092,
+          0.14334460507158697,
+          0.1487438847131279,
+          0.14424577770464964,
+          0.14229010770124434,
+          0.14324266544607933,
+          0.14415660938725428
+        ]
+      },
+      "rev": {
+        "phi_deg": 2.0175956328556257,
+        "seg_std_deg": 0.25404005623246995,
+        "n": 36,
+        "sem_deg": 0.042340009372078324,
+        "first_session_phi_deg": 2.037603618443825,
+        "steps_m": [
+          0.14569822785405726,
+          0.14543574914143387,
+          0.14227316384025523,
+          0.14402618435751754,
+          0.14509911213142168,
+          0.144959421082061,
+          0.14551408927340842,
+          0.14731962831372247,
+          0.14094075278386653,
+          0.14670743813866127,
+          0.14502704765279703,
+          0.14595794823104524,
+          0.1461746323220462,
+          0.14876326333620515,
+          0.14151498125175813,
+          0.1458957705820865,
+          0.1439670853767198,
+          0.14516958674885325,
+          0.1425057870756386,
+          0.15020947109156255,
+          0.14031508913914176,
+          0.14561970767393917,
+          0.14407681816925635,
+          0.14438178040467023,
+          0.14373734278504954,
+          0.15068588898327304,
+          0.14134229721877645,
+          0.14326313163335958,
+          0.14533874526796056,
+          0.14429347010048008,
+          0.14413030521935294,
+          0.14939845045044792,
+          0.14218533447872805,
+          0.1437086656407377,
+          0.14394782375306572,
+          0.14545401443550138
+        ]
+      }
+    },
+    "frame_correction": {
+      "x_mm": -1.920085463943331,
+      "y_mm": 0.07533552741114703,
+      "yaw_deg": 0.049046945855320496
+    }
+  },
+  "holdout": {
+    "sessions": [
+      "val_20261012_001106",
+      "val_20261012_001429",
+      "val_20261012_001706",
+      "val_20261012_002053"
+    ],
+    "final_deployed": {
+      "med_cm": 0.4504556832682014,
+      "p90_cm": 2.1363384576562816,
+      "per_session": {
+        "spins": {
+          "med_cm": 0.4311449789428823,
+          "p90_cm": 1.516869528954583,
+          "within_2cm": 0.9288039939222922,
+          "n": 9214
+        },
+        "str1": {
+          "med_cm": 0.4697663875935206,
+          "p90_cm": 2.136063983615924,
+          "within_2cm": 0.8912957337207766,
+          "n": 7571
+        },
+        "str2": {
+          "med_cm": 0.4855191318103527,
+          "p90_cm": 2.1363384576562816,
+          "within_2cm": 0.8922432986018345,
+          "n": 11229
+        },
+        "poses": {
+          "med_cm": 0.41072583500684456,
+          "p90_cm": 1.3464252572309565,
+          "within_2cm": 0.9407434670592565,
+          "n": 5434
+        }
+      }
+    },
+    "note": "final_deployed = G2 points with base_link <- laser_frame and Mid-360S planes with this base_link <- livox_frame; the G2 <-> Mid-360S relative part fitted on the other three sessions; point-to-plane, matches within 20 cm; med = median of the per-session medians, p90 = worst per-session p90"
+  },
+  "tape": {
+    "mid360_housing_centre_above_floor_m": 1.355,
+    "drive_axle_above_floor_m": 0.06,
+    "livox_origin": {
+      "source": "Livox Mid-360 User Manual v1.2 (Appendix) and Mid-360S User Manual v1.0 p.16: point-cloud origin 47.0 mm from the mounting face, housing height 60 mm",
+      "offset_from_housing_centre_mm": 17.0,
+      "mounting": "upside down: origin 17 mm below the housing centre"
+    },
+    "mid360_z_from_tape_m": 1.1955,
+    "difference_floor_minus_tape_mm": -8.24503288646583,
+    "straight_line_from_base_floor_point_cm": 136,
+    "straight_line_from_calibration_cm": 135.58252386055898,
+    "fore_aft_robot_lying_on_side_mm": -173.5
+  },
+  "mast": {
+    "phone_inclinometer_deg": {
+      "mast_forward_lean": 2.0,
+      "mid360_tilt": 2.0,
+      "resolution": "about +-0.5-1 deg"
+    },
+    "team_estimate_deg": "2-3 forward",
+    "change_with_configuration": {
+      "before": "2026-10-11 21:00 run (head camera not connected): pitch 2.913 deg, x -152.2 mm",
+      "after": "this run (head D435 connected): pitch 1.130 deg, x -156.5 mm",
+      "live_check": "check_live.py before this run: G2 vs Mid-360S correction dx -31 mm, floor pitch -1.59 deg with the old values"
+    },
+    "interpretation": "The mast / bracket carrying the Mid-360S changes its tilt with the robot configuration (1.8 deg after the head camera was connected); the position changes little (~4 mm). A 1.8 deg tilt error shifts walls at the G2 height (0.85 m below the sensor) by ~27 mm. Run check_live.py after any change; recalibrate (automated, ~12 min) when its correction exceeds a few mm."
+  },
+  "bags": {
+    "val_20261012_001106": {
+      "role": "calib_drive.py: 8 x +45 deg, 8 x -45 deg, 6 x 0.15 m forward, 6 reverse (29 stills)",
+      "sha256": "dda2b7a677148055ec77d45bd4dfa4f14f6bf85ec49e3c5ef20166db69d37365",
+      "bytes": 1062268928
+    },
+    "val_20261012_001429": {
+      "role": "calib_drive.py --straights 2 (25 stills)",
+      "sha256": "549a8a256b4929a61270b8585259c3ddb3467e59951a2c98b523741e0912b6b7",
+      "bytes": 821063680
+    },
+    "val_20261012_001706": {
+      "role": "calib_drive.py --straights 3 (37 stills)",
+      "sha256": "1e5cca4c642cf63ad8a74eb4fef7377103475c880ccb2c92a17ebaafb866fbd8",
+      "bytes": 1208053760
+    },
+    "val_20261012_002053": {
+      "role": "calib_drive.py --poses: 16 positions / headings in a ~0.6 m box (17 stills)",
+      "sha256": "cee8902239c19563cc6722b58c5cdcc601650d379f4747b0702645d918494128",
+      "bytes": 869564416
+    }
+  },
+  "bag_storage": "raw bags (rosbag2 sqlite3, recorded on the Jetson) removed after analysis (2026-10-12); SHA-256 kept for identification. Per-segment results are in solver_output.json files",
+  "tools": [
+    "base_2dlidar/tools/calib_drive.py",
+    "base_2dlidar/tools/calib_extract.py",
+    "base_2dlidar/tools/calib_solve.py",
+    "base_2dlidar/vs_mid360/tools/g2_mid_static.py"
+  ],
+  "g2_record_sha256": "6db17e41513d99346961f83b099a61e9b67e551d6655860619ad0b206727b38f",
+  "independent_measurement": true,
+  "contains_nominal_reference": true
+}

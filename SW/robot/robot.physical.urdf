@@ -1,0 +1,297 @@
+<?xml version='1.0' encoding='utf-8'?>
+<robot name="robocup_physical_arm">
+  <link name="base_link">
+    <visual>
+      <origin rpy="1.57 0 0" xyz="0 0 0" />
+      <geometry>
+        <mesh filename="../../HW/URDF/tracer/meshes/tracer_base_link_no_wheel.dae" />
+      </geometry>
+    </visual>
+    <collision>
+      <origin rpy="1.57 0 0" xyz="0 0 0" />
+      <geometry>
+        <mesh filename="../../HW/URDF/tracer/meshes/tracer_base_link_no_wheel.dae" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="piper_base_link">
+    <inertial>
+      <origin xyz="-0.00473641164191482 2.56829134630247E-05 0.041451518036016" rpy="0 0 0" />
+      <mass value="1.02" />
+      <inertia ixx="0.00267433" ixy="-0.00000073" ixz="-0.00017389" iyy="0.00282612" iyz="0.0000004" izz="0.00089624" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="../../HW/URDF/piper/meshes/dae/base_link.dae" />
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="../../HW/URDF/piper/meshes/base_link.stl" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="piper_link1">
+    <inertial>
+      <origin xyz="0.00032 -0.00041 -0.00348" rpy="0 0 0" />
+      <mass value="0.71" />
+      <inertia ixx="0.00050027" ixy="0.00000078" ixz="0.00000626" iyy="0.00040879" iyz="0.00000462" izz="0.00045802" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="../../HW/URDF/piper/meshes/dae/link1.dae" />
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="../../HW/URDF/piper/meshes/link1.stl" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="piper_link2">
+    <inertial>
+      <origin xyz="0.21852 -0.00861 0.00126" rpy="0 0 0" />
+      <mass value="1.16" />
+      <inertia ixx="0.00111915" ixy="0.00182916" ixz="0.00019233" iyy="0.06763251" iyz="0.00000767" izz="0.067559" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="../../HW/URDF/piper/meshes/dae/link2.dae" />
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="../../HW/URDF/piper/meshes/link2.stl" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="piper_link3">
+    <inertial>
+      <origin xyz="-0.01999 -0.14808 -0.00053" rpy="0 0 0" />
+      <mass value="0.5" />
+      <inertia ixx="0.01347608" ixy="0.00161034" ixz="0.00000066" iyy="0.00046377" iyz="0.00000162" izz="0.01363321" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="../../HW/URDF/piper/meshes/dae/link3.dae" />
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="../../HW/URDF/piper/meshes/link3.stl" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="piper_link4">
+    <inertial>
+      <origin xyz="0.00013 -0.00076 -0.00394" rpy="0 0 0" />
+      <mass value="0.38" />
+      <inertia ixx="0.00017844" ixy="0.00000062" ixz="0.00000067" iyy="0.00018914" iyz="0.00000408" izz="0.00014613" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="../../HW/URDF/piper/meshes/dae/link4.dae" />
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="../../HW/URDF/piper/meshes/link4.stl" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="piper_link5">
+    <inertial>
+      <origin xyz="0.00018 -0.06104 -0.00227" rpy="0 0 0" />
+      <mass value="0.383" />
+      <inertia ixx="0.00172318" ixy="0.00000259" ixz="0.00000010" iyy="0.00017936" iyz="0.00000990" izz="0.00171172" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="../../HW/URDF/piper/meshes/dae/link5.dae" />
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="../../HW/URDF/piper/meshes/link5.stl" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="piper_link6">
+    <inertial>
+      <origin xyz="-0.00003 0.00006 -0.002" rpy="0 0 0" />
+      <mass value="0.007" />
+      <inertia ixx="0.00152112" ixy="0.00000202" ixz="0.00000261" iyy="0.00138626" iyz="0.00000002" izz="0.00031152" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="../../HW/URDF/piper/meshes/dae/link6.dae" />
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="../../HW/URDF/piper/meshes/link6.stl" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="piper_flange_link">
+    <inertial>
+      <origin xyz="1.151691e-03 0.782428e-03 4.798051e-03" rpy="0 0 0" />
+      <mass value="0.04" />
+      <inertia ixx="9.935389e-06" ixy="0.0" ixz="0.0" iyy="10.508003e-06" iyz="0.0" izz="19.652873e-06" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="../../HW/URDF/piper/meshes/dae/flange.dae" />
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="../../HW/URDF/piper/meshes/flange.stl" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="piper_gripper_base">
+    <inertial>
+      <origin xyz="-0.000183807162235591 8.05033155577911E-05 0.0321436689908876" rpy="0 0 0" />
+      <mass value="0.45" />
+      <inertia ixx="0.00092934" ixy="0.00000034" ixz="-0.00000738" iyy="0.00071447" iyz="0.00000005" izz="0.00039442" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="../../HW/URDF/piper/meshes/dae/gripper_base.dae" />
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="../../HW/URDF/piper/meshes/gripper_base.stl" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="piper_gripper_link1">
+    <inertial>
+      <origin xyz="0.00065123185041968 -0.0491929869131989 0.00972258769184025" rpy="0 0 0" />
+      <mass value="0.025" />
+      <inertia ixx="0.00007371" ixy="-0.00000113" ixz="0.00000021" iyy="0.00000781" iyz="-0.00001372" izz="0.0000747" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="../../HW/URDF/piper/meshes/dae/gripper_link1.dae" />
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="../../HW/URDF/piper/meshes/gripper_link1.stl" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="piper_gripper_link2">
+    <inertial>
+      <origin xyz="0.00065123185041968 -0.0491929869131989 0.00972258769184025" rpy="0 0 0" />
+      <mass value="0.025" />
+      <inertia ixx="0.00007371" ixy="-0.00000113" ixz="0.00000021" iyy="0.00000781" iyz="-0.00001372" izz="0.0000747" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="../../HW/URDF/piper/meshes/dae/gripper_link2.dae" />
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="../../HW/URDF/piper/meshes/gripper_link2.stl" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="piper_joint1" type="revolute">
+    <origin xyz="0 0 0.123" rpy="0 0 1.6" />
+    <parent link="piper_base_link" />
+    <child link="piper_link1" />
+    <axis xyz="0 0 1" />
+    <limit lower="-4.2179938" upper="1.0179938" effort="100" velocity="5" />
+  </joint>
+  <joint name="piper_joint2" type="revolute">
+    <origin xyz="0 0 0" rpy="1.5707963 -0.1357866 -3.1415926" />
+    <parent link="piper_link1" />
+    <child link="piper_link2" />
+    <axis xyz="0 0 1" />
+    <limit lower="0" upper="3.1415926" effort="100" velocity="5" />
+  </joint>
+  <joint name="piper_joint3" type="revolute">
+    <origin xyz="0.28503 0 0" rpy="0 0 -1.7938494" />
+    <parent link="piper_link2" />
+    <child link="piper_link3" />
+    <axis xyz="0 0 1" />
+    <limit lower="-2.9670597" upper="0" effort="100" velocity="5" />
+  </joint>
+  <joint name="piper_joint4" type="revolute">
+    <origin xyz="-0.02198 -0.25075 0" rpy="1.5707963 0 0" />
+    <parent link="piper_link3" />
+    <child link="piper_link4" />
+    <axis xyz="0 0 1" />
+    <limit lower="-1.7453292" upper="1.7453292" effort="100" velocity="5" />
+  </joint>
+  <joint name="piper_joint5" type="revolute">
+    <origin xyz="0 0 0" rpy="-1.5707963 0 0" />
+    <parent link="piper_link4" />
+    <child link="piper_link5" />
+    <axis xyz="0 0 1" />
+    <limit lower="-1.2217304" upper="1.2217304" effort="100" velocity="5" />
+  </joint>
+  <joint name="piper_joint6" type="revolute">
+    <origin xyz="8.8259E-05 -0.091 0" rpy="1.5707963 0 0" />
+    <parent link="piper_link5" />
+    <child link="piper_link6" />
+    <axis xyz="0 0 1" />
+    <limit lower="-2.0943951" upper="2.0943951" effort="100" velocity="5" />
+  </joint>
+  <joint name="piper_flange_joint" type="fixed">
+    <origin xyz="0 0 0" rpy="0 0 0" />
+    <parent link="piper_link6" />
+    <child link="piper_flange_link" />
+  </joint>
+  <joint name="piper_gripper_base_joint" type="fixed">
+    <origin xyz="0 0 0.0045" rpy="0 0 0" />
+    <parent link="piper_flange_link" />
+    <child link="piper_gripper_base" />
+  </joint>
+  <joint name="piper_gripper_joint1" type="prismatic">
+    <origin xyz="0 0 0.138" rpy="1.5707963 0 0" />
+    <parent link="piper_gripper_base" />
+    <child link="piper_gripper_link1" />
+    <axis xyz="0 0 1" />
+    <limit lower="0" upper="0.05" effort="10" velocity="3" />
+  </joint>
+  <joint name="piper_gripper_joint2" type="prismatic">
+    <origin xyz="0 0 0.138" rpy="1.5707963 0 -3.1415926" />
+    <parent link="piper_gripper_base" />
+    <child link="piper_gripper_link2" />
+    <axis xyz="0 0 -1" />
+    <limit lower="-0.05" upper="0" effort="10" velocity="3" />
+  </joint>
+  <joint name="physical_base_to_piper" type="fixed">
+    <parent link="base_link" />
+    <child link="piper_base_link" />
+    <origin xyz="-0.0195 -2.0072832285199999e-15 0.80610999999999999" rpy="0 0 0" />
+  </joint>
+</robot>
