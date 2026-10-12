@@ -22,8 +22,10 @@ def generate_launch_description():
         if filename and not filename.startswith(('package:', 'file:', 'http:', 'https:')):
             mesh.set('filename', (path.parent / filename).resolve().as_uri())
     actions = [
-        DeclareLaunchArgument('tracer_can', default_value='can2'),
-        DeclareLaunchArgument('piper_can', default_value='can0'),
+        DeclareLaunchArgument('tracer_can', default_value='can_tracer'),
+        DeclareLaunchArgument('piper_can', default_value='can_arm'),
+        DeclareLaunchArgument('tracer', default_value='true'),
+        DeclareLaunchArgument('calibration', default_value='true'),
         DeclareLaunchArgument('arm', default_value='true'),
         DeclareLaunchArgument('head_camera', default_value='true'),
         DeclareLaunchArgument('wrist_camera', default_value='true'),
@@ -31,7 +33,8 @@ def generate_launch_description():
         DeclareLaunchArgument('mid360_lidar', default_value='true'),
         Node(package='tracer_base', executable='tracer_base_node', name='tracer_base_node',
              parameters=[str(config / 'tracer.yaml'), {'port_name': LaunchConfiguration('tracer_can')}],
-             remappings=[('/tf', '/wheel/tf'), ('/tf_static', '/wheel/tf_static')], output='screen'),
+             remappings=[('/tf', '/wheel/tf'), ('/tf_static', '/wheel/tf_static')],
+             condition=IfCondition(LaunchConfiguration('tracer')), output='screen'),
         Node(package='ydlidar_ros2_driver', executable='ydlidar_ros2_driver_node',
              parameters=[str(WORKSPACE / 'tracer_ws/src/ydlidar_ros2_driver/params/G2.yaml')],
              remappings=[('scan', '/scan_raw')], condition=IfCondition(LaunchConfiguration('g2_lidar')), output='screen'),
@@ -42,11 +45,17 @@ def generate_launch_description():
                           'cmdline_input_bd_code': 'livox0000000001'}],
              condition=IfCondition(LaunchConfiguration('mid360_lidar')), output='screen'),
         ExecuteProcess(cmd=[sys.executable, str(HERE / 'imu_base.py'), '--ros-args',
-                            '--params-file', str(config / 'imu_base.yaml')], output='screen'),
+                            '--params-file', str(config / 'imu_base.yaml')],
+                       condition=IfCondition(LaunchConfiguration('calibration')), output='screen'),
+        ExecuteProcess(cmd=[sys.executable, str(HERE / 'rotation_fallback.py')],
+                       condition=IfCondition(LaunchConfiguration('calibration')), output='screen'),
         Node(package='robot_localization', executable='ekf_node', name='ekf_filter_node',
-             parameters=[str(config / 'ekf.yaml')], remappings=[('odometry/filtered', '/odom_ekf')], output='screen'),
-        ExecuteProcess(cmd=[sys.executable, str(HERE / 'sensor_tf.py')], output='screen'),
-        ExecuteProcess(cmd=[sys.executable, str(HERE / 'calibrated_streams.py')], output='screen'),
+             parameters=[str(config / 'ekf.yaml')], remappings=[('odometry/filtered', '/odom_ekf')],
+             condition=IfCondition(LaunchConfiguration('calibration')), output='screen'),
+        ExecuteProcess(cmd=[sys.executable, str(HERE / 'sensor_tf.py')],
+                       condition=IfCondition(LaunchConfiguration('calibration')), output='screen'),
+        ExecuteProcess(cmd=[sys.executable, str(HERE / 'calibrated_streams.py')],
+                       condition=IfCondition(LaunchConfiguration('calibration')), output='screen'),
         Node(package='piper', executable='piper_read_slave_joint', name='piper_feedback',
              parameters=[{'can_port': LaunchConfiguration('piper_can'), 'gripper_exist': True}],
              remappings=[('joint_states', '/piper/joint_states_feedback')],
@@ -58,7 +67,7 @@ def generate_launch_description():
              remappings=[('joint_states', '/robot/joint_states')],
              condition=IfCondition(LaunchConfiguration('arm')), output='screen'),
     ]
-    for namespace, camera_name, serial, fps in [('head', 'camera', '244622071116', 15),
+    for namespace, camera_name, serial, fps in [('head', 'camera', '244622071116', 30),
                                               ('wrist', 'wrist', '243222070076', 30)]:
         actions.append(ExecuteProcess(cmd=[
             'ros2', 'launch', 'realsense2_camera', 'rs_launch.py',

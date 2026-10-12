@@ -2,7 +2,7 @@
 
 **관제센터는 젯슨에서 실행합니다. 맥은 SSH 터널을 통해 `http://localhost:8081`에 접속합니다.** ROS, 센서 드라이버, SLAM, YOLO 추론, HTTP 서버는 모두 젯슨에서 동작하고 맥 브라우저는 화면을 표시합니다. 맥에 ROS/RViz, Python 서버, Node.js를 설치할 필요가 없습니다.
 
-SLAM 지도·로봇 위치·2D 스캔·MID-360 점군·Head/Wrist 영상·검출 결과를 표시하며, 웹에서 Head D435, Wrist D435, YDLIDAR G2, MID-360 드라이버를 각각 켜고 끌 수 있습니다.
+SLAM 지도·로봇 위치·2D 스캔·MID-360 점군·Head/Wrist 영상·검출 결과를 표시하며, 웹에서 Head D435, Wrist D435, YDLIDAR G2, MID-360 드라이버를 각각 켜고 끌 수 있습니다. 화면 상단의 **서버 종료**는 관제센터와 여기서 시작한 센서·SLAM·검출 프로세스를 함께 종료합니다. 센서 그룹에는 SIGINT, SIGTERM, SIGKILL 순서로 종료를 요청하며 SSH 터널은 그대로 유지됩니다. 다시 사용하려면 젯슨에서 `start`를 실행합니다.
 
 ```text
 Jetson / Ubuntu (sparo@192.168.50.70)
@@ -16,6 +16,52 @@ Mac                      │
 ```
 
 ## 바로 실행하기
+
+### 디텍션 업데이트와 MID-360 수신 복구
+
+`--detection`은 현재 checkout의 `robocup_head_detection.backends.YoloDetector`와 클래스 변환을 직접 불러옵니다. 이전 단일 목표 YOLO/CSRT 실행 대신 매 프레임 전체 객체를 검출하고 `/detection/head/objects` (`std_msgs/String` JSON), `/detection/head/debug_image`를 발행합니다. 화면에는 green_apple, peach, tomato, fanta_can, cup, banana의 모든 박스와 Camera/YOLO FPS, 추론 시간을 표시합니다. 기존 7출력 체크포인트는 새 소스의 클래스 변환을 사용하며 가중치를 새로 학습한 것은 아닙니다. 이 관제용 실행은 커스텀 메시지 빌드 없이 기존 GPU venv를 사용하고, pull 후 관제센터 재시작으로 소스 변경을 반영합니다. `/detection/head/target` 추적기가 필요한 별도 접근 시스템은 해당 실행기를 따로 사용합니다.
+
+MID-360 로그에 `host IP 없음: 192.168.1.5`가 나오면 Livox 전용 Ethernet 프로필을 활성화해야 합니다. Wi-Fi의 `192.168.50.70`은 MID-360 설정의 수신 주소를 대신하지 않습니다. 아래 명령은 CAN 등록과 별도로 Ethernet만 설정하므로 팔 USB CAN이 없어도 사용할 수 있습니다. sudo 인증은 젯슨 터미널에서 입력합니다.
+
+```bash
+bash ~/robocup/SW/control_center/jetson-center.sh kill
+bash ~/robocup/SW/control_center/setup-lidar.sh &&
+ROBOCUP_YOLO_PYTHON="$HOME/venvs/head_detection/bin/python" \
+bash ~/robocup/SW/control_center/jetson-center.sh start --mapping --detection
+```
+
+회전은 보정된 `/imu/base`가 신선하게 들어올 때 MID-360 gyro를 사용합니다. IMU 시작 전·중지·수신 지연에는 `/odom`의 바퀴 각속도만 `/odom/rotation_fallback`으로 전달해 EKF 회전 입력을 이어갑니다. 대체 입력에는 유한 공분산을 넣고, gyro 수신이 돌아오면 발행을 중지합니다. 바퀴 회전 입력은 IMU 대체이며 같은 정확도를 보장하지 않습니다. CAN·오도메트리 패널에 바퀴/융합 yaw·각속도와 현재 회전 소스를 표시합니다.
+
+Humble SLAM Toolbox의 translation gate가 제자리 회전 스캔을 버리지 않도록 `minimum_travel_distance: 0.0`을 사용합니다. 스캔 처리는 최소 0.5초 간격, 지도 출력은 1초 간격이며 정지 중에도 스캔 처리량이 증가할 수 있습니다. 다른 `ROBOCUP_SLAM_PARAMS` 파일을 지정하면 그 파일의 설정이 우선합니다.
+
+### 현재 젯슨의 최초 설정과 재부팅 후 실행
+
+Tracer와 팔의 전원을 켜고 각각의 USB CAN 어댑터를 젯슨에 연결합니다. USB CAN은 총 두 개여야 하며 내장 `can0`/`can1`은 이 개수에 포함하지 않습니다. MID-360 Ethernet과 사용할 카메라·G2도 연결합니다.
+
+이번 복구에서는 젯슨 터미널에서 한 번 아래를 실행합니다. 기존 관제센터·통합 센서·`tracer` tmux 세션과 그 하위 프로세스를 먼저 정리하고, 두 USB CAN의 시리얼 고정·bitrate와 Livox 전용 Ethernet 설정을 저장합니다. sudo 비밀번호는 터미널에서 입력합니다.
+
+```bash
+bash ~/robocup/SW/control_center/setup-hardware.sh
+```
+
+USB CAN 한 개만 감지됐다는 오류가 나오면 서버 시작으로 넘어가지 않습니다. 팔 USB가 Linux CAN 인터페이스로 등록돼야 두 장치의 역할을 고정할 수 있습니다. 종료할 세션이 없다는 메시지는 정상이며 설정을 계속합니다.
+
+설정이 성공한 뒤, 그리고 다음 재부팅부터는 젯슨에서 다음 순서로 실행합니다. `kill-can-users`는 알려진 세 세션만 정리하며 다른 tmux 세션을 일괄 종료하지 않습니다.
+
+```bash
+bash ~/robocup/SW/control_center/jetson-center.sh kill-can-users &&
+ROBOCUP_YOLO_PYTHON="$HOME/venvs/head_detection/bin/python" \
+bash ~/robocup/SW/control_center/jetson-center.sh start --mapping --detection
+```
+
+젯슨에서 서버 준비 완료 메시지가 나오면 맥의 별도 터미널에서 터널을 연결하고, 브라우저에서 `http://localhost:8081`을 엽니다. 맥의 SSH 터널 터미널은 계속 열어 둡니다.
+
+```bash
+ssh -N -o ExitOnForwardFailure=yes \
+  -L 127.0.0.1:8081:127.0.0.1:8765 sparo@192.168.50.70
+```
+
+재부팅 후에는 위 서버 실행과 맥의 터널 연결을 반복합니다. 어댑터를 교체하거나 하드웨어 설정이 바뀐 경우에는 최초 설정을 다시 실행합니다.
 
 ### 1. 젯슨: 저장소 업데이트
 
@@ -56,7 +102,7 @@ bash SW/control_center/jetson-center.sh start --mapping --detection
 - 실물 TF·보정 스트림·Tracer 오도메트리·PiPER 관절 피드백
 - 개별 Head/Wrist D435, G2, MID-360 드라이버
 - `--mapping`: SLAM Toolbox (`/map`)
-- `--detection`: Head YOLO/CSRT (`/detection/head/target`, `/detection/head/debug_image`)
+- `--detection`: 현재 Head 6종 전체 객체 YOLO (`/detection/head/objects`, `/detection/head/debug_image`)
 - ROS 구독 bridge와 HTTP 서버 (`127.0.0.1:8765`)
 
 차체와 팔의 상태 노드는 실행하지만, 이 관제센터는 주행 속도·접근·파지 명령을 발행하지 않습니다. 지도는 LiDAR 스캔과 오도메트리 입력이 들어올 때 생성됩니다.
@@ -97,6 +143,42 @@ bash SW/control_center/connect.command
 
 맥 SSH 터널을 Ctrl+C로 닫거나 브라우저를 닫아도 젯슨의 tmux 관제센터는 계속 실행합니다. 다시 터널을 연결하면 다시 접속할 수 있습니다.
 
+## CAN 자동 연결과 오도메트리 상태
+
+기본 `start`는 `config.json`에 지정한 두 CAN 인터페이스를 살펴보고, 내려간 CAN 인터페이스의 연결과 BUS-OFF 복구를 자동 요청합니다. Tracer와 팔은 각각 USB CAN을 사용하며, Tracer는 `can_tracer`(500 kbps), PiPER는 `can_arm`(1 Mbps)로 구분합니다. 내장 `can0`/`can1`을 USB 어댑터 대신 배정하지 않습니다. `can.tracer.usb_serial`, `can.piper.usb_serial`로 각 어댑터를 확인하며, 다른 어댑터가 해당 이름을 사용 중이면 피드백을 시작하지 않습니다. 최초 설정은 두 USB CAN을 연결하고 관제센터와 기존 센서 실행을 종료한 뒤 실행합니다. `setup-jetson.sh`에도 이 준비가 포함됩니다.
+
+```bash
+bash SW/control_center/setup-can.sh
+```
+
+이 스크립트는 두 USB CAN의 고유 시리얼로 udev 이름 고정 규칙과 CAN 전용 systemd-networkd 설정을 저장하고, 현재 인터페이스도 이름과 bitrate를 적용합니다. 모든 `gs_usb` 장치에 같은 `can_arm` 이름을 주던 기존 `/etc/udev/rules.d/80-can-usb.rules`는 장치별 규칙으로 교체합니다. 현재 Tracer 어댑터 시리얼은 `003500294656530B20353433`이며, 팔 시리얼이 아직 비어 있을 때는 정확히 두 USB CAN 중 Tracer와 다른 어댑터를 팔로 등록합니다. 세 개 이상, 시리얼 중복/누락, 등록된 장치 미발견은 오류로 표시합니다. USB CAN이 한 개만 보이면 설정을 중단하며 내장 CAN을 대신 사용하지 않습니다. 이전 규칙·네트워크 설정·등록 파일은 `/var/backups/inha-control-center/`에 보관합니다.
+
+다른 어댑터를 쓰는 설치에서는 `setup-can.sh --tracer-serial SERIAL --piper-serial SERIAL`로 각 역할을 지정합니다. 현재 Linux에 등록된 CAN의 USB 경로와 시리얼은 `/usr/bin/python3 SW/control_center/can_devices.py`로 출력할 수 있습니다. 시리얼로 고정하므로 USB 연결 순서나 포트를 바꿔도 등록된 역할을 유지합니다.
+
+MID-360의 `bind failed`까지 함께 복구하려면 다음을 실행합니다. 관제센터의 소유 프로세스를 먼저 종료하고 현재 CAN 설정과 Livox JSON의 host IP를 적용합니다. 기본 Livox 전용 Ethernet 프로필은 `livox`, 인터페이스는 `eno1`입니다. `sensors.mid360_lidar`의 `connection`, `interface`, `prefix`로 바꿀 수 있습니다. Wi-Fi 연결을 수정하지 않으며 Livox Ethernet은 기본 경로로 사용하지 않습니다.
+
+```bash
+bash SW/control_center/setup-hardware.sh
+ROBOCUP_YOLO_PYTHON="$HOME/venvs/head_detection/bin/python" \
+bash SW/control_center/jetson-center.sh start --mapping --detection
+```
+
+센서 TF, 보정 `/scan`, 카메라 보정, IMU relay, EKF는 `sensor_core`로 CAN 상태와 관계없이 시작합니다. 차체와 팔 피드백은 각 CAN의 준비 상태에 따라 독립적으로 시작합니다. 지도 생성에는 실제 차체 odom과 G2 스캔이 필요합니다. MID-360 시작 시 host IP와 UDP 포트를 점검하며 주소 누락·포트 점유·SDK 초기화 실패를 센서 오류와 로그에 표시합니다.
+
+웹의 **CAN 연결 · 오도메트리** 패널에 다음을 각각 표시합니다.
+
+- CAN 인터페이스/bitrate/bus 상태, RX 누적 프레임 수와 실제 최근 수신 여부
+- 바퀴 `/odom`과 융합 `/odom_ekf`의 Hz, 속도, 최근 수신 및 원본 timestamp 지연
+- `odom → base_link` TF의 수신 지연
+
+최대 3초 이내 CAN 프레임 증가와 바퀴/융합 odom의 유효한 새 timestamp, 최신 TF가 모두 있을 때 **정상 수신**을 표시합니다. 정지 상태의 속도 0도 정상입니다. CAN 인터페이스 UP만으로 정상 수신으로 표시하지 않으며, NaN/Inf, 잘못된 좌표계, 멈춘 timestamp, BUS-OFF 등을 구분합니다. 이 표시는 데이터 수신 상태이며 실제 주행 거리 정확도나 CAN 발신 장치의 신원을 측정한 결과는 아닙니다.
+
+차체와 팔 피드백은 각 CAN의 준비 상태에 따라 실행합니다. 한쪽만 연결돼도 해당 피드백을 시작합니다. 연결이 끊기면 관제센터가 시작한 피드백 그룹만 중지하고, 다시 연결되거나 장치 번호가 바뀌면 새 그룹을 시작합니다. 센서 TF와 보정은 독립적으로 유지합니다. 주행 속도·팔 이동 명령을 보내는 동작 확인은 하지 않습니다.
+
+`--observe`에서는 CAN과 odom을 관측만 하고 CAN 설정이나 피드백 프로세스를 바꾸지 않습니다. `config.json`의 `can.auto_connect=false`는 CAN 링크 변경 요청만 비활성화하며, 기본 `start`의 피드백 관리 기능은 유지합니다. 사용 중인 인터페이스의 bitrate가 다르면 임의로 내려 재설정하지 않고 오류를 표시합니다. 권한 부족/장치 누락/실행 실패는 패널과 이벤트에 표시되고 재시도합니다.
+
+코드를 갱신한 뒤 관제센터를 stop → start로 재시작하면 적용됩니다. 이번 변경 후 테스트·빌드·브라우저/실기 검증은 실행하지 않았습니다.
+
 ## 센서 켜기 / 끄기
 
 웹 상단의 **카메라 · LiDAR**에서 센서별 **켜기 / 끄기**를 누릅니다.
@@ -132,7 +214,15 @@ git pull --ff-only origin main
 bash SW/control_center/jetson-center.sh start --mapping --detection
 ```
 
-`stop`은 종료 요청을 전달하며 종료 상태를 폴링하지 않습니다. 아직 같은 tmux 세션이 있으면 `start`는 중복 실행하지 않습니다. 웹 접속은 다시 SSH 터널을 열면 됩니다.
+`stop`은 종료 요청을 전달하며 종료 상태를 폴링하지 않습니다. 아직 같은 tmux 세션이 있으면 `start`는 중복 실행하지 않습니다. 바로 강제 종료하고 다시 시작하려면 아래를 사용하세요.
+
+```bash
+bash SW/control_center/jetson-center.sh kill
+ROBOCUP_YOLO_PYTHON="$HOME/venvs/head_detection/bin/python" \
+bash SW/control_center/jetson-center.sh start --mapping --detection
+```
+
+`kill`은 관제센터 tmux 세션의 프로세스 트리를 중지해 자동 재실행을 막은 후 SIGKILL로 정리하고 세션을 제거합니다. 별도 프로세스 그룹으로 띄운 센서·SLAM·검출도 함께 대상에 포함됩니다. 다른 터미널에서 실행한 ROS 프로세스에는 신호를 보내지 않습니다. 강제 종료이므로 해당 프로세스의 정상 종료 처리와 기록 저장은 생략됩니다. 웹 접속은 다시 SSH 터널을 열면 됩니다.
 
 `config.json`은 Git에서 제외되어 장치 설정을 직접 관리할 수 있습니다. 소스 업데이트에는 `git pull --ff-only`를 사용하고, 로컬 변경 때문에 pull이 거절되면 변경을 보존한 채 처리하세요.
 
@@ -242,6 +332,14 @@ RViz와 같은 종류의 관측 데이터를 웹에서 볼 수 있으며 RViz의
 
 ## 문제 해결과 로그
 
+`start`는 최대 30초 동안 ROS bridge의 서버 준비 완료 메시지를 기다립니다. 기동 중 종료되면 오류와 시작 로그 경로를 터미널에 출력합니다. 전체 시작 출력은 `~/.local/state/inha-control-center/startup/`에 저장합니다 (`XDG_STATE_HOME`이 있으면 그 경로 사용). 최근 시작 오류는 다음 명령으로 볼 수 있습니다.
+
+```bash
+bash SW/control_center/jetson-center.sh errors
+```
+
+SSH 터널에서 `open failed: connect failed: Connection refused`가 나오면 터널의 원격 주소/포트에서 HTTP 서버가 연결을 받지 못한 것입니다. 젯슨의 시작 로그로 기동 오류를 파악하세요. 직접 기동 오류를 보려면 기존 관제센터를 `kill`로 종료한 뒤 젯슨 터미널에서 `bash SW/control_center/run-robot.sh --with-robot --mapping --detection`을 실행하고 그 터미널을 유지합니다.
+
 - **localhost 접속 실패:** 젯슨 관제센터를 먼저 실행하고 맥의 SSH 터널 터미널을 유지하세요. 포트가 겹치면 양쪽 포트를 함께 바꿉니다.
 - **SSH 인증 거절:** 일반 SSH 키/암호 인증을 터미널에서 설정합니다. 암호를 코드, 환경변수, Git에 넣지 않습니다.
 - **센서 외부 실행 표시:** 기존 통합 센서 실행을 종료하고 관제센터 기본 `start`로 전환합니다.
@@ -250,7 +348,7 @@ RViz와 같은 종류의 관측 데이터를 웹에서 볼 수 있으며 RViz의
 - **검출 없음:** Head package overlay, YOLO Python, 모델 경로, Head 입력 토픽을 맞춥니다.
 - **센서를 껐는데 지도/영상이 남아 있음:** 마지막 수신값을 표시하는 것이며 화면의 수신 지연 상태를 함께 봅니다.
 
-프로세스 로그는 젯슨의 `${XDG_STATE_HOME:-~/.local/state}/inha-control-center/<실행시각-PID>/`에 `head_camera.log`, `wrist_camera.log`, `g2_lidar.log`, `mid360_lidar.log`, `robot_core.log`, `mapping.log`, `head_detection.log`로 저장됩니다. 센서 카드의 설명에 마우스를 올리면 해당 로그 경로가 표시됩니다.
+프로세스 로그는 젯슨의 `${XDG_STATE_HOME:-~/.local/state}/inha-control-center/<실행시각-PID>/`에 `head_camera.log`, `wrist_camera.log`, `g2_lidar.log`, `mid360_lidar.log`, `sensor_core.log`, `robot_core.log`, `mapping.log`, `head_detection.log`로 저장됩니다. 센서 카드의 설명에 마우스를 올리면 해당 로그 경로가 표시됩니다.
 
 ## 파일 구성
 

@@ -3,6 +3,7 @@
 import argparse
 import base64
 from collections import deque
+import json
 import math
 import os
 from pathlib import Path
@@ -12,6 +13,7 @@ import time
 
 from server import State, load_config, make_server, png_gray
 from sensor_manager import SensorManager, SENSORS
+from can_monitor import CanMonitor, OdometryMonitor
 
 TYPES = {
     'map': ['nav_msgs/msg/OccupancyGrid'],
@@ -20,7 +22,7 @@ TYPES = {
     'path': ['nav_msgs/msg/Path'],
     'cloud': ['sensor_msgs/msg/PointCloud2'],
     'object_cloud': ['sensor_msgs/msg/PointCloud2'],
-    'detections': ['robocup_detection_msgs/msg/HeadTarget', 'yolo_msgs/msg/DetectionArray',
+    'detections': ['std_msgs/msg/String', 'robocup_detection_msgs/msg/HeadTarget', 'yolo_msgs/msg/DetectionArray',
                    'vision_msgs/msg/Detection2DArray'],
     'wrist_status': ['std_msgs/msg/String'],
     'battery': ['sensor_msgs/msg/BatteryState'],
@@ -50,6 +52,8 @@ def run(args):
         from rclpy.time import Time
         from rosidl_runtime_py.utilities import get_message
         from tf2_ros import Buffer, TransformListener
+        from nav_msgs.msg import Odometry
+        from sensor_msgs.msg import Imu
     except ImportError as exc:
         raise SystemExit(f'ROS 의존성 없음: {exc}\nsource /opt/ros/humble/setup.bash 후 /usr/bin/python3로 실행하세요.\n'
                          '영상 변환에는 ros-humble-cv-bridge와 python3-opencv가 필요합니다.')
@@ -76,6 +80,25 @@ def run(args):
             self.fixed = config.get('fixed_frame', 'map')
             self.base = config.get('base_frame', 'base_link')
             self.last_cpu = None
+            self.odom_monitor = OdometryMonitor(state)
+            odom_qos = QoSProfile(depth=20, reliability=ReliabilityPolicy.BEST_EFFORT,
+                                 durability=DurabilityPolicy.VOLATILE)
+            self.odom_subscriptions = []
+            for key, topic in [('wheel', '/odom'), ('fused', '/odom_ekf')]:
+                subscription = self.create_subscription(
+                    Odometry, topic,
+                    lambda msg, key=key: self.odom_monitor.receive(
+                        key, msg, self.get_clock().now().nanoseconds / 1e9),
+                    odom_qos)
+                self.odom_subscriptions.append(subscription)
+            for key, topic, message_type in [('imu', '/imu/base', Imu),
+                                               ('wheel_fallback', '/odom/rotation_fallback', Odometry)]:
+                subscription = self.create_subscription(
+                    message_type, topic,
+                    lambda msg, key=key: self.odom_monitor.receive_rotation(
+                        key, msg, self.get_clock().now().nanoseconds / 1e9), odom_qos)
+                self.odom_subscriptions.append(subscription)
+            self.create_timer(1.0, self.odometry_health)
             self.create_timer(2.0, self.discover)
             self.create_timer(0.2, self.update_pose)
             self.create_timer(3.0, self.health)
@@ -238,7 +261,11 @@ def run(args):
                     points = points @ rotation.T + offset
                     state.put(key, dict(points=points[:, :2].round(3).tolist(), frame=self.fixed), stamp, age)
                 elif key == 'detections':
-                    state.put(key, self.detections(msg), stamp, age)
+                    result = self.detections(msg)
+                    if result.get('stamp') is not None:
+                        stamp = float(result['stamp'])
+                        age = self.get_clock().now().nanoseconds / 1e9 - stamp
+                    state.put(key, result, stamp, age)
                 elif key == 'wrist_status':
                     state.put(key, dict(text=msg.data), stamp, age)
                 elif key == 'battery':
@@ -279,6 +306,11 @@ def run(args):
             return np.asarray(points).reshape(-1, 3)
 
         def detections(self, msg):
+            if hasattr(msg, 'data'):
+                value = json.loads(msg.data)
+                if not isinstance(value, dict) or value.get('mode') != 'all_objects' or not isinstance(value.get('objects'), list):
+                    raise ValueError('Head 전체 검출 JSON 형식이 아닙니다.')
+                return value
             if hasattr(msg, 'target_id') and hasattr(msg, 'valid'):
                 objects = []
                 if msg.width > 0 and msg.height > 0:
@@ -330,6 +362,21 @@ def run(args):
                 state.channels['pose'].update(topic='TF ' + pose['frame'] + ' ← ' + self.base,
                                               type='tf2', publishers=1, qos='TF')
 
+        def odometry_health(self):
+            ros_now = self.get_clock().now().nanoseconds / 1e9
+            tf_status = dict(state='waiting', age=None, error='')
+            try:
+                transform = self.tf.lookup_transform('odom', self.base, Time())
+                stamp = stamp_seconds(transform.header.stamp)
+                age = ros_now - stamp
+                p, q = transform.transform.translation, transform.transform.rotation
+                finite = (all(math.isfinite(v) for v in (p.x, p.y, p.z, q.x, q.y, q.z, q.w)) and
+                          0.5 <= math.sqrt(q.x*q.x + q.y*q.y + q.z*q.z + q.w*q.w) <= 1.5)
+                tf_status.update(state='live' if finite and stamp > 0 and -0.5 <= age <= 3 else 'stale', age=age)
+            except Exception as exc:
+                tf_status['error'] = str(exc)[:200]
+            self.odom_monitor.publish(ros_now, tf_status)
+
         def health(self):
             health = dict(domain_id=os.environ.get('ROS_DOMAIN_ID', '0'), ros_time=self.get_clock().now().nanoseconds / 1e9,
                           sim_time=use_sim_time, cpu=None, memory_percent=None, temperature=None)
@@ -355,17 +402,21 @@ def run(args):
     node = None
     server = None
     server_thread = None
+    can_monitor = None
     try:
         node = Bridge()
         server = make_server(state, args.host, args.port)
         server_thread = threading.Thread(target=server.serve_forever, daemon=True)
         server_thread.start()
         state.sensor_manager = SensorManager(state)
+        if args.with_robot:
+            state.sensor_manager.start_auxiliary('sensor_core', [
+                'ros2', 'launch', str(Path(__file__).resolve().parent / '../robot/physical.launch.py'),
+                'tracer:=false', 'arm:=false', 'calibration:=true',
+                'head_camera:=false', 'wrist_camera:=false', 'g2_lidar:=false', 'mid360_lidar:=false'])
+        can_monitor = CanMonitor(state, state.sensor_manager, args.with_robot)
         node.discover()
         if args.with_robot:
-            state.sensor_manager.start_auxiliary('robot_core', ['ros2', 'launch',
-                str(Path(__file__).resolve().parent / '../robot/physical.launch.py'),
-                'head_camera:=false', 'wrist_camera:=false', 'g2_lidar:=false', 'mid360_lidar:=false'])
             for key in SENSORS:
                 try:
                     state.sensor_manager.request(key, 'start')
@@ -377,13 +428,16 @@ def run(args):
             state.sensor_manager.start_auxiliary('head_detection', ['bash', str(Path(__file__).resolve().parent / 'start-head-detection.sh')])
         print(f'INHA_CONTROL_CENTER_READY http://{args.host}:{args.port}', flush=True)
         print('Jetson web server. Ctrl+C stops processes started by this control center.', flush=True)
-        rclpy.spin(node)
+        while rclpy.ok() and not state.shutdown_requested.is_set():
+            rclpy.spin_once(node, timeout_sec=0.2)
     except KeyboardInterrupt:
         pass
     finally:
         state.closed.set()
         with state.condition:
             state.condition.notify_all()
+        if can_monitor:
+            can_monitor.close()
         if state.sensor_manager:
             state.sensor_manager.close()
         if server:
@@ -404,5 +458,5 @@ if __name__ == '__main__':
     parser.add_argument('--sim-time', action='store_true')
     parser.add_argument('--with-robot', action='store_true', help='Start physical TF/odom core and four owned sensor drivers')
     parser.add_argument('--mapping', action='store_true', help='Start SLAM Toolbox on the Jetson')
-    parser.add_argument('--detection', action='store_true', help='Start Head YOLO/CSRT on the Jetson')
+    parser.add_argument('--detection', action=argparse.BooleanOptionalAction, default=True, help='Start full-frame Head TensorRT by default; --no-detection disables it')
     run(parser.parse_args())

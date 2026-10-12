@@ -1,10 +1,12 @@
 """Own separate ROS driver process groups; never kill unrelated ROS processes."""
 from datetime import datetime
+from concurrent.futures import ThreadPoolExecutor
 import os
 from pathlib import Path
 import queue
 import signal
 import subprocess
+import sys
 import threading
 import time
 
@@ -25,6 +27,7 @@ class SensorManager:
         self.queue = queue.Queue()
         self.closed = threading.Event()
         self.jobs = {}
+        self.log_offsets = {}
         self.exiting = set()
         self.status = {key: dict(label=label, state='off', error='', publishers=0, topic=topic)
                        for key, (label, topic, _) in SENSORS.items()}
@@ -55,11 +58,8 @@ class SensorManager:
                     '--ros-args', '--params-file', path, '-r', 'scan:=/scan_raw']
         if key == 'mid360_lidar':
             path = self._path(settings.get('config_file', '~/ws_livox/src/livox_ros_driver2/config/MID360s_config.json'))
-            return ['ros2', 'run', 'livox_ros_driver2', 'livox_ros_driver2_node', '--ros-args',
-                    '-r', '__node:=livox_lidar_publisher', '-p', 'xfer_format:=0', '-p', 'multi_topic:=0',
-                    '-p', 'data_src:=0', '-p', 'publish_freq:=10.0', '-p', 'output_data_type:=0',
-                    '-p', 'frame_id:=livox_frame', '-p', 'user_config_path:=' + path,
-                    '-p', 'cmdline_input_bd_code:=livox0000000001']
+            return [sys.executable, str(ROOT / 'start-mid360.py'), '--config', path,
+                    '--connection', str(settings.get('connection', 'livox'))]
         raise ValueError('알 수 없는 센서입니다.')
 
     @staticmethod
@@ -72,6 +72,19 @@ class SensorManager:
     def start_auxiliary(self, key, command):
         with self.lock:
             self._spawn(key, command)
+
+    def replace_robot_core(self, command):
+        """Reconnect only our own physical feedback process group."""
+        with self.lock:
+            if self.closed.is_set():
+                return
+            process = self.jobs.get('robot_core')
+            if process is not None:
+                self._stop(process)
+                self.jobs.pop('robot_core', None)
+            self.exiting.discard('robot_core')
+            if command is not None:
+                self._spawn('robot_core', command)
 
     def request(self, key, action):
         if key not in SENSORS or action not in ('start', 'stop'):
@@ -101,6 +114,7 @@ class SensorManager:
     def _spawn(self, key, command):
         log = self.logs / (key + '.log')
         with log.open('ab', buffering=0) as output:
+            self.log_offsets[key] = output.tell()
             process = subprocess.Popen(command, cwd=ROOT, stdin=subprocess.DEVNULL,
                                        stdout=output, stderr=subprocess.STDOUT, start_new_session=True)
         self.jobs[key] = process
@@ -178,18 +192,38 @@ class SensorManager:
         with self.lock:
             for key, process in list(self.jobs.items()):
                 code = process.poll()
+                details = self._log_tail(key) if key in SENSORS or code is not None else ''
+                if key == 'mid360_lidar' and code is None and self.status[key]['state'] != 'stopping':
+                    if 'Init lds lidar fail!' in details or 'Failed to init livox lidar sdk' in details:
+                        self.status[key].update(state='stopping', error='Livox SDK 초기화 실패 · ' + details[-700:])
+                        self.queue.put((key, 'stop', None))
+                        self.state.log('MID-360 초기화 실패 · 드라이버 정리 · ' + details[-700:], 'error', 'sensor-control')
                 if code is None:
                     continue
                 # Keep ownership until cleanup has signalled any remaining children.
                 if key in SENSORS and self.status[key]['state'] != 'stopping':
-                    self.status[key].update(state='stopping', error=f'드라이버 종료 코드 {code}')
+                    self.status[key].update(state='stopping', error=f'드라이버 종료 코드 {code} · ' + details[-700:])
                     self.queue.put((key, 'stop', None))
                     self.state.log(f'{key} 종료 코드 {code} · 로그 {self.logs / (key + ".log")}', 'error', 'sensor-control')
+                elif key == 'robot_core' and key not in self.exiting:
+                    # The CAN supervisor alone replaces this group; queued cleanup
+                    # could otherwise kill a newly reconnected feedback process.
+                    self.state.log(f'{key} 프로세스 종료 코드 {code} · CAN 감독기가 재연결합니다.', 'error', 'can')
+                    self.exiting.add(key)
                 elif key not in SENSORS and key not in self.exiting:
-                    self.state.log(f'{key} 프로세스 종료 코드 {code} · 로그 {self.logs / (key + ".log")}', 'error', 'sensor-control')
+                    self.state.log(f'{key} 프로세스 종료 코드 {code} · {details[-600:]} · 로그 {self.logs / (key + ".log")}', 'error', 'sensor-control')
                     self.exiting.add(key)
                     self.queue.put((key, 'stop', None))
             self._publish()
+
+    def _log_tail(self, key):
+        try:
+            with (self.logs / (key + '.log')).open('rb') as output:
+                end = output.seek(0, os.SEEK_END)
+                output.seek(max(self.log_offsets.get(key, 0), end - 8192))
+                return output.read().decode('utf-8', errors='replace').strip()
+        except OSError:
+            return ''
 
     def _publish(self):
         controls = {}
@@ -219,10 +253,12 @@ class SensorManager:
         self.worker.join(timeout=15)
         with self.lock:
             jobs, self.jobs = list(self.jobs.items()), {}
-        # Stop inference and mapping before sensors and the physical TF/odom core.
-        jobs.sort(key=lambda item: 2 if item[0] == 'robot_core' else 1 if item[0] in SENSORS else 0)
-        for key, process in jobs:
+        # Every job owns a separate process group; signal them together on shutdown.
+        def stop_job(item):
+            key, process = item
             try:
                 self._stop(process)
             except (OSError, subprocess.SubprocessError) as exc:
                 self.state.log(f'{key} 종료 오류: {exc}', 'error', 'sensor-control')
+        with ThreadPoolExecutor(max_workers=max(1, len(jobs))) as executor:
+            list(executor.map(stop_job, jobs))

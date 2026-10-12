@@ -15,9 +15,9 @@ const elapsed = seconds => `${Math.floor(seconds / 60).toString().padStart(2, '0
 function toast(message) { text('toast', message); $('toast').classList.add('visible'); clearTimeout(toastTimer); toastTimer = setTimeout(() => $('toast').classList.remove('visible'), 3500); }
 function quality(key) {
   const m = data.meta[key];
+  if (m?.error) return 'error';
   if (!m || m.age == null || data.values[key] == null) return 'waiting';
   if (!data.connected || performance.now() - data.received > 2500) return 'stale';
-  if (m.error) return 'error';
   if (['map', 'path', 'object_cloud'].includes(key)) return data.mode === 'demo' || m.publishers > 0 ? 'cached' : 'stale';
   return m.age <= 2.5 && (m.source_age == null || (m.source_age >= -.5 && m.source_age <= 2.5)) ? 'live' : 'stale';
 }
@@ -25,6 +25,7 @@ function fresh(key) { return ['live', 'cached'].includes(quality(key)); }
 function badge(id, label, state) { text(id, label); $(id).className = 'tiny-pill' + (state === 'live' || state === 'cached' ? ' active' : state === 'stale' || state === 'error' ? ' warn' : ''); }
 function connect() {
   if (source) source.close();
+  data.shutdownRequested = false;
   data.connected = false;
   source = new EventSource('/api/events');
   source.onopen = () => {
@@ -41,6 +42,11 @@ function connect() {
       data.mode = payload.mode; data.meta = payload.channels; data.versions = payload.versions;
       data.logs = payload.logs; data.uptime = payload.uptime; data.fixedFrame = payload.fixed_frame;
       data.controlToken = payload.control_token;
+      if (payload.shutting_down) {
+        data.shutdownRequested = true;
+        source.close();
+        data.connected = false;
+      }
       Object.assign(data.values, payload.changes);
       const map = data.values.map;
       if (map && payload.changes.map && view.mapVersion !== data.versions.map) {
@@ -58,13 +64,15 @@ function connect() {
 
 function render() {
   const demo = data.mode === 'demo';
-  const alive = data.connected && performance.now() - data.received < 2500;
+  const alive = !data.shutdownRequested && data.connected && performance.now() - data.received < 2500;
+  $('shutdown-button').disabled = data.mode !== 'live' || !alive || Boolean(data.shutdownPending);
+  text('shutdown-button', data.shutdownRequested ? '종료 요청됨' : data.shutdownPending ? '종료 요청 중…' : '서버 종료');
   $('connection').className = 'connection ' + (alive ? 'connected' : 'disconnected');
   $('connection').replaceChildren(Object.assign(document.createElement('i'), {}), document.createTextNode(alive ? '서버 연결됨' : '서버 연결 끊김'));
   text('mode-badge', demo ? 'SAMPLE MODE' : data.mode === 'live' ? 'ROS LIVE' : '입력 대기');
   $('mode-badge').className = 'badge ' + (data.mode === 'live' && alive ? 'green' : 'amber');
   $('notice').classList.toggle('live', data.mode === 'live' && alive);
-  text('notice-text', !alive ? '데이터 연결이 끊겼습니다. 마지막 수신 화면은 실시간 상태가 아닙니다.' : demo
+  text('notice-text', data.shutdownRequested ? '서버 종료를 요청했습니다. 센서·SLAM·검출 프로세스를 정리합니다. 다시 사용하려면 젯슨에서 서버를 시작하세요.' : !alive ? '데이터 연결이 끊겼습니다. 마지막 수신 화면은 실시간 상태가 아닙니다.' : demo
     ? '샘플 모드 · 지도, 로봇 위치, 영상, 검출, 점군은 가상 데이터입니다. 실제 연결은 젯슨 서버와 맥 SSH 터널을 실행하세요.'
     : data.mode === 'live' ? '젯슨 실시간 연결 · 센서 제어와 SLAM 지도, 영상, 검출 결과를 표시합니다.'
     : '젯슨에서 관제센터를 시작하고 맥에서 SSH 터널을 연결하세요.');
@@ -81,12 +89,50 @@ function render() {
   text('detection-value', detections && fresh('detections') ? (detections.valid ? detections.objects.length : 0) : '—');
   text('detection-foot', detections ? `${detections.state} · ${fresh('detections') ? detections.valid ? '유효 관측' : '유효 목표 없음' : '수신 지연'}` : '검출 토픽 수신 대기');
   updateCamera('head'); updateCamera('wrist');
-  renderDetections(); renderSensors(); renderSensorControls(); renderLogs();
+  renderDetections(); renderSensors(); renderSensorControls(); renderCanOdometry(); renderLogs();
   text('session-time', 'SESSION ' + elapsed(data.uptime));
   text('transport-label', demo ? 'SYNTHETIC SAMPLE · LOCALHOST' : 'ROS 2 → SSE / MJPEG → SSH TUNNEL');
   $('save-map-button').disabled = !map;
   if (view.follow && p && fresh('pose') && p.frame === currentFrame() && view.kind === '2d') { view.x = p.x; view.y = p.y; }
   draw();
+}
+
+function renderCanOdometry() {
+  const can = data.values.can_status, odometry = data.values.odometry_health;
+  const live = data.mode === 'live';
+  const canFresh = live && quality('can_status') === 'live';
+  const odomFresh = live && quality('odometry_health') === 'live';
+  const healthy = canFresh && odomFresh && odometry?.state === 'ok';
+  const status = !live ? '실물 입력 대기' : !canFresh || !odomFresh ? '연결 대기 / 지연' : healthy ? '정상 수신' : '입력 대기 / 이상';
+  badge('odom-health-status', status, healthy ? 'live' : live ? 'stale' : 'waiting');
+  text('can-mode', canFresh ? can.automatic ? '자동 연결 사용 중' : '관측 전용' : 'CAN 상태 수신 대기');
+  const container = $('can-readings'); container.replaceChildren();
+  function row(title, summary, detail, good) {
+    const card = document.createElement('article'); card.className = 'can-reading' + (good ? ' receiving' : '');
+    const label = document.createElement('strong'); label.textContent = title;
+    const value = document.createElement('span'); value.textContent = summary;
+    const description = document.createElement('small'); description.textContent = detail;
+    card.append(label, value, description); container.append(card);
+  }
+  for (const [key, title] of [['tracer', 'Tracer CAN'], ['piper', 'PiPER CAN']]) {
+    const c = can?.interfaces?.[key];
+    const labels = { missing: '장치 없음', down: '연결 준비', bus_off: 'BUS-OFF', mismatch: 'bitrate 불일치', error: '연결 오류' };
+    const summary = !canFresh ? '상태 수신 대기 / 지연' : c?.ready ? c.receiving ? 'CAN 데이터 수신 중' : '인터페이스 연결 · 수신 대기' : labels[c?.state] || '입력 대기';
+    row(title + ' (설정)', summary, c ? `${c.interface}${c.hardware ? ' · ' + c.hardware : ''} · ${fmt((c.bitrate ?? c.expected_bitrate) / 1000, 0)} kbps · RX ${c.rx_packets ?? '—'}${c.error ? ' · ' + c.error : ''}${c.bus_state ? ' · ' + c.bus_state : ''}` : 'CAN 입력 대기', canFresh && c?.ready && c.receiving);
+  }
+  for (const [key, title, topic] of [['wheel', '바퀴 오도메트리', '/odom'], ['fused', '융합 오도메트리', '/odom_ekf']]) {
+    const o = odometry?.[key];
+    const good = odomFresh && o?.state === 'live';
+    const labels = { waiting: '입력 대기', invalid: '좌표계 / 수치 오류', stale: '수신 / timestamp 지연' };
+    row(title, good ? `${fmt(o.hz)} Hz · ${fmt(o.linear, 2)} m/s` : !odomFresh ? '상태 수신 대기 / 지연' : labels[o?.state] || '입력 대기',
+      `${topic} · yaw ${fmt(o?.yaw * 180 / Math.PI)}° · 회전 ${fmt(o?.angular, 3)} rad/s · 지연 ${fmt(o?.source_age)}s`, good);
+  }
+  const rotation = odometry?.rotation, gyro = rotation?.imu;
+  const gyroGood = odomFresh && gyro?.state === 'live';
+  row('회전 입력', gyroGood ? 'MID-360 IMU 사용' : odomFresh && rotation?.source === 'wheel_fallback' ? '바퀴 각속도 대체 · IMU 대기' : '회전 입력 대기 / 지연',
+    `/imu/base · ${fmt(gyro?.angular, 3)} rad/s · 지연 ${fmt(gyro?.source_age)}s`, gyroGood);
+  const tf = odometry?.tf, tfGood = odomFresh && tf?.state === 'live';
+  row('오도메트리 TF', tfGood ? '정상 수신' : 'TF 입력 대기 / 지연', `odom → ${data.values.odometry_health?.wheel?.child_frame || 'base_link'} · 지연 ${fmt(tf?.age)}s${tf?.error ? ' · ' + tf.error : ''}`, tfGood);
 }
 
 function updateCamera(role) {
@@ -123,7 +169,9 @@ function updateCamera(role) {
 function renderDetections() {
   const d = data.values.detections, q = quality('detections');
   badge('target-status', d ? fresh('detections') ? d.state : 'STALE' : 'WAITING', q);
-  text('target-summary', d ? `${d.valid ? '유효 관측' : '후보 / 무효 관측'} · ${d.measured ? 'YOLO 측정' : '추적 중 · 마지막 YOLO 신뢰도'}${d.processing_ms != null ? ' · ' + fmt(d.processing_ms) + ' ms' : ''}${q === 'stale' ? ' · 과거 결과' : ''}` : '모델이 발행한 클래스·신뢰도·추적 상태를 표시합니다.');
+  text('target-summary', d?.mode === 'all_objects'
+    ? `6종 전체 객체 검출 · Camera ${fmt(d.camera_fps)} FPS · YOLO ${fmt(d.detection_fps)} FPS${d.processing_ms != null ? ' · ' + fmt(d.processing_ms) + ' ms' : ''}${d.reason ? ' · ' + d.reason : ''}${q === 'stale' ? ' · 과거 결과' : ''}`
+    : d ? `${d.valid ? '유효 관측' : '후보 / 무효 관측'} · ${d.measured ? 'YOLO 측정' : '추적 중 · 마지막 YOLO 신뢰도'}${d.processing_ms != null ? ' · ' + fmt(d.processing_ms) + ' ms' : ''}${q === 'stale' ? ' · 과거 결과' : ''}` : 'green_apple · peach · tomato · fanta_can · cup · banana 전체 검출 대기');
   const list = $('detection-list'); list.replaceChildren();
   if (!d || !d.objects.length) {
     const empty = document.createElement('div'); empty.className = 'empty-row';
@@ -148,7 +196,7 @@ function renderSensors() {
     const m = data.meta[key], q = quality(key), row = document.createElement('div'); row.className = 'sensor-row';
     const light = document.createElement('span'); light.className = 'sensor-light ' + (q === 'cached' ? 'live' : q);
     const description = document.createElement('div'), label = document.createElement('strong'), topic = document.createElement('small');
-    label.textContent = names[key]; topic.textContent = m?.topic || '발행 토픽 대기'; topic.title = m?.error || m?.topic || '';
+    label.textContent = names[key]; topic.textContent = m?.error || m?.topic || '발행 토픽 대기'; topic.title = m?.error || m?.topic || '';
     description.append(label, topic);
     const status = document.createElement('span'); status.textContent = q === 'live' ? fmt(m.hz) + ' Hz' : q === 'cached' ? '저장된 결과' : q === 'stale' ? '수신 지연' : q === 'error' ? '오류' : 'WAITING';
     row.append(light, description, status); list.append(row);
@@ -315,7 +363,9 @@ function drawCloud() {
   }
   $('canvas-empty').classList.toggle('hidden', Boolean(cloud?.points.length));
   $('canvas-empty').querySelector('strong').textContent = '3D 점군 입력을 기다리고 있습니다';
-  $('canvas-empty').querySelector('p').textContent = 'MID-360 PointCloud2 또는 Wrist 물체 점군을 선택하세요.';
+  $('canvas-empty').querySelector('p').textContent = data.meta[key]?.error || (key === 'cloud'
+    ? data.values.sensor_control?.mid360_lidar?.error || 'MID-360 PointCloud2 수신 대기 · 상단 LiDAR 실행 상태를 확인하세요.'
+    : 'Wrist 물체 점군 수신 대기');
   text('frame-tag', 'FRAME / ' + (cloud?.frame || '—'));
   badge('map-status', cloud ? fresh(key) ? key === 'object_cloud' ? 'CACHED CLOUD' : 'POINT CLOUD' : 'STALE' : 'WAITING', quality(key));
   text('map-detail', cloud ? `${cloud.points.length.toLocaleString()} / ${cloud.total_points.toLocaleString()} points · ${cloud.frame}` : 'NO POINT CLOUD');
@@ -364,6 +414,29 @@ $('cloud-source').onchange = () => { view.cloudFitted = ''; draw(); };
 for (const id of ['layer-scan', 'layer-path', 'layer-trail']) $(id).onchange = draw;
 for (const role of ['head', 'wrist']) $(role + '-source').onchange = () => updateCamera(role);
 $('reconnect-button').onclick = connect;
+$('shutdown-button').onclick = async () => {
+  if (data.shutdownPending || data.shutdownRequested) return;
+  data.shutdownPending = true;
+  render();
+  try {
+    const response = await fetch('/api/shutdown', {
+      method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Control-Token': data.controlToken || '' },
+      body: JSON.stringify({ action: 'shutdown' })
+    });
+    const result = await response.json();
+    if (!response.ok) throw new Error(result.error || response.status);
+    data.shutdownRequested = true;
+    data.connected = false;
+    source?.close();
+    for (const role of ['head', 'wrist']) $(role + '-camera').removeAttribute('src');
+    toast('서버 종료를 요청했습니다.');
+  } catch (error) {
+    toast('서버 종료 요청 실패: ' + error.message);
+  } finally {
+    data.shutdownPending = false;
+    render();
+  }
+};
 function download(url, name) { const link = document.createElement('a'); link.href = url; link.download = name; document.body.append(link); link.click(); link.remove(); }
 $('save-map-button').onclick = () => download('/api/map.png', 'slam-map.png');
 $('export-button').onclick = async () => {
@@ -373,7 +446,7 @@ $('export-button').onclick = async () => {
 
 const allowedTypes = { map: ['nav_msgs/msg/OccupancyGrid'], scan: ['sensor_msgs/msg/LaserScan'],
   odom: ['nav_msgs/msg/Odometry'], path: ['nav_msgs/msg/Path'], cloud: ['sensor_msgs/msg/PointCloud2'],
-  object_cloud: ['sensor_msgs/msg/PointCloud2'], detections: ['robocup_detection_msgs/msg/HeadTarget', 'yolo_msgs/msg/DetectionArray', 'vision_msgs/msg/Detection2DArray'] };
+  object_cloud: ['sensor_msgs/msg/PointCloud2'], detections: ['std_msgs/msg/String', 'robocup_detection_msgs/msg/HeadTarget', 'yolo_msgs/msg/DetectionArray', 'vision_msgs/msg/Detection2DArray'] };
 for (const key of ['head_image', 'head_debug', 'wrist_image', 'wrist_debug']) allowedTypes[key] = ['sensor_msgs/msg/Image', 'sensor_msgs/msg/CompressedImage'];
 function openSettings() {
   const fields = $('topic-fields'); fields.replaceChildren();

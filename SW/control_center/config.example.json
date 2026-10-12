@@ -7,6 +7,11 @@
   "cloud_hz": 2,
   "max_cloud_points": 5000,
   "use_sim_time": false,
+  "can": {
+    "auto_connect": true,
+    "tracer": {"interface": "can_tracer", "usb_serial": "", "bitrate": 500000},
+    "piper": {"interface": "can_arm", "usb_serial": "", "bitrate": 1000000}
+  },
   "channels": {
     "map": [
       "/map"
@@ -53,6 +58,7 @@
       "/wrist_yolo/debug_image"
     ],
     "detections": [
+      "/detection/head/objects",
       "/detection/head/target",
       "/head_yolo/detections"
     ],

@@ -42,6 +42,7 @@ class State:
         self.mode, self.config = mode, config or {}
         self.condition = threading.Condition(threading.RLock())
         self.closed = threading.Event()
+        self.shutdown_requested = threading.Event()
         self.started = time.monotonic()
         self.values, self.versions, self.channels, self.frames = {}, {}, {}, {}
         self.logs = deque(maxlen=60)
@@ -112,7 +113,7 @@ class State:
                         clients=self.clients, channels=metadata, versions=dict(self.versions),
                         changes={k: v for k, v in self.values.items() if known.get(k) != self.versions[k]},
                         logs=list(self.logs), fixed_frame=self.config.get('fixed_frame', 'map'),
-                        control_token=self.control_token)
+                        control_token=self.control_token, shutting_down=self.shutdown_requested.is_set())
 
 
 def make_server(state, host='127.0.0.1', port=8765):
@@ -173,7 +174,7 @@ def make_server(state, host='127.0.0.1', port=8765):
 
         def do_POST(self):
             path = urlparse(self.path).path
-            if path not in ('/api/select', '/api/sensors'):
+            if path not in ('/api/select', '/api/sensors', '/api/shutdown'):
                 self.send_json({'error': 'Not found'}, 404)
                 return
             if state.mode != 'live':
@@ -194,6 +195,18 @@ def make_server(state, host='127.0.0.1', port=8765):
                 items = json.loads(self.rfile.read(length))
                 if not isinstance(items, dict):
                     raise ValueError('Expected a channel/topic object')
+                if path == '/api/shutdown':
+                    if items != {'action': 'shutdown'}:
+                        raise ValueError('action=shutdown을 지정하세요.')
+                    self.send_json({'state': 'shutting_down'}, 202)
+                    state.log('웹에서 서버 종료 요청 · 센서·SLAM·검출 프로세스 정리', source='server')
+                    state.shutdown_requested.set()
+                    with state.condition:
+                        state.condition.notify_all()
+                    return
+                if state.shutdown_requested.is_set():
+                    self.send_json({'error': '관제센터 종료 중입니다.'}, 409)
+                    return
                 if path == '/api/sensors':
                     if not state.sensor_manager:
                         self.send_json({'error': '센서 제어 관리자가 없습니다.'}, 409)

@@ -1,9 +1,12 @@
 head_detection_node:
   ros__parameters:
     input_topic: /head/calibrated/color/image_raw
-    target_topic: /detection/head/target
+    objects_topic: /detection/head/objects
     debug_topic: /detection/head/debug_image
-    task: detect
     confidence: 0.25
-    cup_confidence: 0.70
+    cup_confidence: 0.50
+    banana_confidence: 0.50
     nms_iou: 0.7
+    imgsz: 640
+    input_timeout: 1.0
+    max_input_age: 1.0

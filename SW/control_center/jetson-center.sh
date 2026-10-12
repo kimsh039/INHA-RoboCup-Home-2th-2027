@@ -26,7 +26,11 @@ case "${1:-}" in
       [[ "$CONTROL_CENTER_ARG" == --observe ]] || CONTROL_CENTER_ARGS+=("$CONTROL_CENTER_ARG")
     done
     printf -v CONTROL_CENTER_COMMAND '%q ' bash "$CONTROL_CENTER_DIR/run-robot.sh" "${CONTROL_CENTER_ARGS[@]}"
+    CONTROL_CENTER_LOG_ROOT="${XDG_STATE_HOME:-$HOME/.local/state}/inha-control-center/startup"
+    mkdir -p "$CONTROL_CENTER_LOG_ROOT"
+    CONTROL_CENTER_START_LOG="$CONTROL_CENTER_LOG_ROOT/$(date +%Y%m%d-%H%M%S)-$$.log"
     tmux new-session -d -s "$CONTROL_CENTER_SESSION" \
+      -e "ROBOCUP_CENTER_LOG=$CONTROL_CENTER_START_LOG" \
       -e "ROS_DOMAIN_ID=${ROS_DOMAIN_ID:-0}" \
       -e "ROBOCUP_MODEL=${ROBOCUP_MODEL:-}" \
       -e "ROBOCUP_YOLO_PYTHON=${ROBOCUP_YOLO_PYTHON:-}" \
@@ -34,7 +38,8 @@ case "${1:-}" in
       -e "ROBOCUP_SLAM_PARAMS=${ROBOCUP_SLAM_PARAMS:-}" \
       -e "ROBOCUP_USE_SIM_TIME=${ROBOCUP_USE_SIM_TIME:-false}" \
       "$CONTROL_CENTER_COMMAND"
-    echo '젯슨 관제센터 실행 요청을 전달했습니다. 서버: http://127.0.0.1:8765 (기본 포트)'
+    echo '젯슨 관제센터 시작 중 · 서버 준비를 기다립니다.'
+    /usr/bin/python3 "$CONTROL_CENTER_DIR/wait-start.py" "$CONTROL_CENTER_START_LOG"
     echo '출력 보기: tmux attach -t inha_control_center'
     echo '맥에서: ssh -N -L 127.0.0.1:8081:127.0.0.1:8765 sparo@192.168.50.70'
     ;;
@@ -43,6 +48,12 @@ case "${1:-}" in
     tmux send-keys -t "$CONTROL_CENTER_SESSION" C-c
     echo '젯슨 관제센터와 여기서 시작한 프로세스의 종료를 요청했습니다.'
     ;;
+  kill) exec /usr/bin/python3 "$CONTROL_CENTER_DIR/kill-center.py" ;;
+  kill-can-users) exec /usr/bin/python3 "$CONTROL_CENTER_DIR/kill-center.py" --can-users ;;
+  errors)
+    CONTROL_CENTER_LOG_ROOT="${XDG_STATE_HOME:-$HOME/.local/state}/inha-control-center/startup"
+    /usr/bin/python3 "$CONTROL_CENTER_DIR/wait-start.py" --logs "$CONTROL_CENTER_LOG_ROOT"
+    ;;
   logs) exec tmux attach -t "$CONTROL_CENTER_SESSION" ;;
-  *) echo '사용법: jetson-center.sh start [--mapping] [--detection] [--observe] [--port 8765] | stop | logs' >&2; exit 2 ;;
+  *) echo '사용법: jetson-center.sh start [--mapping] [--detection] [--observe] [--port 8765] | stop | kill | kill-can-users | logs | errors' >&2; exit 2 ;;
 esac
