@@ -1,0 +1,9 @@
+{
+  "previous_images_preserved": 1262,
+  "new_sampled_images": 979,
+  "overlapping_source_frames": 86,
+  "merged_images": 2155,
+  "train": 1786,
+  "val": 369,
+  "previous_reviewed_preserved": 0
+}

@@ -11,10 +11,13 @@ from .class_schema import class_mapping
 
 class YoloDetector:
     def __init__(self, model_path, confidence=0.35, nms_iou=0.45,
-                 imgsz=640, device="cpu", task="detect"):
+                 imgsz=640, device="cpu", task="detect", cup_confidence=None):
+        if cup_confidence is not None and not 0 <= cup_confidence <= 1:
+            raise ValueError("cup_confidence must be in [0,1]")
         self.model = None
         self.error = "Model path is empty; supply a trained local .pt file and restart."
         self.confidence, self.nms_iou = confidence, nms_iou
+        self.cup_confidence = cup_confidence
         self.imgsz, self.device = imgsz, device
         if not model_path:
             return
@@ -61,6 +64,11 @@ class YoloDetector:
             if identity is None:
                 continue
             class_id, class_name = identity
+            confidence = float(item.conf[0])
+            # Apply after the legacy mug -> cup adapter; preserve other classes.
+            if (class_name == "cup" and self.cup_confidence is not None
+                    and confidence < self.cup_confidence):
+                continue
             mask = None
             if polygons is not None and index < len(polygons):
                 points = np.asarray(polygons[index])
@@ -70,7 +78,7 @@ class YoloDetector:
                     mask = np.zeros((height, width), np.uint8)
                     mask[y0:y1, x0:x1] = local_mask
             output.append(Box(left+x0, top+y0, right-left, bottom-top,
-                              class_id, class_name, float(item.conf[0]), mask))
+                              class_id, class_name, confidence, mask))
         return output
 
 

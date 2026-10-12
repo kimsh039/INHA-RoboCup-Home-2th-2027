@@ -29,7 +29,8 @@ class HeadDetectionNode(Node):
         defaults = {
             "model_path": os.environ.get("ROBOCUP_MODEL", ""),
             "device": os.environ.get("ROBOCUP_DEVICE", "cpu"),
-            "task": "detect", "confidence": 0.35, "nms_iou": 0.45, "imgsz": 640,
+            "task": "detect", "confidence": 0.25, "cup_confidence": 0.70,
+            "nms_iou": 0.7, "imgsz": 640,
             "target_class": "", "tracker_type": "CSRT", "confirm_frames": 3,
             "redetect_interval": 5, "roi_margin": 2.0, "match_iou": 0.25,
             "max_unconfirmed": 2, "max_verification_age": 0.5, "max_frame_gap": 0.5,
@@ -46,13 +47,16 @@ class HeadDetectionNode(Node):
             raise ValueError("task must be detect or segment")
         if not 0 < get("confidence") <= 1 or not 0 < get("nms_iou") <= 1:
             raise ValueError("confidence/nms_iou must be in (0,1]")
+        if not 0 <= get("cup_confidence") <= 1:
+            raise ValueError("cup_confidence must be in [0,1]")
         if get("imgsz") < 32 or get("imgsz") % 32:
             raise ValueError("imgsz must be a positive multiple of 32")
         if get("input_timeout") <= 0 or get("max_input_age") <= 0:
             raise ValueError("input_timeout/max_input_age must be > 0")
         config = Config(**{name: get(name) for name in Config.__dataclass_fields__})
         detector = YoloDetector(get("model_path"), get("confidence"), get("nms_iou"),
-                                get("imgsz"), get("device"), get("task"))
+                                get("imgsz"), get("device"), get("task"),
+                                cup_confidence=get("cup_confidence"))
         self.pipeline = HeadPipeline(detector, make_tracker_factory(get("tracker_type")), config)
         if not detector.ready:
             self.get_logger().warning(detector.error)

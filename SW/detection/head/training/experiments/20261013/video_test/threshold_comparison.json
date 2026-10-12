@@ -1,0 +1,38 @@
+[
+  {
+    "cup_threshold": 0.25,
+    "zero_cup_frames": 0,
+    "one_cup_frames": 860,
+    "two_cup_frames": 101
+  },
+  {
+    "cup_threshold": 0.4,
+    "zero_cup_frames": 0,
+    "one_cup_frames": 907,
+    "two_cup_frames": 54
+  },
+  {
+    "cup_threshold": 0.5,
+    "zero_cup_frames": 0,
+    "one_cup_frames": 938,
+    "two_cup_frames": 23
+  },
+  {
+    "cup_threshold": 0.6,
+    "zero_cup_frames": 0,
+    "one_cup_frames": 956,
+    "two_cup_frames": 5
+  },
+  {
+    "cup_threshold": 0.7,
+    "zero_cup_frames": 0,
+    "one_cup_frames": 961,
+    "two_cup_frames": 0
+  },
+  {
+    "cup_threshold": 0.8,
+    "zero_cup_frames": 49,
+    "one_cup_frames": 912,
+    "two_cup_frames": 0
+  }
+]

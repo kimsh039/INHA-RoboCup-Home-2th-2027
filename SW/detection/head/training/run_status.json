@@ -1,5 +1,5 @@
 {
-  "status": "six_class_dataset_ready_retraining_pending",
+  "status": "six_class_training_complete_video_tested",
   "schema_updated": "2026-10-12",
   "classes": [
     "green_apple",
@@ -10,12 +10,16 @@
     "banana"
   ],
   "model": "YOLO11n",
-  "dataset": "../datasets/20261012/data.yaml",
-  "label_boxes": 7202,
-  "removed_plate_boxes": 1184,
-  "six_class_training_started": false,
-  "six_class_model_path": null,
-  "six_class_validation": null,
+  "dataset": "../datasets/20261013/data.yaml",
+  "label_boxes": 12205,
+  "six_class_training_started": true,
+  "six_class_model_path": "SW/detection/head/models/head_yolo11n_20261013.pt",
+  "six_class_validation": {
+    "precision": 0.93227,
+    "recall": 0.96319,
+    "mAP50": 0.97474,
+    "mAP50_95": 0.70237
+  },
   "legacy_model_adapter": "Head runtime and evaluate_holdout.py rename apple/tomato, mug/cup, exclude plate and remap IDs",
   "previous_seven_class_run": {
     "status": "evaluated",
@@ -46,5 +50,17 @@
     "model_path": "SW/detection/head/models/head_yolo11n_20261007.pt",
     "report": "experiments/20261007/TRAINING_RESULTS.md",
     "publication_note": "This status is part of the model publication commit; remote push is verified separately."
-  }
+  },
+  "best_epoch": 12,
+  "completed_epochs": 32,
+  "training_environment": "RTX 5070 Laptop / torch 2.11.0+cu128 / ultralytics 8.4.174",
+  "six_class_report": "experiments/20261013/TRAINING_RESULTS.md",
+  "inference_settings": {
+    "confidence": 0.25,
+    "cup_confidence": 0.7,
+    "nms_iou": 0.7,
+    "imgsz": 640
+  },
+  "jetson_new_model_tested": false,
+  "video_test_report": "experiments/20261013/VIDEO_TEST.md"
 }

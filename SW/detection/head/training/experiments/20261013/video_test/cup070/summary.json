@@ -1,0 +1,38 @@
+{
+  "input": "C:\\Users\\seung\\Desktop\\KakaoTalk_20261013_002408663.mp4",
+  "model": "C:\\Users\\seung\\Documents\\INHA\\RoboCup\\outputs\\head_yolo11n_local_20261013\\runs\\head_yolo11n_6cls\\weights\\best.pt",
+  "classes": {
+    "0": "green_apple",
+    "1": "peach",
+    "2": "tomato",
+    "3": "fanta_can",
+    "4": "cup",
+    "5": "banana"
+  },
+  "frames": 961,
+  "fps": 24.0,
+  "duration_seconds": 40.041666666666664,
+  "width": 640,
+  "height": 480,
+  "confidence_threshold": 0.25,
+  "cup_confidence_threshold": 0.7,
+  "detection_count_by_class": {
+    "fanta_can": 961,
+    "green_apple": 934,
+    "tomato": 968,
+    "banana": 961,
+    "peach": 961,
+    "cup": 961
+  },
+  "frames_with_class": {
+    "banana": 961,
+    "green_apple": 923,
+    "peach": 961,
+    "fanta_can": 961,
+    "cup": 961,
+    "tomato": 961
+  },
+  "processing_seconds_before_encoding": 13.923765900000944,
+  "evaluation": "Inference only; no ground-truth labels, accuracy metrics unavailable.",
+  "output": "C:\\Users\\seung\\Documents\\INHA\\RoboCup\\outputs\\head_yolo11n_local_20261013\\video_tests\\KakaoTalk_20261013_002408663_cup070\\KakaoTalk_20261013_002408663_yolo11n_cup070_detected.mp4"
+}

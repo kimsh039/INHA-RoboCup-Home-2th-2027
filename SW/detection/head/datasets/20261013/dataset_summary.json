@@ -1,0 +1,20 @@
+{
+  "images": 2155,
+  "splits": {
+    "train": 1786,
+    "val": 369
+  },
+  "boxes": 12205,
+  "boxes_by_class": {
+    "green_apple": 2035,
+    "banana": 2021,
+    "cup": 2058,
+    "tomato": 1995,
+    "fanta_can": 2064,
+    "peach": 2032
+  },
+  "saved_frames": 315,
+  "reviewed_frames": 209,
+  "review_status": "partially_human_reviewed",
+  "source_zip_sha256": "125197d879d93d2bc9c2f025213268a4c0d2fd7fc20ef7b08cc3f56e3da33b3f"
+}

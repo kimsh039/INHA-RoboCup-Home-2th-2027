@@ -1,0 +1,191 @@
+[
+  {
+    "source": "C:\\Users\\seung\\Pictures\\Camera Roll\\banana_objectOnly.mp4",
+    "video": "banana_objectOnly.mp4",
+    "fps": 29.977885166680316,
+    "frames": 549,
+    "duration": 18.3135,
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "source": "C:\\Users\\seung\\Pictures\\Camera Roll\\cup_objectOnly.mp4",
+    "video": "cup_objectOnly.mp4",
+    "fps": 29.97801612151089,
+    "frames": 810,
+    "duration": 27.0198,
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "source": "C:\\Users\\seung\\Pictures\\Camera Roll\\fanta_can_object_only.mp4",
+    "video": "fanta_can_object_only.mp4",
+    "fps": 29.97800033440545,
+    "frames": 759,
+    "duration": 25.318566666666666,
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "source": "C:\\Users\\seung\\Pictures\\Camera Roll\\green_apple_objectOnly.mp4",
+    "video": "green_apple_objectOnly.mp4",
+    "fps": 29.977996445958386,
+    "frames": 609,
+    "duration": 20.314899999999998,
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "source": "C:\\Users\\seung\\Pictures\\Camera Roll\\peach_objectOnly.mp4",
+    "video": "peach_objectOnly.mp4",
+    "fps": 29.977985928260026,
+    "frames": 463,
+    "duration": 15.444666666666667,
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "source": "C:\\Users\\seung\\Pictures\\Camera Roll\\tomato_objectOnly.mp4",
+    "video": "tomato_objectOnly.mp4",
+    "fps": 29.977894561227895,
+    "frames": 575,
+    "duration": 19.180799999999998,
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "source": "C:\\Users\\seung\\Pictures\\Camera Roll\\WIN_20261006_23_47_12_Pro.mp4",
+    "video": "WIN_20261006_23_47_12_Pro.mp4",
+    "fps": 29.888309754281458,
+    "frames": 669,
+    "duration": 22.383333333333333,
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "source": "C:\\Users\\seung\\Pictures\\Camera Roll\\WIN_20261006_23_48_36_Pro.mp4",
+    "video": "WIN_20261006_23_48_36_Pro.mp4",
+    "fps": 29.978013419116156,
+    "frames": 739,
+    "duration": 24.6514,
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "source": "C:\\Users\\seung\\Pictures\\Camera Roll\\WIN_20261006_23_49_36_Pro.mp4",
+    "video": "WIN_20261006_23_49_36_Pro.mp4",
+    "fps": 29.978003153530203,
+    "frames": 308,
+    "duration": 10.2742,
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "source": "C:\\Users\\seung\\Pictures\\Camera Roll\\WIN_20261006_23_50_08_Pro.mp4",
+    "video": "WIN_20261006_23_50_08_Pro.mp4",
+    "fps": 29.977929292636727,
+    "frames": 345,
+    "duration": 11.508466666666665,
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "source": "C:\\Users\\seung\\Pictures\\Camera Roll\\WIN_20261006_23_50_46_Pro.mp4",
+    "video": "WIN_20261006_23_50_46_Pro.mp4",
+    "fps": 29.9778387323984,
+    "frames": 349,
+    "duration": 11.641933333333332,
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "source": "C:\\Users\\seung\\Pictures\\Camera Roll\\WIN_20261006_23_51_34_Pro.mp4",
+    "video": "WIN_20261006_23_51_34_Pro.mp4",
+    "fps": 29.978197674418606,
+    "frames": 418,
+    "duration": 13.943466666666666,
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "source": "C:\\Users\\seung\\Pictures\\Camera Roll\\WIN_20261006_23_52_09_Pro.mp4",
+    "video": "WIN_20261006_23_52_09_Pro.mp4",
+    "fps": 29.977534237682665,
+    "frames": 431,
+    "duration": 14.377433333333332,
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "source": "C:\\Users\\seung\\Pictures\\Camera Roll\\WIN_20261012_21_51_54_Pro.mp4",
+    "video": "WIN_20261012_21_51_54_Pro.mp4",
+    "fps": 29.940788738688415,
+    "frames": 804,
+    "duration": 26.853,
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "source": "C:\\Users\\seung\\Pictures\\Camera Roll\\WIN_20261012_21_52_32_Pro.mp4",
+    "video": "WIN_20261012_21_52_32_Pro.mp4",
+    "fps": 29.947765525246663,
+    "frames": 989,
+    "duration": 33.024166666666666,
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "source": "C:\\Users\\seung\\Pictures\\Camera Roll\\WIN_20261012_21_53_24_Pro.mp4",
+    "video": "WIN_20261012_21_53_24_Pro.mp4",
+    "fps": 29.97777133703043,
+    "frames": 824,
+    "duration": 27.487033333333333,
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "source": "C:\\Users\\seung\\Pictures\\Camera Roll\\WIN_20261012_21_56_01_Pro.mp4",
+    "video": "WIN_20261012_21_56_01_Pro.mp4",
+    "fps": 29.978007809047472,
+    "frames": 961,
+    "duration": 32.05683333333334,
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "source": "C:\\Users\\seung\\Pictures\\Camera Roll\\WIN_20261012_21_56_41_Pro.mp4",
+    "video": "WIN_20261012_21_56_41_Pro.mp4",
+    "fps": 29.977975950618653,
+    "frames": 1044,
+    "duration": 34.82556666666667,
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "source": "C:\\Users\\seung\\Pictures\\Camera Roll\\WIN_20261012_21_57_30_Pro.mp4",
+    "video": "WIN_20261012_21_57_30_Pro.mp4",
+    "fps": 29.977982451244976,
+    "frames": 949,
+    "duration": 31.656566666666667,
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "source": "C:\\Users\\seung\\Pictures\\Camera Roll\\WIN_20261012_21_59_47_Pro.mp4",
+    "video": "WIN_20261012_21_59_47_Pro.mp4",
+    "fps": 29.977785617641242,
+    "frames": 1031,
+    "duration": 34.392133333333334,
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "source": "C:\\Users\\seung\\Pictures\\Camera Roll\\WIN_20261012_22_00_50_Pro.mp4",
+    "video": "WIN_20261012_22_00_50_Pro.mp4",
+    "fps": 29.97795272260084,
+    "frames": 945,
+    "duration": 31.523166666666665,
+    "width": 1920,
+    "height": 1080
+  }
+]
