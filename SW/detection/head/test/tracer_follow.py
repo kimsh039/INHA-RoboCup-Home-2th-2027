@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Standalone Head RGB-D follower. Default: preview and candidate commands only."""
 import argparse
+import os
 from collections import deque
 from pathlib import Path
 import signal
@@ -13,14 +14,15 @@ sys.path.insert(0, str(HEAD / 'head_detection_ws/src/robocup_head_detection'))
 sys.path.insert(0, str(HEAD / 'scripts'))
 from follow_control import Controller, Decision, Settings, decode_depth, fresh_command
 from live_ros_viewer import Preview, make_server
+from camera_topics import input_status, select_topics
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--target', choices=['green_apple', 'peach', 'tomato', 'fanta_can', 'cup', 'banana'], default='banana')
     parser.add_argument('--model', type=Path, default=HEAD / 'models/head_yolo11n_20261007.pt')
-    parser.add_argument('--rgb', default='/head/camera/color/image_raw')
-    parser.add_argument('--depth', default='/head/camera/aligned_depth_to_color/image_raw')
+    parser.add_argument('--rgb', help='Explicit RGB topic; also supply --depth')
+    parser.add_argument('--depth', help='Explicit aligned depth topic; also supply --rgb')
     parser.add_argument('--device', default='0')
     parser.add_argument('--imgsz', type=int, default=640)
     parser.add_argument('--distance', type=float, default=1.0)
@@ -31,6 +33,8 @@ def main():
     parser.add_argument('--move', action='store_true', help='Actually publish to /cmd_vel; default is dry run')
     parser.add_argument('--port', type=int, default=8787)
     args = parser.parse_args()
+    if bool(args.rgb) != bool(args.depth):
+        parser.error('--rgb and --depth must be provided together')
     cfg = Settings(target=args.target, distance=args.distance, linear_max=args.max_linear,
                    angular_max=args.max_angular, confidence=args.conf, allow_reverse=args.allow_reverse)
     import cv2
@@ -113,9 +117,7 @@ def main():
             node.get_logger().error('Another /cmd_vel publisher detected: stopping this test.')
             quit_event.set()
 
-    subscriptions = [node.create_subscription(Image, args.rgb, rgb_callback, qos),
-                     node.create_subscription(Image, args.depth, depth_callback, qos),
-                     node.create_subscription(Empty, '/object_follow/stop', stop_callback, 1)]
+    subscriptions = [node.create_subscription(Empty, '/object_follow/stop', stop_callback, 1)]
     executor = SingleThreadedExecutor()
     executor.add_node(node)
     try:
@@ -123,6 +125,11 @@ def main():
         discovery_end = time.monotonic() + 2
         while time.monotonic() < discovery_end and not quit_event.is_set():
             executor.spin_once(timeout_sec=0.05)
+        published = {name for name, types in node.get_topic_names_and_types()
+                     if 'sensor_msgs/msg/Image' in types and node.count_publishers(name) > 0}
+        args.rgb, args.depth = select_topics(published, args.rgb, args.depth)
+        subscriptions.extend([node.create_subscription(Image, args.rgb, rgb_callback, qos),
+                              node.create_subscription(Image, args.depth, depth_callback, qos)])
         if drive_pub and other_publishers():
             raise RuntimeError('Another /cmd_vel publisher exists; stop that controller first')
         if quit_event.is_set():
@@ -134,6 +141,8 @@ def main():
         server_started = True
         print(f'{"MOVE" if args.move else "DRY RUN"} | target={args.target} | distance={args.distance:.2f} m', flush=True)
         print(f'Preview http://127.0.0.1:{args.port}/ | RGB={args.rgb} | depth={args.depth}', flush=True)
+        print(f'ROS_DOMAIN_ID={os.environ.get("ROS_DOMAIN_ID", "0")} | '
+              f'RGB publishers={node.count_publishers(args.rgb)} | depth publishers={node.count_publishers(args.depth)}', flush=True)
         print('Dry run never publishes /cmd_vel. Stop: Ctrl+C or /object_follow/stop (latched).', flush=True)
         frames = previous_camera = 0
         previous_input_at = float('-inf')
@@ -199,8 +208,9 @@ def main():
                 fps = frames / elapsed
                 with state_lock:
                     shown = command
+                diagnostic = input_status(node.count_publishers(args.rgb), node.count_publishers(args.depth), count)
                 print(f'Camera FPS={(count-previous_camera)/elapsed:.1f} | Detection FPS={fps:.1f} | '
-                      f'{shown.reason} | v={shown.linear:.3f} m/s w={shown.angular:.3f} rad/s', flush=True)
+                      f'{diagnostic or shown.reason} | v={shown.linear:.3f} m/s w={shown.angular:.3f} rad/s', flush=True)
                 started, frames, previous_camera = time.monotonic(), 0, count
         node.destroy_timer(timer)
     finally:

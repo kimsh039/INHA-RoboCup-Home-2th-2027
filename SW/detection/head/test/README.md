@@ -8,10 +8,20 @@
 
 ## 확인 모드
 
+`ros2 topic list -t`에 `/parameter_events`, `/rosout`만 있으면 해당 ROS domain에서 카메라 입력을 발견하지 못한 상태다. 이 테스트는 센서를 자동 실행하지 않는다. Head 카메라를 단독 실행하려면 첫 번째 SSH 터미널에서:
+
+```bash
+cd ~/INHA-RoboCup-Home-2th-2027
+git pull --ff-only
+bash SW/detection/head/test/start_head_camera.sh
+```
+
+이 터미널을 유지하고 두 번째 SSH 터미널에서 아래 디텍션을 실행한다. 카메라 실행기는 기본 Head D435 serial `244622071116`, RGB/depth 640×480@30, aligned depth를 사용한다. 다른 serial은 스크립트 첫 번째 인자로 지정한다. 이 카메라 실행은 Tracer·팔·LiDAR·전체 로봇을 실행하지 않는다. 기존 Head publisher가 있으면 중복 실행하지 않는다.
+
 이미 Head 카메라·aligned depth·Tracer 드라이버가 실행 중인 Jetson SSH 터미널에서:
 
 ```bash
-cd ~/robocup
+cd ~/INHA-RoboCup-Home-2th-2027
 git pull --ff-only
 source /opt/ros/humble/setup.bash
 source ~/detection_ws/src/yolo_ros/yolo_ros/.venv/bin/activate
@@ -20,7 +30,9 @@ python SW/detection/head/test/tracer_follow.py --target banana
 
 기본값은 **DRY RUN**이다. `/object_follow/candidate_cmd_vel`에 계산 결과만 발행하며 `/cmd_vel` publisher를 만들지 않는다. 화면에는 대상 박스·거리·상태·계산 속도, 터미널에는 Camera FPS·Detection FPS·v·w가 표시된다. 센서나 모터 드라이버를 새로 실행하지 않는다.
 
-기본 입력은 `/head/camera/color/image_raw`와 `/head/camera/aligned_depth_to_color/image_raw`다. factory RGB와 그 RGB에 aligned된 depth의 같은 픽셀 좌표를 사용한다. 인트린식으로 3D 좌표를 투영하지 않으며 회전은 화면 중심 오차 기준이다. ROS_DOMAIN_ID는 기존 센서 노드와 같아야 한다.
+기본 입력은 `/head/camera/color/image_raw`와 `/head/camera/aligned_depth_to_color/image_raw`다. 시작할 때 실제 publisher가 있는 Head 토픽 쌍(`/head/camera`, `/sensors/head`, `/head_camera`)을 탐색한다. Wrist나 generic `/camera`를 자동으로 선택하지 않는다. 다른 토픽은 `--rgb`와 `--depth`를 함께 지정한다. factory RGB와 그 RGB에 aligned된 depth의 같은 픽셀 좌표를 사용한다. 인트린식으로 3D 좌표를 투영하지 않으며 회전은 화면 중심 오차 기준이다. ROS_DOMAIN_ID는 기존 센서 노드와 같아야 한다(미지정 시 0).
+
+터미널에 ROS domain과 실제 RGB/depth publisher 수를 출력한다. 입력 없음은 `NO_RGB_PUBLISHER`, publisher는 있지만 콜백이 없는 경우는 `WAITING_RGB_FRAMES`, aligned depth 발행자 없음은 `NO_DEPTH_PUBLISHER`로 구분한다. `NO_RGB_PUBLISHER`가 계속되면 카메라 실행 터미널 로그와 domain을 먼저 확인한다.
 
 거리 값은 카메라 광학축 z 기준이며 범퍼에서 객체까지의 간격이 아니다. Camera FPS는 구독 콜백에 도착한 프레임 수, Detection FPS는 실제 YOLO 호출을 완료한 프레임 수다. depth가 누락되면 화면은 갱신돼도 Detection FPS는 0일 수 있다.
 
@@ -66,4 +78,4 @@ python SW/detection/head/test/tracer_follow.py --target tomato --distance 1.2
 python -m unittest discover -s SW/detection/head/test -p 'test_*.py' -v
 ```
 
-2026-10-12 로컬 CPU 제어 테스트 **13개 통과**. CLI 도움말과 Python 문법 확인 완료. Jetson ROS 카메라·주행 통합 검증은 아직 수행하지 않았다. 종료 신호 옵션은 [ROS 2 Humble rclpy API](https://github.com/ros2/rclpy/blob/humble/rclpy/rclpy/__init__.py)에 맞췄다.
+2026-10-12 로컬 CPU 제어·입력 토픽 테스트 **18개 통과**. CLI 도움말과 Python 문법 확인 완료. Jetson ROS 카메라·주행 통합 검증은 아직 수행하지 않았다. 종료 신호 옵션은 [ROS 2 Humble rclpy API](https://github.com/ros2/rclpy/blob/humble/rclpy/rclpy/__init__.py)에 맞췄다.
