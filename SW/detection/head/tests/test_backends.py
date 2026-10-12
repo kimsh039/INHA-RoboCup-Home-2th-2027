@@ -7,10 +7,29 @@ import numpy as np
 
 from robocup_head_detection.backends import YoloDetector, make_tracker_factory
 from robocup_head_detection.core import Box
+from robocup_head_detection.class_schema import CLASSES, LEGACY_CLASSES, class_mapping
 from robocup_head_detection.images import decode_raw, decode_compressed
 
 
 class AdapterTests(unittest.TestCase):
+    def test_legacy_head_outputs_use_six_current_ids_and_exclude_plate(self):
+        items = [SimpleNamespace(xyxy=np.array([[i, 3, i+12, 13]]), cls=[i], conf=[0.8])
+                 for i in range(7)]
+        result = SimpleNamespace(boxes=items, names=dict(enumerate(LEGACY_CLASSES)), masks=None)
+        detector = YoloDetector("")
+        detector.model = SimpleNamespace(predict=lambda *args, **kwargs: [result])
+        boxes = detector.detect(np.zeros((100, 200, 3), np.uint8))
+        self.assertEqual([(b.class_id, b.class_name) for b in boxes],
+                         [(2, "tomato"), (5, "banana"), (3, "fanta_can"),
+                          (0, "green_apple"), (4, "cup"), (1, "peach")])
+        self.assertEqual([b.x for b in boxes], list(range(6)))
+
+    def test_current_schema_and_unrelated_models_preserve_identity(self):
+        self.assertEqual(class_mapping(dict(enumerate(CLASSES))),
+                         {i: (i, name) for i, name in enumerate(CLASSES)})
+        self.assertEqual(class_mapping({0: "apple", 1: "cup", 2: "plate"}),
+                         {0: (0, "apple"), 1: (1, "cup"), 2: (2, "plate")})
+
     def test_missing_model_does_not_import_yolo_or_download(self):
         self.assertFalse(YoloDetector("").ready)
         self.assertFalse(YoloDetector("/does/not/exist/model.pt").ready)

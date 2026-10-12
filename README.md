@@ -31,3 +31,5 @@ Head와 Wrist 카메라는 모두 RealSense D435를 사용합니다. Head는 목
 현재 최종 보정 모델은 [robocup.calibrated.urdf](SW/simulation/robot_description/robocup.calibrated.urdf)이며, [robocup.urdf](SW/simulation/robot_description/robocup.urdf)는 CAD 기준 원본입니다. 시뮬레이션 보정 기록과 실기 검증 범위는 [SW 안내](SW/README.md)에 있습니다.
 
 [Head YOLO11n 7개 클래스 모델·실제 평가 결과](SW/detection/head/training/experiments/20261007/TRAINING_RESULTS.md): 100 epoch 완료, 두 보관 영상 739프레임 추론. 라벨 초안 기준 검증과 실제 누락을 함께 기록했습니다.
+
+현재 검출 대상은 **green_apple, peach, tomato, fanta_can, cup, banana**입니다. [20261012 정정 데이터·재학습 설정](SW/detection/head/training/README.md): apple → tomato, mug → cup, plate 제외. 기존 모델의 출력 변환을 적용했으며 새 6클래스 학습은 준비 상태입니다.
