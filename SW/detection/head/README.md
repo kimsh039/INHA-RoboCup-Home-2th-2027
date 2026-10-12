@@ -1,5 +1,7 @@
 # 헤드 검출·추적 구현
 
+실물 Head RGB를 받아 브라우저에 모든 객체를 표시하고 SSH 터미널에 FPS를 출력하는 준비된 실행기는 [Jetson 실시간 화면·FPS 안내](LIVE_JETSON.md)에 있다. 실기 실행과 FPS 측정은 아직 수행하지 않았다.
+
 Gazebo에서 검출한 목표를 SLAM 지도 좌표로 변환해 Nav2로 이동하는 테스트는
 [시뮬레이션 검출·주행 가이드](SIM_NAV_TEST.md)를 참고한다. 도착 후 closed approach 연결 자리도 남겨두었다.
 
