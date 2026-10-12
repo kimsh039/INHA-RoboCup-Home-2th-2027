@@ -11,20 +11,27 @@ from .class_schema import class_mapping
 
 class YoloDetector:
     def __init__(self, model_path, confidence=0.35, nms_iou=0.45,
-                 imgsz=640, device="cpu", task="detect", cup_confidence=None):
+                 imgsz=640, device="cpu", task="detect", cup_confidence=None,
+                 banana_confidence=None):
         if cup_confidence is not None and not 0 <= cup_confidence <= 1:
             raise ValueError("cup_confidence must be in [0,1]")
+        if banana_confidence is not None and not 0 <= banana_confidence <= 1:
+            raise ValueError("banana_confidence must be in [0,1]")
         self.model = None
         self.error = "Model path is empty; supply a trained local .pt file and restart."
         self.confidence, self.nms_iou = confidence, nms_iou
         self.cup_confidence = cup_confidence
+        self.banana_confidence = banana_confidence
         self.imgsz, self.device = imgsz, device
         if not model_path:
             return
         path = Path(model_path).expanduser()
-        if not path.is_file() or path.suffix.lower() != ".pt":
-            self.error = f"Expected an existing local .pt model: {path}"
+        if not path.is_file() or path.suffix.lower() not in (".pt", ".engine"):
+            self.error = f"Expected an existing local .pt or TensorRT .engine model: {path}"
             return  # Never pass a nonexistent model name to YOLO (implicit download).
+        if path.suffix.lower() == ".engine" and str(device).lower() == "cpu":
+            self.error = "TensorRT requires a CUDA device; use device=0 or select the current .pt for CPU."
+            return
         try:
             from ultralytics import YOLO
             model = YOLO(str(path), task=task)
@@ -68,6 +75,9 @@ class YoloDetector:
             # Apply after the legacy mug -> cup adapter; preserve other classes.
             if (class_name == "cup" and self.cup_confidence is not None
                     and confidence < self.cup_confidence):
+                continue
+            if (class_name == "banana" and self.banana_confidence is not None
+                    and confidence < self.banana_confidence):
                 continue
             mask = None
             if polygons is not None and index < len(polygons):

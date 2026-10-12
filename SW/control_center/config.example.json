@@ -4,9 +4,18 @@
   "image_hz": 6,
   "image_width": 960,
   "jpeg_quality": 75,
-  "cloud_hz": 2,
-  "max_cloud_points": 5000,
+  "cloud_hz": 5,
+  "max_cloud_points": 20000,
+  "cloud_decay_sec": 2.0,
+  "cloud_voxel_size": 0.04,
+  "max_accumulated_cloud_points": 80000,
+  "cloud_point_size": 2.0,
   "use_sim_time": false,
+  "can": {
+    "auto_connect": true,
+    "tracer": {"interface": "can_tracer", "usb_serial": "", "bitrate": 500000},
+    "piper": {"interface": "can_arm", "usb_serial": "", "bitrate": 1000000}
+  },
   "channels": {
     "map": [
       "/map"
@@ -53,6 +62,7 @@
       "/wrist_yolo/debug_image"
     ],
     "detections": [
+      "/detection/head/objects",
       "/detection/head/target",
       "/head_yolo/detections"
     ],

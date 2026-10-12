@@ -40,7 +40,7 @@ bash ~/robocup/SW/robot/jetson_sensors.sh stop
 CAN 포트 변경 또는 팔 피드백 없이 실행:
 
 ```bash
-bash ~/robocup/SW/robot/start_robot.sh tracer_can:=can2 piper_can:=can0
+bash ~/robocup/SW/robot/start_robot.sh tracer_can:=can0 piper_can:=can_arm
 bash ~/robocup/SW/robot/start_robot.sh arm:=false
 ```
 
@@ -130,10 +130,10 @@ Nav2/SLAM에서는 스캔 입력을 `/scan`, 오도메트리 입력을 `/odom_ek
 ## 이 젯슨의 실행 조건
 
 - Ubuntu 22.04 / ROS 2 Humble. 기존 `tracer_ws`, `ws_livox`, `piper_ros`의 install 환경을 source합니다.
-- Tracer: `can2`. PiPER 피드백: `can0`. CAN 인터페이스는 기존 하드웨어 설정대로 준비되어 있어야 합니다.
+- Tracer: `can0` (젯슨 내장 CAN + SN65HVD230 트랜시버, 500 kbps). PiPER: USB-CAN 어댑터 `can_arm` (1 Mbps). 두 인터페이스는 `~/livox_g2_calib/can_boot_setup.sh`(udev 이름 고정 + systemd-networkd)로 부팅·재연결 시 자동으로 올라옵니다.
 - G2: `~/tracer_ws/src/ydlidar_ros2_driver/params/G2.yaml`의 기존 USB 설정을 사용합니다.
 - Mid-360S: 기존 `MID360s_config.json`의 센서 IP `192.168.1.184`, host IP `192.168.1.5`와 네트워크 설정을 사용합니다. 점군에 드라이버 extrinsic을 추가하지 않습니다.
-- Head D435 `244622071116`: RGB/depth 640×480, 15fps. Wrist D435IF `243222070076`: RGB/depth 640×480, 30fps.
+- Head D435 `244622071116`: RGB/depth 640×480, 30fps (USB 3). Wrist D435IF `243222070076`: RGB/depth 640×480, 30fps.
 - 이 작업은 현재 설치된 ROS 패키지, numpy, PyYAML을 사용합니다. 새 colcon 빌드를 수행하지 않았습니다.
 - 모든 로봇 노드와 소비 프로그램은 같은 `ROS_DOMAIN_ID`를 사용합니다. 별도 지정이 없으면 기본 0입니다. tmux 실행기는 시작한 셸의 domain 값을 전달합니다.
 

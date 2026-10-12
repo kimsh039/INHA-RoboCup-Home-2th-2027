@@ -20,7 +20,7 @@
   <div class="app-shell">
     <header class="topbar">
       <div class="identity"><span class="eyebrow">INHA UNITED @HOME</span><h1>로봇 관제센터 <span>01</span></h1></div>
-      <div class="top-actions"><span id="mode-badge" class="badge amber">입력 대기</span><span class="connection" id="connection"><i></i>연결 중</span><span class="clock" id="clock">--:--:--</span><button class="icon-button" id="settings-button" title="연결 정보" aria-label="연결 정보">⚙</button></div>
+      <div class="top-actions"><span id="mode-badge" class="badge amber">입력 대기</span><span class="connection" id="connection"><i></i>연결 중</span><span class="clock" id="clock">--:--:--</span><button class="server-shutdown-button" id="shutdown-button" disabled title="관제센터와 여기서 시작한 센서·SLAM·검출 종료">서버 종료</button><button class="icon-button" id="settings-button" title="연결 정보" aria-label="연결 정보">⚙</button></div>
     </header>
     <div class="notice" id="notice"><span class="notice-dot"></span><span id="notice-text">데이터 서버에 연결하고 있습니다.</span><button id="reconnect-button">다시 연결 ↗</button></div>
     <main>
@@ -35,6 +35,11 @@
         <div class="panel-header"><div><span class="panel-index">CONTROL</span><h3>카메라 · LiDAR</h3></div><span class="control-caption">젯슨 드라이버 실행 / 중지</span></div>
         <div class="sensor-controls" id="sensor-controls"></div>
         <p class="sensor-control-note" id="sensor-control-note">젯슨 관제센터에 연결하면 센서를 제어할 수 있습니다.</p>
+      </section>
+      <section class="panel can-panel" aria-label="CAN 연결과 오도메트리 상태">
+        <div class="panel-header"><div><span class="panel-index">CAN / ODOM</span><h3>CAN 연결 · 오도메트리</h3><span class="tiny-pill" id="odom-health-status" role="status">입력 대기</span></div><span class="control-caption" id="can-mode">자동 연결 준비 중</span></div>
+        <div class="can-readings" id="can-readings" aria-live="polite"></div>
+        <p class="sensor-control-note">역할 이름은 현재 설정 기준입니다. USB/내장 CAN과 각 포트의 수신을 구분해 표시합니다. 바퀴·융합 오도메트리와 TF는 각각 확인하며 정지 상태의 0 m/s도 정상 수신으로 표시합니다.</p>
       </section>
       <div class="workspace">
         <section class="panel map-panel">

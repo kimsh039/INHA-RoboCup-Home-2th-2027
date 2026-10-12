@@ -28,6 +28,14 @@
     odom0_differential: false
     odom0_relative: false
     odom0_queue_size: 10
+    # Published only when /imu/base is missing/stale; never competes with a live gyro.
+    odom1: /odom/rotation_fallback
+    odom1_config: [false, false, false, false, false, false,
+                   false, false, false, false, false, true,
+                   false, false, false]
+    odom1_differential: false
+    odom1_relative: false
+    odom1_queue_size: 10
     imu0: /imu/base
     imu0_config:
     - false

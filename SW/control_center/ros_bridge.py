@@ -3,6 +3,7 @@
 import argparse
 import base64
 from collections import deque
+import json
 import math
 import os
 from pathlib import Path
@@ -12,6 +13,7 @@ import time
 
 from server import State, load_config, make_server, png_gray
 from sensor_manager import SensorManager, SENSORS
+from can_monitor import CanMonitor, OdometryMonitor
 
 TYPES = {
     'map': ['nav_msgs/msg/OccupancyGrid'],
@@ -20,7 +22,7 @@ TYPES = {
     'path': ['nav_msgs/msg/Path'],
     'cloud': ['sensor_msgs/msg/PointCloud2'],
     'object_cloud': ['sensor_msgs/msg/PointCloud2'],
-    'detections': ['robocup_detection_msgs/msg/HeadTarget', 'yolo_msgs/msg/DetectionArray',
+    'detections': ['std_msgs/msg/String', 'robocup_detection_msgs/msg/HeadTarget', 'yolo_msgs/msg/DetectionArray',
                    'vision_msgs/msg/Detection2DArray'],
     'wrist_status': ['std_msgs/msg/String'],
     'battery': ['sensor_msgs/msg/BatteryState'],
@@ -43,6 +45,7 @@ def run(args):
     try:
         import cv2
         import numpy as np
+        from cloud_history import CloudHistory
         import rclpy
         from cv_bridge import CvBridge
         from rclpy.node import Node
@@ -50,6 +53,8 @@ def run(args):
         from rclpy.time import Time
         from rosidl_runtime_py.utilities import get_message
         from tf2_ros import Buffer, TransformListener
+        from nav_msgs.msg import Odometry
+        from sensor_msgs.msg import Imu
     except ImportError as exc:
         raise SystemExit(f'ROS 의존성 없음: {exc}\nsource /opt/ros/humble/setup.bash 후 /usr/bin/python3로 실행하세요.\n'
                          '영상 변환에는 ros-humble-cv-bridge와 python3-opencv가 필요합니다.')
@@ -70,12 +75,32 @@ def run(args):
             self.tf = Buffer()
             self.listener = TransformListener(self.tf, self)
             self.bound, self.overrides, self.last_processed = {}, {}, {}
+            self.cloud_history = CloudHistory(config)
             self.trail = deque(maxlen=1200)
             self.trail_frame = None
             self.odom_message = None
             self.fixed = config.get('fixed_frame', 'map')
             self.base = config.get('base_frame', 'base_link')
             self.last_cpu = None
+            self.odom_monitor = OdometryMonitor(state)
+            odom_qos = QoSProfile(depth=20, reliability=ReliabilityPolicy.BEST_EFFORT,
+                                 durability=DurabilityPolicy.VOLATILE)
+            self.odom_subscriptions = []
+            for key, topic in [('wheel', '/odom'), ('fused', '/odom_ekf')]:
+                subscription = self.create_subscription(
+                    Odometry, topic,
+                    lambda msg, key=key: self.odom_monitor.receive(
+                        key, msg, self.get_clock().now().nanoseconds / 1e9),
+                    odom_qos)
+                self.odom_subscriptions.append(subscription)
+            for key, topic, message_type in [('imu', '/imu/base', Imu),
+                                               ('wheel_fallback', '/odom/rotation_fallback', Odometry)]:
+                subscription = self.create_subscription(
+                    message_type, topic,
+                    lambda msg, key=key: self.odom_monitor.receive_rotation(
+                        key, msg, self.get_clock().now().nanoseconds / 1e9), odom_qos)
+                self.odom_subscriptions.append(subscription)
+            self.create_timer(1.0, self.odometry_health)
             self.create_timer(2.0, self.discover)
             self.create_timer(0.2, self.update_pose)
             self.create_timer(3.0, self.health)
@@ -95,6 +120,7 @@ def run(args):
                 if key in self.bound:
                     self.destroy_subscription(self.bound.pop(key)[3])
                 self.last_processed.pop(key, None)
+                self.cloud_history.frames.pop(key, None)
                 state.clear(key)
                 with state.condition:
                     state.channels[key].update(topic='', type='', publishers=0)
@@ -165,7 +191,7 @@ def run(args):
 
         def receive(self, key, msg):
             limit = config.get('image_hz', 6) if key in ('head_image', 'head_debug', 'wrist_image', 'wrist_debug') else (
-                    config.get('cloud_hz', 2) if key in ('cloud', 'object_cloud') else 8 if key == 'scan' else 0)
+                    config.get('cloud_hz', 5) if key in ('cloud', 'object_cloud') else 8 if key == 'scan' else 0)
             now = time.monotonic()
             if limit and now - self.last_processed.get(key, 0) < 1 / max(float(limit), 0.1):
                 return
@@ -222,14 +248,26 @@ def run(args):
                 elif key in ('cloud', 'object_cloud'):
                     points = self.cloud_points(msg)
                     frame = msg.header.frame_id
+                    stable = False
                     try:
                         rotation, offset = self.transform(frame, msg.header.stamp)
                         points = points @ rotation.T + offset
                         frame = self.fixed
+                        stable = True
                     except Exception:
-                        pass  # Native frame is explicit; never overlay it on a map with another frame.
+                        try:
+                            rotation, offset = self.transform(frame, msg.header.stamp, target='odom')
+                            points = points @ rotation.T + offset
+                            frame, stable = 'odom', True
+                        except Exception:
+                            pass  # Native frames are displayed without accumulating moving observations.
+                    points, metadata = self.cloud_history.add(
+                        key, points, frame, msg.header.frame_id, stamp, self.bound[key][0],
+                        msg.width * msg.height, stable)
                     state.put(key, dict(points=points.round(3).tolist(), frame=frame,
-                                        source_frame=msg.header.frame_id, total_points=msg.width * msg.height), stamp, age)
+                                        source_frame=msg.header.frame_id,
+                                        point_size=max(1.0, min(6.0, float(config.get('cloud_point_size', 2.0)))),
+                                        **metadata), stamp, age)
                 elif key == 'path':
                     rotation, offset = self.transform(msg.header.frame_id, msg.header.stamp)
                     step = max(1, len(msg.poses) // 1000)
@@ -238,7 +276,11 @@ def run(args):
                     points = points @ rotation.T + offset
                     state.put(key, dict(points=points[:, :2].round(3).tolist(), frame=self.fixed), stamp, age)
                 elif key == 'detections':
-                    state.put(key, self.detections(msg), stamp, age)
+                    result = self.detections(msg)
+                    if result.get('stamp') is not None:
+                        stamp = float(result['stamp'])
+                        age = self.get_clock().now().nanoseconds / 1e9 - stamp
+                    state.put(key, result, stamp, age)
                 elif key == 'wrist_status':
                     state.put(key, dict(text=msg.data), stamp, age)
                 elif key == 'battery':
@@ -261,24 +303,30 @@ def run(args):
             if not total:
                 return np.empty((0, 3))
             endian = '>' if msg.is_bigendian else '<'
-            parsers = []
+            names, formats, offsets = [], [], []
             for name in ('x', 'y', 'z'):
                 field = fields[name]
                 if field.datatype not in (7, 8):
                     raise ValueError('XYZ fields must be FLOAT32 or FLOAT64')
-                parsers.append((field.offset, struct.Struct(endian + ('f' if field.datatype == 7 else 'd'))))
-            maximum = max(1, int(config.get('max_cloud_points', 5000)))
+                names.append(name)
+                formats.append(endian + ('f4' if field.datatype == 7 else 'f8'))
+                offsets.append(field.offset)
+            dtype = np.dtype(dict(names=names, formats=formats, offsets=offsets, itemsize=msg.point_step))
+            maximum = max(1, int(config.get('max_cloud_points', 20000)))
             step = max(1, math.ceil(total / maximum))
-            data, points = memoryview(msg.data), []
-            for index in range(0, total, step):
-                row, col = divmod(index, msg.width)
-                position = row * msg.row_step + col * msg.point_step
-                point = [reader.unpack_from(data, position + offset)[0] for offset, reader in parsers]
-                if all(math.isfinite(x) for x in point):
-                    points.append(point)
-            return np.asarray(points).reshape(-1, 3)
+            records = np.ndarray((msg.height, msg.width), dtype=dtype, buffer=msg.data,
+                                 strides=(msg.row_step, msg.point_step))
+            indices = np.arange(0, total, step)
+            rows, columns = np.divmod(indices, msg.width)
+            points = np.column_stack([records[name][rows, columns] for name in names])
+            return points[np.isfinite(points).all(axis=1)]
 
         def detections(self, msg):
+            if hasattr(msg, 'data'):
+                value = json.loads(msg.data)
+                if not isinstance(value, dict) or value.get('mode') != 'all_objects' or not isinstance(value.get('objects'), list):
+                    raise ValueError('Head 전체 검출 JSON 형식이 아닙니다.')
+                return value
             if hasattr(msg, 'target_id') and hasattr(msg, 'valid'):
                 objects = []
                 if msg.width > 0 and msg.height > 0:
@@ -330,6 +378,21 @@ def run(args):
                 state.channels['pose'].update(topic='TF ' + pose['frame'] + ' ← ' + self.base,
                                               type='tf2', publishers=1, qos='TF')
 
+        def odometry_health(self):
+            ros_now = self.get_clock().now().nanoseconds / 1e9
+            tf_status = dict(state='waiting', age=None, error='')
+            try:
+                transform = self.tf.lookup_transform('odom', self.base, Time())
+                stamp = stamp_seconds(transform.header.stamp)
+                age = ros_now - stamp
+                p, q = transform.transform.translation, transform.transform.rotation
+                finite = (all(math.isfinite(v) for v in (p.x, p.y, p.z, q.x, q.y, q.z, q.w)) and
+                          0.5 <= math.sqrt(q.x*q.x + q.y*q.y + q.z*q.z + q.w*q.w) <= 1.5)
+                tf_status.update(state='live' if finite and stamp > 0 and -0.5 <= age <= 3 else 'stale', age=age)
+            except Exception as exc:
+                tf_status['error'] = str(exc)[:200]
+            self.odom_monitor.publish(ros_now, tf_status)
+
         def health(self):
             health = dict(domain_id=os.environ.get('ROS_DOMAIN_ID', '0'), ros_time=self.get_clock().now().nanoseconds / 1e9,
                           sim_time=use_sim_time, cpu=None, memory_percent=None, temperature=None)
@@ -355,17 +418,21 @@ def run(args):
     node = None
     server = None
     server_thread = None
+    can_monitor = None
     try:
         node = Bridge()
         server = make_server(state, args.host, args.port)
         server_thread = threading.Thread(target=server.serve_forever, daemon=True)
         server_thread.start()
         state.sensor_manager = SensorManager(state)
+        if args.with_robot:
+            state.sensor_manager.start_auxiliary('sensor_core', [
+                'ros2', 'launch', str(Path(__file__).resolve().parent / '../robot/physical.launch.py'),
+                'tracer:=false', 'arm:=false', 'calibration:=true',
+                'head_camera:=false', 'wrist_camera:=false', 'g2_lidar:=false', 'mid360_lidar:=false'])
+        can_monitor = CanMonitor(state, state.sensor_manager, args.with_robot)
         node.discover()
         if args.with_robot:
-            state.sensor_manager.start_auxiliary('robot_core', ['ros2', 'launch',
-                str(Path(__file__).resolve().parent / '../robot/physical.launch.py'),
-                'head_camera:=false', 'wrist_camera:=false', 'g2_lidar:=false', 'mid360_lidar:=false'])
             for key in SENSORS:
                 try:
                     state.sensor_manager.request(key, 'start')
@@ -377,13 +444,16 @@ def run(args):
             state.sensor_manager.start_auxiliary('head_detection', ['bash', str(Path(__file__).resolve().parent / 'start-head-detection.sh')])
         print(f'INHA_CONTROL_CENTER_READY http://{args.host}:{args.port}', flush=True)
         print('Jetson web server. Ctrl+C stops processes started by this control center.', flush=True)
-        rclpy.spin(node)
+        while rclpy.ok() and not state.shutdown_requested.is_set():
+            rclpy.spin_once(node, timeout_sec=0.2)
     except KeyboardInterrupt:
         pass
     finally:
         state.closed.set()
         with state.condition:
             state.condition.notify_all()
+        if can_monitor:
+            can_monitor.close()
         if state.sensor_manager:
             state.sensor_manager.close()
         if server:
@@ -404,5 +474,5 @@ if __name__ == '__main__':
     parser.add_argument('--sim-time', action='store_true')
     parser.add_argument('--with-robot', action='store_true', help='Start physical TF/odom core and four owned sensor drivers')
     parser.add_argument('--mapping', action='store_true', help='Start SLAM Toolbox on the Jetson')
-    parser.add_argument('--detection', action='store_true', help='Start Head YOLO/CSRT on the Jetson')
+    parser.add_argument('--detection', action=argparse.BooleanOptionalAction, default=True, help='Start full-frame Head TensorRT by default; --no-detection disables it')
     run(parser.parse_args())
