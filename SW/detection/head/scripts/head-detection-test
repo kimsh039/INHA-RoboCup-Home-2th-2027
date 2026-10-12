@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+set -e
+source /opt/ros/humble/setup.bash
+HEAD_SCRIPTS="$HOME/INHA-RoboCup-Home-2th-2027/SW/detection/head/scripts"
+if ros2 topic info /detection/head/debug_image 2>/dev/null | grep -Eq 'Publisher count: [1-9]'; then
+  if [[ " $* " == *" --yolo-hz "* || " $* " == *" --yolo-hz="* ]]; then
+    echo '관제 디텍션이 실행 중입니다. 3Hz 비교는 관제 디텍션을 종료한 뒤 실행하세요.' >&2
+    exit 2
+  fi
+  exec "$HOME/venvs/head_detection/bin/python" -u "$HEAD_SCRIPTS/serve_detection_preview.py" "$@"
+fi
+exec "$HOME/venvs/head_detection/bin/python" -u "$HEAD_SCRIPTS/live_ros_viewer.py" \
+  --topic /head/camera/color/image_raw --device 0 \
+  --conf 0.25 --cup-conf 0.50 --banana-conf 0.50 --iou 0.7 --imgsz 640 \
+  --host 127.0.0.1 --port 8787 "$@"

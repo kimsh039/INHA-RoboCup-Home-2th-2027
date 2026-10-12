@@ -1,5 +1,11 @@
 # INHA @HOME 웹 관제센터
 
+2026-10-13: 기본 Head 화면은 최신 6클래스 모델의 **전체 객체 디텍션**이다.
+ROI·단일 목표 추적을 기본 화면에서 사용하지 않는다. 대상 Jetson에 최신 FP16
+TensorRT 엔진이 있으면 이를 우선 사용하고, 없으면 최신 `.pt`를 선택한다.
+cup/banana 신뢰도는 각각 0.50, 나머지는 0.25다. 디텍션은 기본 활성화되며
+`--no-detection`으로 끌 수 있다. [배포 설정](../detection/head/TENSORRT_JETSON.md).
+
 **관제센터는 젯슨에서 실행합니다. 맥은 SSH 터널을 통해 `http://localhost:8081`에 접속합니다.** ROS, 센서 드라이버, SLAM, YOLO 추론, HTTP 서버는 모두 젯슨에서 동작하고 맥 브라우저는 화면을 표시합니다. 맥에 ROS/RViz, Python 서버, Node.js를 설치할 필요가 없습니다.
 
 SLAM 지도·로봇 위치·2D 스캔·MID-360 점군·Head/Wrist 영상·검출 결과를 표시하며, 웹에서 Head D435, Wrist D435, YDLIDAR G2, MID-360 드라이버를 각각 켜고 끌 수 있습니다. 화면 상단의 **서버 종료**는 관제센터와 여기서 시작한 센서·SLAM·검출 프로세스를 함께 종료합니다. 센서 그룹에는 SIGINT, SIGTERM, SIGKILL 순서로 종료를 요청하며 SSH 터널은 그대로 유지됩니다. 다시 사용하려면 젯슨에서 `start`를 실행합니다.

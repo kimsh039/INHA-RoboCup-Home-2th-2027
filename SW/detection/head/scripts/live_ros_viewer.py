@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Detect all six Head objects from ROS RGB, serve a preview and print live FPS."""
 import argparse
+import math
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 import sys
@@ -9,6 +10,7 @@ import time
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'head_detection_ws' /
                        'src' / 'robocup_head_detection'))
+from robocup_head_detection.model_paths import current_model_path
 
 
 class Preview:
@@ -82,36 +84,50 @@ def make_server(preview, host, port):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--model', type=Path, default=Path(__file__).resolve().parents[1] /
-                        'models/head_yolo11n_20261013.pt')
+    parser.add_argument('--model', type=Path, default=current_model_path(Path(__file__).resolve().parents[1]))
     parser.add_argument('--topic', default='/head/calibrated/color/image_raw')
     parser.add_argument('--device', default='0')
     parser.add_argument('--imgsz', type=int, default=640)
     parser.add_argument('--conf', type=float, default=0.25)
-    parser.add_argument('--cup-conf', type=float, default=0.70,
+    parser.add_argument('--cup-conf', type=float, default=0.50,
                         help='Additional minimum confidence only for cup')
+    parser.add_argument('--banana-conf', type=float, default=0.50,
+                        help='Additional minimum confidence only for banana')
     parser.add_argument('--iou', type=float, default=0.7)
+    parser.add_argument('--yolo-hz', type=float, default=0,
+                        help='0: YOLO every frame (default); 3: YOLO 3 Hz + OpenCV KCF preview tracking')
+    parser.add_argument('--preview-fps', type=float, default=15,
+                        help='Maximum JPEG/browser FPS; detection and tracking remain independent')
     parser.add_argument('--host', default='127.0.0.1')
     parser.add_argument('--port', type=int, default=8787)
     args = parser.parse_args()
-    if not 0 < args.conf <= 1 or not 0 <= args.cup_conf <= 1 or not 0 < args.iou <= 1:
-        parser.error('conf/iou must be in (0,1] and cup-conf in [0,1]')
+    if (not 0 < args.conf <= 1 or not 0 <= args.cup_conf <= 1
+            or not 0 <= args.banana_conf <= 1 or not 0 < args.iou <= 1):
+        parser.error('conf/iou must be in (0,1] and class thresholds in [0,1]')
+    if (not math.isfinite(args.yolo_hz) or args.yolo_hz < 0 or
+            (args.yolo_hz and args.yolo_hz < 2) or
+            not math.isfinite(args.preview_fps) or args.preview_fps <= 0):
+        parser.error('yolo-hz must be 0 or >= 2; preview-fps must be finite and > 0')
     import cv2
     import rclpy
-    from rclpy.executors import SingleThreadedExecutor
+    from rclpy.executors import SingleThreadedExecutor, ExternalShutdownException
     from rclpy.qos import QoSProfile, ReliabilityPolicy, HistoryPolicy
     from sensor_msgs.msg import Image
-    from robocup_head_detection.backends import YoloDetector
+    from robocup_head_detection.backends import YoloDetector, make_tracker_factory
     from robocup_head_detection.class_schema import CLASSES, LEGACY_CLASSES
     from robocup_head_detection.images import decode_raw
+    from robocup_head_detection.preview_pipeline import PreviewPipeline
 
     detector = YoloDetector(str(args.model), confidence=args.conf, nms_iou=args.iou,
-                            imgsz=args.imgsz, device=args.device, cup_confidence=args.cup_conf)
+                            imgsz=args.imgsz, device=args.device, cup_confidence=args.cup_conf,
+                            banana_confidence=args.banana_conf)
     if not detector.ready:
         raise SystemExit(detector.error)
     names = tuple(detector.model.names[i] for i in range(len(detector.model.names)))
     if names not in (CLASSES, LEGACY_CLASSES):
         raise SystemExit(f'Expected this project\'s Head checkpoint, got {names}')
+    pipeline = PreviewPipeline(detector,
+        make_tracker_factory('KCF') if args.yolo_hz else None, yolo_hz=args.yolo_hz)
 
     preview = Preview()
     server = make_server(preview, args.host, args.port)
@@ -133,16 +149,25 @@ def main():
     subscription = node.create_subscription(Image, args.topic, receive, qos)
     executor = SingleThreadedExecutor()
     executor.add_node(node)
-    threading.Thread(target=executor.spin, daemon=True).start()
+    def spin():
+        try:
+            executor.spin()
+        except ExternalShutdownException:
+            pass
+    threading.Thread(target=spin, daemon=True).start()
     threading.Thread(target=server.serve_forever, daemon=True).start()
     print(f'Preview: http://{args.host}:{args.port}/ | topic={args.topic}', flush=True)
     print(f'Classes: {", ".join(CLASSES)} | device={args.device} | imgsz={args.imgsz}', flush=True)
-    print(f'Confidence: other={args.conf:.2f} | cup={max(args.conf, args.cup_conf):.2f} | NMS IoU={args.iou:.2f}', flush=True)
+    print(f'Model: {args.model} | YOLO={args.yolo_hz or "every frame"} | preview limit={args.preview_fps} FPS', flush=True)
+    print(f'Confidence: other={args.conf:.2f} | cup={max(args.conf, args.cup_conf):.2f} | '
+          f'banana={max(args.conf, args.banana_conf):.2f} | NMS IoU={args.iou:.2f}', flush=True)
     print(('Existing 7-output checkpoint adapted to six classes; no new training. '
            if names == LEGACY_CLASSES else 'Native six-class checkpoint. ') +
           'Ctrl+C to stop.', flush=True)
     started = time.perf_counter()
     processed = previous_received = 0
+    yolo_count = tracker_count = preview_count = 0
+    next_preview = 0.0
     detection_ms = age_ms = 0.0
     fps = 0.0
     try:
@@ -154,23 +179,31 @@ def main():
                 msg, arrival = item
                 frame = decode_raw(msg).copy()
                 before = time.perf_counter()
-                boxes = detector.detect(frame)
-                detection_ms += (time.perf_counter() - before) * 1000
-                for box in boxes:
-                    x, y, right, bottom = [round(v) for v in
-                        (box.x, box.y, box.x + box.width, box.y + box.height)]
-                    color = (40, 220, 90)
-                    cv2.rectangle(frame, (x, y), (right, bottom), color, 2)
-                    cv2.putText(frame, f'{box.class_name} {box.confidence:.2f}',
-                                (max(0, x), max(18, y-5)), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 1)
-                cv2.putText(frame, f'Detection FPS: {fps:.1f}', (10, 24),
-                            cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 255), 2)
-                ok, encoded = cv2.imencode('.jpg', frame, [cv2.IMWRITE_JPEG_QUALITY, 85])
-                if not ok:
-                    raise RuntimeError('Preview JPEG encoding failed')
-                preview.publish(encoded.tobytes())
-                age_ms += (time.perf_counter() - arrival) * 1000
+                stamp = msg.header.stamp.sec + msg.header.stamp.nanosec * 1e-9
+                boxes, measured = pipeline.step(frame, stamp, time.monotonic())
+                if measured:
+                    yolo_count += 1
+                    detection_ms += (time.perf_counter() - before) * 1000
+                else:
+                    tracker_count += 1
                 processed += 1
+                if time.monotonic() >= next_preview:
+                    next_preview = time.monotonic() + 1 / args.preview_fps
+                    for box in boxes:
+                        x, y, right, bottom = [round(v) for v in
+                            (box.x, box.y, box.x + box.width, box.y + box.height)]
+                        color = (40, 220, 90)
+                        cv2.rectangle(frame, (x, y), (right, bottom), color, 2)
+                        cv2.putText(frame, f'{box.class_name} {box.confidence:.2f} {"YOLO" if measured else "TRACK"}',
+                                    (max(0, x), max(18, y-5)), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 1)
+                    cv2.putText(frame, f'Processed FPS: {fps:.1f}  {"YOLO" if measured else "TRACK"}', (10, 24),
+                                cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 255), 2)
+                    ok, encoded = cv2.imencode('.jpg', frame, [cv2.IMWRITE_JPEG_QUALITY, 85])
+                    if not ok:
+                        raise RuntimeError('Preview JPEG encoding failed')
+                    preview.publish(encoded.tobytes())
+                    age_ms += (time.perf_counter() - arrival) * 1000
+                    preview_count += 1
             now = time.perf_counter()
             elapsed = now - started
             if elapsed >= 1:
@@ -178,13 +211,15 @@ def main():
                     count = received
                 fps = processed / elapsed
                 camera_fps = (count - previous_received) / elapsed
-                average = f'{detection_ms/processed:.1f}' if processed else '-'
-                age = f'{age_ms/processed:.1f}' if processed else '-'
-                print(f'Camera FPS={camera_fps:.1f} | Detection FPS={fps:.1f} | '
+                average = f'{detection_ms/yolo_count:.1f}' if yolo_count else '-'
+                age = f'{age_ms/preview_count:.1f}' if preview_count else '-'
+                print(f'Camera FPS={camera_fps:.1f} | Detection FPS={yolo_count/elapsed:.1f} | '
+                      f'Tracking FPS={tracker_count/elapsed:.1f} | Preview FPS={preview_count/elapsed:.1f} | '
                       f'detect={average} ms | callback-to-preview={age} ms' +
                       (' | waiting for camera input' if not processed else ''), flush=True)
                 started, previous_received = now, count
                 processed = 0
+                yolo_count = tracker_count = preview_count = 0
                 detection_ms = age_ms = 0.0
     except KeyboardInterrupt:
         pass

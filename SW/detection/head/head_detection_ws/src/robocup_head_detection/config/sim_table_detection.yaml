@@ -4,6 +4,7 @@
 # banana -> frisbee, plate -> not found.
 head_detection_node:
   ros__parameters:
+    detection_only: false
     task: detect
     confidence: 0.4
     target_class: cup

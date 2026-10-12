@@ -1,5 +1,6 @@
 head_detection_node:
   ros__parameters:
+    detection_only: false
     task: detect
     confidence: 0.25
     target_class: bus

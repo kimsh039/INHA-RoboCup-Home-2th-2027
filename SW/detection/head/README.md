@@ -1,12 +1,17 @@
 # 헤드 검출·추적 구현
 
-현재 모델은 [20261013 native 6클래스 YOLO11n](models/head_yolo11n_20261013.pt)이다. cup 신뢰도 0.70 / 다른 클래스 0.25를 채택했다. [우분투 작업 인수인계](UBUNTU_HANDOFF_20261013.md)에 pull, 카메라, 화면·FPS, 관제센터 실행 명령을 정리했다. [Jetson 실시간 화면·FPS 안내](LIVE_JETSON.md)와 실제 대상 장치에서 이어서 검증한다.
+현재 모델은 [20261013 native 6클래스 YOLO11n](models/head_yolo11n_20261013.pt)이다.
+Jetson FP16 TensorRT 엔진을 우선 사용하고 **cup=0.50 / banana=0.50 / 나머지=0.25**를 적용한다.
+기본 관제 화면은 ROI·추적 없이 전체 객체 검출 박스를 표시한다.
+이전 20261007 Head 가중치는 작업 복사본에서 삭제했다.
+[현재 배포·실행 가이드](TENSORRT_JETSON.md)를 참고한다.
+[우분투 인수인계](UBUNTU_HANDOFF_20261013.md)는 최초 게시 당시의 학습·설정 기록이다.
 
 Gazebo에서 검출한 목표를 SLAM 지도 좌표로 변환해 Nav2로 이동하는 테스트는
 [시뮬레이션 검출·주행 가이드](SIM_NAV_TEST.md)를 참고한다. 도착 후 closed approach 연결 자리도 남겨두었다.
 
-전체 영상 YOLO 탐색 → OpenCV CSRT/KCF 추적 → 주기적 ROI YOLO 재검증 구조다.
-한 컨테이너의 한 ROS 2 노드에서 YOLO와 OpenCV를 실행한다. 카메라·LiDAR 드라이버,
+선택형 추적 모드(`detection_only: false`)는 전체 영상 YOLO 탐색 → OpenCV CSRT/KCF 추적 → 주기적 ROI YOLO 재검증 구조다.
+ROS 2 노드에서 YOLO와 OpenCV를 실행한다. 카메라·LiDAR 드라이버,
 CameraInfo·TF·시간 동기화와 3D 위치 추정은 호스트의 별도 노드가 담당한다.
 최신 설계에 맞춰 기본 모델 task는 **detect (YOLO11n bbox)**다. 선택적으로 YOLO-seg
 가중치와 `task: segment`를 연결하면 검증 프레임의 마스크도 출력할 수 있다.
@@ -185,7 +190,7 @@ docker compose -f compose.yaml -f compose.gpu.yaml logs -f head_detection
 ```
 
 GPU 실행에서는 `ROBOCUP_DEVICE` 기본값이 `0`이다. CPU 구성의 기본은 `cpu`다.
-`.engine` TensorRT 배포는 현재 이 구현의 범위에 포함하지 않았다.
+현재 adapter는 `.pt`와 TensorRT `.engine`을 지원한다. 엔진은 대상 Jetson에서 생성한다.
 
 ## 호스트에서 ROS 메시지 확인 / 도커 없이 실행
 
