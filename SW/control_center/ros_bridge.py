@@ -45,6 +45,7 @@ def run(args):
     try:
         import cv2
         import numpy as np
+        from cloud_history import CloudHistory
         import rclpy
         from cv_bridge import CvBridge
         from rclpy.node import Node
@@ -74,6 +75,7 @@ def run(args):
             self.tf = Buffer()
             self.listener = TransformListener(self.tf, self)
             self.bound, self.overrides, self.last_processed = {}, {}, {}
+            self.cloud_history = CloudHistory(config)
             self.trail = deque(maxlen=1200)
             self.trail_frame = None
             self.odom_message = None
@@ -118,6 +120,7 @@ def run(args):
                 if key in self.bound:
                     self.destroy_subscription(self.bound.pop(key)[3])
                 self.last_processed.pop(key, None)
+                self.cloud_history.frames.pop(key, None)
                 state.clear(key)
                 with state.condition:
                     state.channels[key].update(topic='', type='', publishers=0)
@@ -188,7 +191,7 @@ def run(args):
 
         def receive(self, key, msg):
             limit = config.get('image_hz', 6) if key in ('head_image', 'head_debug', 'wrist_image', 'wrist_debug') else (
-                    config.get('cloud_hz', 2) if key in ('cloud', 'object_cloud') else 8 if key == 'scan' else 0)
+                    config.get('cloud_hz', 5) if key in ('cloud', 'object_cloud') else 8 if key == 'scan' else 0)
             now = time.monotonic()
             if limit and now - self.last_processed.get(key, 0) < 1 / max(float(limit), 0.1):
                 return
@@ -245,14 +248,26 @@ def run(args):
                 elif key in ('cloud', 'object_cloud'):
                     points = self.cloud_points(msg)
                     frame = msg.header.frame_id
+                    stable = False
                     try:
                         rotation, offset = self.transform(frame, msg.header.stamp)
                         points = points @ rotation.T + offset
                         frame = self.fixed
+                        stable = True
                     except Exception:
-                        pass  # Native frame is explicit; never overlay it on a map with another frame.
+                        try:
+                            rotation, offset = self.transform(frame, msg.header.stamp, target='odom')
+                            points = points @ rotation.T + offset
+                            frame, stable = 'odom', True
+                        except Exception:
+                            pass  # Native frames are displayed without accumulating moving observations.
+                    points, metadata = self.cloud_history.add(
+                        key, points, frame, msg.header.frame_id, stamp, self.bound[key][0],
+                        msg.width * msg.height, stable)
                     state.put(key, dict(points=points.round(3).tolist(), frame=frame,
-                                        source_frame=msg.header.frame_id, total_points=msg.width * msg.height), stamp, age)
+                                        source_frame=msg.header.frame_id,
+                                        point_size=max(1.0, min(6.0, float(config.get('cloud_point_size', 2.0)))),
+                                        **metadata), stamp, age)
                 elif key == 'path':
                     rotation, offset = self.transform(msg.header.frame_id, msg.header.stamp)
                     step = max(1, len(msg.poses) // 1000)
@@ -288,22 +303,23 @@ def run(args):
             if not total:
                 return np.empty((0, 3))
             endian = '>' if msg.is_bigendian else '<'
-            parsers = []
+            names, formats, offsets = [], [], []
             for name in ('x', 'y', 'z'):
                 field = fields[name]
                 if field.datatype not in (7, 8):
                     raise ValueError('XYZ fields must be FLOAT32 or FLOAT64')
-                parsers.append((field.offset, struct.Struct(endian + ('f' if field.datatype == 7 else 'd'))))
-            maximum = max(1, int(config.get('max_cloud_points', 5000)))
+                names.append(name)
+                formats.append(endian + ('f4' if field.datatype == 7 else 'f8'))
+                offsets.append(field.offset)
+            dtype = np.dtype(dict(names=names, formats=formats, offsets=offsets, itemsize=msg.point_step))
+            maximum = max(1, int(config.get('max_cloud_points', 20000)))
             step = max(1, math.ceil(total / maximum))
-            data, points = memoryview(msg.data), []
-            for index in range(0, total, step):
-                row, col = divmod(index, msg.width)
-                position = row * msg.row_step + col * msg.point_step
-                point = [reader.unpack_from(data, position + offset)[0] for offset, reader in parsers]
-                if all(math.isfinite(x) for x in point):
-                    points.append(point)
-            return np.asarray(points).reshape(-1, 3)
+            records = np.ndarray((msg.height, msg.width), dtype=dtype, buffer=msg.data,
+                                 strides=(msg.row_step, msg.point_step))
+            indices = np.arange(0, total, step)
+            rows, columns = np.divmod(indices, msg.width)
+            points = np.column_stack([records[name][rows, columns] for name in names])
+            return points[np.isfinite(points).all(axis=1)]
 
         def detections(self, msg):
             if hasattr(msg, 'data'):

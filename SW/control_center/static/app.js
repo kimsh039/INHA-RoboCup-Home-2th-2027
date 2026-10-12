@@ -357,7 +357,7 @@ function drawCloud() {
     for (const point of cloud.points) {
       const p = project(point); if (!p || p[0] < 0 || p[0] > view.width || p[1] < 0 || p[1] > view.height) continue;
       ctx.fillStyle = `hsl(${190 - Math.max(0, Math.min(1, (point[2] - view.center[2] + 1) / 3)) * 95},65%,66%)`;
-      const size = Math.max(1, Math.min(3, 15 / p[2])); ctx.fillRect(p[0], p[1], size, size);
+      const size = cloud.point_size || 2; ctx.fillRect(p[0] - size / 2, p[1] - size / 2, size, size);
     }
     ctx.globalAlpha = 1;
   }
@@ -368,7 +368,7 @@ function drawCloud() {
     : 'Wrist 물체 점군 수신 대기');
   text('frame-tag', 'FRAME / ' + (cloud?.frame || '—'));
   badge('map-status', cloud ? fresh(key) ? key === 'object_cloud' ? 'CACHED CLOUD' : 'POINT CLOUD' : 'STALE' : 'WAITING', quality(key));
-  text('map-detail', cloud ? `${cloud.points.length.toLocaleString()} / ${cloud.total_points.toLocaleString()} points · ${cloud.frame}` : 'NO POINT CLOUD');
+  text('map-detail', cloud ? `${cloud.points.length.toLocaleString()} points · ${cloud.decay_sec ? fmt(cloud.decay_sec) + 's 누적 · ' + cloud.accumulated_frames + '프레임' : '현재 프레임'} · ${cloud.frame}${cloud.accumulation_warning ? ' · ' + cloud.accumulation_warning : ''}` : 'NO POINT CLOUD');
   $('scale-bar').style.width = '55px'; text('scale-label', 'XYZ / m');
 }
 

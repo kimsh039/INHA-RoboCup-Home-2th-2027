@@ -17,6 +17,12 @@ Mac                      │
 
 ## 바로 실행하기
 
+### 3D 점군 표시 밀도
+
+기본 MID-360 표시를 5 Hz, 입력 프레임당 최대 20,000점, 2초 누적(Decay Time), 점 크기 2 px로 설정했습니다. 누적 점군은 4 cm voxel로 중복을 줄이고 최대 80,000점으로 제한합니다. PointCloud2는 NumPy로 변환해 점 수 증가에 따른 Python 반복 비용을 줄입니다. 실제 화면 점 수는 센서 입력과 voxel 중복 제거에 따라 달라집니다.
+
+`config.json`의 `cloud_hz`, `max_cloud_points`, `cloud_decay_sec`, `cloud_voxel_size`, `max_accumulated_cloud_points`, `cloud_point_size`로 조절하며 변경 후 관제센터를 재시작합니다. map 또는 odom TF를 해당 센서 timestamp에 조회한 뒤 누적하고, 변환이 없으면 원본 좌표의 현재 프레임만 표시하며 누적 중지 이유를 화면에 표시합니다. Wrist 물체 점군은 현재 관측만 표시합니다.
+
 ### 디텍션 업데이트와 MID-360 수신 복구
 
 `--detection`은 현재 checkout의 `robocup_head_detection.backends.YoloDetector`와 클래스 변환을 직접 불러옵니다. 이전 단일 목표 YOLO/CSRT 실행 대신 매 프레임 전체 객체를 검출하고 `/detection/head/objects` (`std_msgs/String` JSON), `/detection/head/debug_image`를 발행합니다. 화면에는 green_apple, peach, tomato, fanta_can, cup, banana의 모든 박스와 Camera/YOLO FPS, 추론 시간을 표시합니다. 기존 7출력 체크포인트는 새 소스의 클래스 변환을 사용하며 가중치를 새로 학습한 것은 아닙니다. 이 관제용 실행은 커스텀 메시지 빌드 없이 기존 GPU venv를 사용하고, pull 후 관제센터 재시작으로 소스 변경을 반영합니다. `/detection/head/target` 추적기가 필요한 별도 접근 시스템은 해당 실행기를 따로 사용합니다.
