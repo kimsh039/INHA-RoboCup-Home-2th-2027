@@ -1,0 +1,48 @@
+{
+  "parent_frame": "camera_optical_frame",
+  "child_frame": "livox_frame",
+  "translation_unit": "m",
+  "matrix4x4": [
+    [
+      0.006079430327900037,
+      0.999852949969283,
+      -0.016034929516869745,
+      0.02526863177760013
+    ],
+    [
+      -0.2275983553909699,
+      0.016997883142442882,
+      0.9736067278896556,
+      0.08727682079181132
+    ],
+    [
+      0.9737361188485381,
+      -0.0022694506821303584,
+      0.22766822449210466,
+      -0.01694810202904658
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "translation_xyz_m": [
+    0.02526863177760013,
+    0.08727682079181132,
+    -0.01694810202904658
+  ],
+  "quaternion_xyzw": [
+    -0.43629500418104505,
+    -0.44250712658736874,
+    -0.5487692846319302,
+    0.5591836768814088
+  ],
+  "status": "user_accepted_physical_koide",
+  "method": "Koide four-bag RGB-optical estimate composed with existing Mid360 mount",
+  "contains_nominal_reference": true,
+  "independent_measurement": false,
+  "source": "HW/calibration/head_mid360/calib.json",
+  "post_work_verification_run": false
+}

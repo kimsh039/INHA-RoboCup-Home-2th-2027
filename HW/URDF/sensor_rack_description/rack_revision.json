@@ -5,19 +5,19 @@
     -4.777222609636355
   ],
   "material": "알루미늄 6061",
-  "mass_kg": 15.64636810338113,
+  "mass_kg": 15.69213045731638,
   "com_m": [
-    -0.06134496799266715,
-    1.9579998495790194e-06,
-    0.483339112314726
+    -0.061596482673435926,
+    1.9524221084046648e-06,
+    0.4856366526469199
   ],
   "inertia_kg_m2": [
-    2.707194326021492,
-    2.4886657895970616,
-    0.712004088347102,
-    -1.1500498456627935e-07,
-    -2.914115247869503e-06,
-    0.35933687792693264
+    2.735553622120294,
+    2.517331942796831,
+    0.7123784034851126,
+    -1.2252552047856692e-07,
+    -2.8453185789642982e-06,
+    0.36243610828891615
   ],
   "bodies": [
     {
@@ -871,18 +871,18 @@
       "error_cm": 8.881784197001252e-16
     },
     {
-      "source": "3D_LiDAR_Camera_mount:1",
+      "source": "final_assembly_fix:3D_LiDAR_Camera_mount_15:1",
       "name": "3D_LiDAR_Camera_mount_1_body1",
       "bbox_m": [
         [
-          -0.2125000000000003,
-          -0.060000000000002614,
-          1.2300000000000002
+          -0.2124999999999995,
+          -0.06000000000000316,
+          1.2300000000000009
         ],
         [
-          -0.14750000000000027,
-          0.05999999999999739,
-          1.2905000000000002
+          -0.14012499999999947,
+          0.059999999999996834,
+          1.2905000000000009
         ]
       ],
       "error_cm": 1.7763568394002505e-15
@@ -916,9 +916,9 @@
     0.0,
     1.0
   ],
-  "revision": "2026-10-06",
-  "source": "Fusion Assembly/final_assembly",
-  "scope": "Rack profiles/brackets, removal of old manipulator plate, Piper base placement only. Sensor mounts retained from original CAD. Sensor/arm/wrist links and Gazebo extensions preserved.",
+  "revision": "2026-10-10",
+  "source": "Fusion final_assembly baseline rack + final_assembly_fix 15-degree Head mount",
+  "scope": "Previous rack profiles/brackets and Piper mount retained; only Head camera/mount geometry, camera transforms, rack mass/inertia and mount collision updated.",
   "cad_frames": [
     {
       "name": "cad_profiles_470mm_1",
@@ -1607,11 +1607,82 @@
       ]
     }
   ],
-  "old_rack_mass_kg": 15.85407974,
+  "old_rack_mass_kg": 15.64636810338113,
   "piper_base_orientation_rpy": [
     0,
     0,
     0
   ],
-  "base_registration_check": "CAD base shell+plate vs URDF base STL: matching bottom plane and XY outline; zero-yaw sampled vertex median distance 0.654 mm vs 6.542 mm at +90 degrees. Mesh tessellations differ."
+  "base_registration_check": "CAD base shell+plate vs URDF base STL: matching bottom plane and XY outline; zero-yaw sampled vertex median distance 0.654 mm vs 6.542 mm at +90 degrees. Mesh tessellations differ.",
+  "date": "2026-10-10",
+  "head_camera_mount": {
+    "baseline_commit": "3618afc",
+    "source_document": "final_assembly_fix",
+    "rotation_deg": 15.000000000000018,
+    "camera_new_rack_frame": [
+      [
+        0.9659258262890682,
+        2.775557561563215e-17,
+        0.2588190451025208,
+        -0.12066631979152745
+      ],
+      [
+        3.3986645259148207e-71,
+        0.9999999999999999,
+        -4.26296566734869e-31,
+        0.0012499999999974198
+      ],
+      [
+        -0.25881904510252085,
+        1.3877787807826542e-17,
+        0.9659258262890681,
+        1.260689017116834
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "old_to_new_rack_transform": [
+      [
+        0.9659258262890682,
+        2.775557561563215e-17,
+        0.2588190451025208,
+        -0.32867407507690954
+      ],
+      [
+        3.3986645259148207e-71,
+        0.9999999999999999,
+        -4.26296566734869e-31,
+        0.0012500000000000289
+      ],
+      [
+        -0.25881904510252085,
+        1.3877787807826542e-17,
+        0.9659258262890681,
+        0.0016237780441570315
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "camera_translation_delta_m": [
+      0.004283680208472862,
+      0.0012500000000000289,
+      -0.009310982883166341
+    ],
+    "calibration_status": "Experimental rigid CAD delta applied to previous calibration; new head mount has NOT been recalibrated.",
+    "frame": "rack_base_link",
+    "head_measurement_sources": {
+      "head_piper/results/piper_head.json": "71c34c3c43a805973cd22d4195e6b221ac0e300cc3d7cfd099992c4c17c48e7b",
+      "20261006_head_mid360/results/automated_01/head_mid360.json": "728e77495b651e0a3b34e4ba58ac57c0f183f4fcb3fcdd3ecf5ad109d0d1ec3a"
+    },
+    "head_measurement_hash_basis": "canonical_json"
+  },
+  "previous_revision": "camera_mount_15/previous_rack_revision.json"
 }

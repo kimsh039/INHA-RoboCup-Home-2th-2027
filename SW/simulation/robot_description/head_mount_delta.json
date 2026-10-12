@@ -1,0 +1,69 @@
+{
+  "baseline_commit": "3618afc",
+  "source_document": "final_assembly_fix",
+  "rotation_deg": 15.000000000000018,
+  "camera_new_rack_frame": [
+    [
+      0.9659258262890682,
+      2.775557561563215e-17,
+      0.2588190451025208,
+      -0.12066631979152745
+    ],
+    [
+      3.3986645259148207e-71,
+      0.9999999999999999,
+      -4.26296566734869e-31,
+      0.0012499999999974198
+    ],
+    [
+      -0.25881904510252085,
+      1.3877787807826542e-17,
+      0.9659258262890681,
+      1.260689017116834
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "old_to_new_rack_transform": [
+    [
+      0.9659258262890682,
+      2.775557561563215e-17,
+      0.2588190451025208,
+      -0.32867407507690954
+    ],
+    [
+      3.3986645259148207e-71,
+      0.9999999999999999,
+      -4.26296566734869e-31,
+      0.0012500000000000289
+    ],
+    [
+      -0.25881904510252085,
+      1.3877787807826542e-17,
+      0.9659258262890681,
+      0.0016237780441570315
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "camera_translation_delta_m": [
+    0.004283680208472862,
+    0.0012500000000000289,
+    -0.009310982883166341
+  ],
+  "calibration_status": "Experimental rigid CAD delta applied to previous calibration; new head mount has NOT been recalibrated.",
+  "frame": "rack_base_link",
+  "head_measurement_sources": {
+    "head_piper/results/piper_head.json": "71c34c3c43a805973cd22d4195e6b221ac0e300cc3d7cfd099992c4c17c48e7b",
+    "20261006_head_mid360/results/automated_01/head_mid360.json": "728e77495b651e0a3b34e4ba58ac57c0f183f4fcb3fcdd3ecf5ad109d0d1ec3a"
+  },
+  "head_measurement_hash_basis": "canonical_json"
+}

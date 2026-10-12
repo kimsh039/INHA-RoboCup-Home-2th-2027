@@ -1,0 +1,686 @@
+{
+  "schema": "tracer_odom_scale_offset/v4",
+  "status": "physical_cross_validated",
+  "date": "2026-10-11",
+  "model": "v = linear_velocity_scale * v_rep + linear_velocity_offset * sign(v_rep) while |v_rep| > linear_offset_threshold; w = angular_velocity_scale * w_rep + angular_velocity_offset * sign(w_rep) while |w_rep| > angular_offset_threshold; w = 0 while |w_rep| <= straight_yaw_deadband and |v_rep| > straight_yaw_deadband_min_linear; integrated in SE(2) like the driver",
+  "linear_velocity_scale": 1.0362,
+  "linear_velocity_offset_m_s": 0.00632,
+  "linear_offset_threshold_m_s": 0.0035,
+  "angular_velocity_scale": 0.9924,
+  "angular_velocity_offset_rad_s": 0.0343,
+  "angular_offset_threshold_rad_s": 0.02,
+  "angular_velocity_bias_rad_s": 0.0,
+  "straight_yaw_deadband_rad_s": 0.0186,
+  "straight_yaw_deadband_min_linear_m_s": 0.05,
+  "firmware": "/tracer_status speeds are quantised (w steps ~0.0185 rad/s, v steps 0.003 m/s) and short by a speed-dependent amount. The linear part repeats between sessions (deficit 0.009 / 0.012 / 0.015 / 0.014 m/s at 0.09 / 0.19 / 0.34 / 0.48 m/s). The angular part does not: 0.021-0.033 rad/s in sweep 1, 0.038-0.052 rad/s in sweep 2 for the same command and the same firmware integral. Wheel yaw is therefore limited to ~2.5-4 deg per 90 deg turn; use the IMU-yaw odometry (/odom_ekf or /odom_fused) where heading matters.",
+  "fit": {
+    "session": "sweep 1 (odom_speed_sweep.py all: 4 turn speeds x +-90 deg x 2, 4 straight speeds x +-1 m x 2)",
+    "method": "sweep_analyze.py: least squares on SE(2)-integrated segment motion vs Mid-360S, fit on repetition 1 / test on repetition 2 and reverse, then all",
+    "models": {
+      "none|tw=0.02": {
+        "fit_rep1": [
+          1.0,
+          0.0,
+          1.0,
+          0.0
+        ],
+        "test_rep2": {
+          "rot_yaw_rms_deg": 13.396850323044708,
+          "str_trans_rms_mm": 76.45328302683694,
+          "str_yaw_rms_deg": 1.8317941712310157,
+          "rot_trans_rms_mm": 6.7399394225922915
+        },
+        "fit_rep2": [
+          1.0,
+          0.0,
+          1.0,
+          0.0
+        ],
+        "test_rep1": {
+          "rot_yaw_rms_deg": 10.4436405571685,
+          "str_trans_rms_mm": 75.36360963502085,
+          "str_yaw_rms_deg": 1.6626541566921569,
+          "rot_trans_rms_mm": 7.407274283109902
+        },
+        "fit_all": [
+          1.0,
+          0.0,
+          1.0,
+          0.0
+        ],
+        "all": {
+          "rot_yaw_rms_deg": 11.63923824918787,
+          "str_trans_rms_mm": 75.91040160215674,
+          "str_yaw_rms_deg": 1.7492696662495513,
+          "rot_trans_rms_mm": 7.164311828315646
+        }
+      },
+      "offset|tw=0.02": {
+        "fit_rep1": [
+          1.0,
+          0.010607473018173708,
+          1.0,
+          0.03211446208429156
+        ],
+        "test_rep2": {
+          "rot_yaw_rms_deg": 1.2983584306392106,
+          "str_trans_rms_mm": 43.29502274688067,
+          "str_yaw_rms_deg": 2.019239323552252,
+          "rot_trans_rms_mm": 6.842804656774946
+        },
+        "fit_rep2": [
+          1.0,
+          0.010461842134383928,
+          1.0,
+          0.033508397006269806
+        ],
+        "test_rep1": {
+          "rot_yaw_rms_deg": 1.3710805006488633,
+          "str_trans_rms_mm": 39.63837863177073,
+          "str_yaw_rms_deg": 2.1176350602758744,
+          "rot_trans_rms_mm": 7.416846031556522
+        },
+        "fit_all": [
+          1.0,
+          0.010534896039296042,
+          1.0,
+          0.03283128990482171
+        ],
+        "all": {
+          "rot_yaw_rms_deg": 1.281893526529956,
+          "str_trans_rms_mm": 41.501810542412265,
+          "str_yaw_rms_deg": 2.0665275479758853,
+          "rot_trans_rms_mm": 7.211440962581393
+        }
+      },
+      "scale|tw=0.02": {
+        "fit_rep1": [
+          1.0738118344997671,
+          0.0,
+          1.0791340424591493,
+          0.0
+        ],
+        "test_rep2": {
+          "rot_yaw_rms_deg": 9.171815577975709,
+          "str_trans_rms_mm": 45.05117422590369,
+          "str_yaw_rms_deg": 1.8563316724102117,
+          "rot_trans_rms_mm": 6.747056221875455
+        },
+        "fit_rep2": [
+          1.0735277617558494,
+          0.0,
+          1.118246678464045,
+          0.0
+        ],
+        "test_rep1": {
+          "rot_yaw_rms_deg": 7.038291387135628,
+          "str_trans_rms_mm": 41.128451995782996,
+          "str_yaw_rms_deg": 1.7243607177626834,
+          "rot_trans_rms_mm": 7.31900701858651
+        },
+        "fit_all": [
+          1.0736669184018364,
+          0.0,
+          1.0909305106742728,
+          0.0
+        ],
+        "all": {
+          "rot_yaw_rms_deg": 7.6425251835338655,
+          "str_trans_rms_mm": 43.12858331204948,
+          "str_yaw_rms_deg": 1.7866451576764124,
+          "rot_trans_rms_mm": 7.11780861879874
+        }
+      },
+      "scale+offset|tw=0.02": {
+        "fit_rep1": [
+          1.036319808648898,
+          0.006370408400639086,
+          0.9915497602928613,
+          0.03387797536496534
+        ],
+        "test_rep2": {
+          "rot_yaw_rms_deg": 1.185380397051695,
+          "str_trans_rms_mm": 39.957065039482046,
+          "str_yaw_rms_deg": 2.0276528624125216,
+          "rot_trans_rms_mm": 6.764501784026707
+        },
+        "fit_rep2": [
+          1.036071265795468,
+          0.006273895453100868,
+          0.9959567467799757,
+          0.03418053623060405
+        ],
+        "test_rep1": {
+          "rot_yaw_rms_deg": 1.3021102132697149,
+          "str_trans_rms_mm": 35.33554212970804,
+          "str_yaw_rms_deg": 2.1247070639804604,
+          "rot_trans_rms_mm": 7.209370588899838
+        },
+        "fit_all": [
+          1.0362116024071626,
+          0.006320766796620914,
+          0.9924167331377757,
+          0.03425294813961049
+        ],
+        "all": {
+          "rot_yaw_rms_deg": 1.1974836848321038,
+          "str_trans_rms_mm": 37.72095650490586,
+          "str_yaw_rms_deg": 2.0776242290171716,
+          "rot_trans_rms_mm": 7.048062672197401
+        }
+      },
+      "none|tw=0.06": {
+        "fit_rep1": [
+          1.0,
+          0.0,
+          1.0,
+          0.0
+        ],
+        "test_rep2": {
+          "rot_yaw_rms_deg": 13.396850323044708,
+          "str_trans_rms_mm": 76.45328302683694,
+          "str_yaw_rms_deg": 1.8317941712310157,
+          "rot_trans_rms_mm": 6.7399394225922915
+        },
+        "fit_rep2": [
+          1.0,
+          0.0,
+          1.0,
+          0.0
+        ],
+        "test_rep1": {
+          "rot_yaw_rms_deg": 10.4436405571685,
+          "str_trans_rms_mm": 75.36360963502085,
+          "str_yaw_rms_deg": 1.6626541566921569,
+          "rot_trans_rms_mm": 7.407274283109902
+        },
+        "fit_all": [
+          1.0,
+          0.0,
+          1.0,
+          0.0
+        ],
+        "all": {
+          "rot_yaw_rms_deg": 11.63923824918787,
+          "str_trans_rms_mm": 75.91040160215674,
+          "str_yaw_rms_deg": 1.7492696662495513,
+          "rot_trans_rms_mm": 7.164311828315646
+        }
+      },
+      "offset|tw=0.06": {
+        "fit_rep1": [
+          1.0,
+          0.010610614270372423,
+          1.0,
+          0.032820644981677444
+        ],
+        "test_rep2": {
+          "rot_yaw_rms_deg": 1.6355443108164454,
+          "str_trans_rms_mm": 42.58286908343627,
+          "str_yaw_rms_deg": 1.9699588434306021,
+          "rot_trans_rms_mm": 6.840968929823214
+        },
+        "fit_rep2": [
+          1.0,
+          0.010462099506373487,
+          1.0,
+          0.034840492080118926
+        ],
+        "test_rep1": {
+          "rot_yaw_rms_deg": 1.5611446468842314,
+          "str_trans_rms_mm": 38.37080939062682,
+          "str_yaw_rms_deg": 1.6855066462239439,
+          "rot_trans_rms_mm": 7.414776148378199
+        },
+        "fit_all": [
+          1.0,
+          0.01053645079853549,
+          1.0,
+          0.03383450812757402
+        ],
+        "all": {
+          "rot_yaw_rms_deg": 1.4763818055691464,
+          "str_trans_rms_mm": 40.53372346593721,
+          "str_yaw_rms_deg": 1.8352704528634103,
+          "rot_trans_rms_mm": 7.2101033225935796
+        }
+      },
+      "scale|tw=0.06": {
+        "fit_rep1": [
+          1.0738146567733222,
+          0.0,
+          1.0791386886835914,
+          0.0
+        ],
+        "test_rep2": {
+          "rot_yaw_rms_deg": 9.243987434210954,
+          "str_trans_rms_mm": 44.95412598116454,
+          "str_yaw_rms_deg": 1.8513960977902564,
+          "rot_trans_rms_mm": 6.746766854731326
+        },
+        "fit_rep2": [
+          1.0735318839110513,
+          0.0,
+          1.117585497474465,
+          0.0
+        ],
+        "test_rep1": {
+          "rot_yaw_rms_deg": 7.0738435195446225,
+          "str_trans_rms_mm": 40.956673775241704,
+          "str_yaw_rms_deg": 1.6580593106876593,
+          "rot_trans_rms_mm": 7.319201156634776
+        },
+        "fit_all": [
+          1.0736701309866175,
+          0.0,
+          1.090695875538773,
+          0.0
+        ],
+        "all": {
+          "rot_yaw_rms_deg": 7.703910410054672,
+          "str_trans_rms_mm": 43.006928529080106,
+          "str_yaw_rms_deg": 1.7594135109330664,
+          "rot_trans_rms_mm": 7.117710363084238
+        }
+      },
+      "scale+offset|tw=0.06": {
+        "fit_rep1": [
+          1.0362543891236835,
+          0.006378133026059028,
+          0.984661386604046,
+          0.03623542070006853
+        ],
+        "test_rep2": {
+          "rot_yaw_rms_deg": 1.3463726286377342,
+          "str_trans_rms_mm": 39.18390905808392,
+          "str_yaw_rms_deg": 1.980649889440054,
+          "rot_trans_rms_mm": 6.764282975186389
+        },
+        "fit_rep2": [
+          1.0360529634444704,
+          0.00627614630021196,
+          0.9873131923847612,
+          0.0370233015364085
+        ],
+        "test_rep1": {
+          "rot_yaw_rms_deg": 1.343598689024415,
+          "str_trans_rms_mm": 33.90401225330213,
+          "str_yaw_rms_deg": 1.687611644201048,
+          "rot_trans_rms_mm": 7.211854111546337
+        },
+        "fit_all": [
+          1.0361677863828238,
+          0.006325973203876356,
+          0.9846742894215439,
+          0.03687226628475621
+        ],
+        "all": {
+          "rot_yaw_rms_deg": 1.2788046887948403,
+          "str_trans_rms_mm": 36.64156909089278,
+          "str_yaw_rms_deg": 1.8414550218456098,
+          "rot_trans_rms_mm": 7.049510302988526
+        }
+      }
+    },
+    "levels": [
+      {
+        "kind": "rot",
+        "fw_speed": 0.11,
+        "n": 4,
+        "ratio_mean": 0.7716716984817444,
+        "ratio_std": 0.016500086329066438,
+        "deficit_mean": 0.03353647040618177,
+        "deficit_std": 0.002519351412763033,
+        "pos": [
+          0.7615306558629132,
+          0.7510771891275706
+        ],
+        "neg": [
+          0.7937364796566814,
+          0.7803424692798122
+        ]
+      },
+      {
+        "kind": "rot",
+        "fw_speed": 0.26,
+        "n": 4,
+        "ratio_mean": 0.8895590989933817,
+        "ratio_std": 0.013971001460180058,
+        "deficit_mean": 0.030620780596387464,
+        "deficit_std": 0.0038946669303201687,
+        "pos": [
+          0.8759232359571584,
+          0.8753435916729053
+        ],
+        "neg": [
+          0.9050482263208417,
+          0.9019213420226214
+        ]
+      },
+      {
+        "kind": "rot",
+        "fw_speed": 0.43,
+        "n": 1,
+        "ratio_mean": 0.9192941859507582,
+        "ratio_std": 0.0,
+        "deficit_mean": 0.03290881479728955,
+        "deficit_std": 0.0,
+        "pos": [
+          0.9192941859507582
+        ],
+        "neg": []
+      },
+      {
+        "kind": "rot",
+        "fw_speed": 0.44,
+        "n": 3,
+        "ratio_mean": 0.9405192587073857,
+        "ratio_std": 0.009166106645881997,
+        "deficit_mean": 0.024865796021587522,
+        "deficit_std": 0.0037437204306364678,
+        "pos": [
+          0.9276253266701019
+        ],
+        "neg": [
+          0.9481221460161472,
+          0.9458103034359082
+        ]
+      },
+      {
+        "kind": "rot",
+        "fw_speed": 0.72,
+        "n": 3,
+        "ratio_mean": 0.9632436670082049,
+        "ratio_std": 0.01022890834804443,
+        "deficit_mean": 0.021438822277243863,
+        "deficit_std": 0.005559030787107966,
+        "pos": [
+          0.9586689513837319,
+          0.9536461675766439
+        ],
+        "neg": [
+          0.9774158820642386
+        ]
+      },
+      {
+        "kind": "rot",
+        "fw_speed": 0.76,
+        "n": 1,
+        "ratio_mean": 0.9816136366004565,
+        "ratio_std": 0.0,
+        "deficit_mean": 0.011119642568484767,
+        "deficit_std": 0.0,
+        "pos": [],
+        "neg": [
+          0.9816136366004565
+        ]
+      },
+      {
+        "kind": "str",
+        "fw_speed": 0.09,
+        "n": 4,
+        "ratio_mean": 0.9028126939100986,
+        "ratio_std": 0.0006887989262273277,
+        "deficit_mean": 0.009177487961627671,
+        "deficit_std": 8.076382976291087e-05,
+        "pos": [
+          0.9026835702298491,
+          0.9037903655014573
+        ],
+        "neg": [
+          0.9018567977207103,
+          0.9029200421883777
+        ]
+      },
+      {
+        "kind": "str",
+        "fw_speed": 0.19,
+        "n": 4,
+        "ratio_mean": 0.9360231892225025,
+        "ratio_std": 0.0011281260420091062,
+        "deficit_mean": 0.01170462898067651,
+        "deficit_std": 0.00016240075305503791,
+        "pos": [
+          0.9359206498334299,
+          0.937856223723691
+        ],
+        "neg": [
+          0.9354917357581007,
+          0.9348241475747884
+        ]
+      },
+      {
+        "kind": "str",
+        "fw_speed": 0.34,
+        "n": 4,
+        "ratio_mean": 0.947561257969207,
+        "ratio_std": 0.018269140205678096,
+        "deficit_mean": 0.015273337060907012,
+        "deficit_std": 0.005783342243313065,
+        "pos": [
+          0.9635885290384368,
+          0.9678590868672781
+        ],
+        "neg": [
+          0.9311895479699964,
+          0.9276078680011163
+        ]
+      },
+      {
+        "kind": "str",
+        "fw_speed": 0.48,
+        "n": 4,
+        "ratio_mean": 0.9642622495843012,
+        "ratio_std": 0.051522863652869705,
+        "deficit_mean": 0.014076689468938926,
+        "deficit_std": 0.019375764782182833,
+        "pos": [
+          1.0168756275586068,
+          1.0145063269694257
+        ],
+        "neg": [
+          0.9085932978355836,
+          0.9170737459735886
+        ]
+      }
+    ],
+    "ground_truth": {
+      "g2_vs_mid": {
+        "trans_median_mm": 10.20892507085922,
+        "trans_max_mm": 15.95624219827237,
+        "yaw_rms_deg": 0.06621578139117583
+      },
+      "imu_vs_mid": {
+        "yaw_rms_deg": 0.10759802739566986,
+        "mid_over_imu": 0.9989384126502929
+      }
+    },
+    "file": "sweep_20261011/sweep1_analysis.json"
+  },
+  "ground_truth": "Mid-360S 3-DoF point-to-plane ICP between still clouds in base_link (sweep_extract_mid.py). The clouds were moved with the Mid-360S calibration valid at the time of the sweeps (<= 7 mm / 0.6 deg from the final one: < 1 mm per segment).",
+  "validation": {
+    "sweep2": {
+      "file": "sweep_20261011/sweep2_validate.json",
+      "overall": {
+        "driver /odom (v4)": {
+          "rot_yaw_rms_deg": 3.8990935997200515,
+          "str_trans_rms_mm": 36.947014011031555,
+          "str_slow_trans_rms_mm": 19.79083965787708,
+          "str_yaw_rms_deg": 1.5926101471863796
+        },
+        "fused /odom_fused": {
+          "rot_yaw_rms_deg": 0.8209001778878187,
+          "str_trans_rms_mm": 26.54002217851162,
+          "str_slow_trans_rms_mm": 4.335180929860646,
+          "str_yaw_rms_deg": 0.09226810753879168
+        },
+        "firmware raw": {
+          "rot_yaw_rms_deg": 14.530326214165829,
+          "str_trans_rms_mm": 74.77876400577331,
+          "str_slow_trans_rms_mm": 82.49405527582769,
+          "str_yaw_rms_deg": 2.1451334693126842
+        },
+        "v3 (offline)": {
+          "rot_yaw_rms_deg": 4.072517003620515,
+          "str_trans_rms_mm": 46.069175465172435,
+          "str_slow_trans_rms_mm": 32.803232077616265,
+          "str_yaw_rms_deg": 2.323312086060026
+        }
+      }
+    },
+    "sweep3": {
+      "file": "sweep_20261011/sweep3_validate.json",
+      "overall": {
+        "driver /odom (v4)": {
+          "rot_yaw_rms_deg": 3.5744890273634504,
+          "str_trans_rms_mm": 40.17219221772198,
+          "str_slow_trans_rms_mm": 22.25155019278287,
+          "str_yaw_rms_deg": 1.9830213129136973
+        },
+        "fused /odom_fused": {
+          "rot_yaw_rms_deg": 0.09868492893798646,
+          "str_trans_rms_mm": 31.18638308839618,
+          "str_slow_trans_rms_mm": 5.054093787760702,
+          "str_yaw_rms_deg": 0.10197994871862764
+        },
+        "firmware raw": {
+          "rot_yaw_rms_deg": 14.291088037045492,
+          "str_trans_rms_mm": 76.75388511616093,
+          "str_slow_trans_rms_mm": 83.90216386592884,
+          "str_yaw_rms_deg": 2.3708338862582776
+        },
+        "v3 (offline)": {
+          "rot_yaw_rms_deg": 4.145788173200274,
+          "str_trans_rms_mm": 47.57657705468779,
+          "str_slow_trans_rms_mm": 33.92444317848486,
+          "str_yaw_rms_deg": 2.4710859910342564
+        }
+      }
+    },
+    "sweep4": {
+      "file": "sweep_20261011/sweep4_validate.json",
+      "overall": {
+        "driver /odom (v4)": {
+          "rot_yaw_rms_deg": 2.4801046045194504,
+          "str_trans_rms_mm": 30.7046330809018,
+          "str_slow_trans_rms_mm": 19.624430319941986,
+          "str_yaw_rms_deg": 1.090506900090042
+        },
+        "fused /odom_fused": {
+          "rot_yaw_rms_deg": 0.10901654901075482,
+          "str_trans_rms_mm": 25.525491392464154,
+          "str_slow_trans_rms_mm": 7.154892085877222,
+          "str_yaw_rms_deg": 0.07734501790666837
+        },
+        "EKF /odom_ekf": {
+          "rot_yaw_rms_deg": 0.10580404711477731,
+          "str_trans_rms_mm": 25.515025852553343,
+          "str_slow_trans_rms_mm": 7.131738820183591,
+          "str_yaw_rms_deg": 0.0711672123334569
+        },
+        "firmware raw": {
+          "rot_yaw_rms_deg": 13.248347358299222,
+          "str_trans_rms_mm": 66.64192497926186,
+          "str_slow_trans_rms_mm": 78.11225881752404,
+          "str_yaw_rms_deg": 1.6264280607676633
+        },
+        "v3 (offline)": {
+          "rot_yaw_rms_deg": 4.881176519664553,
+          "str_trans_rms_mm": 35.3569713549056,
+          "str_slow_trans_rms_mm": 26.923903730333546,
+          "str_yaw_rms_deg": 1.6380754832659514
+        }
+      }
+    }
+  },
+  "validation_notes": {
+    "sweep2": "first odom_imu_fusion.py version (froze yaw while still, bias from that motion: 0.82 deg); fixed for sweep 3",
+    "sweep4": "after a reboot, adds robot_localization EKF (ekf_odom_imu.yaml + imu_base_relay.py)"
+  },
+  "path_test": {
+    "file": "sweep_20261011/path_validate.json",
+    "still_drift": {
+      "duration_s": 284.27999353408813,
+      "driver v4": {
+        "yaw_change_deg": 0.0,
+        "rate_deg_per_min": 0.0
+      },
+      "fusion node": {
+        "yaw_change_deg": 0.05692569058692997,
+        "rate_deg_per_min": 0.012014709135014241
+      },
+      "EKF": {
+        "yaw_change_deg": 0.07363817065704208,
+        "rate_deg_per_min": 0.015542037216532882
+      },
+      "raw_gyro_bias": {
+        "first_30s": 0.012866590932359671,
+        "last_30s": 0.012931821806939456,
+        "change_rad_s": 6.523087457978478e-05,
+        "yaw_if_bias_frozen_deg": 0.9006895859764519
+      }
+    },
+    "summary": {
+      "arcs": {
+        "driver v4": {
+          "trans_rms_mm": 131.50169145902024,
+          "yaw_rms_deg": 8.131565249423435,
+          "path_m": 1.0727712940323644
+        },
+        "fusion node": {
+          "trans_rms_mm": 31.954175685612157,
+          "yaw_rms_deg": 0.1726133947077023,
+          "path_m": 1.072771290844235
+        },
+        "EKF": {
+          "trans_rms_mm": 30.917943713150528,
+          "yaw_rms_deg": 0.17216541434191826,
+          "path_m": 1.0728975065351987
+        }
+      }
+    },
+    "note": "odom_path_test.py: 5 min still, 14 arcs (0.4-2.1 m, 90 deg); the loops were stopped by remote control (not enough space) and excluded"
+  },
+  "imu_odometry": {
+    "fusion": {
+      "node": "odom_imu_fusion.py",
+      "topic": "/odom_fused (odom_fused -> base_link, no TF by default)",
+      "yaw": "Mid-360S gyro rotated to base_link (T_base_mid360); bias from the first 2 s still, then only after 1.5 s still and |gz - bias| < 0.004 rad/s (20 s average)"
+    },
+    "ekf": {
+      "config": "ekf_odom_imu.yaml (robot_localization: /odom vx, vy + /imu/base yaw rate, two_d_mode, no TF)",
+      "imu": "imu_base_relay.py (same bias handling)"
+    },
+    "result_sweep4": {
+      "fused /odom_fused": {
+        "rot_yaw_rms_deg": 0.10901654901075482,
+        "str_trans_rms_mm": 25.525491392464154,
+        "str_slow_trans_rms_mm": 7.154892085877222,
+        "str_yaw_rms_deg": 0.07734501790666837
+      },
+      "EKF /odom_ekf": {
+        "rot_yaw_rms_deg": 0.10580404711477731,
+        "str_trans_rms_mm": 25.515025852553343,
+        "str_slow_trans_rms_mm": 7.131738820183591,
+        "str_yaw_rms_deg": 0.0711672123334569
+      }
+    }
+  },
+  "not_calibratable": "Straights at >= 0.34 m/s with ~1.6 m/s^2 acceleration: forward and reverse travel differ by up to +-5 % and the base curves up to 4 deg while the firmware reports neither (wheel slip). Limit acceleration (~0.5 m/s^2) in navigation.",
+  "driver": {
+    "repository": "tracer_ros2 (agilexrobotics), Jetson ~/tracer_ws/src/tracer_ros2, local branch odom-correction, HEAD 97a1788",
+    "patch": "tracer-odom-correction.patch (git diff from upstream 832ea9a; apply with git apply)",
+    "running_check": "parameters printed at tracer_base start-up"
+  },
+  "bags": {
+    "sweeps": {
+      "val_20261011_194355": "sweep 1 (fit)",
+      "val_20261011_200216": "sweep 2",
+      "val_20261011_201130": "sweep 3",
+      "val_20261011_202957": "sweep 4",
+      "val_20261011_204042": "path test"
+    },
+    "storage": "raw bags removed after analysis (per-segment results are in sweep_20261011/)"
+  },
+  "not_corrected": "Commanded /cmd_vel is passed to the firmware unchanged."
+}

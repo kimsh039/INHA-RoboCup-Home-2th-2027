@@ -1,0 +1,18 @@
+/**:
+  ros__parameters:
+    linear_velocity_scale: 1.0362
+    linear_velocity_offset: 0.00632
+    linear_offset_threshold: 0.0035
+    angular_velocity_scale: 0.9924
+    angular_velocity_offset: 0.0343
+    angular_offset_threshold: 0.02
+    angular_velocity_bias: 0.0
+    straight_yaw_deadband: 0.0186
+    straight_yaw_deadband_min_linear: 0.05
+    port_name: can2
+    odom_frame: odom
+    base_frame: base_link
+    odom_topic_name: odom
+    is_tracer_mini: false
+    simulated_robot: false
+    use_sim_time: false

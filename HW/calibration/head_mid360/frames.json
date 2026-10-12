@@ -1,0 +1,15 @@
+{
+  "measurement": "physical_robot",
+  "accepted_on": "2026-10-12",
+  "source": "/home/sparo/vlcal_results/mid360_camera_4bags/calib.json",
+  "parent_frame": "livox_frame",
+  "child_frame": "camera_color_optical_frame",
+  "transform_direction": "parent <- child",
+  "translation_unit": "m",
+  "quaternion_order": "xyzw",
+  "camera_serial": "244622071116",
+  "frame_source": "Original recording 20261012_004405: PointCloud2 and CameraInfo headers",
+  "camera_internal_tf_recorded": false,
+  "base_mid360_basis": "Existing calibrated URDF; no new physical Base–Mid360 calibration",
+  "post_work_verification_run": false
+}

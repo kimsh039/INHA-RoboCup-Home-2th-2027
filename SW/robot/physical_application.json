@@ -1,0 +1,84 @@
+{
+  "measurement_selection": "physical_robot_only",
+  "inputs": [
+    {
+      "kind": "Base–Mid360",
+      "path": "HW/calibration/physical/base_mid360/base_mid360.json",
+      "sha256": "51b9db6375f5529fe270ce7a77330d0eb6eb9837bea1cda46116e42bfd385dac"
+    },
+    {
+      "kind": "G2–Mid360 and range scale",
+      "path": "HW/calibration/physical/base_2dlidar/vs_mid360/calibration.json",
+      "sha256": "c83bf0ac1848e76043f2e2e636bbbb30f098953aeaf3772db0022be64ab90979"
+    },
+    {
+      "kind": "Base–G2 record",
+      "path": "HW/calibration/physical/base_2dlidar/calibration.json",
+      "sha256": "6db17e41513d99346961f83b099a61e9b67e551d6655860619ad0b206727b38f"
+    },
+    {
+      "kind": "Head–Mid360",
+      "path": "HW/calibration/head_mid360/calib.json",
+      "sha256": "8dc149ec162673e22f08205751c23b311ba7c7d27f6d948620d03fd4b5cba30d"
+    },
+    {
+      "kind": "Wrist hand-eye",
+      "path": "HW/calibration/physical/wrist_handeye/calibration.json",
+      "sha256": "a964fbcf53f23a69cbbc1ec0ff77ea9ce279af5e89051459a750b80b36f5e972"
+    },
+    {
+      "kind": "Head RGB intrinsics",
+      "path": "HW/calibration/camera_intrinsics/head/ost.yaml",
+      "sha256": "80a8e457f4716d612b424db3f891b2ff44d52221fca5faab8d6ff4d9c6c2af49"
+    },
+    {
+      "kind": "Wrist RGB intrinsics",
+      "path": "HW/calibration/camera_intrinsics/wrist/ost.yaml",
+      "sha256": "b6dbb5a9cfccf84fd193ea4b82701dac490c04fa8e59e5f2731ecd7f23bd460a"
+    },
+    {
+      "kind": "Tracer odometry v4",
+      "path": "HW/calibration/physical/tracer_odom/odom_calibration.json",
+      "sha256": "a1c89b66f9119b643c0361a0cbbe00f925743276c3253e84d3a2af3a9ab91d01"
+    }
+  ],
+  "branch_sources": {
+    "g2_mid360_odom": "b8be83d9108b076b398a13e515e0998b6db2c79d",
+    "wrist_handeye": "0bac1e558075600d21c6b7273f26a6858266ea0d"
+  },
+  "base_piper_reference": {
+    "kind": "CAD_geometry_not_a_physical_calibration",
+    "matrix4x4": [
+      [
+        1.0,
+        0.0,
+        0.0,
+        -0.0195
+      ],
+      [
+        0.0,
+        1.0,
+        0.0,
+        -2.00728322852e-15
+      ],
+      [
+        0.0,
+        0.0,
+        1.0,
+        0.80611
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "nominal_model_sha256": "5b7d47200d819cf7cde8b334d1f2b3d57f7bf604ba82cbb5898fd66c4dea616e"
+  },
+  "arm_kinematics": "Nominal geometry; piper_joint1 retains +1.6 rad model rotation, feedback bridge subtracts 1.6 rad from measured q1.",
+  "simulated_calibrations_applied": [],
+  "tcp_calibration_applied": false,
+  "post_work_verification_run": false,
+  "runtime_launched": false
+}
