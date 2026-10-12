@@ -1,0 +1,91 @@
+{
+  "fixed_frame": "map",
+  "base_frame": "base_link",
+  "image_hz": 6,
+  "image_width": 960,
+  "jpeg_quality": 75,
+  "cloud_hz": 2,
+  "max_cloud_points": 5000,
+  "use_sim_time": false,
+  "channels": {
+    "map": [
+      "/map"
+    ],
+    "scan": [
+      "/scan",
+      "/scan_raw"
+    ],
+    "odom": [
+      "/odom_ekf",
+      "/odom"
+    ],
+    "path": [
+      "/plan",
+      "/global_plan",
+      "/navigate_to_pose/plan"
+    ],
+    "cloud": [
+      "/livox/lidar",
+      "/mid360/points_filtered",
+      "/mid360/points"
+    ],
+    "object_cloud": [
+      "/detection/wrist/object_cloud"
+    ],
+    "head_image": [
+      "/head/calibrated/color/image_raw",
+      "/head/camera/color/image_raw",
+      "/head_camera/color/image_raw",
+      "/sensors/head/color/image_raw"
+    ],
+    "head_debug": [
+      "/detection/head/debug_image",
+      "/head_yolo/debug_image"
+    ],
+    "wrist_image": [
+      "/wrist/calibrated/color/image_raw",
+      "/wrist/wrist/color/image_raw",
+      "/wrist_camera/color/image_raw",
+      "/sensors/wrist/color/image_raw"
+    ],
+    "wrist_debug": [
+      "/detection/wrist/debug_image",
+      "/wrist_yolo/debug_image"
+    ],
+    "detections": [
+      "/detection/head/target",
+      "/head_yolo/detections"
+    ],
+    "wrist_status": [
+      "/detection/wrist/status"
+    ],
+    "battery": [
+      "/battery_state",
+      "/battery"
+    ],
+    "joints": [
+      "/piper/joint_states_feedback",
+      "/robot/joint_states",
+      "/joint_states"
+    ],
+    "rosout": [
+      "/rosout"
+    ]
+  },
+  "sensors": {
+    "head_camera": {
+      "serial": "244622071116",
+      "fps": 15
+    },
+    "wrist_camera": {
+      "serial": "243222070076",
+      "fps": 30
+    },
+    "g2_lidar": {
+      "params_file": "~/tracer_ws/src/ydlidar_ros2_driver/params/G2.yaml"
+    },
+    "mid360_lidar": {
+      "config_file": "~/ws_livox/src/livox_ros_driver2/config/MID360s_config.json"
+    }
+  }
+}

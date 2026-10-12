@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#10161e">
+  <title>INHA @HOME · 관제센터</title>
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <aside class="rail">
+    <a class="brand" href="/" aria-label="INHA 관제센터 홈"><span class="brand-mark">i</span></a>
+    <div class="rail-line"></div>
+    <button class="rail-button active" id="nav-map" title="지도 관측" aria-label="지도 관측">◈</button>
+    <button class="rail-button" id="nav-cloud" title="3D 점군" aria-label="3D 점군">⬡</button>
+    <button class="rail-button" id="nav-topics" title="토픽 연결" aria-label="토픽 연결">≋</button>
+    <div class="rail-bottom"><span>INHA</span><span>2027</span></div>
+  </aside>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="identity"><span class="eyebrow">INHA UNITED @HOME</span><h1>로봇 관제센터 <span>01</span></h1></div>
+      <div class="top-actions"><span id="mode-badge" class="badge amber">입력 대기</span><span class="connection" id="connection"><i></i>연결 중</span><span class="clock" id="clock">--:--:--</span><button class="icon-button" id="settings-button" title="연결 정보" aria-label="연결 정보">⚙</button></div>
+    </header>
+    <div class="notice" id="notice"><span class="notice-dot"></span><span id="notice-text">데이터 서버에 연결하고 있습니다.</span><button id="reconnect-button">다시 연결 ↗</button></div>
+    <main>
+      <div class="page-heading"><div><span class="eyebrow">MISSION OBSERVATION</span><h2>현장을 한눈에.</h2><p>SLAM 지도와 센서, 인지 결과를 같은 화면에서 관측합니다.</p></div><div class="robot-label"><span class="robot-mini">▣</span><div><strong>TRACER × PiPER</strong><span id="host-label">ROS 2 Humble · Jetson AGX Orin</span></div></div></div>
+      <section class="metrics" aria-label="로봇 상태">
+        <article class="metric"><span class="metric-title">로봇 위치 <span class="metric-icon">⌖</span></span><div><strong id="position-value">—</strong><small id="position-unit">m</small></div><span class="metric-foot" id="position-foot">TF 수신 대기</span></article>
+        <article class="metric"><span class="metric-title">이동 속도 <span class="metric-icon">↗</span></span><div><strong id="speed-value">—</strong><small>m/s</small></div><span class="metric-foot" id="speed-foot">오도메트리 수신 대기</span></article>
+        <article class="metric"><span class="metric-title">관측된 지도 <span class="metric-icon">▧</span></span><div><strong id="area-value">—</strong><small>m²</small></div><span class="metric-foot" id="area-foot">SLAM /map 수신 대기</span></article>
+        <article class="metric"><span class="metric-title">인지 상태 <span class="metric-icon">⦿</span></span><div><strong id="detection-value">—</strong><small id="detection-unit">개</small></div><span class="metric-foot" id="detection-foot">검출 토픽 수신 대기</span></article>
+      </section>
+      <section class="panel sensor-controls-panel" aria-label="젯슨 센서 제어">
+        <div class="panel-header"><div><span class="panel-index">CONTROL</span><h3>카메라 · LiDAR</h3></div><span class="control-caption">젯슨 드라이버 실행 / 중지</span></div>
+        <div class="sensor-controls" id="sensor-controls"></div>
+        <p class="sensor-control-note" id="sensor-control-note">젯슨 관제센터에 연결하면 센서를 제어할 수 있습니다.</p>
+      </section>
+      <div class="workspace">
+        <section class="panel map-panel">
+          <div class="panel-header"><div><span class="panel-index">01</span><h3>공간 관측</h3><span class="tiny-pill" id="map-status">WAITING</span></div><div class="segmented" role="group" aria-label="공간 화면"><button class="selected" id="view-2d">2D 지도</button><button id="view-3d">3D 점군</button></div></div>
+          <div class="map-toolbar"><div class="layer-options" id="map-layers"><label><input type="checkbox" id="layer-scan" checked>스캔</label><label><input type="checkbox" id="layer-path" checked>경로</label><label><input type="checkbox" id="layer-trail" checked>궤적</label></div><select id="cloud-source" class="hidden" aria-label="3D 점군 소스"><option value="cloud">MID-360 · 환경 점군</option><option value="object_cloud">Wrist · 물체 점군</option></select><div class="map-tools"><button id="follow-button" aria-pressed="false">⌖ 추적</button><button id="fit-button">화면 맞춤</button><button id="save-map-button" disabled title="SLAM 지도 PNG 다운로드">↓ 지도</button></div></div>
+          <div class="map-stage" id="map-stage"><canvas id="map-canvas" aria-label="실시간 2D SLAM 지도 또는 3D 점군"></canvas><div class="stage-overlay"><span class="stage-tag" id="frame-tag">FRAME / map</span><span class="stage-tag" id="view-tag">LIVE MAPPING</span></div><div class="canvas-empty" id="canvas-empty"><div class="radar-symbol"><span></span><span></span><span></span><b>⌖</b></div><strong>지도 입력을 기다리고 있습니다</strong><p>/map과 map → base_link TF가 연결되면<br>로봇 위치와 지도 갱신을 볼 수 있습니다.</p></div><div class="map-scale"><span id="scale-bar"></span><small id="scale-label">1 m</small></div><div class="map-coordinates" id="map-coordinates">드래그로 이동 · 스크롤로 확대</div><div class="zoom-control"><button id="zoom-in" aria-label="확대">+</button><button id="zoom-out" aria-label="축소">−</button></div></div>
+          <div class="panel-footer"><span><i class="legend-dot robot-dot"></i>로봇<i class="legend-dot scan-dot"></i>스캔<i class="legend-dot path-dot"></i>계획 경로</span><span id="map-detail">NO DATA</span></div>
+        </section>
+        <div class="camera-column">
+          <section class="panel camera-panel"><div class="panel-header"><div><span class="panel-index">02</span><h3>Head 카메라</h3></div><span class="stream-meta" id="head-hz">— FPS</span></div><div class="camera-frame"><img id="head-camera" alt="Head 카메라 실시간 영상" hidden><div class="camera-empty" id="head-empty"><span>⦿</span><strong>카메라 입력 대기</strong><small>Head RGB / YOLO debug</small></div><span class="camera-state" id="head-state">WAITING</span><span class="camera-sample hidden">가상 샘플 영상</span></div><div class="camera-footer"><select id="head-source" aria-label="Head 영상 선택"><option value="auto">검출 영상 우선 · 자동</option><option value="head_debug">YOLO 검출 영상</option><option value="head_image">원본 RGB</option></select><span id="head-resolution">—</span></div></section>
+          <section class="panel camera-panel"><div class="panel-header"><div><span class="panel-index">03</span><h3>Wrist 카메라</h3></div><span class="stream-meta" id="wrist-hz">— FPS</span></div><div class="camera-frame"><img id="wrist-camera" alt="Wrist 카메라 실시간 영상" hidden><div class="camera-empty" id="wrist-empty"><span>⦿</span><strong>손목 관측 입력 대기</strong><small>Wrist RGB / SAM debug</small></div><span class="camera-state" id="wrist-state">WAITING</span><span class="camera-sample hidden">가상 샘플 영상</span></div><div class="camera-footer"><select id="wrist-source" aria-label="Wrist 영상 선택"><option value="auto">분할 영상 우선 · 자동</option><option value="wrist_debug">SAM / 검출 영상</option><option value="wrist_image">원본 RGB</option></select><span id="wrist-resolution">—</span></div></section>
+        </div>
+      </div>
+      <div class="bottom-grid">
+        <section class="panel perception-panel"><div class="panel-header"><div><span class="panel-index">04</span><h3>검출 결과</h3></div><span class="tiny-pill" id="target-status">WAITING</span></div><div class="target-summary" id="target-summary">모델이 발행한 클래스·신뢰도·추적 상태를 표시합니다.</div><div id="detection-list" class="detection-list"><div class="empty-row">검출 토픽 입력 대기</div></div><div class="wrist-summary"><span>SAM / WRIST</span><p id="wrist-summary">분할 노드 상태 입력 대기</p></div></section>
+        <section class="panel sensors-panel"><div class="panel-header"><div><span class="panel-index">05</span><h3>데이터 연결</h3></div><button class="text-button" id="topic-button">토픽 선택 ↗</button></div><div id="sensor-list" class="sensor-list"></div><div class="health-row"><span id="health-cpu">CPU —</span><span id="health-memory">RAM —</span><span id="health-temperature">온도 —</span></div></section>
+        <section class="panel log-panel"><div class="panel-header"><div><span class="panel-index">06</span><h3>이벤트</h3></div><button class="text-button" id="export-button">↓ 상태 JSON</button></div><div class="event-list" id="event-list"><div class="empty-row">이벤트 수신 대기</div></div><div class="log-footer"><span id="session-time">SESSION 00:00</span><span>젯슨 관제</span></div></section>
+      </div>
+    </main>
+    <footer class="app-footer"><span><i></i>INHA UNITED @HOME · CONTROL CENTER</span><span id="transport-label">ROS 2 → SSE / MJPEG → BROWSER</span></footer>
+  </div>
+  <dialog id="settings-dialog"><div class="dialog-header"><div><span class="eyebrow">DATA CONNECTION</span><h2>토픽 연결</h2></div><button class="icon-button" id="close-settings" aria-label="닫기">×</button></div><p class="dialog-intro">발행 중인 ROS 토픽에서 소스를 선택합니다. 자동은 실기·시뮬레이션 후보를 순서대로 탐색합니다.</p><div class="connection-detail"><span>SSH</span><code>sparo@192.168.50.70</code><span>실시간 접속</span><code>http://localhost:8081</code><span>로봇 서버</span><code>127.0.0.1:8765</code></div><p class="dialog-tip" id="dialog-tip">젯슨에서 관제센터를 시작하고 맥에서 SSH 터널을 연결하세요.</p><form id="topic-form"><div id="topic-fields" class="topic-fields"></div><div class="dialog-actions"><span id="topic-result" role="status"></span><button class="primary-button" id="apply-topics" type="submit">선택한 토픽 적용</button></div></form></dialog>
+  <div class="toast" id="toast" role="status"></div>
+</body>
+</html>

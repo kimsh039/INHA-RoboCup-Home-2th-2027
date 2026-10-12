@@ -2,6 +2,8 @@
 
 **실물 로봇 실행:** [Jetson에서 실물 캘리브레이션을 적용하는 방법](SW/robot/README.md). 최신 G2·Base–Mid360·Head–Mid360·Wrist hand-eye·RGB 내부 보정·Tracer 오도메트리를 사용합니다.
 
+**웹 관제센터:** [젯슨에서 실행하고 맥 localhost로 접속](SW/control_center/README.md). 실시간 SLAM·카메라·검출·점군 관측과 카메라/LiDAR 개별 실행·중지를 제공합니다.
+
 인하 유나이티드 앳홈 2기 · TRACER × PiPER · ROS 2 Humble · Jetson AGX Orin
 
 | 영역 | 내용 | 시작 문서 |
@@ -17,6 +19,7 @@ HW/                         # 하드웨어 자료
         ├── head/           # 헤드 카메라
         └── wrist/          # 손목 카메라
 SW/
+├── control_center/         # Jetson 웹 관제 / Mac SSH 터널
 ├── setup/                  # Jetson 설치와 실행
 ├── simulation/             # Gazebo·MuJoCo·보정
 └── detection/
