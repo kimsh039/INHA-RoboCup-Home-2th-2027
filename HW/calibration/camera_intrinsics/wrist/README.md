@@ -1,3 +1,5 @@
+> **2026-10-14 교체**: `ost.yaml`/`ost.txt`는 RealSense 공장 초점거리·주점(fx 606.47, cx 317.73) + ChArUco 55장에서 추정한 방사 왜곡(k1 0.1097, k2 -0.2235, 재투영 0.164 px)으로 바꿨다. 이전 값(fx 619.9, cx 338.1, 큰 접선 왜곡)은 같은 자세에서 보드 거리를 5% 멀게 재고 hand-eye 불일치를 키웠다. 아래 내용과 `reprojection_*` 파일은 이전 보정 기록이며 이전 ost.yaml은 `git show ea2e220:HW/calibration/camera_intrinsics/wrist/ost.yaml`로 볼 수 있다.
+
 # 손목 카메라 — D435IF RGB 내부 캘리브레이션 결과
 
 카메라의 내부 파라미터와 저장 영상의 재투영 오차 결과입니다. 로봇과 카메라 사이의 hand-eye 변환은 아직 계산하지 않았습니다.
