@@ -55,6 +55,8 @@ def run(args):
         from tf2_ros import Buffer, TransformListener
         from nav_msgs.msg import Odometry
         from sensor_msgs.msg import Imu
+        from geometry_msgs.msg import PoseWithCovarianceStamped
+        from rclpy.action import ActionClient
     except ImportError as exc:
         raise SystemExit(f'ROS 의존성 없음: {exc}\nsource /opt/ros/humble/setup.bash 후 /usr/bin/python3로 실행하세요.\n'
                          '영상 변환에는 ros-humble-cv-bridge와 python3-opencv가 필요합니다.')
@@ -65,6 +67,10 @@ def run(args):
         raise SystemExit('--with-robot은 실물 센서 실행입니다. 시뮬레이션은 --observe --sim-time으로 실행하세요.')
     if use_sim_time:
         os.environ['ROBOCUP_USE_SIM_TIME'] = 'true'
+    try:
+        from nav2_msgs.action import NavigateToPose
+    except ImportError:
+        NavigateToPose = None
     state = State('live', config)
     rclpy.init(args=['--ros-args', '-p', 'use_sim_time:=' + str(use_sim_time).lower()])
 
@@ -73,7 +79,10 @@ def run(args):
             super().__init__('inha_control_center')
             self.cv = CvBridge()
             self.tf = Buffer()
-            self.listener = TransformListener(self.tf, self)
+            # TF gets its own node and thread: on the bridge's executor it queued behind image and cloud
+            # callbacks, so lookups at sensor stamps extrapolated and the display frame flickered.
+            self.tf_node = rclpy.create_node('inha_control_center_tf')
+            self.listener = TransformListener(self.tf, self.tf_node, spin_thread=True)
             self.bound, self.overrides, self.last_processed = {}, {}, {}
             self.cloud_history = CloudHistory(config)
             self.trail = deque(maxlen=1200)
@@ -107,6 +116,13 @@ def run(args):
             state.log('ROS 수신 모드 · ROS_DOMAIN_ID=' + os.environ.get('ROS_DOMAIN_ID', '0'))
             self.create_timer(1.0, lambda: state.sensor_manager.refresh() if state.sensor_manager else None)
             state.log('카메라·LiDAR 드라이버는 센서 제어 버튼에서 실행/중지합니다.')
+            self.nav_requests = deque(maxlen=8)
+            self.nav_goal = None
+            self.nav_status = dict(state='idle', message='목표 없음', goal=None)
+            self.nav_client = ActionClient(self, NavigateToPose, '/navigate_to_pose') if NavigateToPose else None
+            self.initial_pose = self.create_publisher(PoseWithCovarianceStamped, '/initialpose', 1)
+            state.navigation_request = self.nav_requests.append  # deque.append is thread-safe
+            self.create_timer(0.1, self.navigation)
             self.discover()
 
         def discover(self):
@@ -189,6 +205,125 @@ def run(args):
                                [2*(x*z-y*w), 2*(y*z+x*w), 1 - 2*(x*x+y*y)]])
             return matrix, np.array([p.x, p.y, p.z])
 
+        def display_transform(self, source, stamp):
+            """Fixed-frame pose of a sensor message for display. SLAM publishes map -> odom only at scan
+            rate, so an exact-stamp lookup intermittently extrapolates; the latest map -> odom composed
+            with odom -> sensor at the stamp keeps the fixed frame. Falls back to odom, then native."""
+            try:
+                rotation, offset = self.transform(source, stamp)
+                return rotation, offset, self.fixed
+            except Exception:
+                pass
+            try:
+                rotation, offset = self.transform(source, stamp, target='odom')
+            except Exception:
+                try:  # stamp outside the buffer: latest fixed-frame pose keeps the frame steady
+                    rotation, offset = self.transform(source, target=self.fixed)
+                    return rotation, offset, self.fixed
+                except Exception:
+                    return None, None, source
+            if self.fixed != 'odom':
+                try:
+                    tf = self.tf.lookup_transform(self.fixed, 'odom', Time()).transform
+                    q, t = tf.rotation, tf.translation
+                    x, y, z, w = q.x, q.y, q.z, q.w
+                    r = np.array([[1 - 2*(y*y+z*z), 2*(x*y-z*w), 2*(x*z+y*w)],
+                                  [2*(x*y+z*w), 1 - 2*(x*x+z*z), 2*(y*z-x*w)],
+                                  [2*(x*z-y*w), 2*(y*z+x*w), 1 - 2*(x*x+y*y)]])
+                    return r @ rotation, r @ offset + np.array([t.x, t.y, t.z]), self.fixed
+                except Exception:
+                    pass
+            return rotation, offset, 'odom'
+
+        def navigation(self):
+            while self.nav_requests:
+                request = self.nav_requests.popleft()
+                try:
+                    if request['action'] == 'goal':
+                        self.send_goal(request)
+                    elif request['action'] == 'cancel':
+                        self.cancel_goal()
+                    elif request['action'] == 'initial_pose':
+                        self.publish_initial_pose(request)
+                except Exception as exc:
+                    self.nav_update(state='error', message=str(exc)[:300])
+            state.put('navigation', dict(self.nav_status, available=bool(
+                self.nav_client and self.nav_client.server_is_ready())))
+
+        def nav_update(self, **values):
+            self.nav_status.update(values)
+            if values.get('state') in ('succeeded', 'aborted', 'canceled', 'rejected', 'error'):
+                state.log('Nav2 · ' + self.nav_status.get('message', ''), 'info' if values['state'] == 'succeeded' else 'warn', 'navigation')
+
+        def pose_msg(self, request, message_type):
+            message = message_type()
+            message.header.frame_id = self.fixed
+            message.header.stamp = self.get_clock().now().to_msg()
+            target = message.pose.pose if hasattr(message.pose, 'pose') else message.pose
+            target.position.x, target.position.y = float(request['x']), float(request['y'])
+            target.orientation.z, target.orientation.w = math.sin(request['yaw'] / 2), math.cos(request['yaw'] / 2)
+            return message
+
+        def send_goal(self, request):
+            if not self.nav_client:
+                raise RuntimeError('nav2_msgs가 없습니다. Nav2를 설치하세요.')
+            if not self.nav_client.server_is_ready():
+                raise RuntimeError('Nav2 /navigate_to_pose 서버 대기 중입니다.')
+            goal = NavigateToPose.Goal()
+            goal.pose = self.pose_msg(request, type(goal.pose))
+            target = dict(x=request['x'], y=request['y'], yaw=request['yaw'], frame=self.fixed)
+            self.nav_update(state='sending', message='목표 전송 중', goal=target, distance=None, eta=None,
+                            recoveries=0, started=time.time())
+            state.log(f'Nav2 목표 전송 · {self.fixed} ({target["x"]:.2f}, {target["y"]:.2f}) '
+                      f'{math.degrees(target["yaw"]):.0f}°', source='navigation')
+            future = self.nav_client.send_goal_async(goal, feedback_callback=lambda f, t=target: self.nav_feedback(f, t))
+            future.add_done_callback(lambda f, t=target: self.nav_accepted(f, t))
+
+        def nav_accepted(self, future, target):
+            handle = future.result()
+            if self.nav_status.get('goal') is not target:
+                if handle.accepted:
+                    handle.cancel_goal_async()  # superseded while it was being sent
+                return
+            if not handle.accepted:
+                self.nav_update(state='rejected', message='Nav2가 목표를 거부했습니다.')
+                return
+            self.nav_goal = handle
+            self.nav_update(state='active', message='이동 중')
+            handle.get_result_async().add_done_callback(lambda f, h=handle: self.nav_result(f, h))
+
+        def nav_feedback(self, message, target):
+            if self.nav_status.get('goal') is not target:
+                return
+            feedback = message.feedback
+            self.nav_status.update(distance=float(feedback.distance_remaining),
+                                   eta=feedback.estimated_time_remaining.sec + feedback.estimated_time_remaining.nanosec * 1e-9,
+                                   recoveries=int(feedback.number_of_recoveries))
+
+        def nav_result(self, future, handle):
+            if handle is not self.nav_goal:
+                return
+            self.nav_goal = None
+            code = future.result().status
+            names = {4: ('succeeded', '목표 도착'), 5: ('canceled', '이동 취소됨'), 6: ('aborted', '이동 실패 · 경로 또는 진행 불가')}
+            result, message = names.get(code, ('aborted', f'종료 상태 {code}'))
+            self.nav_update(state=result, message=message)
+
+        def cancel_goal(self):
+            if self.nav_goal is not None:
+                self.nav_goal.cancel_goal_async()
+                self.nav_update(state='canceling', message='취소 요청')
+            else:  # a goal still being sent is cancelled as soon as it is accepted
+                self.nav_update(state='idle', message='목표 취소', goal=None)
+
+        def publish_initial_pose(self, request):
+            message = self.pose_msg(request, PoseWithCovarianceStamped)
+            message.pose.covariance[0] = message.pose.covariance[7] = 0.25 ** 2
+            message.pose.covariance[35] = math.radians(15) ** 2
+            self.initial_pose.publish(message)
+            state.log(f'초기 위치 지정 · {self.fixed} ({request["x"]:.2f}, {request["y"]:.2f}) '
+                      f'{math.degrees(request["yaw"]):.0f}°', source='navigation')
+
         def receive(self, key, msg):
             limit = config.get('image_hz', 6) if key in ('head_image', 'head_debug', 'wrist_image', 'wrist_debug') else (
                     config.get('cloud_hz', 5) if key in ('cloud', 'object_cloud') else 8 if key == 'scan' else 0)
@@ -242,25 +377,17 @@ def run(args):
                         if math.isfinite(r) and msg.range_min <= r <= msg.range_max:
                             a = msg.angle_min + i * msg.angle_increment
                             points.append([r * math.cos(a), r * math.sin(a), 0])
-                    rotation, offset = self.transform(msg.header.frame_id, msg.header.stamp)
-                    transformed = np.asarray(points).reshape(-1, 3) @ rotation.T + offset
-                    state.put(key, dict(frame=self.fixed, points=transformed[:, :2].round(3).tolist()), stamp, age)
+                    rotation, offset, frame = self.display_transform(msg.header.frame_id, msg.header.stamp)
+                    transformed = np.asarray(points).reshape(-1, 3)
+                    if rotation is not None:
+                        transformed = transformed @ rotation.T + offset
+                    state.put(key, dict(frame=frame, points=transformed[:, :2].round(3).tolist()), stamp, age)
                 elif key in ('cloud', 'object_cloud'):
                     points = self.cloud_points(msg)
-                    frame = msg.header.frame_id
-                    stable = False
-                    try:
-                        rotation, offset = self.transform(frame, msg.header.stamp)
+                    rotation, offset, frame = self.display_transform(msg.header.frame_id, msg.header.stamp)
+                    stable = rotation is not None  # native frames are shown without accumulating moving observations
+                    if stable:
                         points = points @ rotation.T + offset
-                        frame = self.fixed
-                        stable = True
-                    except Exception:
-                        try:
-                            rotation, offset = self.transform(frame, msg.header.stamp, target='odom')
-                            points = points @ rotation.T + offset
-                            frame, stable = 'odom', True
-                        except Exception:
-                            pass  # Native frames are displayed without accumulating moving observations.
                     points, metadata = self.cloud_history.add(
                         key, points, frame, msg.header.frame_id, stamp, self.bound[key][0],
                         msg.width * msg.height, stable)
@@ -439,7 +566,10 @@ def run(args):
                 except (ValueError, RuntimeError) as exc:
                     state.log(f'{key}: {exc}', 'warn', 'sensor-control')
         if args.mapping:
-            state.sensor_manager.start_auxiliary('mapping', ['bash', str(Path(__file__).resolve().parent / 'start-mapping.sh')])
+            try:
+                state.sensor_manager.service_request('mapping', 'start')
+            except (ValueError, RuntimeError) as exc:
+                state.log(f'mapping: {exc}', 'warn', 'sensor-control')
         if args.detection:
             state.sensor_manager.start_auxiliary('head_detection', ['bash', str(Path(__file__).resolve().parent / 'start-head-detection.sh')])
         print(f'INHA_CONTROL_CENTER_READY http://{args.host}:{args.port}', flush=True)

@@ -288,6 +288,22 @@ bash SW/control_center/jetson-center.sh start --observe
 
 이 모드는 물리 bringup/센서를 자동 시작하지 않습니다. 외부 센서는 개별 종료할 수 없습니다. 시뮬레이션이나 bag의 `/clock`을 사용할 때는 `start --observe --sim-time`으로 실행합니다. 시뮬레이션에서 SLAM/검출도 이 실행기로 켜려면 `ROBOCUP_USE_SIM_TIME=true`를 적용하고 Head YAML 입력을 시뮬레이션 토픽으로 맞추세요.
 
+## 관측 · SLAM · NAV 모드
+
+화면 위쪽 탭(또는 왼쪽 레일)에서 모드를 고릅니다. 지도·카메라·검출 화면은 모든 모드에서 같고, 위쪽 제어 패널만 바뀝니다.
+
+| 모드 | 제어 | 동작 |
+|---|---|---|
+| **관측** | 카메라·LiDAR 켜기/끄기, CAN·오도메트리 | 기존 화면 |
+| **SLAM** | SLAM 시작 · 중지 · **초기화** · 저장 · 저장된 지도 | `start-mapping.sh`(SLAM Toolbox)를 관제센터가 소유해 실행합니다. **초기화**는 SLAM 프로세스를 다시 시작해 현재 지도를 지우고 지금 위치를 원점으로 새로 만듭니다. **저장**은 `save-map.sh`로 `~/maps/<이름>.{pgm,yaml}`(Nav2 map_server)과 `.posegraph/.data`(SLAM Toolbox 위치추정)를 남깁니다. |
+| **NAV** | 위치추정 시작 · 초기 위치 지정 · Nav2 시작/중지 · 목표 지정 · 이동 취소 | 저장 지도 위치추정은 `start-localization.sh`(SLAM Toolbox localization)입니다. `start-navigation.sh`가 Mid-360S 자기 점 필터(`/livox/lidar` → `/mid360/points_filtered`)와 Nav2(`nav2-web.yaml`)를 올립니다. **목표 지정**/**초기 위치 지정**은 2D 지도에서 클릭한 뒤 드래그해 방향을 정합니다(Esc 취소). |
+
+- API: `POST /api/mapping {action: start|stop|reset|localize|save, map?, name?}`, `POST /api/navigation {action: start|stop|goal|cancel|initial_pose, x?, y?, yaw?}` (map 좌표, `X-Control-Token` 필요).
+- Nav2가 실행 중이면 SLAM 중지·초기화·위치추정 전환을 막습니다(목표 좌표계가 바뀌지 않게). 먼저 Nav2를 중지합니다.
+- Nav2 설치(최초 1회): `sudo apt-get install -y ros-humble-navigation2 ros-humble-nav2-bringup`
+- 실물 Nav2 설정 `nav2-web.yaml`: 최대 0.25 m/s · 0.6 rad/s, 가속 0.5 m/s²([Tracer odom 보정](../../HW/calibration/physical/tracer_odom/README.md) 권장), 목표 허용 0.15 m · 0.2 rad(정밀 접근은 dock 노드), Mid-360S 장애물 높이 바닥 위 0.11–1.39 m. Tracer가 리모컨(RC) 모드면 속도 명령이 적용되지 않습니다.
+- 3D 점군과 2D 스캔은 메시지 시각의 `map ← 센서` TF로 변환합니다. SLAM의 `map → odom`은 스캔 주기로만 갱신되어 정확한 시각 조회가 가끔 실패하므로, 그때는 최신 `map → odom`과 메시지 시각의 `odom → 센서`를 합성해 `map` 좌표를 유지합니다.
+
 ## SLAM과 검출 준비
 
 `--mapping`은 이 폴더의 `slam-web.yaml`을 사용합니다. 기존 `SW/simulation/ros2/slam_params.yaml`에서 가져온 설정에 실물 시간 `use_sim_time=false`를 적용했습니다. `/scan`, `odom → base_link` TF가 필요하며 물리 환경의 G2 필터링·SLAM 임계값은 환경에 맞춰 조정하세요. 다른 YAML은 `ROBOCUP_SLAM_PARAMS=/절대/경로.yaml`로 선택합니다.
@@ -374,7 +390,8 @@ SW/control_center/
 ├── sensor_manager.py         # 개별 센서 프로세스 소유/제어
 ├── server.py                 # 표준 라이브러리 HTTP/SSE/MJPEG/API
 ├── config.example.json       # 토픽/센서 설정
-├── start-mapping.sh · slam-web.yaml
+├── start-mapping.sh · slam-web.yaml · start-localization.sh · save-map.sh
+├── start-navigation.sh · nav2-web.yaml
 ├── start-head-detection.sh · head-web.yaml
 └── static/                   # 빌드 없는 HTML/CSS/JS
 ```

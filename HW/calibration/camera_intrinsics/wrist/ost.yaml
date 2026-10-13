@@ -1,26 +1,29 @@
 image_width: 640
 image_height: 480
 camera_name: d435_rgb
+# 2026-10-14: RealSense factory focal length / principal point (camera_info) + radial distortion k1, k2 estimated from
+# 55 ChArUco views (wrist hand-eye capture, reprojection 0.164 px). Factory camera_info reports zero distortion.
+# Previous calibration (fx 619.9, cx 338.1, large tangential terms): git show ea2e220:HW/calibration/camera_intrinsics/wrist/ost.yaml
 camera_matrix:
   rows: 3
   cols: 3
-  data: [619.88157,   0.     , 338.06437,
-           0.     , 618.92987, 245.83783,
-           0.     ,   0.     ,   1.     ]
+  data: [606.47009, 0.0, 317.72855,
+         0.0, 606.55560, 254.95840,
+         0.0, 0.0, 1.0]
 distortion_model: plumb_bob
 distortion_coefficients:
   rows: 1
   cols: 5
-  data: [0.214474, -0.370789, -0.006668, 0.010270, 0.000000]
+  data: [0.109745, -0.223515, 0.0, 0.0, 0.0]
 rectification_matrix:
   rows: 3
   cols: 3
-  data: [1., 0., 0.,
-         0., 1., 0.,
-         0., 0., 1.]
+  data: [1.0, 0.0, 0.0,
+         0.0, 1.0, 0.0,
+         0.0, 0.0, 1.0]
 projection_matrix:
   rows: 3
   cols: 4
-  data: [639.01129,   0.     , 343.06657,   0.     ,
-           0.     , 641.90076, 242.7876 ,   0.     ,
-           0.     ,   0.     ,   1.     ,   0.     ]
+  data: [606.47009, 0.0, 317.72855, 0.0,
+         0.0, 606.55560, 254.95840, 0.0,
+         0.0, 0.0, 1.0, 0.0]

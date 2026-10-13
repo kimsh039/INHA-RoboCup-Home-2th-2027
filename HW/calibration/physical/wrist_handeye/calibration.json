@@ -6,21 +6,125 @@
   "camera_serial": "243222070076",
   "translation_unit": "m",
   "translation_xyz_m": [
-    -0.063877,
-    0.028728,
-    -0.012631
+    -0.064927,
+    0.031071,
+    0.019479
   ],
   "quaternion_xyzw": [
-    0.018698,
-    -0.005325,
-    -0.705684,
-    0.70826
+    0.005303,
+    -0.002385,
+    -0.697211,
+    0.716842
   ],
-  "method": "PARK",
-  "sample_count": 15,
-  "source_commit": "0bac1e558075600d21c6b7273f26a6858266ea0d",
-  "source_path": "SW/simulation/calibration/wrist_handeye/wrist_handeye_calibration.yaml",
-  "source_sha256": "16ccafef8257a40e524f75ab7b239d290e3f765638bf6c68f282bf6fc84a2e8d",
-  "source_note": "Original YAML has malformed validation indentation; transform fields above it are transcribed without changing the source.",
-  "post_work_verification_run": false
+  "method": "Wrist ChArUco hand-eye: automatic PiPER capture (SDK joint mode), board poses from colour images with factory K plus estimated k1/k2, OpenCV Park then joint nonlinear fit of X with one board pose per panel placement (soft-L1)",
+  "sample_count": 55,
+  "source_commit": "",
+  "source_path": "~/livox_g2_calib/handeye_auto (he_capture.py, solve_final.py; data run1, run2, run3)",
+  "source_sha256": "",
+  "source_note": "2026-10-14, 55 poses at two panel placements (28 far, 27 near), board 7x5 48 mm DICT_4X4_50. Arm pose = URDF FK of SDK joints (same as runtime TF); controller /end_pose equals URDF link6.",
+  "post_work_verification_run": true,
+  "applied_on": "2026-10-14",
+  "started_from": {
+    "translation_xyz_m": [
+      -0.069302,
+      0.03175,
+      0.01739
+    ],
+    "quaternion_xyzw": [
+      0.012262,
+      -0.00512,
+      -0.70305,
+      0.711016
+    ],
+    "method": "Mid-360S cloud vs wrist aligned depth over the arm chain (hand-eye correction only; mount and joints fixed)",
+    "sample_count": 14,
+    "source_path": "HW/calibration/arm_piper/tools/arm_lidar_chain.py",
+    "applied_on": "2026-10-13"
+  },
+  "validation": {
+    "placements_solved_separately_difference_mm_deg": [
+      3.9,
+      0.27
+    ],
+    "cross_placement_rms_mm_deg": [
+      [
+        10.4,
+        1.23
+      ],
+      [
+        11.2,
+        1.01
+      ]
+    ],
+    "same_data_rms_mm_deg": {
+      "new": [
+        10.5,
+        1.11
+      ],
+      "previous": [
+        15.5,
+        1.32
+      ]
+    },
+    "change_from_previous_mm_deg": [
+      4.9,
+      1.28
+    ],
+    "note": "Per-sample residual (~10 mm, ~1 deg) did not shrink with joint zero offsets; attributed to PiPER pose accuracy, not the hand-eye. Independent placements agree within 3.9 mm / 0.27 deg.",
+    "previous_validation": {
+      "leave_one_pose_out_depth_median_abs_mm": 13.0,
+      "leave_one_pose_out_floor_angle_median_deg": 1.22,
+      "deployed_before_depth_median_abs_mm": 61.7,
+      "deployed_before_floor_angle_median_deg": 1.49,
+      "correction_mm_deg": [
+        30.66,
+        0.86
+      ],
+      "camera_depth_scale_percent": 2.27,
+      "holdout_2026_10_13": {
+        "poses": 5,
+        "note": "5 new arm poses not used in the fit; same captures evaluated with the old and the new value",
+        "old": {
+          "depth_median_abs_mm": 51.5,
+          "depth_max_abs_mm": 80.9,
+          "floor_angle_median_deg": 2.38,
+          "floor_angle_max_deg": 3.37
+        },
+        "new": {
+          "depth_median_abs_mm": 19.1,
+          "depth_max_abs_mm": 42.1,
+          "floor_angle_median_deg": 1.7,
+          "floor_angle_max_deg": 2.74
+        }
+      }
+    }
+  },
+  "wrist_color_lens": {
+    "note": "camera_info reports zero distortion; images show real radial distortion (not used by sensor_tf)",
+    "K": [
+      [
+        606.4700927734375,
+        0.0,
+        317.7285461425781
+      ],
+      [
+        0.0,
+        606.5556030273438,
+        254.95840454101562
+      ],
+      [
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "D_plumb_bob": [
+      0.10974,
+      -0.22352,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "reprojection_rms_px_with": 0.164
+  }
 }

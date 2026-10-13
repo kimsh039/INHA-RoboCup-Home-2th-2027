@@ -5,6 +5,7 @@ const view = { kind: '2d', x: 0, y: 0, scale: 43, follow: false, yaw: -.8, pitch
   center: [0, 0, 0], image: null, mapVersion: 0, fitted: false, cloudFitted: '', width: 0, height: 0 };
 let source, session = 0, lastLog = '', toastTimer;
 const cameras = {};
+const pick = { mode: null, start: null, end: null };  // map click tool: 'goal' | 'initial'
 const names = { map: 'SLAM 지도', scan: '2D LiDAR', cloud: 'MID-360 점군', object_cloud: 'Wrist 물체 점군',
   odom: '오도메트리', head_image: 'Head RGB', head_debug: 'Head 검출 영상', wrist_image: 'Wrist RGB',
   wrist_debug: 'Wrist 분할 영상', detections: '검출 결과', path: '계획 경로', battery: '배터리',
@@ -52,10 +53,9 @@ function connect() {
       if (map && payload.changes.map && view.mapVersion !== data.versions.map) {
         view.mapVersion = data.versions.map;
         const version = view.mapVersion, image = new Image();
-        image.onload = () => { if (version !== view.mapVersion) return; view.image = image; if (!view.fitted) { fitMap(); view.fitted = true; } draw(); };
+        image.onload = () => { if (version !== view.mapVersion) return; view.image = image; view.known = knownBounds(image, map); if (!view.fitted || !view.touched) { fitMap(); view.fitted = true; } draw(); };
         image.src = map.image;
-      } else if (!map) { view.image = null; }
-      text('host-label', payload.hostname + ' · ROS 2 Humble');
+      } else if (!map) { view.image = null; view.known = null; }
       render();
     } catch (error) { toast('수신 데이터를 읽을 수 없습니다: ' + error.message); }
   };
@@ -89,9 +89,8 @@ function render() {
   text('detection-value', detections && fresh('detections') ? (detections.valid ? detections.objects.length : 0) : '—');
   text('detection-foot', detections ? `${detections.state} · ${fresh('detections') ? detections.valid ? '유효 관측' : '유효 목표 없음' : '수신 지연'}` : '검출 토픽 수신 대기');
   updateCamera('head'); updateCamera('wrist');
-  renderDetections(); renderSensors(); renderSensorControls(); renderCanOdometry(); renderLogs();
+  renderDetections(); renderSensors(); renderSensorControls(); renderCanOdometry(); renderServices(); renderLogs();
   text('session-time', 'SESSION ' + elapsed(data.uptime));
-  text('transport-label', demo ? 'SYNTHETIC SAMPLE · LOCALHOST' : 'ROS 2 → SSE / MJPEG → SSH TUNNEL');
   $('save-map-button').disabled = !map;
   if (view.follow && p && fresh('pose') && p.frame === currentFrame() && view.kind === '2d') { view.x = p.x; view.y = p.y; }
   draw();
@@ -112,7 +111,7 @@ function renderCanOdometry() {
     const label = document.createElement('strong'); label.textContent = title;
     const value = document.createElement('span'); value.textContent = summary;
     const description = document.createElement('small'); description.textContent = detail;
-    card.append(label, value, description); container.append(card);
+    card.title = detail; card.append(label, value, description); container.append(card);
   }
   for (const [key, title] of [['tracer', 'Tracer CAN'], ['piper', 'PiPER CAN']]) {
     const c = can?.interfaces?.[key];
@@ -229,11 +228,10 @@ function renderSensorControls() {
     ui.status.textContent = !alive ? '제어 연결 대기' : labels[sensor?.state] || '관리자 연결 대기';
     ui.card.classList.toggle('running', alive && sensor?.managed);
     ui.hint.textContent = !alive ? data.mode === 'demo' ? '샘플 모드 · 실제 제어 비활성' : '젯슨 서버에 연결하세요' : sensor?.error || (sensor?.state === 'external' ? '기존 실행에서 전환 필요 · README 참조' : sensor?.managed ? sensor.receiving ? '실시간 데이터 수신 중' : '프로세스 실행 · 데이터 수신 대기' : sensor?.topic || '센서 상태 대기');
-    ui.hint.title = sensor?.log || '';
+    ui.hint.title = sensor?.log || ''; ui.card.title = ui.hint.textContent + (sensor?.log ? ' · ' + sensor.log : '');
     ui.start.disabled = !alive || !sensor?.can_start || sensorPending.has(key);
     ui.stop.disabled = !alive || !sensor?.can_stop || sensorPending.has(key);
   }
-  text('sensor-control-note', '켜기/끄기는 센서 드라이버를 실행·중지합니다. 장치의 전원 차단을 의미하지 않습니다.');
 }
 async function controlSensor(sensor, action) {
   sensorPending.add(sensor); renderSensorControls();
@@ -251,7 +249,7 @@ function renderLogs() {
   const list = $('event-list'); list.replaceChildren();
   for (const item of data.logs) {
     const row = document.createElement('div'); row.className = 'event ' + item.level;
-    const stamp = document.createElement('time'); stamp.textContent = new Date(item.time * 1000).toLocaleTimeString('ko-KR', { hour12: false });
+    const stamp = document.createElement('time'); stamp.textContent = new Date(item.time * 1000).toLocaleTimeString('en-GB', { hour12: false });
     const dot = document.createElement('i'), body = document.createElement('p'), origin = document.createElement('small');
     body.textContent = item.message; origin.textContent = item.source; body.append(origin); row.append(stamp, dot, body); list.prepend(row);
   }
@@ -266,9 +264,22 @@ function mapBounds() {
   const corners = [[0, 0], [w, 0], [0, h], [w, h]].map(([u, v]) => [x + Math.cos(a) * u - Math.sin(a) * v, y + Math.sin(a) * u + Math.cos(a) * v]);
   return [Math.min(...corners.map(c => c[0])), Math.min(...corners.map(c => c[1])), Math.max(...corners.map(c => c[0])), Math.max(...corners.map(c => c[1]))];
 }
+function knownBounds(image, m) {
+  // Bounding box of observed cells (anything but the unknown gray 95) in the map frame.
+  try {
+    const c = document.createElement('canvas'); c.width = image.width; c.height = image.height;
+    const g = c.getContext('2d'); g.drawImage(image, 0, 0); const px = g.getImageData(0, 0, c.width, c.height).data;
+    let u0 = Infinity, v0 = Infinity, u1 = -1, v1 = -1;
+    for (let v = 0; v < c.height; v++) for (let u = 0; u < c.width; u++) if (px[(v * c.width + u) * 4] !== 95) { if (u < u0) u0 = u; if (u > u1) u1 = u; if (v < v0) v0 = v; if (v > v1) v1 = v; }
+    if (u1 < 0) return null;
+    const [x, y, a] = m.origin, r = m.resolution;
+    const corners = [[u0, v0], [u1 + 1, v0], [u0, v1 + 1], [u1 + 1, v1 + 1]].map(([u, v]) => [x + Math.cos(a) * u * r - Math.sin(a) * v * r, y + Math.sin(a) * u * r + Math.cos(a) * v * r]);
+    return [Math.min(...corners.map(k => k[0])), Math.min(...corners.map(k => k[1])), Math.max(...corners.map(k => k[0])), Math.max(...corners.map(k => k[1]))];
+  } catch { return null; }
+}
 function fitMap() {
-  const b = mapBounds(); view.x = (b[0] + b[2]) / 2; view.y = (b[1] + b[3]) / 2;
-  view.scale = Math.max(2, Math.min((view.width - 70) / Math.max(b[2] - b[0], .1), (view.height - 65) / Math.max(b[3] - b[1], .1)));
+  const b = view.known || mapBounds(); view.x = (b[0] + b[2]) / 2; view.y = (b[1] + b[3]) / 2;
+  view.scale = Math.max(2, Math.min((view.width - 40) / Math.max(b[2] - b[0], .1), (view.height - 40) / Math.max(b[3] - b[1], .1)));
 }
 function fitCloud() {
   const cloud = data.values[$('cloud-source').value];
@@ -278,7 +289,7 @@ function fitCloud() {
   view.center = min.map((v, i) => (v + max[i]) / 2);
   view.distance = Math.max(.4, Math.hypot(...min.map((v, i) => max[i] - v)) * .95);
 }
-function fit() { if (view.kind === '2d') fitMap(); else fitCloud(); draw(); }
+function fit() { view.touched = false; if (view.kind === '2d') fitMap(); else fitCloud(); draw(); }
 function spacing(value) { const power = 10 ** Math.floor(Math.log10(Math.max(value, .001))); return ([1, 2, 5, 10].find(n => n * power >= value) || 10) * power; }
 function world(p) { return [view.width / 2 + (p[0] - view.x) * view.scale, view.height / 2 - (p[1] - view.y) * view.scale]; }
 function worldLine(points, color, width = 1, dashed = false) {
@@ -322,12 +333,27 @@ function drawMap() {
     ctx.fillStyle = live ? '#b8ed7a' : '#f0b869'; ctx.strokeStyle = '#173225'; ctx.lineWidth = 2;
     ctx.beginPath(); ctx.moveTo(size * .7, 0); ctx.lineTo(-size * .55, -size * .45); ctx.lineTo(-size * .25, 0); ctx.lineTo(-size * .55, size * .45); ctx.closePath(); ctx.fill(); ctx.stroke(); ctx.restore();
   }
+  const goal = data.values.navigation?.goal;
+  if (goal?.frame === frame) drawArrow([goal.x, goal.y], goal.yaw, ['active', 'sending', 'canceling'].includes(data.values.navigation.state) ? '#c18bdf' : '#c18bdf77', '목표');
+  if (pick.start) {
+    const [dx, dy] = [pick.end[0] - pick.start[0], pick.end[1] - pick.start[1]];
+    drawArrow(pick.start, Math.hypot(dx, dy) * view.scale > 6 ? Math.atan2(dy, dx) : pickDefaultYaw(pick.start), pick.mode === 'goal' ? '#c18bdf' : '#5fd0da', pick.mode === 'goal' ? '목표' : '초기 위치');
+  }
   const useful = Boolean(m || scan?.frame === frame || p?.frame === frame);
   $('canvas-empty').classList.toggle('hidden', useful);
   text('frame-tag', 'FRAME / ' + frame);
   const q = quality('map'); badge('map-status', m ? q === 'cached' ? 'MAP LOADED' : q.toUpperCase() : 'WAITING SLAM', q);
   text('map-detail', m ? `${fmt(m.resolution, 3)} m/cell · ${fmt(m.known_area)} m²` : `${frame} · /map 입력 대기`);
   const unit = spacing(55 / view.scale); $('scale-bar').style.width = unit * view.scale + 'px'; text('scale-label', fmt(unit, unit < 1 ? 2 : 0) + ' m');
+}
+function drawArrow(point, angle, color, label) {
+  const [x, y] = world(point), size = Math.max(14, Math.min(30, .5 * view.scale));
+  ctx.save(); ctx.translate(x, y);
+  ctx.strokeStyle = color; ctx.fillStyle = color; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.arc(0, 0, 4, 0, Math.PI * 2); ctx.fill();
+  ctx.rotate(-angle); ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(size, 0); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(size + 6, 0); ctx.lineTo(size - 3, -5); ctx.lineTo(size - 3, 5); ctx.closePath(); ctx.fill();
+  ctx.restore(); ctx.fillStyle = color; ctx.font = '10px ui-monospace, monospace'; ctx.fillText(label, x + 8, y - 8);
 }
 function project(point) {
   const dx = point[0] - view.center[0], dy = point[1] - view.center[1], dz = point[2] - view.center[2];
@@ -375,10 +401,9 @@ function drawCloud() {
 function setView(kind) {
   view.kind = kind;
   $('view-2d').classList.toggle('selected', kind === '2d'); $('view-3d').classList.toggle('selected', kind === '3d');
-  $('nav-map').classList.toggle('active', kind === '2d'); $('nav-cloud').classList.toggle('active', kind === '3d');
   $('map-layers').classList.toggle('hidden', kind === '3d'); $('cloud-source').classList.toggle('hidden', kind === '2d');
   $('follow-button').disabled = kind === '3d';
-  text('map-coordinates', kind === '2d' ? '드래그로 이동 · 스크롤로 확대' : '드래그로 회전 · 스크롤로 확대');
+  text('map-coordinates', kind === '2d' ? pick.mode ? pickHint() : '드래그로 이동 · 스크롤로 확대' : '드래그로 회전 · 스크롤로 확대');
   if (kind === '2d') {
     $('canvas-empty').querySelector('strong').textContent = '지도 입력을 기다리고 있습니다';
     $('canvas-empty').querySelector('p').textContent = '/map과 map → base_link TF를 기다립니다.';
@@ -386,18 +411,26 @@ function setView(kind) {
   draw();
 }
 let dragging = null;
-canvas.addEventListener('pointerdown', e => { dragging = [e.clientX, e.clientY]; canvas.setPointerCapture(e.pointerId); });
+function screenToWorld(e) { const r = canvas.getBoundingClientRect(); return [view.x + (e.clientX - r.left - view.width / 2) / view.scale, view.y - (e.clientY - r.top - view.height / 2) / view.scale]; }
+canvas.addEventListener('pointerdown', e => {
+  canvas.setPointerCapture(e.pointerId);
+  if (pick.mode && view.kind === '2d') { pick.start = pick.end = screenToWorld(e); draw(); return; }
+  dragging = [e.clientX, e.clientY];
+});
 canvas.addEventListener('pointermove', e => {
+  if (pick.start) { pick.end = screenToWorld(e); draw(); return; }
   if (!dragging) return;
   const dx = e.clientX - dragging[0], dy = e.clientY - dragging[1]; dragging = [e.clientX, e.clientY];
-  if (view.kind === '2d') { view.x -= dx / view.scale; view.y += dy / view.scale; view.follow = false; $('follow-button').setAttribute('aria-pressed', 'false'); }
+  if (view.kind === '2d') { view.touched = true; view.x -= dx / view.scale; view.y += dy / view.scale; view.follow = false; $('follow-button').setAttribute('aria-pressed', 'false'); }
   else { view.yaw += dx * .007; view.pitch = Math.max(-.9, Math.min(1.45, view.pitch + dy * .006)); }
   draw();
 });
-canvas.addEventListener('pointerup', () => dragging = null); canvas.addEventListener('pointercancel', () => dragging = null);
+canvas.addEventListener('pointerup', e => { dragging = null; if (pick.start) { pick.end = screenToWorld(e); finishPick(); } });
+canvas.addEventListener('pointercancel', () => { dragging = null; pick.start = pick.end = null; draw(); });
 function zoom(factor, x = view.width / 2, y = view.height / 2) {
   if (view.kind === '3d') view.distance = Math.max(.1, Math.min(1000, view.distance / factor));
   else {
+    view.touched = true;
     const wx = view.x + (x - view.width / 2) / view.scale, wy = view.y - (y - view.height / 2) / view.scale;
     view.scale = Math.max(2, Math.min(1000, view.scale * factor));
     view.x = wx - (x - view.width / 2) / view.scale; view.y = wy + (y - view.height / 2) / view.scale;
@@ -408,8 +441,8 @@ canvas.addEventListener('wheel', e => { e.preventDefault(); const rect = canvas.
 $('zoom-in').onclick = () => zoom(1.25); $('zoom-out').onclick = () => zoom(.8);
 $('fit-button').onclick = fit;
 $('follow-button').onclick = () => { view.follow = !view.follow; $('follow-button').setAttribute('aria-pressed', String(view.follow)); render(); };
-$('view-2d').onclick = $('nav-map').onclick = () => setView('2d');
-$('view-3d').onclick = $('nav-cloud').onclick = () => setView('3d');
+$('view-2d').onclick = () => setView('2d');
+$('view-3d').onclick = () => { setPick(null); setView('3d'); };
 $('cloud-source').onchange = () => { view.cloudFitted = ''; draw(); };
 for (const id of ['layer-scan', 'layer-path', 'layer-trail']) $(id).onchange = draw;
 for (const role of ['head', 'wrist']) $(role + '-source').onchange = () => updateCamera(role);
@@ -467,7 +500,7 @@ function openSettings() {
   text('dialog-tip', data.mode === 'live' ? '토픽을 바꾸면 선택한 수신 채널만 재연결합니다. 설정은 서버를 종료할 때 초기화됩니다.' : '샘플 / 대기 모드입니다. 젯슨에서 관제센터를 시작하고 맥에서 SSH 터널을 연결하세요.');
   $('settings-dialog').showModal();
 }
-$('settings-button').onclick = $('topic-button').onclick = $('nav-topics').onclick = openSettings;
+$('settings-button').onclick = $('topic-button').onclick = openSettings;
 $('close-settings').onclick = () => $('settings-dialog').close();
 $('settings-dialog').addEventListener('click', e => { if (e.target === $('settings-dialog')) { const r = e.target.getBoundingClientRect(); if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) e.target.close(); } });
 $('topic-form').onsubmit = async e => {
@@ -479,6 +512,185 @@ $('topic-form').onsubmit = async e => {
     text('topic-result', '선택을 전달했습니다. ROS 탐색 주기에서 재연결합니다.');
   } catch (error) { text('topic-result', error.message); }
 };
-new ResizeObserver(draw).observe($('map-stage'));
+// Panel fullscreen: browser Fullscreen API on the whole panel (toolbar and selectors stay usable); a fixed full-window
+// layout where the API is missing or refused (e.g. iPhone Safari). Esc or the same button leaves it.
+const nativeFullscreen = () => document.fullscreenElement || document.webkitFullscreenElement || null;
+const fullscreenPanel = () => nativeFullscreen() || document.querySelector('.panel.pseudo-fullscreen');
+function syncFullscreen() {
+  const current = fullscreenPanel();
+  for (const panel of document.querySelectorAll('.panel')) {
+    panel.classList.toggle('is-fullscreen', panel === current);
+    if (panel !== current) panel.classList.remove('pseudo-fullscreen');
+  }
+  document.body.classList.toggle('has-pseudo-fullscreen', Boolean(document.querySelector('.panel.pseudo-fullscreen')));
+  for (const button of document.querySelectorAll('.fullscreen-button')) {
+    const active = button.closest('.panel') === current;
+    button.setAttribute('aria-pressed', String(active)); button.title = active ? '전체화면 종료 (Esc)' : '전체화면';
+  }
+  requestAnimationFrame(draw);
+}
+async function leaveFullscreen() {
+  if (nativeFullscreen()) { try { await (document.exitFullscreen || document.webkitExitFullscreen).call(document); } catch { /* already left */ } }
+  document.querySelector('.panel.pseudo-fullscreen')?.classList.remove('pseudo-fullscreen');
+  syncFullscreen();
+}
+async function toggleFullscreen(panel) {
+  const current = fullscreenPanel();
+  if (current) { await leaveFullscreen(); if (current === panel) return; }
+  const request = panel.requestFullscreen || panel.webkitRequestFullscreen;
+  if (request) {
+    // Some embedded browsers neither grant nor reject the request; fall back if it has not taken effect shortly.
+    try { await Promise.race([request.call(panel), new Promise(resolve => setTimeout(resolve, 700))]); } catch { /* refused */ }
+    if (nativeFullscreen() === panel) return;
+  }
+  panel.classList.add('pseudo-fullscreen'); syncFullscreen();
+}
+for (const button of document.querySelectorAll('.fullscreen-button')) button.onclick = () => toggleFullscreen(button.closest('.panel'));
+for (const frame of document.querySelectorAll('.camera-frame')) frame.addEventListener('dblclick', () => toggleFullscreen(frame.closest('.panel')));
+document.addEventListener('fullscreenchange', syncFullscreen); document.addEventListener('webkitfullscreenchange', syncFullscreen);
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && document.querySelector('.panel.pseudo-fullscreen') && !$('settings-dialog').open) leaveFullscreen(); });
+new ResizeObserver(() => { const r = $('map-stage').getBoundingClientRect(); view.width = r.width; view.height = r.height; if (view.kind === '2d' && !view.touched && data.values.map) fitMap(); draw(); }).observe($('map-stage'));
 setInterval(() => { text('clock', new Date().toLocaleTimeString('ko-KR', { hour12: false, timeZone: 'Asia/Seoul' })); if (data.received && performance.now() - data.received > 2500) { data.connected = false; render(); } }, 1000);
+
+// ---- Modes (관측 / SLAM / NAV) ----
+const modes = { observe: 1, slam: 1, nav: 1 };
+let mode = 'observe';
+function setMode(next) {
+  mode = modes[next] ? next : 'observe';
+  for (const el of document.querySelectorAll('[data-mode-button]')) {
+    const on = el.dataset.modeButton === mode;
+    el.classList.toggle('active', on); if (el.getAttribute('role') === 'tab') el.setAttribute('aria-selected', String(on));
+  }
+  for (const el of document.querySelectorAll('.mode-section')) el.classList.toggle('hidden', el.dataset.mode !== mode);
+  if (mode !== 'observe' && view.kind !== '2d') setView('2d');
+  if (mode !== 'nav') setPick(null);
+  try { localStorage.setItem('inha-cc-mode', mode); } catch { /* storage unavailable */ }
+  renderServices(); requestAnimationFrame(draw);
+}
+for (const el of document.querySelectorAll('[data-mode-button]')) el.onclick = () => setMode(el.dataset.modeButton);
+
+const pickHint = () => pick.mode === 'goal' ? '목표 지정 · 클릭 후 드래그로 방향 · Esc 취소' : '초기 위치 지정 · 클릭 후 드래그로 방향 · Esc 취소';
+function pickDefaultYaw(point) {
+  const p = data.values.pose;
+  return p && pick.mode === 'goal' ? Math.atan2(point[1] - p.y, point[0] - p.x) : p?.yaw || 0;
+}
+function setPick(next) {
+  pick.mode = next; pick.start = pick.end = null;
+  for (const el of document.querySelectorAll('[data-pick]')) el.setAttribute('aria-pressed', String(el.dataset.pick === next));
+  $('map-stage').classList.toggle('picking', Boolean(next));
+  if (next && view.kind !== '2d') setView('2d');
+  text('map-coordinates', view.kind === '2d' ? next ? pickHint() : '드래그로 이동 · 스크롤로 확대' : '드래그로 회전 · 스크롤로 확대');
+  draw();
+}
+async function post(url, body) {
+  const response = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Control-Token': data.controlToken || '' }, body: JSON.stringify(body) });
+  const result = await response.json(); if (!response.ok) throw new Error(result.error || response.status);
+  return result;
+}
+const servicePending = new Set();
+async function serviceAction(url, body, message, key) {
+  servicePending.add(key); renderServices();
+  try { await post(url, body); if (message) toast(message); }
+  catch (error) { toast(error.message); }
+  finally { servicePending.delete(key); renderServices(); }
+}
+async function finishPick() {
+  const kind = pick.mode, start = pick.start, end = pick.end;
+  const [dx, dy] = [end[0] - start[0], end[1] - start[1]];
+  const yaw = Math.hypot(dx, dy) * view.scale > 6 ? Math.atan2(dy, dx) : pickDefaultYaw(start);
+  setPick(null);
+  if (currentFrame() !== 'map') { toast('map 좌표의 지도가 있어야 지정할 수 있습니다.'); return; }
+  await serviceAction('/api/navigation', { action: kind === 'goal' ? 'goal' : 'initial_pose', x: start[0], y: start[1], yaw },
+    kind === 'goal' ? `목표 전송 (${fmt(start[0], 2)}, ${fmt(start[1], 2)}) ${fmt(yaw * 180 / Math.PI, 0)}°` : '초기 위치를 보냈습니다.', 'pick');
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && pick.mode) setPick(null); });
+for (const el of document.querySelectorAll('[data-pick]')) el.onclick = () => setPick(pick.mode === el.dataset.pick ? null : el.dataset.pick);
+
+const defaultMapName = () => { const d = new Date(), z = n => String(n).padStart(2, '0'); return `map_${d.getFullYear()}${z(d.getMonth() + 1)}${z(d.getDate())}_${z(d.getHours())}${z(d.getMinutes())}`; };
+$('map-name').value = defaultMapName();
+$('slam-start').onclick = () => serviceAction('/api/mapping', { action: 'start' }, 'SLAM 시작을 요청했습니다.', 'mapping');
+$('slam-stop').onclick = () => { if (confirm('SLAM을 중지할까요? 저장하지 않은 지도는 사라집니다.')) serviceAction('/api/mapping', { action: 'stop' }, 'SLAM 중지를 요청했습니다.', 'mapping'); };
+$('slam-reset').onclick = () => { if (confirm('지도를 초기화할까요? 저장하지 않은 지도는 사라지고 현재 위치에서 새로 시작합니다.')) serviceAction('/api/mapping', { action: 'reset' }, '지도를 초기화합니다.', 'mapping'); };
+$('map-save').onclick = () => {
+  const name = $('map-name').value.trim();
+  if (!/^[A-Za-z0-9_-]{1,48}$/.test(name)) { toast('지도 이름은 영문·숫자·_·- 1~48자입니다.'); return; }
+  if ((data.values.service_control?.maps?.items || []).some(m => m.name === name) && !confirm(name + ' 지도를 덮어쓸까요?')) return;
+  serviceAction('/api/mapping', { action: 'save', name }, '지도 저장을 요청했습니다.', 'save');
+};
+function localize(name) {
+  if (!name) { toast('위치추정에 쓸 저장 지도를 고르세요.'); return; }
+  if (data.values.service_control?.mapping?.managed && data.values.service_control.mapping.mode === 'mapping' && !confirm('작성 중인 지도를 닫고 ' + name + ' 지도로 위치추정을 시작할까요? 저장하지 않은 지도는 사라집니다.')) return;
+  serviceAction('/api/mapping', { action: 'localize', map: name }, name + ' 지도로 위치추정을 시작합니다. 로봇이 지도를 만들기 시작한 위치에 있지 않으면 초기 위치를 지정하세요.', 'mapping');
+}
+$('nav-localize').onclick = () => localize($('nav-map-select').value);
+$('nav-start').onclick = () => serviceAction('/api/navigation', { action: 'start' }, 'Nav2 시작을 요청했습니다. 준비까지 10~20초 걸립니다.', 'navigation');
+$('nav-stop').onclick = () => serviceAction('/api/navigation', { action: 'stop' }, 'Nav2 중지를 요청했습니다.', 'navigation');
+$('nav-cancel').onclick = () => serviceAction('/api/navigation', { action: 'cancel' }, '이동 취소를 요청했습니다.', 'cancel');
+
+function renderServices() {
+  const alive = data.mode === 'live' && data.connected && performance.now() - data.received < 2500;
+  const sc = data.values.service_control || {}, slam = sc.mapping, nav = sc.navigation, maps = sc.maps || {}, goal = data.values.navigation;
+  const labels = { off: '중지됨', starting: '시작 중…', running: '실행 중', stopping: '중지 중…', external: '외부 실행 중', error: '오류' };
+  const slamRunning = Boolean(slam && (slam.managed || slam.state === 'external'));
+  const localizing = slam?.mode === 'localization';
+  const navRunning = Boolean(nav && (nav.managed || nav.state === 'external'));
+  // SLAM card
+  const slamLabel = !alive ? '연결 대기' : slam ? (slam.managed && slam.state === 'running' ? localizing ? '위치추정 중 · ' + slam.map : '지도 작성 중' : labels[slam.state] || slam.state) : '상태 수신 대기';
+  text('slam-state', slamLabel);
+  const m = data.values.map;
+  text('slam-hint', !alive ? '' : slam?.error || (slam?.state === 'external' ? '외부 실행' : slamRunning ? m ? `${fmt(m.known_area, 1)} m²` : '/map 대기' : ''));
+  $('slam-hint').title = slam?.log || '';
+  badge('slam-pill', !alive ? '대기' : slamRunning ? localizing ? 'LOCALIZING' : 'MAPPING' : slam?.state === 'error' ? 'ERROR' : 'OFF', slamRunning ? 'live' : slam?.state === 'error' ? 'error' : 'waiting');
+  const busy = !alive || servicePending.has('mapping') || slam?.busy;
+  $('slam-start').disabled = busy || slamRunning || navRunning;
+  $('slam-stop').disabled = busy || !slam?.managed || navRunning;
+  $('slam-reset').disabled = busy || !slam?.managed || navRunning;
+  $('slam-reset').textContent = localizing ? '다시 불러오기' : '초기화';
+  text('slam-caption', navRunning ? 'Nav2 실행 중 · 잠금' : '');
+  // Save card
+  $('map-save').disabled = !alive || !slamRunning || Boolean(maps.saving) || servicePending.has('save');
+  text('save-state', maps.saving ? maps.saving + ' 저장 중…' : maps.last ? (maps.last.ok ? '저장 완료 · ' : '저장 실패 · ') + maps.last.name : '—');
+  text('save-hint', maps.last && !maps.saving && !maps.last.ok ? maps.last.message : '');
+  // Saved maps list + NAV map selector
+  const items = maps.items || [], signature = JSON.stringify(items.map(i => [i.name, i.posegraph, i.image, i.time])) + alive + localizing + navRunning;
+  if (signature !== renderServices.signature) {
+    renderServices.signature = signature;
+    const list = $('map-list'); list.replaceChildren();
+    if (!items.length) { const e = document.createElement('div'); e.className = 'empty-row'; e.textContent = '저장된 지도가 없습니다'; list.append(e); }
+    for (const item of items) {
+      const row = document.createElement('div'); row.className = 'map-row';
+      const name = document.createElement('strong'); name.textContent = item.name;
+      const meta = document.createElement('small'); meta.textContent = new Date(item.time * 1000).toLocaleString('ko-KR', { hour12: false }) + (item.posegraph ? '' : ' · pose graph 없음');
+      const use = document.createElement('button'); use.textContent = '위치추정'; use.disabled = !alive || !item.posegraph || navRunning;
+      use.onclick = () => localize(item.name);
+      const info = document.createElement('div'); info.append(name, meta); row.append(info, use); list.append(row);
+    }
+    const select = $('nav-map-select'), previous = select.value; select.replaceChildren(new Option('저장된 지도 선택', ''));
+    for (const item of items) if (item.posegraph) select.append(new Option(item.name, item.name));
+    select.value = [...select.options].some(o => o.value === previous) ? previous : localizing && slam?.map ? slam.map : '';
+  }
+  // NAV cards
+  text('nav-localization', !alive ? '연결 대기' : !slamRunning ? 'SLAM / 위치추정 없음' : localizing ? '저장 지도 위치추정 · ' + slam.map : slam.state === 'external' ? '외부 SLAM 사용' : '작성 중인 지도 사용 (SLAM)');
+  text('nav-localization-hint', '');
+  $('nav-localize').disabled = !alive || navRunning || servicePending.has('mapping') || !$('nav-map-select').value;
+  $('nav-initial').disabled = !alive || !slamRunning;
+  const ready = Boolean(goal?.available);
+  text('nav-state', !alive ? '연결 대기' : nav ? nav.managed && nav.state === 'running' ? ready ? '준비 완료' : '서버 활성화 대기…' : labels[nav.state] || nav.state : '상태 수신 대기');
+  text('nav-hint', !alive ? '' : nav?.error || (maps.nav2_installed === false ? 'Nav2 미설치' : !slamRunning ? 'SLAM 먼저' : ''));
+  $('nav-hint').title = nav?.log || '';
+  badge('nav-pill', !alive ? '대기' : navRunning ? ready ? goal?.state === 'active' ? 'DRIVING' : 'READY' : 'STARTING' : nav?.state === 'error' ? 'ERROR' : 'OFF', navRunning && ready ? 'live' : nav?.state === 'error' ? 'error' : 'waiting');
+  const navBusy = !alive || servicePending.has('navigation') || nav?.busy;
+  $('nav-start').disabled = navBusy || navRunning || !slamRunning || maps.nav2_installed === false;
+  $('nav-stop').disabled = navBusy || !nav?.managed;
+  const goalLabels = { idle: '목표 없음', sending: '목표 전송 중', active: '이동 중', canceling: '취소 중', succeeded: '도착', aborted: '실패', canceled: '취소됨', rejected: '거부됨', error: '오류' };
+  text('goal-state', goal ? (goalLabels[goal.state] || goal.state) + (goal.goal ? ` · (${fmt(goal.goal.x, 2)}, ${fmt(goal.goal.y, 2)})` : '') : '목표 없음');
+  text('goal-hint', goal?.state === 'active' ? `남은 거리 ${fmt(goal.distance, 2)} m · 예상 ${fmt(goal.eta, 0)} s · 복구 ${goal.recoveries ?? 0}회` : goal && goal.state !== 'idle' ? goal.message : '');
+  $('nav-goal').disabled = !alive || !navRunning || !ready;
+  $('nav-cancel').disabled = !alive || !goal || !['active', 'sending', 'canceling'].includes(goal.state);
+  if (pick.mode === 'goal' && $('nav-goal').disabled) setPick(null);
+  if (pick.mode === 'initial' && $('nav-initial').disabled) setPick(null);
+}
+let savedMode = 'observe';
+try { savedMode = localStorage.getItem('inha-cc-mode') || 'observe'; } catch { /* storage unavailable */ }
+setMode(savedMode);
 connect();
