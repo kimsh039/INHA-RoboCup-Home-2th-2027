@@ -40,6 +40,12 @@ ROI 재검출·단일 목표 추적은 기본 화면에서 사용하지 않는�
 카메라·LiDAR·모터 관련 기존 관제 수정 사항과는 독립적인 검출 실행기다.
 
 신뢰도는 **cup=0.50 / banana=0.50 / 나머지=0.25**, NMS IoU=0.7이다.
+클래스 매핑과 신뢰도 필터를 거친 후보 중 **클래스별 최고 신뢰도 박스 하나만**
+남긴다. 동일 클래스 후보가 여러 개여도 위치·겹침 여부와 무관하게 하나만
+표시·발행하며, 동일 신뢰도라면 먼저 나온 후보를 유지한다. 후보가 없는
+클래스에는 박스를 만들지 않는다. 따라서 전체 출력은 최대 6개다.
+이 규칙은 공통 YOLO adapter에서 적용되어 관제센터, ROS 노드, 순수 디텍션
+미리보기와 선택형 KCF 미리보기에 동일하게 적용된다. 엔진 재생성은 필요 없다.
 관제 실행기는 `~/venvs/head_detection/bin/python`을 기본으로 사용한다.
 `ROBOCUP_MODEL`을 명시하면 그 경로가 우선하므로 삭제된 이전 모델을 지정하지 않는다.
 
@@ -66,6 +72,33 @@ Linux PC에서 아래 명령을 실행하면 브라우저 자동 열기 실행�
 ```bash
 bash SW/detection/head/scripts/install_detection_helpers.sh --local
 ```
+
+Linux Ubuntu PC의 OpenCV 창으로 보려면 `~/.local/bin/robocup-detection-window`를
+실행한다. 시스템 Python에 GUI 지원 OpenCV와 NumPy가 필요하다. 브라우저를
+열지 않으며 기존 Jetson MJPEG 영상만 받아 최신 프레임을 표시한다.
+전송은 기존 SSH 터널을 사용하고 YOLO를 추가 실행하지 않는다.
+종료는 창에서 Q / Esc 또는 터미널 Ctrl+C다. 터미널 Window FPS는
+이 창에 새로 전달한 영상 수이며 디텍션 FPS와 별개다.
+현재 사용 설정은 미리보기 최대 15FPS다. Camera/Detection FPS와 구분한다.
+관제 디텍션이 실행 중이면 그 결과를 재사용하며, 별도 YOLO를 실행하지 않는다.
+Jetson에서 미리보기를 시작하고 PC에서 팝업을 열려면 아래처럼 실행한다.
+
+```bash
+# Jetson SSH 터미널: Camera / Detection / Preview FPS 출력
+~/robot_setup/bin/head-detection-test --preview-fps 15
+
+# Ubuntu PC 로컬 터미널: OpenCV 영상 창 + Window FPS 출력
+~/.local/bin/robocup-detection-window
+```
+
+원본 미리보기 제한은 그대로 적용되므로 더 높은 전송률을 비교하려면
+Jetson의 기존 미리보기 실행을 Ctrl+C로 종료한 뒤
+`~/robot_setup/bin/head-detection-test --preview-fps 30`으로 다시 실행한다.
+30FPS 설정은 더 많은 JPEG 생성·전송 작업을 요구하며, 카메라·검출·화면의
+실제 FPS가 30이 되는 것을 보장하지 않는다. 2026-10-13 현장 진단에서는
+추론 시간 약 24~27ms인 상태에서도 독립 카메라 구독률이 약 8~25FPS로
+흔들렸고 카메라 USB 통신 오류가 기록됐다. USB 오류가 해당 하락의 직접
+원인인지는 확정하지 않았다.
 
 Jetson에서는 아래 명령으로 카메라·디텍션 도우미를 설치한다.
 현재 배포 경로인 `~/INHA-RoboCup-Home-2th-2027`과

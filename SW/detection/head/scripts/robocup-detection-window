@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+# Local Ubuntu OpenCV window; reuse Jetson detection without launching a browser.
+set -e
+target=sparo@192.168.50.70
+control=/tmp/robocup-ssh-control
+url=http://127.0.0.1:8787/
+if ! ssh -S "$control" -O check "$target" >/dev/null 2>&1; then
+  ssh -fN -M -S "$control" -o ControlPersist=yes "$target"
+fi
+if ! curl -fsS --max-time 2 "$url" >/dev/null 2>&1; then
+  ssh -S "$control" -O forward -L 8787:127.0.0.1:8787 "$target"
+fi
+if ! curl -fsS --max-time 2 "$url" >/dev/null 2>&1; then
+  echo 'Jetson SSH 터미널에서 ~/robot_setup/bin/head-detection-test --preview-fps 30 을 먼저 실행하세요.' >&2
+  exit 1
+fi
+exec /usr/bin/python3 "$HOME/.local/share/robocup/native_detection_window.py" "$@"
