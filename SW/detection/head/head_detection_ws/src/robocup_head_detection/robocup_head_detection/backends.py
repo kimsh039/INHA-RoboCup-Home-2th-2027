@@ -63,7 +63,7 @@ class YoloDetector:
         # masks.xy is scaled by Ultralytics to the input crop coordinates.
         # rasterize there, then embed into the ORIGINAL RGB grid.
         polygons = result.masks.xy if result.masks is not None else None
-        output = []
+        best_by_class = {}
         mapping = class_mapping(result.names)
         for index, item in enumerate(result.boxes):
             left, top, right, bottom = item.xyxy[0].tolist()
@@ -79,6 +79,10 @@ class YoloDetector:
             if (class_name == "banana" and self.banana_confidence is not None
                     and confidence < self.banana_confidence):
                 continue
+            # Keep only the highest-confidence candidate of each mapped class.
+            previous = best_by_class.get(class_id)
+            if previous is not None and previous.confidence >= confidence:
+                continue
             mask = None
             if polygons is not None and index < len(polygons):
                 points = np.asarray(polygons[index])
@@ -87,9 +91,9 @@ class YoloDetector:
                     cv2.fillPoly(local_mask, [np.rint(points).astype(np.int32)], 255)
                     mask = np.zeros((height, width), np.uint8)
                     mask[y0:y1, x0:x1] = local_mask
-            output.append(Box(left+x0, top+y0, right-left, bottom-top,
-                              class_id, class_name, confidence, mask))
-        return output
+            best_by_class[class_id] = Box(left+x0, top+y0, right-left, bottom-top,
+                                          class_id, class_name, confidence, mask)
+        return list(best_by_class.values())
 
 
 def tracker_constructor(kind):

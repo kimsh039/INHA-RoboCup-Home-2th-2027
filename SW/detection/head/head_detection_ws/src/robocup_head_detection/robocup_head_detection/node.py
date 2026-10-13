@@ -17,6 +17,7 @@ from robocup_detection_msgs.msg import HeadTarget
 from .backends import YoloDetector, make_tracker_factory
 from .core import Config, HeadPipeline, Observation, roi_bounds
 from .images import decode_compressed, decode_raw
+from .model_paths import current_model_path
 
 
 def stamp_seconds(stamp):
@@ -27,10 +28,12 @@ class HeadDetectionNode(Node):
     def __init__(self):
         super().__init__("head_detection_node")
         defaults = {
-            "model_path": os.environ.get("ROBOCUP_MODEL", ""),
-            "device": os.environ.get("ROBOCUP_DEVICE", "cpu"),
-            "task": "detect", "confidence": 0.25, "cup_confidence": 0.70,
+            "model_path": str(current_model_path()),
+            "device": os.environ.get("ROBOCUP_DEVICE", "0"),
+            "task": "detect", "confidence": 0.25, "cup_confidence": 0.50,
+            "banana_confidence": 0.50,
             "nms_iou": 0.7, "imgsz": 640,
+            "detection_only": True,
             "target_class": "", "tracker_type": "CSRT", "confirm_frames": 3,
             "redetect_interval": 5, "roi_margin": 2.0, "match_iou": 0.25,
             "max_unconfirmed": 2, "max_verification_age": 0.5, "max_frame_gap": 0.5,
@@ -49,6 +52,8 @@ class HeadDetectionNode(Node):
             raise ValueError("confidence/nms_iou must be in (0,1]")
         if not 0 <= get("cup_confidence") <= 1:
             raise ValueError("cup_confidence must be in [0,1]")
+        if not 0 <= get("banana_confidence") <= 1:
+            raise ValueError("banana_confidence must be in [0,1]")
         if get("imgsz") < 32 or get("imgsz") % 32:
             raise ValueError("imgsz must be a positive multiple of 32")
         if get("input_timeout") <= 0 or get("max_input_age") <= 0:
@@ -56,8 +61,12 @@ class HeadDetectionNode(Node):
         config = Config(**{name: get(name) for name in Config.__dataclass_fields__})
         detector = YoloDetector(get("model_path"), get("confidence"), get("nms_iou"),
                                 get("imgsz"), get("device"), get("task"),
-                                cup_confidence=get("cup_confidence"))
-        self.pipeline = HeadPipeline(detector, make_tracker_factory(get("tracker_type")), config)
+                                cup_confidence=get("cup_confidence"),
+                                banana_confidence=get("banana_confidence"))
+        self.detector, self.detection_only = detector, get("detection_only")
+        self.target_class, self.detection_counter = get("target_class"), 0
+        self.pipeline = (None if self.detection_only else
+                         HeadPipeline(detector, make_tracker_factory(get("tracker_type")), config))
         if not detector.ready:
             self.get_logger().warning(detector.error)
         self.session = uuid.uuid4().hex[:12]
@@ -76,10 +85,15 @@ class HeadDetectionNode(Node):
         self.create_subscription(message_type, get("input_topic"), self.on_image, sensor_qos)
         self.create_timer(0.1, self.watchdog)
         self.get_logger().info(f"Head detection ready: {get('input_topic')} -> {get('target_topic')}")
+        self.get_logger().info(f"Model: {get('model_path')} | mode={'FULL_FRAME_DETECT' if self.detection_only else 'ROI_TRACK'}")
+
+    def reset_pipeline(self):
+        if self.pipeline is not None:
+            self.pipeline.reset()
 
     def watchdog(self):
         if time.monotonic()-self.last_received > self.timeout and not self.timeout_reported:
-            self.pipeline.reset()
+            self.reset_pipeline()
             self.publish(Observation("WAITING_IMAGE", "INPUT_TIMEOUT"), self.last_header)
             self.timeout_reported = True
 
@@ -89,33 +103,58 @@ class HeadDetectionNode(Node):
         self.timeout_reported = False
         age = self.get_clock().now().nanoseconds/1e9 - stamp_seconds(msg.header.stamp)
         if age > self.max_input_age or age < -self.max_input_age:
-            self.pipeline.reset()
+            self.reset_pipeline()
             self.publish(Observation("LOST", "STALE_OR_FUTURE_IMAGE"), msg.header)
             return
         try:
             frame = decode_compressed(msg) if self.compressed else decode_raw(msg)
         except (ValueError, cv2.error) as exc:
-            self.pipeline.reset()
+            self.reset_pipeline()
             self.publish(Observation("LOST", f"INVALID_IMAGE:{exc}"), msg.header)
             return
-        observation = self.pipeline.step(frame, stamp_seconds(msg.header.stamp))
+        boxes = []
+        if self.detection_only:
+            if not self.detector.ready:
+                observation = Observation("WAITING_MODEL", "MODEL_NOT_READY")
+            else:
+                try:
+                    height, width = frame.shape[:2]
+                    boxes = [box.clipped(width, height) for box in self.detector.detect(frame)]
+                    boxes = [box for box in boxes if box is not None]
+                    candidates = [box for box in boxes if not self.target_class or
+                                  box.class_name == self.target_class]
+                    chosen = max(candidates, key=lambda box: box.confidence) if candidates else None
+                    self.detection_counter += 1
+                    observation = Observation("DETECTED" if chosen else "SEARCH",
+                        "" if chosen else "TARGET_NOT_FOUND", chosen,
+                        f"detection-{self.detection_counter}" if chosen else "",
+                        bool(chosen), True, stamp_seconds(msg.header.stamp))
+                except Exception as exc:
+                    boxes = []
+                    observation = Observation("LOST", f"PROCESSING_ERROR:{type(exc).__name__}:{exc}")
+        else:
+            observation = self.pipeline.step(frame, stamp_seconds(msg.header.stamp))
         elapsed = (time.perf_counter()-start)*1000
         # A slow inference must not publish a currently-valid control observation.
         completion_age = self.get_clock().now().nanoseconds/1e9-stamp_seconds(msg.header.stamp)
         if completion_age > self.max_input_age:
-            self.pipeline.reset()
+            self.reset_pipeline()
+            boxes = []
             observation = Observation("LOST", "RESULT_TOO_OLD")
         self.publish(observation, msg.header, elapsed)
         if observation.reason.startswith("PROCESSING_ERROR"):
             self.get_logger().error(observation.reason, throttle_duration_sec=2.0)
         if self.debug_pub.get_subscription_count():
             debug = frame.copy()
-            box = observation.box
-            if box:
+            visible = boxes if self.detection_only else ([observation.box] if observation.box else [])
+            for box in visible:
                 x, y, w, h = (round(v) for v in (box.x, box.y, box.width, box.height))
                 cv2.rectangle(debug, (x, y), (x+w, y+h), (0, 255, 0), 2)
-                x0, y0, x1, y1 = roi_bounds(box, frame.shape[1], frame.shape[0], self.pipeline.cfg.roi_margin)
-                cv2.rectangle(debug, (x0, y0), (x1, y1), (255, 180, 0), 1)
+                cv2.putText(debug, f"{box.class_name} {box.confidence:.2f}",
+                            (max(0, x), max(45, y-5)), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
+                if not self.detection_only:
+                    x0, y0, x1, y1 = roi_bounds(box, frame.shape[1], frame.shape[0], self.pipeline.cfg.roi_margin)
+                    cv2.rectangle(debug, (x0, y0), (x1, y1), (255, 180, 0), 1)
             text = f"{observation.state} YOLO={observation.measured} {elapsed:.1f}ms"
             cv2.putText(debug, text, (10, 25), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 255), 2)
             self.debug_pub.publish(self.image_message(debug, msg.header, "bgr8"))

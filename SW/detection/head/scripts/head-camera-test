@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+set -e
+exec bash "$HOME/INHA-RoboCup-Home-2th-2027/SW/detection/head/test/start_head_camera.sh" "$@"

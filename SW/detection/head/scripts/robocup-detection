@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+set -e
+
+target=sparo@192.168.50.70
+control=/tmp/robocup-ssh-control
+url=http://127.0.0.1:8787/
+
+if ! ssh -S "$control" -O check "$target" >/dev/null 2>&1; then
+  ssh -fN -M -S "$control" -o ControlPersist=yes "$target"
+fi
+
+# An existing tunnel may already serve the preview.
+if ! curl -fsS --max-time 2 "$url" >/dev/null 2>&1; then
+  ssh -S "$control" -O forward -L 8787:127.0.0.1:8787 "$target"
+fi
+
+if curl -fsS --max-time 2 "$url" >/dev/null 2>&1; then
+  xdg-open "$url" >/dev/null 2>&1 &
+  echo '기존 디텍션 화면을 열었습니다. FPS는 기존 디텍션 터미널에 표시됩니다.'
+  if (( $# )); then echo '새 옵션을 적용하려면 기존 디텍션을 Ctrl+C로 종료하고 다시 실행하세요.'; fi
+  exit 0
+fi
+
+# Open the local browser as soon as remote model warmup completes.
+(
+  for ((attempt=0; attempt<120; attempt++)); do
+    if curl -fsS --max-time 2 "$url" >/dev/null 2>&1; then
+      xdg-open "$url" >/dev/null 2>&1
+      exit 0
+    fi
+    sleep 1
+  done
+  echo '화면 서버 대기 시간 초과. 디텍션 터미널 오류를 확인하세요.' >&2
+) &
+browser_waiter=$!
+trap 'kill "$browser_waiter" 2>/dev/null || true' EXIT
+
+echo '디텍션을 시작합니다. 브라우저가 자동으로 열리고 이 터미널에 FPS가 표시됩니다.'
+detection_args=''
+if (( $# > 0 )); then
+  printf -v detection_args '%q ' "$@"
+fi
+ssh -tt -S "$control" "$target" "bash ~/robot_setup/bin/head-detection-test $detection_args"

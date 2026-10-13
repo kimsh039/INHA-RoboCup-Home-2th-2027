@@ -15,12 +15,13 @@ sys.path.insert(0, str(HEAD / 'scripts'))
 from follow_control import Controller, Decision, Settings, decode_depth, fresh_command
 from live_ros_viewer import Preview, make_server
 from camera_topics import input_status, select_topics
+from robocup_head_detection.model_paths import current_model_path
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--target', choices=['green_apple', 'peach', 'tomato', 'fanta_can', 'cup', 'banana'], default='banana')
-    parser.add_argument('--model', type=Path, default=HEAD / 'models/head_yolo11n_20261007.pt')
+    parser.add_argument('--model', type=Path, default=current_model_path(HEAD))
     parser.add_argument('--rgb', help='Explicit RGB topic; also supply --depth')
     parser.add_argument('--depth', help='Explicit aligned depth topic; also supply --rgb')
     parser.add_argument('--device', default='0')

@@ -8,6 +8,7 @@ from launch.actions import DeclareLaunchArgument
 from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
 from launch_ros.parameter_descriptions import ParameterValue
+from robocup_head_detection.model_paths import current_model_path
 
 
 def generate_launch_description():
@@ -15,8 +16,8 @@ def generate_launch_description():
                  "config" / "head_detection.yaml")
     return LaunchDescription([
         DeclareLaunchArgument("config", default_value=config),
-        DeclareLaunchArgument("model_path", default_value=os.environ.get("ROBOCUP_MODEL", "")),
-        DeclareLaunchArgument("device", default_value=os.environ.get("ROBOCUP_DEVICE", "cpu")),
+        DeclareLaunchArgument("model_path", default_value=str(current_model_path())),
+        DeclareLaunchArgument("device", default_value=os.environ.get("ROBOCUP_DEVICE", "0")),
         DeclareLaunchArgument("use_sim_time", default_value="false"),
         DeclareLaunchArgument("python_executable", default_value=sys.executable),
         Node(package="robocup_head_detection", executable="head_detection_node",
