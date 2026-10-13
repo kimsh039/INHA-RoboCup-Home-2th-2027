@@ -48,6 +48,7 @@ class State:
         self.logs = deque(maxlen=60)
         self.pending = {}
         self.sensor_manager = None
+        self.navigation_request = None  # set by the ROS bridge; queues goal / cancel / initial pose
         self.control_token = secrets.token_urlsafe(32)
         self.map_png = None
         self.clients = 0
@@ -174,7 +175,7 @@ def make_server(state, host='127.0.0.1', port=8765):
 
         def do_POST(self):
             path = urlparse(self.path).path
-            if path not in ('/api/select', '/api/sensors', '/api/shutdown'):
+            if path not in ('/api/select', '/api/sensors', '/api/shutdown', '/api/mapping', '/api/navigation'):
                 self.send_json({'error': 'Not found'}, 404)
                 return
             if state.mode != 'live':
@@ -214,6 +215,37 @@ def make_server(state, host='127.0.0.1', port=8765):
                     if set(items) != {'sensor', 'action'} or not all(isinstance(v, str) for v in items.values()):
                         raise ValueError('sensor와 action 문자열을 지정하세요.')
                     state.sensor_manager.request(items['sensor'], items['action'])
+                    self.send_json({'queued': items}, 202)
+                    return
+                if path in ('/api/mapping', '/api/navigation'):
+                    if not state.sensor_manager:
+                        self.send_json({'error': '프로세스 관리자가 없습니다.'}, 409)
+                        return
+                    action = items.get('action')
+                    if path == '/api/mapping':
+                        if action == 'save':
+                            state.sensor_manager.save_map(items.get('name'))
+                        elif action in ('start', 'stop', 'reset', 'localize'):
+                            state.sensor_manager.service_request('mapping', action, items.get('map', ''))
+                        else:
+                            raise ValueError('action은 start/stop/reset/localize/save 중 하나입니다.')
+                    elif action in ('start', 'stop'):
+                        state.sensor_manager.service_request('navigation', action)
+                    elif action in ('goal', 'cancel', 'initial_pose'):
+                        if not state.navigation_request:
+                            raise RuntimeError('ROS 내비게이션 연결이 준비되지 않았습니다.')
+                        request = dict(action=action)
+                        if action != 'cancel':
+                            values = [items.get(k) for k in ('x', 'y', 'yaw')]
+                            if not all(isinstance(v, (int, float)) and not isinstance(v, bool) and math.isfinite(v)
+                                       for v in values) or max(abs(values[0]), abs(values[1])) > 500:
+                                raise ValueError('x, y, yaw 숫자를 지정하세요.')
+                            request.update(x=float(values[0]), y=float(values[1]), yaw=float(values[2]))
+                        if action == 'goal' and not state.sensor_manager.navigation_available():
+                            raise RuntimeError('Nav2가 실행 중이 아닙니다. 먼저 Nav2를 시작하세요.')
+                        state.navigation_request(request)
+                    else:
+                        raise ValueError('action은 start/stop/goal/cancel/initial_pose 중 하나입니다.')
                     self.send_json({'queued': items}, 202)
                     return
                 for key, topic in items.items():
