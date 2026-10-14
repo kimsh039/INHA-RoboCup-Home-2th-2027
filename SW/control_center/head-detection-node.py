@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Expose the current Head detector's full-frame objects and FPS to the control center."""
+import array
 import json
 import math
 from pathlib import Path
@@ -30,7 +31,7 @@ class HeadObjects(Node):
                         objects_topic='/detection/head/objects', debug_topic='/detection/head/debug_image',
                         model_path=str(current_model_path()), device='0', confidence=0.25,
                         cup_confidence=0.50, banana_confidence=0.50, nms_iou=0.7, imgsz=640,
-                        input_timeout=1.0, max_input_age=1.0)
+                        input_timeout=1.0, max_input_age=1.0, debug_hz=6.0)
         for key, value in defaults.items():
             self.declare_parameter(key, value)
         get = lambda key: self.get_parameter(key).value
@@ -41,6 +42,9 @@ class HeadObjects(Node):
         if get('imgsz') < 32 or get('imgsz') % 32:
             raise ValueError('imgsz must be a positive multiple of 32')
         self.timeout, self.max_age = get('input_timeout'), get('max_input_age')
+        # Objects go out for every frame; the annotated image only for viewers (control center shows ~6 Hz).
+        self.debug_period = 1.0 / get('debug_hz') if get('debug_hz') > 0 else 0.0
+        self.last_debug = 0.0
         image_qos = QoSProfile(depth=1, reliability=ReliabilityPolicy.BEST_EFFORT)
         self.objects_pub = self.create_publisher(String, get('objects_topic'), 10)
         self.debug_pub = self.create_publisher(Image, get('debug_topic'), image_qos)
@@ -139,13 +143,15 @@ class HeadObjects(Node):
                     return
                 self.publish('DETECTED' if objects else 'SEARCH', msg=msg, objects=objects,
                              processing_ms=processing_ms, processing_total_ms=(time.perf_counter() - start) * 1000)
-                if self.debug_pub.get_subscription_count():
+                if self.debug_pub.get_subscription_count() and time.monotonic() - self.last_debug >= self.debug_period:
+                    self.last_debug = time.monotonic()
                     cv2.putText(frame, f'Camera {self.camera_fps:.1f} FPS | YOLO {self.detection_fps:.1f} FPS',
                                 (10, 24), cv2.FONT_HERSHEY_SIMPLEX, 0.55, (0, 255, 255), 2)
                     image = Image()
                     image.header, image.encoding = msg.header, 'bgr8'
                     image.height, image.width = frame.shape[:2]
-                    image.step, image.is_bigendian, image.data = image.width * 3, 0, frame.tobytes()
+                    # array.array skips rclpy's per-element uint8 check on bytes (about 175 ms per 640x480 frame on the Orin).
+                    image.step, image.is_bigendian, image.data = image.width * 3, 0, array.array('B', frame.tobytes())
                     self.debug_pub.publish(image)
                 self.error = ''
             except Exception as exc:
