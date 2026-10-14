@@ -79,10 +79,9 @@ def run(args):
             super().__init__('inha_control_center')
             self.cv = CvBridge()
             self.tf = Buffer()
-            # TF gets its own node and thread: on the bridge's executor it queued behind image and cloud
-            # callbacks, so lookups at sensor stamps extrapolated and the display frame flickered.
-            self.tf_node = rclpy.create_node('inha_control_center_tf')
-            self.listener = TransformListener(self.tf, self.tf_node, spin_thread=True)
+            # TF stays on the bridge executor: a separate spin thread starved every other channel (~2 Hz).
+            # Lookups at sensor stamps may lag; display_transform falls back to the latest TF in a steady frame.
+            self.listener = TransformListener(self.tf, self)
             self.bound, self.overrides, self.last_processed = {}, {}, {}
             self.cloud_history = CloudHistory(config)
             self.trail = deque(maxlen=1200)
@@ -217,11 +216,13 @@ def run(args):
             try:
                 rotation, offset = self.transform(source, stamp, target='odom')
             except Exception:
-                try:  # stamp outside the buffer: latest fixed-frame pose keeps the frame steady
-                    rotation, offset = self.transform(source, target=self.fixed)
-                    return rotation, offset, self.fixed
-                except Exception:
-                    return None, None, source
+                for target in (self.fixed, 'odom'):  # stamp outside the buffer: latest TF in a steady frame
+                    try:
+                        rotation, offset = self.transform(source, target=target)
+                        return rotation, offset, target
+                    except Exception:
+                        continue
+                return None, None, source
             if self.fixed != 'odom':
                 try:
                     tf = self.tf.lookup_transform(self.fixed, 'odom', Time()).transform
@@ -391,6 +392,8 @@ def run(args):
                     points, metadata = self.cloud_history.add(
                         key, points, frame, msg.header.frame_id, stamp, self.bound[key][0],
                         msg.width * msg.height, stable)
+                    if points is None:
+                        return  # accumulated cloud is rebuilt at most every cloud_accumulated_period_sec
                     state.put(key, dict(points=points.round(3).tolist(), frame=frame,
                                         source_frame=msg.header.frame_id,
                                         point_size=max(1.0, min(6.0, float(config.get('cloud_point_size', 2.0)))),
