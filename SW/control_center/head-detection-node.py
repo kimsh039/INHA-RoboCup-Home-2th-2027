@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Expose the current Head detector's full-frame objects and FPS to the control center."""
+import array
 import json
 import math
 from pathlib import Path
@@ -145,7 +146,8 @@ class HeadObjects(Node):
                     image = Image()
                     image.header, image.encoding = msg.header, 'bgr8'
                     image.height, image.width = frame.shape[:2]
-                    image.step, image.is_bigendian, image.data = image.width * 3, 0, frame.tobytes()
+                    # array.array skips rclpy's per-element uint8 check on bytes (about 175 ms per 640x480 frame on the Orin).
+                    image.step, image.is_bigendian, image.data = image.width * 3, 0, array.array('B', frame.tobytes())
                     self.debug_pub.publish(image)
                 self.error = ''
             except Exception as exc:
