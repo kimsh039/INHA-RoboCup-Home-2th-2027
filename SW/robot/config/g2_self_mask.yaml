@@ -1,0 +1,14 @@
+# G2 self-occlusion mask: /scan_raw beams inside these angle ranges (deg, laser_frame, inclusive) are
+# published as NaN on /scan (unknown; no matching point or obstacle-clearing ray).
+# Measured 2026-10-14, robot stationary, 73 scans: runs of >= 2 beams that hit the rack posts (< 0.35 m)
+# or never return (post edge shadows), widened by 1.5 deg; edge beams there jumped up to 1.6 m.
+# These interval widths sum to 120.4 deg. Re-measure after changing the rack, G2 mount or arm rest pose.
+sectors_deg:
+  - [-175.9, -161.6]
+  - [-140.5, -120.8]
+  - [-97.0, -75.2]
+  - [-71.8, -68.4]
+  - [58.9, 69.8]
+  - [73.8, 97.7]
+  - [117.4, 139.8]
+  - [167.8, 171.8]

@@ -1,0 +1,24 @@
+# Trial 시작값. 보정된 robot.measured.yaml 위에 적용한다. 코드 변경 불필요.
+# D435 depth 848x480 조건의 추천값; 실물 성공/최적값은 아니다.
+# [TUNE:OBSERVATION] Object TOP to lens distance in meters.
+observation_surface_clearance_m: 0.25
+# [TUNE:MOTION] Change clearances and speeds between trials.
+pregrasp_m: 0.10
+lift_m: 0.12
+retreat_m: 0.10
+place_offset_m: 0.10
+velocity_scale: 0.05
+acceleration_scale: 0.05
+stage_timeout_s: 120.0
+observation_timeout_s: 5.0
+observation_retries: 1
+# [TUNE:GRIPPER] Search here for each class open/close width.
+classes:
+  green_apple: {open_m: 0.100, close_m: 0.079, grip_height_m: 0.034}
+  peach: {open_m: 0.100, close_m: 0.079, grip_height_m: 0.034}
+  tomato: {open_m: 0.100, close_m: 0.082, grip_height_m: 0.034}
+  fanta_can: {open_m: 0.080, close_m: 0.064, grip_height_m: 0.062}
+  cup: {open_m: 0.100, close_m: 0.090, grip_height_m: 0.039}
+  banana: {open_m: 0.040, close_m: 0.026}
+# [TUNE:GRASP_HEIGHT] Midpoint initial grip heights; tune between trials.
+# center_height_m stays in robot config: geometry, distinct from tuned contact height.

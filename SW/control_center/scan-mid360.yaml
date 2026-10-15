@@ -1,0 +1,18 @@
+# pointcloud_to_laserscan: 2D scan for SLAM from the Mid-360S cloud (see slam-scan.sh).
+# Heights are in base_link: the floor is at z = -0.1425, so 0.1075 .. 1.0575 = 0.25 .. 1.20 m above the floor
+# (partitions, walls, table tops; not the floor, ceiling or high shelves). range_min 0.55 drops the mast and the
+# folded arm. Measured 2026-10-14: ~328 deg of 360 per 10 Hz frame, 7.6 mm frame-to-frame jitter at rest.
+scan_mid360:
+  ros__parameters:
+    target_frame: base_link
+    transform_tolerance: 0.05
+    min_height: 0.1075
+    max_height: 1.0575
+    angle_min: -3.14159
+    angle_max: 3.14159
+    angle_increment: 0.017453
+    scan_time: 0.1
+    range_min: 0.55
+    range_max: 15.0
+    use_inf: true
+    inf_epsilon: 1.0

@@ -1,0 +1,15 @@
+slam_global_initializer:
+  ros__parameters:
+    translation_step: 0.25
+    heading_step: 0.0872664626 # 5 degrees, full 360-degree search
+    sigma: 0.12
+    max_beams: 120
+    minimum_valid_beams: 40
+    refine_candidates: 8
+    match_distance: 0.20
+    minimum_score: 0.60
+    minimum_matched_fraction: 0.65
+    minimum_score_margin: 0.08
+    retry_interval: 3.0
+    confirmation_timeout: 8.0
+    scan_max_age: 1.0

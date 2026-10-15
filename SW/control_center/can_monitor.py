@@ -96,6 +96,11 @@ class CanMonitor:
             status['state'] = 'down'
         elif status['bitrate'] != bitrate:
             status.update(state='mismatch', error='bitrate 불일치 · 관제센터 kill 후 setup-can.sh 실행 필요')
+        elif status['bus_state'] in ('ERROR-WARNING', 'ERROR-PASSIVE'):
+            # Leave passive feedback readers attached so they recover on valid
+            # frames, but do not present an errored interface as a healthy bus.
+            status.update(state='warning', ready=True,
+                          error='CAN '+status['bus_state']+' · 장치 응답/배선/전원과 인터페이스 재연결 확인 필요')
         else:
             status.update(state='up', ready=True)
         return status

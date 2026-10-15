@@ -48,7 +48,7 @@ class State:
         self.logs = deque(maxlen=60)
         self.pending = {}
         self.sensor_manager = None
-        self.navigation_request = None  # set by the ROS bridge; queues goal / cancel / initial pose
+        self.navigation_request = None  # set by the ROS bridge; queues goal / cancel
         self.control_token = secrets.token_urlsafe(32)
         self.map_png = None
         self.clients = 0
@@ -231,7 +231,7 @@ def make_server(state, host='127.0.0.1', port=8765):
                             raise ValueError('action은 start/stop/reset/localize/save 중 하나입니다.')
                     elif action in ('start', 'stop'):
                         state.sensor_manager.service_request('navigation', action)
-                    elif action in ('goal', 'cancel', 'initial_pose'):
+                    elif action in ('goal', 'cancel'):
                         if not state.navigation_request:
                             raise RuntimeError('ROS 내비게이션 연결이 준비되지 않았습니다.')
                         request = dict(action=action)
@@ -243,9 +243,11 @@ def make_server(state, host='127.0.0.1', port=8765):
                             request.update(x=float(values[0]), y=float(values[1]), yaw=float(values[2]))
                         if action == 'goal' and not state.sensor_manager.navigation_available():
                             raise RuntimeError('Nav2가 실행 중이 아닙니다. 먼저 Nav2를 시작하세요.')
+                        if action == 'goal':
+                            state.sensor_manager.require_collision_ready()
                         state.navigation_request(request)
                     else:
-                        raise ValueError('action은 start/stop/goal/cancel/initial_pose 중 하나입니다.')
+                        raise ValueError('action은 start/stop/goal/cancel 중 하나입니다.')
                     self.send_json({'queued': items}, 202)
                     return
                 for key, topic in items.items():

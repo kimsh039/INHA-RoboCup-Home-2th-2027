@@ -1,0 +1,6 @@
+__pycache__/
+*.py[cod]
+*.before_*
+manipulation_ws/build/
+manipulation_ws/install/
+manipulation_ws/log/

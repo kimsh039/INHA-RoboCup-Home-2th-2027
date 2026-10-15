@@ -1,0 +1,81 @@
+# Minimum clearance is from URDF Tracer surfaces, NOT base_link / LiDAR origin.
+# The same margin is used for protruding rack/arm collision boxes.
+/**:
+  ros__parameters:
+    base_frame: base_link
+    odom_frame: odom
+    odom_topic: /odom_ekf
+    joint_topic: /robot/joint_states
+    clearance: 0.10
+    uncertainty_margin: 0.05
+    floor_z: -0.1425
+    floor_band: 0.02
+    floor_fit_radius: 3.0
+    floor_fit_interval: 0.25
+    floor_model_timeout: 2.0
+    floor_fit_distance: 0.012
+    floor_max_tilt_deg: 5.0
+    floor_max_offset: 0.05
+    floor_min_inlier_ratio: 0.55
+    max_obstacle_height: 2.10
+    max_range: 4.0
+    safety_voxel: 0.04
+    self_padding: 0.005
+    # Body/wheel allowance includes the recorded return 11 mm beyond the rear.
+    base_self_padding: 0.02
+    # Include wiring and open space enclosed by the assembled URDF rack.
+    mask_rack_interior: true
+    # Rack-only assembly/calibration allowance, including the recorded 2 cm returns.
+    rack_self_padding: 0.03
+    # 3D Euclidean radius about the MID-360 measurement frame, before deskew.
+    min_sensor_range: 0.15
+    # Remove only single returns with no other return within 5 cm in 3D.
+    # The query point is not counted. Zero neighbors disables this filter.
+    outlier_radius: 0.05
+    outlier_min_neighbors: 1
+    cloud_topic: /livox/lidar
+    filtered_topic: /mid360/points_filtered
+    obstacle_topic: /mid360/points_obstacles
+    # Distant valid returns also clear near cells along their measured rays.
+    clearing_topic: /mid360/points_clearing
+    safety_topic: /collision/points
+    cloud_status_topic: /collision/cloud_status
+    point_time_field: timestamp
+    point_time_format: absolute_ns
+    max_scan_duration: 0.25
+    max_pending_sec: 0.25
+    max_odom_gap_sec: 0.08
+    cloud_timeout: 0.40
+    odom_timeout: 0.20
+    joint_timeout: 0.50
+    require_arm_feedback: true
+    arm_motion_limit: 0.08
+    arm_settle_sec: 0.50
+    minimum_raw_points: 100
+    # All ROS commands (Nav2, behavior recovery, teleop) pass through this gate.
+    command_topic: /cmd_vel
+    approved_topic: /collision/cmd_vel_approved
+    protected_topic: /tracer/cmd_vel_safe
+    status_topic: /collision/status
+    command_timeout: 0.25
+    approval_timeout: 0.15
+    control_frequency: 20.0
+    reaction_time: 0.30
+    linear_deceleration: 0.50
+    angular_deceleration: 1.00
+    max_linear_velocity: 0.25
+    max_reverse_velocity: 0.15
+    max_angular_velocity: 0.60
+    prediction_step: 0.04
+    minimum_speed_scale: 0.10
+    computation_budget: 0.04
+    costmap_resolution: 0.05
+    # Recent obstacles persist across temporarily occluded scans. Expired cells
+    # are cleared only in newly observed rays, never merely because time passed.
+    memory_radius: 4.0
+    ray_clearance: 0.025
+    free_observations_to_clear: 3
+    odom_history_sec: 3.0
+    odom_queue_depth: 200
+    joint_queue_depth: 200
+    maximum_cells: 250000

@@ -55,9 +55,10 @@
         <div class="panel-header"><div><h3>NAV</h3><span class="tiny-pill" id="nav-pill" role="status">대기</span></div></div>
         <div class="mode-cards">
           <article class="mode-card"><span class="mode-card-title">위치</span><strong id="nav-localization">SLAM 상태 대기</strong><small id="nav-localization-hint"></small>
-            <div class="mode-actions"><select id="nav-map-select" aria-label="위치추정에 사용할 저장 지도"></select><button id="nav-localize">위치추정 시작</button><button id="nav-initial" data-pick="initial" title="지도에서 클릭 후 드래그로 방향 지정">초기 위치 지정</button></div></article>
+            <div class="mode-actions"><select id="nav-map-select" aria-label="위치추정에 사용할 저장 지도"></select><button id="nav-localize">자동 위치추정</button></div></article>
           <article class="mode-card"><span class="mode-card-title">Nav2</span><strong id="nav-state">상태 수신 대기</strong><small id="nav-hint">—</small>
             <div class="mode-actions"><button class="primary" id="nav-start">Nav2 시작</button><button id="nav-stop">중지</button></div></article>
+          <article class="mode-card"><span class="mode-card-title">3D 충돌 보호 · 로봇 외곽 거리</span><strong id="collision-state">보호 상태 대기</strong><small id="collision-distance">차체 기준 거리 —</small><small id="collision-point">장애물 측정 위치 대기</small><small id="collision-hint">MID-360 입력 대기</small></article>
           <article class="mode-card"><span class="mode-card-title">목표</span><strong id="goal-state">목표 없음</strong><small id="goal-hint"></small>
             <div class="mode-actions"><button class="primary" id="nav-goal" data-pick="goal">목표 지정</button><button class="danger" id="nav-cancel">이동 취소</button></div></article>
         </div>

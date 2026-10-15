@@ -1,0 +1,2 @@
+Starting >>> robocup_real_manipulation
+[0.186s] WARNING:colcon.colcon_ros.prefix_path.ament:The path '/tmp/manip_phase1_msgs_install' in the environment variable AMENT_PREFIX_PATH doesn't contain any 'local_setup.*' files.

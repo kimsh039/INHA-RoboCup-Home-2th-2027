@@ -1,0 +1,65 @@
+{
+  "source_repository": "kimsh039/INHA-RoboCup-Home-2th-2027",
+  "source_branch": "feature/wrist-handeye-calibration",
+  "source_commit": "0bac1e558075600d21c6b7273f26a6858266ea0d",
+  "source_path": "SW/simulation/calibration/wrist_handeye/wrist_handeye_calibration.yaml",
+  "source_sha256": "51f4a65d3aa3456ee6789d0975c2865ac86c804a2252e0a33e34a9283b3a25ce",
+  "dataset_sha256": "934137caf787812b7033ee18ed03d1b86f5da1c2af9f236f98985345b93e3e9e",
+  "source_yaml_repair": "Dedented validation mapping from transform_matrix; original preserved.",
+  "parent_frame": "piper_link6",
+  "child_frame": "wrist_camera_optical_frame",
+  "camera_serial": "243222070076",
+  "sample_count": 15,
+  "handeye_transform": {
+    "xyz": [
+      -0.063877,
+      0.028728,
+      -0.012631
+    ],
+    "quaternion_xyzw": [
+      0.018697999006341615,
+      -0.00532499971701621,
+      -0.705683962498191,
+      0.708259962361296
+    ]
+  },
+  "offline_reproduction": {
+    "translation_difference_mm": 0.0004956805758060722,
+    "rotation_difference_deg": 4.479577233553308e-05
+  },
+  "source_reported_validation": {
+    "park_vs_tsai": {
+      "translation_difference_mm": 3.471,
+      "rotation_difference_deg": 1.173
+    },
+    "live_handeye_validation": {
+      "validation_poses": 5,
+      "mean_position_deviation_mm": 9.37,
+      "max_position_deviation_mm": 12.71,
+      "mean_rotation_deviation_deg": 0.99,
+      "max_rotation_deviation_deg": 1.25,
+      "board_reprojection_rms_px": {
+        "min": 1.183,
+        "max": 1.838
+      }
+    },
+    "robot_fk_validation": {
+      "tested_poses": 3,
+      "position_error_mm": {
+        "min": 0.086,
+        "max": 0.09
+      },
+      "rotation_error_deg": {
+        "min": 0.0009,
+        "max": 0.0015
+      }
+    },
+    "notes": [
+      "Hand-eye calibration was validated in a moderate working range.",
+      "AprilTag board remained fixed during live validation.",
+      "Robot FK error was negligible compared with hand-eye residual error.",
+      "Calibration is suitable as the current working wrist-camera calibration, but it is not millimeter-level precision."
+    ]
+  },
+  "hardware_revalidated_in_this_task": false
+}

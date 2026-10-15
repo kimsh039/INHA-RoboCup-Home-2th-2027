@@ -1,0 +1,51 @@
+running build
+running build_py
+copying robocup_real_manipulation/core.py -> /tmp/phase1_direct_python_build/lib/robocup_real_manipulation
+copying robocup_real_manipulation/wrist_frontend.py -> /tmp/phase1_direct_python_build/lib/robocup_real_manipulation
+copying robocup_real_manipulation/tuning.py -> /tmp/phase1_direct_python_build/lib/robocup_real_manipulation
+copying robocup_real_manipulation/wrist_geometry.py -> /tmp/phase1_direct_python_build/lib/robocup_real_manipulation
+copying robocup_real_manipulation/head_input_adapter.py -> /tmp/phase1_direct_python_build/lib/robocup_real_manipulation
+copying robocup_real_manipulation/node.py -> /tmp/phase1_direct_python_build/lib/robocup_real_manipulation
+running install
+/usr/lib/python3/dist-packages/setuptools/command/install.py:34: SetuptoolsDeprecationWarning: setup.py install is deprecated. Use build and pip and other standards-based tools.
+  warnings.warn(
+running install_lib
+copying /tmp/phase1_direct_python_build/lib/robocup_real_manipulation/core.py -> /tmp/phase1_direct_python_install/lib/python3.10/site-packages/robocup_real_manipulation
+copying /tmp/phase1_direct_python_build/lib/robocup_real_manipulation/wrist_frontend.py -> /tmp/phase1_direct_python_install/lib/python3.10/site-packages/robocup_real_manipulation
+copying /tmp/phase1_direct_python_build/lib/robocup_real_manipulation/tuning.py -> /tmp/phase1_direct_python_install/lib/python3.10/site-packages/robocup_real_manipulation
+copying /tmp/phase1_direct_python_build/lib/robocup_real_manipulation/wrist_geometry.py -> /tmp/phase1_direct_python_install/lib/python3.10/site-packages/robocup_real_manipulation
+copying /tmp/phase1_direct_python_build/lib/robocup_real_manipulation/head_input_adapter.py -> /tmp/phase1_direct_python_install/lib/python3.10/site-packages/robocup_real_manipulation
+copying /tmp/phase1_direct_python_build/lib/robocup_real_manipulation/node.py -> /tmp/phase1_direct_python_install/lib/python3.10/site-packages/robocup_real_manipulation
+byte-compiling /tmp/phase1_direct_python_install/lib/python3.10/site-packages/robocup_real_manipulation/core.py to core.cpython-310.pyc
+byte-compiling /tmp/phase1_direct_python_install/lib/python3.10/site-packages/robocup_real_manipulation/wrist_frontend.py to wrist_frontend.cpython-310.pyc
+byte-compiling /tmp/phase1_direct_python_install/lib/python3.10/site-packages/robocup_real_manipulation/tuning.py to tuning.cpython-310.pyc
+byte-compiling /tmp/phase1_direct_python_install/lib/python3.10/site-packages/robocup_real_manipulation/wrist_geometry.py to wrist_geometry.cpython-310.pyc
+byte-compiling /tmp/phase1_direct_python_install/lib/python3.10/site-packages/robocup_real_manipulation/head_input_adapter.py to head_input_adapter.cpython-310.pyc
+byte-compiling /tmp/phase1_direct_python_install/lib/python3.10/site-packages/robocup_real_manipulation/node.py to node.cpython-310.pyc
+running install_data
+copying config/phase1.tuning.yaml -> /tmp/phase1_direct_python_install/share/robocup_real_manipulation/config
+copying config/wrist.yaml -> /tmp/phase1_direct_python_install/share/robocup_real_manipulation/config
+copying config/robot.yaml -> /tmp/phase1_direct_python_install/share/robocup_real_manipulation/config
+copying launch/phase1.launch.py -> /tmp/phase1_direct_python_install/share/robocup_real_manipulation/launch
+running install_egg_info
+running egg_info
+writing robocup_real_manipulation.egg-info/PKG-INFO
+writing dependency_links to robocup_real_manipulation.egg-info/dependency_links.txt
+writing entry points to robocup_real_manipulation.egg-info/entry_points.txt
+writing requirements to robocup_real_manipulation.egg-info/requires.txt
+writing top-level names to robocup_real_manipulation.egg-info/top_level.txt
+reading manifest file 'robocup_real_manipulation.egg-info/SOURCES.txt'
+writing manifest file 'robocup_real_manipulation.egg-info/SOURCES.txt'
+removing '/tmp/phase1_direct_python_install/lib/python3.10/site-packages/robocup_real_manipulation-0.1.0-py3.10.egg-info' (and everything under it)
+Copying robocup_real_manipulation.egg-info to /tmp/phase1_direct_python_install/lib/python3.10/site-packages/robocup_real_manipulation-0.1.0-py3.10.egg-info
+running install_scripts
+Installing coordinator script to /tmp/phase1_direct_python_install/lib/robocup_real_manipulation
+Installing head_input_adapter script to /tmp/phase1_direct_python_install/lib/robocup_real_manipulation
+Installing mock_coordinator script to /tmp/phase1_direct_python_install/lib/robocup_real_manipulation
+Installing phase1_pick script to /tmp/phase1_direct_python_install/lib/robocup_real_manipulation
+Installing piper_bridge script to /tmp/phase1_direct_python_install/lib/robocup_real_manipulation
+Installing prepare_description script to /tmp/phase1_direct_python_install/lib/robocup_real_manipulation
+Installing tcp_calibration script to /tmp/phase1_direct_python_install/lib/robocup_real_manipulation
+Installing test_sender script to /tmp/phase1_direct_python_install/lib/robocup_real_manipulation
+Installing wrist_frontend script to /tmp/phase1_direct_python_install/lib/robocup_real_manipulation
+writing list of installed files to '/tmp/phase1_direct_python_install_record.txt'

@@ -1,0 +1,11 @@
+usage: tcp_calibration [-h] {cad,record,solve,apply} ...
+
+Read-only TCP collection, CAD inspection and fixed-point pivot calibration. No
+motor commands, enabling, or automatic movement. Position pivot does NOT
+estimate tool orientation or correct arm joint zeros/link geometry.
+
+positional arguments:
+  {cad,record,solve,apply}
+
+options:
+  -h, --help            show this help message and exit

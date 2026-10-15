@@ -1,0 +1,90 @@
+{
+  "config_path": "/home/doyeonlee/\ubb38\uc11c/ChatGPT/RoboCup@Home2027/INHA-RoboCup-Home-2th-2027/SW/manipulation/manipulation_ws/src/robocup_real_manipulation/config/robot.yaml",
+  "config_sha256": "c7ea94d7c1a83df6c528aa8df7e949c544f265d1af3991e6866d6381d8c395d3",
+  "configuration": {
+    "missing_values": [
+      "joint_signs",
+      "joint_offsets",
+      "return_joints",
+      "table_z_m",
+      "table_bounds_xy",
+      "obstacles",
+      "width_scale",
+      "width_bias_m",
+      "driver_width_max",
+      "grasp_min_effort",
+      "can_port",
+      "firmware",
+      "camera_min_depth_m",
+      "coarse_z_error_bound_m"
+    ],
+    "unacknowledged_flags": [
+      "execution_enabled",
+      "commissioned",
+      "calibration_verified",
+      "scene_verified",
+      "model_names_verified",
+      "gravity_frame_verified",
+      "width_mapping_verified"
+    ],
+    "issues": [],
+    "applied_transforms": {
+      "base_arm_transform": {
+        "xyz": [
+          -0.0195,
+          0.0,
+          0.80611
+        ],
+        "quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "handeye_transform": {
+        "xyz": [
+          -0.063877,
+          0.028728,
+          -0.012631
+        ],
+        "quaternion_xyzw": [
+          0.018698,
+          -0.005325,
+          -0.705684,
+          0.70826
+        ]
+      },
+      "link6_tcp_transform": {
+        "xyz": [
+          0.0,
+          0.0,
+          0.1425
+        ],
+        "quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      }
+    },
+    "input_class_schema": [
+      "green_apple",
+      "peach",
+      "tomato",
+      "fanta_can",
+      "cup",
+      "banana"
+    ],
+    "enabled_class_ids": {
+      "green_apple": 0,
+      "peach": 1,
+      "tomato": 2,
+      "fanta_can": 3,
+      "cup": 4
+    },
+    "hardware_config_ready": false
+  },
+  "read_only": true
+}

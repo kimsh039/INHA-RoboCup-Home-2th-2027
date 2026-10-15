@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>robocup_collision_processing</name>
+  <version>0.1.0</version>
+  <description>Timestamped MID-360 preprocessing and bounded 3D velocity guard.</description>
+  <maintainer email="inha-robocup@example.com">INHA RoboCup</maintainer>
+  <license>Apache-2.0</license>
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  <depend>rclcpp</depend><depend>sensor_msgs</depend><depend>nav_msgs</depend>
+  <depend>std_msgs</depend><depend>geometry_msgs</depend><depend>tf2</depend><depend>tf2_ros</depend>
+  <depend>eigen</depend><depend>yaml-cpp</depend>
+  <depend>nlohmann_json</depend><build_depend>libnanoflann-dev</build_depend>
+  <export><build_type>ament_cmake</build_type></export>
+</package>

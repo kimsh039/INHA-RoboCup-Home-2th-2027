@@ -1,0 +1,23 @@
+# [TUNE:PHASE1] Coarse from real detection; precision from real wrist RGB/depth.
+# Generic SAM2 trial: surface clearance accommodates the prior script's 0.25m
+# depth lower filter + margin. Adjust only against actual depth profile/errors.
+observation_surface_clearance_m: 0.30
+max_observation_age_s: 3.0
+observation_timeout_s: 20.0
+observation_stable_frames: 3
+velocity_scale: 0.05
+acceleration_scale: 0.05
+pregrasp_m: 0.10
+lift_m: 0.12
+retreat_m: 0.10
+place_offset_m: 0.10
+# [TUNE:GRIPPER] Initial physical aperture / contact height, all meters.
+classes:
+  green_apple: {open_m: 0.100, close_m: 0.079, grip_height_m: 0.034}
+  peach: {open_m: 0.100, close_m: 0.079, grip_height_m: 0.034}
+  tomato: {open_m: 0.100, close_m: 0.082, grip_height_m: 0.034}
+  fanta_can: {open_m: 0.080, close_m: 0.064, grip_height_m: 0.062}
+  cup: {open_m: 0.100, close_m: 0.090, grip_height_m: 0.039}
+  # Lying-body height=30mm assumption; revise contact height from real trials.
+  banana: {open_m: 0.040, close_m: 0.026, grip_height_m: 0.015}
+axis_stability_tolerance_rad: 0.15

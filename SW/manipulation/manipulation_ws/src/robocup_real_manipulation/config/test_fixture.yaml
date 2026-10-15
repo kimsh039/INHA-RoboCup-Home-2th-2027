@@ -1,0 +1,248 @@
+# SYNTHETIC TEST VALUES: hardware refuses fixture_only
+acceleration_scale: 0.05
+approach_timeout_s: 3.0
+arm_status_topic: /arm_status
+association_margin_m: 0.02
+association_radius_m: 0.12
+base_age_s: 0.3
+base_arm_transform: null
+base_lease_topic: /manipulation/base_lease
+base_lock_topic: /manipulation/base_lock_request
+calibration_verified: false
+camera_min_depth_m: 0.195
+can_port: null
+cartesian_step_m: 0.005
+classes:
+  banana:
+    axis_required: true
+    center_height_m: null
+    class_id: 5
+    close_m: 0.026
+    closing_axis_yaw_offset_rad: null
+    enabled: true
+    grip_height_m: null
+    open_m: 0.04
+    radius_m: null
+    size_m:
+    - 0.027
+  cup:
+    center_height_m: null
+    class_id: 4
+    close_m: 0.09
+    enabled: false
+    grip_height_m: null
+    open_m: 0.1
+    radius_m: 0.0455
+    size_m:
+    - 0.091
+  fanta_can:
+    center_height_m: null
+    class_id: 3
+    close_m: 0.064
+    enabled: true
+    grip_height_m: null
+    open_m: 0.08
+    radius_m: 0.0323
+    size_m:
+    - 0.0646
+  green_apple:
+    center_height_m: 0.04
+    class_id: 0
+    close_m: 0.079
+    enabled: true
+    grip_height_m: 0.04
+    open_m: 0.1
+    radius_m: 0.04
+    size_m:
+    - 0.08
+    - 0.08
+  peach:
+    center_height_m: null
+    class_id: 1
+    close_m: 0.079
+    enabled: true
+    grip_height_m: null
+    open_m: 0.1
+    radius_m: 0.04
+    size_m:
+    - 0.08
+    - 0.07
+  tomato:
+    center_height_m: null
+    class_id: 2
+    close_m: 0.082
+    enabled: false
+    grip_height_m: null
+    open_m: 0.1
+    radius_m: 0.0415
+    size_m:
+    - 0.083
+    - 0.078
+coarse_collision_padding_m: 0.02
+coarse_z_error_bound_m: 0.02
+command_topic: /joint_ctrl_single
+commissioned: false
+depth_max_m: 1.5
+depth_max_mad_m: 0.008
+depth_min_fraction: 0.65
+depth_min_m: 0.1
+depth_min_pixels: 40
+depth_patch_radius_px: 5
+driver_joint_names:
+- joint1
+- joint2
+- joint3
+- joint4
+- joint5
+- joint6
+driver_speed_percent: 5
+driver_width_max: null
+enable_service: /enable_srv
+execution_enabled: false
+feedback_age_s: 0.3
+feedback_topic: /joint_states_feedback
+firmware: null
+fixture_only: true
+future_tolerance_s: 0.05
+goal_tolerance_rad: 0.015
+grasp_min_effort: 0.5
+gravity_frame: base_link
+gravity_frame_verified: false
+gripper_command_effort: 1.0
+gripper_feedback_topic: /gripper_states_feedback
+gripper_joint_names:
+- piper_gripper_joint1
+- piper_gripper_joint2
+gripper_joint_signs:
+- 1.0
+- -1.0
+gripper_max_m: 0.1
+gripper_settle_s: 0.4
+gripper_tolerance_m: 0.001
+handeye_transform:
+  quaternion_xyzw:
+  - 0.0
+  - 0.0
+  - 0.0
+  - 1.0
+  xyz:
+  - 0.0
+  - 0.0
+  - 0.0
+joint_limits:
+- - -4.2179938
+  - 1.0179938
+- - 0
+  - 3.1415926
+- - -2.9670597
+  - 0
+- - -1.7453292
+  - 1.7453292
+- - -1.2217304
+  - 1.2217304
+- - -2.0943951
+  - 2.0943951
+joint_names:
+- piper_joint1
+- piper_joint2
+- piper_joint3
+- piper_joint4
+- piper_joint5
+- piper_joint6
+joint_offsets: null
+joint_signs: null
+joint_stable_s: 0.4
+journal_path: /tmp/robocup_manipulation_mock/completed_ids.json
+lift_m: 0.12
+link6_tcp_transform:
+  quaternion_xyzw:
+  - 0.0
+  - 0.0
+  - 0.0
+  - 1.0
+  xyz:
+  - 0.0
+  - 0.0
+  - 0.0
+log_path: /tmp/robocup_manipulation_mock/events.jsonl
+mask_erosion_px: 2
+max_event_age_s: 30.0
+max_joint_acceleration_rad_s2: 0.3
+max_joint_speed_rad_s: 0.15
+max_observation_age_s: 0.7
+max_position_std_m: 0.008
+max_target_age_s: 120.0
+min_confidence: 0.65
+model_names:
+- green_apple
+- peach
+- tomato
+- fanta_can
+- cup
+- banana
+model_names_verified: false
+observation_camera_distance_m: 0.25
+observation_camera_quaternion:
+- 1.0
+- 0.0
+- 0.0
+- 0.0
+observation_depth_margin_m: 0.02
+observation_joints:
+- 0.0
+- 0.0
+- 0.0
+- 0.0
+- 0.0
+- 0.0
+observation_retries: 1
+observation_stable_frames: 3
+observation_surface_clearance_m: 0.25
+observation_timeout_s: 1.0
+obstacles: []
+orientation_tolerance_rad: 0.03
+path_tolerance_rad: 0.12
+place_offset_m: 0.1
+planning_group: piper_arm
+position_tolerance_m: 0.003
+pregrasp_m: 0.1
+retreat_m: 0.1
+return_joints:
+- 0.0
+- 0.0
+- 0.0
+- 0.0
+- 0.0
+- 0.0
+scene_verified: false
+stable_speed_rad_s: 0.02
+stage_timeout_s: 3.0
+stop_timeout_s: 3.0
+support_margin_m: 0.015
+table_bounds_xy:
+- 0.1
+- 0.9
+- -0.4
+- 0.4
+table_z_m: 0.7
+tcp_frame: tcp
+tcp_to_grip_center_m:
+- 0.0
+- 0.0
+- 0.0
+topdown_quaternion:
+- 1.0
+- 0.0
+- 0.0
+- 0.0
+touch_links:
+- piper_gripper_base
+- piper_gripper_link1
+- piper_gripper_link2
+velocity_scale: 0.05
+width_bias_m: null
+width_mapping_verified: false
+width_scale: null
+wrist_camera_model: null
+wrist_camera_serial: null
+wrist_optical_frame: wrist_camera_optical_frame
