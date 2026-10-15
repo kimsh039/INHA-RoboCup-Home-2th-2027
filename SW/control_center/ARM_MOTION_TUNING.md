@@ -25,3 +25,5 @@ python3 SW/control_center/tune-arm-motion.py --restore \
 ```
 
 롤백 이후에도 노드 재시작이 필요하다. 튜닝 이후 다른 설정 수정이 있으면 해시 검사로 덮어쓰기를 거부한다. 초기 적용 후 점군 전처리의 거부 횟수 0·`live` 상태를 확인했으며 실제 팔/베이스 이동 시험은 수행하지 않았다.
+
+최종 정지 검증에서는 ROS 원본 토픽을 30초간 읽었다. 관절 피드백 4,645개에서 관절6의 전체 변동 폭은 0.109°, 인접 샘플 최대 계산 속도는 0.283rad/s였다. 같은 데이터에서 기존 0.08 기준 초과는 10회, 새 0.5 기준 초과는 0회였다. 실제 guard 상태 144개와 cloud 상태 452개에서 `arm_is_moving`은 각각 0회였다. cloud의 별도 `processing_deadline_exceeded` 1회는 팔 오판정과 구분한다. 검증 종료 시 guard/actuator는 ready, Nav2는 available, 베이스는 UNLOCKED·stopped였다. 원본 백업/적용본 해시와 정확히 두 설정값만 변경된 diff도 확인했다.
