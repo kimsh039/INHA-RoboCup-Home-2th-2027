@@ -6,15 +6,33 @@
   "jpeg_quality": 75,
   "cloud_hz": 5,
   "max_cloud_points": 20000,
-  "cloud_decay_sec": 2.0,
+  "cloud_decay_sec": 3.0,
   "cloud_voxel_size": 0.04,
-  "max_accumulated_cloud_points": 80000,
-  "cloud_point_size": 2.0,
+  "max_accumulated_cloud_points": 120000,
+  "cloud_point_size": 3.0,
   "use_sim_time": false,
+  "detection": {
+    "objects_topic": "/detection/head/objects",
+    "odom_topic": "/odom_ekf",
+    "cloud_topic": "/mid360/points_obstacles",
+    "camera_info_topic": "/head/calibrated/color/camera_info",
+    "surface_topic": "/mid360/points_filtered",
+    "table_clearance": 0.0,
+    "stage_edge_distance": 0.65,
+    "grasp_max_forward": 0.50
+  },
   "can": {
     "auto_connect": true,
-    "tracer": {"interface": "can_tracer", "usb_serial": "", "bitrate": 500000},
-    "piper": {"interface": "can_arm", "usb_serial": "", "bitrate": 1000000}
+    "tracer": {
+      "interface": "can_tracer",
+      "usb_serial": "",
+      "bitrate": 500000
+    },
+    "piper": {
+      "interface": "can_arm",
+      "usb_serial": "",
+      "bitrate": 1000000
+    }
   },
   "channels": {
     "map": [
@@ -34,8 +52,8 @@
       "/navigate_to_pose/plan"
     ],
     "cloud": [
-      "/livox/lidar",
       "/mid360/points_filtered",
+      "/livox/lidar",
       "/mid360/points"
     ],
     "object_cloud": [
@@ -67,7 +85,6 @@
       "/head_yolo/detections"
     ],
     "wrist_status": [
-      "/manipulation/wrist/status",
       "/detection/wrist/status"
     ],
     "battery": [
@@ -98,5 +115,6 @@
     "mid360_lidar": {
       "config_file": "~/ws_livox/src/livox_ros_driver2/config/MID360s_config.json"
     }
-  }
+  },
+  "slam_scan": "g2"
 }

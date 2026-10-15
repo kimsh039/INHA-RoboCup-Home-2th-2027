@@ -22,6 +22,7 @@ SENSORS = {
 SERVICES = {
     'mapping': ('SLAM Toolbox', '/map'),
     'navigation': ('Nav2', '/local_costmap/costmap'),
+    'detection': ('Head YOLO', '/detection/head/objects'),
 }
 MAP_DIR = Path(os.environ.get('ROBOCUP_MAP_DIR', str(Path.home() / 'maps')))
 MAP_NAME = re.compile(r'[A-Za-z0-9_-]{1,48}')
@@ -70,7 +71,8 @@ class SensorManager:
         if key == 'g2_lidar':
             path = self._path(settings.get('params_file', '~/tracer_ws/src/ydlidar_ros2_driver/params/G2.yaml'))
             return ['ros2', 'run', 'ydlidar_ros2_driver', 'ydlidar_ros2_driver_node',
-                    '--ros-args', '--params-file', path, '-r', 'scan:=/scan_raw']
+                    '--ros-args', '--params-file', path, '-r', 'scan:=/scan_raw',
+                    '-r', 'point_cloud:=/g2/points_raw']
         if key == 'mid360_lidar':
             path = self._path(settings.get('config_file', '~/ws_livox/src/livox_ros_driver2/config/MID360s_config.json'))
             return [sys.executable, str(ROOT / 'start-mid360.py'), '--config', path,
@@ -83,12 +85,16 @@ class SensorManager:
                 base = self.map_base(map_name)
                 if not base.with_suffix('.posegraph').is_file():
                     raise ValueError('저장된 pose graph가 없습니다: ' + str(base) + '.posegraph')
+                if not base.with_suffix('.yaml').is_file():
+                    raise ValueError('전역 위치 탐색에 필요한 점유 지도가 없습니다: ' + str(base) + '.yaml')
                 return ['bash', str(ROOT / 'start-localization.sh'), str(base)]
             return ['bash', str(ROOT / 'start-mapping.sh')]
         if key == 'navigation':
             if not NAV2_SHARE.is_dir():
                 raise ValueError('Nav2가 설치되지 않았습니다. 젯슨에서 sudo apt-get install -y ros-humble-navigation2 ros-humble-nav2-bringup')
             return ['bash', str(ROOT / 'start-navigation.sh')]
+        if key == 'detection':
+            return ['bash', str(ROOT / 'start-head-detection.sh')]
         raise ValueError('알 수 없는 기능입니다.')
 
     @staticmethod
@@ -113,7 +119,7 @@ class SensorManager:
         process = self.jobs.get(key)
         return process is not None and process.poll() is None
 
-    def service_request(self, key, action, map_name=''):
+    def service_request(self, key, action, map_name='', resume_params=None):
         if key not in SERVICES or action not in ('start', 'stop', 'reset', 'localize'):
             raise ValueError('지원하는 기능과 동작을 지정하세요.')
         if action in ('reset', 'localize') and key != 'mapping':
@@ -136,6 +142,14 @@ class SensorManager:
                     raise RuntimeError('외부에서 실행 중인 ' + current['label'] + '이 있습니다. 그 실행을 종료한 뒤 켜세요.')
                 if key == 'navigation' and not (self._service_running('mapping') or self.services['mapping']['publishers']):
                     raise RuntimeError('SLAM 또는 저장된 지도 위치추정을 먼저 시작하세요.')
+                # Server startup is independent of actuator readiness. New goals
+                # and every physical velocity remain gated by collision safety.
+                if key == 'navigation' and self.services['mapping']['mode'] == 'localization':
+                    with self.state.condition:
+                        localization = self.state.values.get('localization') or {}
+                    if (localization.get('state') != 'localized' or
+                            localization.get('map') != self.services['mapping']['map']):
+                        raise RuntimeError('지도 전체에서 자동 위치를 찾고 있습니다. 위치 확인 후 Nav2를 시작하세요.')
             elif action == 'reset':
                 if not running:
                     raise RuntimeError('관제센터가 실행한 SLAM만 초기화할 수 있습니다.')
@@ -147,10 +161,29 @@ class SensorManager:
             elif not running:
                 raise RuntimeError('관제센터가 실행한 ' + current['label'] + '만 끌 수 있습니다.')
             command = None if action == 'stop' else self.service_command(key, mode, name)
+            if resume_params is not None:
+                if key != 'mapping' or action != 'start':
+                    raise ValueError('지도 이어 읽기는 SLAM 시작에만 사용할 수 있습니다.')
+                command = ['env', 'ROBOCUP_SLAM_PARAMS='+self._path(resume_params), *command]
             current.update(state='stopping' if action == 'stop' else 'starting', error='',
                            pending=dict(mode=mode if key == 'mapping' else '', map=name if mode == 'localization' else ''))
             self.queue.put((key, 'stop' if action == 'stop' else 'start', command))
             self._publish()
+
+    def require_collision_ready(self):
+        with self.state.condition:
+            now = time.monotonic()
+            for key in ('collision_safety', 'collision_actuator'):
+                value = self.state.values.get(key) or {}
+                received = self.state.channels.get(key, {}).get('received')
+                if received is None or now-received > 0.8 or not value.get('ready'):
+                    reason = value.get('reason', 'status_missing')
+                    detail = {'stale_arm_feedback': 'PiPER 팔 관절 피드백 없음 · 팔 CAN 연결/전원 확인 필요',
+                              'arm_is_moving': '팔 이동 중 · 정지 후 주행 가능',
+                              'stale_mid360': 'MID-360 수신 지연',
+                              'stale_odometry': '차체 오도메트리 수신 지연',
+                              'missing_fresh_approval': '차체 보호 출력 대기'}.get(reason, reason)
+                    raise RuntimeError('주행 보호 대기: '+detail)
 
     def navigation_available(self):
         with self.lock:
@@ -289,6 +322,8 @@ class SensorManager:
                     with self.lock:
                         if self.closed.is_set():
                             continue
+                        if key == 'mapping':
+                            self.state.put('localization', None)
                         self._spawn(key, command)
                         if key in self.status:
                             self.status[key].update(state='running', error='')
@@ -300,6 +335,8 @@ class SensorManager:
                         self.state.clear('map')
                 else:
                     with self.lock:
+                        if key == 'mapping':
+                            self.state.put('localization', None)
                         if key in self.status:
                             previous_error = self.status[key]['error']
                             self.status[key].update(state='error' if previous_error else 'off')

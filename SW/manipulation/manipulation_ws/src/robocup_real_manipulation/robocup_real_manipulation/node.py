@@ -21,6 +21,7 @@ from cv_bridge import CvBridge
 from sensor_msgs.msg import JointState, CameraInfo
 from geometry_msgs.msg import PointStamped
 from std_srvs.srv import Trigger
+from std_msgs.msg import String
 from robocup_real_manipulation_msgs.msg import Target, ApproachResult, BaseLease, ObservationRequest, WristObservation, TaskStatus
 from robocup_real_manipulation_msgs.action import Manipulate, SetWidth
 from .core import (Fault, require, fresh, validate, EventJoin, rule_for, robust_depth,
@@ -81,7 +82,25 @@ class Coordinator(Node):
         self.create_timer(1.,self.prune_events,callback_group=self.group)
         self.motion=Motion(self,self.c,self.group)
         self.publish_lock()
+        self.readiness_pub=self.create_publisher(String,'/manipulation/readiness',1)
+        self.create_timer(1.,self.publish_readiness,callback_group=self.group)
         if not self.c['execution_enabled']: self.get_logger().info('READ-ONLY: physical goals rejected; fill config before commissioning')
+    def publish_readiness(self):
+        errors=[]
+        if not self.get_parameter('hardware_mode').value: errors.append('READ_ONLY_MODE')
+        try:
+            validate(copy.deepcopy(self.c),hardware=True); validate_integration(self.c)
+        except Exception as exc: errors.append(str(exc))
+        for topic in (self.c['feedback_topic'],self.c['gripper_feedback_topic'],self.c['arm_status_topic'],
+                      '/manipulation/wrist/result','/manipulation/base_lease'):
+            if self.count_publishers(topic)!=1: errors.append('FEEDBACK_NOT_CONNECTED:'+topic)
+        if not self.width.server_is_ready(): errors.append('GRIPPER_ACTION_NOT_CONNECTED')
+        if self.joint_stamp<=0 or not -.05<=self.now()-self.joint_stamp<=self.c['feedback_age_s']:
+            errors.append('MODEL_JOINT_FEEDBACK_STALE')
+        if self.locked_task and self.goal_handle is None: errors.append('BASE_LOCK_RETAINED')
+        self.readiness_pub.publish(String(data=json.dumps(dict(ready=not errors,errors=errors,
+            hardware_mode=self.get_parameter('hardware_mode').value,locked_task=self.locked_task,
+            base_completion_policy=self.c.get('base_completion_policy','hold'),config_sha256=self.config_sha256))))
     def prune_events(self):
         with self.mutex:
             for kind,age in (('targets',self.c['max_target_age_s']),('approaches',self.c['max_event_age_s'])):

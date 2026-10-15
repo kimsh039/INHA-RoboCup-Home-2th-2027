@@ -1,0 +1,35 @@
+<!-- Target the observed object XY with a nearest-free endpoint. Try either
+     in-place turn before allowing reverse recovery, then replan forward. -->
+<root main_tree_to_execute="MainTree">
+  <BehaviorTree ID="MainTree">
+    <RecoveryNode number_of_retries="6" name="ObjectNavigationRecovery">
+      <PipelineSequence name="NavigateToObservedObject">
+      <RateController hz="2.0">
+        <RecoveryNode number_of_retries="1" name="ObservedObjectPlan">
+          <ComputePathToPose goal="{goal}" path="{path}" planner_id="DetectionTarget"/>
+          <ClearEntireCostmap name="ClearObjectGlobal" service_name="global_costmap/clear_entirely_global_costmap"/>
+        </RecoveryNode>
+      </RateController>
+      <RecoveryNode number_of_retries="1" name="ObservedObjectControl">
+        <FollowPath path="{path}" controller_id="GraspApproach" goal_checker_id="grasp_stage_checker"/>
+        <ClearEntireCostmap name="ClearObjectLocal" service_name="local_costmap/clear_entirely_local_costmap"/>
+      </RecoveryNode>
+      </PipelineSequence>
+      <ReactiveFallback name="ObjectRecoveryFallback">
+        <GoalUpdated/>
+        <RoundRobin name="ObjectRecoveryActions">
+          <Fallback name="ObjectTurnBeforeReverse">
+            <Spin spin_dist="0.7854" time_allowance="6.0"/>
+            <Spin spin_dist="-0.7854" time_allowance="6.0"/>
+            <BackUp backup_dist="0.20" backup_speed="0.05" time_allowance="6.0"/>
+          </Fallback>
+          <Sequence name="ClearObjectRecovery">
+            <ClearEntireCostmap name="ClearObjectRecoveryLocal" service_name="local_costmap/clear_entirely_local_costmap"/>
+            <ClearEntireCostmap name="ClearObjectRecoveryGlobal" service_name="global_costmap/clear_entirely_global_costmap"/>
+          </Sequence>
+          <Wait wait_duration="1.0"/>
+        </RoundRobin>
+      </ReactiveFallback>
+    </RecoveryNode>
+  </BehaviorTree>
+</root>

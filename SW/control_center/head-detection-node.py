@@ -85,6 +85,7 @@ class HeadObjects(Node):
         output = dict(mode='all_objects', classes=list(CLASSES), state=state, reason=reason,
                       valid=state == 'DETECTED', measured=state in ('DETECTED', 'SEARCH'),
                       objects=objects or [], stamp=stamp, frame=msg.header.frame_id if msg else '',
+                      width=msg.width if msg else None, height=msg.height if msg else None,
                       processing_ms=processing_ms, processing_total_ms=processing_total_ms,
                       camera_fps=self.camera_fps, detection_fps=self.detection_fps)
         self.objects_pub.publish(String(data=json.dumps(output, allow_nan=False)))

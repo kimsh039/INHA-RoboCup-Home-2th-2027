@@ -54,9 +54,11 @@ def run(args):
         from rosidl_runtime_py.utilities import get_message
         from tf2_ros import Buffer, TransformListener
         from nav_msgs.msg import Odometry
+        from action_msgs.msg import GoalStatusArray
         from sensor_msgs.msg import Imu
-        from geometry_msgs.msg import PoseWithCovarianceStamped
+        from std_msgs.msg import String
         from rclpy.action import ActionClient
+        from lifecycle_msgs.srv import GetState
     except ImportError as exc:
         raise SystemExit(f'ROS 의존성 없음: {exc}\nsource /opt/ros/humble/setup.bash 후 /usr/bin/python3로 실행하세요.\n'
                          '영상 변환에는 ros-humble-cv-bridge와 python3-opencv가 필요합니다.')
@@ -118,10 +120,28 @@ def run(args):
             self.nav_requests = deque(maxlen=8)
             self.nav_goal = None
             self.nav_status = dict(state='idle', message='목표 없음', goal=None)
+            self.nav_started_ros = 0.
             self.nav_client = ActionClient(self, NavigateToPose, '/navigate_to_pose') if NavigateToPose else None
-            self.initial_pose = self.create_publisher(PoseWithCovarianceStamped, '/initialpose', 1)
+            self.nav_lifecycle = {name: self.create_client(GetState, '/'+name+'/get_state')
+                                  for name in ('bt_navigator', 'controller_server', 'planner_server')}
+            self.nav_lifecycle_states, self.nav_lifecycle_pending = {}, {}
+            self.create_timer(1.0, self.navigation_health)
+            self.create_subscription(String, '/localization/status', self.localization_status,
+                                     QoSProfile(depth=1, reliability=ReliabilityPolicy.RELIABLE,
+                                                durability=DurabilityPolicy.TRANSIENT_LOCAL))
+            self.create_subscription(String, '/collision/status', self.collision_status, 10)
+            self.create_subscription(String, '/collision/actuator_status', self.collision_actuator_status, 10)
+            self.create_subscription(GoalStatusArray, '/backup/_action/status', self.backup_status,
+                                     QoSProfile(depth=1, reliability=ReliabilityPolicy.RELIABLE,
+                                                durability=DurabilityPolicy.TRANSIENT_LOCAL))
+            self.create_subscription(String, '/piper/feedback_status', self.piper_feedback_status, 10)
             state.navigation_request = self.nav_requests.append  # deque.append is thread-safe
+            from detection_approach import DetectionApproach
+            self.detection_approach = DetectionApproach(self, state, config.get('detection', {}))
             self.create_timer(0.1, self.navigation)
+            self.create_timer(0.1, self.detection_approach.tick)
+            from manipulation_control import ManipulationControl
+            self.manipulation = ManipulationControl(self, state)
             self.discover()
 
         def discover(self):
@@ -236,20 +256,130 @@ def run(args):
                     pass
             return rotation, offset, 'odom'
 
+        def collision_status(self, msg):
+            try:
+                value = json.loads(msg.data)
+                if not isinstance(value, dict):
+                    raise ValueError('invalid collision status')
+                closest = value.get('nearest_point')
+                if closest is not None:
+                    try:
+                        matrix, offset = self.transform(value.get('frame', 'odom'))
+                        value['display_point'] = (matrix @ np.asarray(closest, dtype=float) + offset).tolist()
+                        value['display_frame'] = self.fixed
+                    except Exception:
+                        pass
+                stamp = value.get('stamp')
+                age = self.get_clock().now().nanoseconds/1e9-stamp if isinstance(stamp, (int, float)) else None
+                state.put('collision_safety', value, stamp, age)
+                with state.condition:
+                    state.channels['collision_safety'].update(topic='/collision/status', type='std_msgs/msg/String', publishers=1)
+            except (ValueError, TypeError, KeyError):
+                state.put('collision_safety', dict(ready=False, reason='invalid_status'))
+                state.error('collision_safety', '충돌 보호 상태 형식 오류')
+
+        def piper_feedback_status(self, msg):
+            try:
+                value = json.loads(msg.data)
+                if not isinstance(value, dict) or value.get('state') not in ('live', 'waiting', 'stale'):
+                    raise ValueError('invalid PiPER feedback status')
+                state.put('piper_feedback', value)
+                with state.condition:
+                    state.channels['piper_feedback'].update(topic='/piper/feedback_status',
+                                                           type='std_msgs/msg/String', publishers=1)
+            except (ValueError, TypeError):
+                state.put('piper_feedback', dict(state='stale', reason='invalid_status'))
+                state.error('piper_feedback', 'PiPER 피드백 상태 형식 오류')
+
+        def collision_actuator_status(self, msg):
+            try:
+                value = json.loads(msg.data)
+                if not isinstance(value, dict):
+                    raise ValueError('invalid actuator status')
+                state.put('collision_actuator', value)
+                with state.condition:
+                    state.channels['collision_actuator'].update(topic='/collision/actuator_status', type='std_msgs/msg/String', publishers=1)
+            except (ValueError, TypeError):
+                state.put('collision_actuator', dict(ready=False, reason='invalid_status'))
+                state.error('collision_actuator', '차체 보호 출력 상태 형식 오류')
+
         def navigation(self):
             while self.nav_requests:
                 request = self.nav_requests.popleft()
                 try:
                     if request['action'] == 'goal':
+                        if self.detection_approach.active:
+                            self.detection_approach.cancel('수동 Nav2 목표로 전환 · 접근 취소')
                         self.send_goal(request)
                     elif request['action'] == 'cancel':
+                        if self.detection_approach.active:
+                            self.detection_approach.cancel('이동 취소 · 물체 접근 중지')
                         self.cancel_goal()
-                    elif request['action'] == 'initial_pose':
-                        self.publish_initial_pose(request)
                 except Exception as exc:
                     self.nav_update(state='error', message=str(exc)[:300])
-            state.put('navigation', dict(self.nav_status, available=bool(
-                self.nav_client and self.nav_client.server_is_ready())))
+            state.put('navigation', dict(self.nav_status, available=self.nav_ready(),
+                server_available=bool(self.nav_client and self.nav_client.server_is_ready()),
+                lifecycle={k: v[1] for k, v in self.nav_lifecycle_states.items()},
+                detection_active=self.detection_approach.active,
+                detection_phase=self.detection_approach.phase))
+
+        def navigation_health(self):
+            now = time.monotonic()
+            for name, client in self.nav_lifecycle.items():
+                pending = self.nav_lifecycle_pending.get(name)
+                if pending:
+                    began, future = pending
+                    if not future.done() and now-began < 2.5:
+                        continue
+                    if not future.done():
+                        future.cancel()
+                    self.nav_lifecycle_pending.pop(name, None)
+                if not client.service_is_ready():
+                    self.nav_lifecycle_states.pop(name, None)
+                    continue
+                future = client.call_async(GetState.Request())
+                self.nav_lifecycle_pending[name] = now, future
+                future.add_done_callback(lambda f, key=name: self.navigation_state(f, key))
+
+        def navigation_state(self, future, name):
+            if future.cancelled():
+                return
+            try:
+                current = future.result().current_state
+                self.nav_lifecycle_states[name] = int(current.id), current.label, time.monotonic()
+            except Exception:
+                self.nav_lifecycle_states.pop(name, None)
+
+        def nav_ready(self):
+            now = time.monotonic()
+            return bool(self.nav_client and self.nav_client.server_is_ready() and all(
+                name in self.nav_lifecycle_states and self.nav_lifecycle_states[name][0] == 3
+                and now-self.nav_lifecycle_states[name][2] < 3. for name in self.nav_lifecycle))
+
+        def backup_status(self, message):
+            if self.nav_status.get('goal') is None:
+                return
+            statuses = [s for s in message.status_list
+                        if stamp_seconds(s.goal_info.stamp) >= self.nav_started_ros]
+            if not statuses:
+                return
+            status = max(statuses, key=lambda s: stamp_seconds(s.goal_info.stamp))
+            descriptions = {1: ('checking', 'Nav2 후진 가능 여부 확인 시작'),
+                            2: ('checking', 'Nav2 후진 판단·실행 중'),
+                            3: ('canceling', 'Nav2 후진 중지 요청'),
+                            4: ('moved', 'Nav2 후진 완료 · 재계획'),
+                            5: ('canceled', 'Nav2 후진 취소'),
+                            6: ('blocked', 'Nav2 후진 실패 · 충돌/시간/입력 조건 확인')}
+            if status.status not in descriptions:
+                return
+            kind, reason = descriptions[status.status]
+            value = dict(state=kind, reason=reason, source='nav2_backup',
+                         goal_id=bytes(status.goal_info.goal_id.uuid).hex())
+            if value != self.nav_status.get('reverse_assessment'):
+                self.nav_status['reverse_assessment'] = value
+                if self.nav_status.get('state') == 'aborted' and self.nav_status.get('failure_detail'):
+                    self.nav_status['message'] = self.nav_status['failure_detail']+' · '+reason
+                state.log(reason, 'warn' if kind == 'blocked' else 'info', 'navigation')
 
         def nav_update(self, **values):
             self.nav_status.update(values)
@@ -266,22 +396,37 @@ def run(args):
             return message
 
         def send_goal(self, request):
+            if state.sensor_manager:
+                state.sensor_manager.require_collision_ready()
             if not self.nav_client:
                 raise RuntimeError('nav2_msgs가 없습니다. Nav2를 설치하세요.')
             if not self.nav_client.server_is_ready():
                 raise RuntimeError('Nav2 /navigate_to_pose 서버 대기 중입니다.')
+            if not self.nav_ready():
+                raise RuntimeError('Nav2 lifecycle 활성화 대기 중입니다.')
             goal = NavigateToPose.Goal()
             goal.pose = self.pose_msg(request, type(goal.pose))
-            target = dict(x=request['x'], y=request['y'], yaw=request['yaw'], frame=self.fixed)
+            owner = request.get('owner', 'navigation')
+            if owner in ('detection', 'detection_target'):
+                tree = 'navigate-to-detection-target.xml' if owner == 'detection_target' else 'navigate-to-detection.xml'
+                goal.behavior_tree = str(Path(__file__).resolve().with_name(tree))
+            target = dict(x=request['x'], y=request['y'], yaw=request['yaw'], frame=self.fixed, owner=owner)
+            self.nav_started_ros = self.get_clock().now().nanoseconds/1e9
             self.nav_update(state='sending', message='목표 전송 중', goal=target, distance=None, eta=None,
-                            recoveries=0, started=time.time())
+                            recoveries=0, started=time.time(), reverse_assessment=None, failure_detail=None)
             state.log(f'Nav2 목표 전송 · {self.fixed} ({target["x"]:.2f}, {target["y"]:.2f}) '
                       f'{math.degrees(target["yaw"]):.0f}°', source='navigation')
             future = self.nav_client.send_goal_async(goal, feedback_callback=lambda f, t=target: self.nav_feedback(f, t))
             future.add_done_callback(lambda f, t=target: self.nav_accepted(f, t))
+            return target
 
         def nav_accepted(self, future, target):
-            handle = future.result()
+            try:
+                handle = future.result()
+            except Exception as exc:
+                if self.nav_status.get('goal') is target:
+                    self.nav_update(state='error', message=str(exc)[:300])
+                return
             if self.nav_status.get('goal') is not target:
                 if handle.accepted:
                     handle.cancel_goal_async()  # superseded while it was being sent
@@ -291,7 +436,7 @@ def run(args):
                 return
             self.nav_goal = handle
             self.nav_update(state='active', message='이동 중')
-            handle.get_result_async().add_done_callback(lambda f, h=handle: self.nav_result(f, h))
+            handle.get_result_async().add_done_callback(lambda f, h=handle, t=target: self.nav_result(f, h, t))
 
         def nav_feedback(self, message, target):
             if self.nav_status.get('goal') is not target:
@@ -301,13 +446,28 @@ def run(args):
                                    eta=feedback.estimated_time_remaining.sec + feedback.estimated_time_remaining.nanosec * 1e-9,
                                    recoveries=int(feedback.number_of_recoveries))
 
-        def nav_result(self, future, handle):
-            if handle is not self.nav_goal:
+        def nav_result(self, future, handle, target):
+            if handle is not self.nav_goal or self.nav_status.get('goal') is not target:
                 return
             self.nav_goal = None
-            code = future.result().status
+            try:
+                code = future.result().status
+            except Exception as exc:
+                self.nav_update(state='error', message=str(exc)[:300])
+                return
             names = {4: ('succeeded', '목표 도착'), 5: ('canceled', '이동 취소됨'), 6: ('aborted', '이동 실패 · 경로 또는 진행 불가')}
             result, message = names.get(code, ('aborted', f'종료 상태 {code}'))
+            if code == 6:
+                with state.condition:
+                    details = next((log['message'] for log in reversed(state.logs)
+                                    if time.time()-log['time'] < 20 and any(text in log['message'] for text in
+                                    ('Trajectory Hits Obstacle', 'No valid trajectories', 'Failed to make progress', 'Failed to create plan', 'Collision Ahead'))), '')
+                if details:
+                    message += ' · '+details[:180]
+                self.nav_status['failure_detail'] = message
+                assessment = self.nav_status.get('reverse_assessment')
+                if assessment and assessment['state'] not in ('checking', 'canceling'):
+                    message += ' · '+assessment['reason']
             self.nav_update(state=result, message=message)
 
         def cancel_goal(self):
@@ -317,13 +477,13 @@ def run(args):
             else:  # a goal still being sent is cancelled as soon as it is accepted
                 self.nav_update(state='idle', message='목표 취소', goal=None)
 
-        def publish_initial_pose(self, request):
-            message = self.pose_msg(request, PoseWithCovarianceStamped)
-            message.pose.covariance[0] = message.pose.covariance[7] = 0.25 ** 2
-            message.pose.covariance[35] = math.radians(15) ** 2
-            self.initial_pose.publish(message)
-            state.log(f'초기 위치 지정 · {self.fixed} ({request["x"]:.2f}, {request["y"]:.2f}) '
-                      f'{math.degrees(request["yaw"]):.0f}°', source='navigation')
+        def localization_status(self, message):
+            try:
+                value = json.loads(message.data)
+                if isinstance(value, dict):
+                    state.put('localization', value)
+            except (ValueError, TypeError):
+                pass
 
         def receive(self, key, msg):
             limit = config.get('image_hz', 6) if key in ('head_image', 'head_debug', 'wrist_image', 'wrist_debug') else (
@@ -396,7 +556,7 @@ def run(args):
                         return  # accumulated cloud is rebuilt at most every cloud_accumulated_period_sec
                     state.put(key, dict(points=points.round(3).tolist(), frame=frame,
                                         source_frame=msg.header.frame_id,
-                                        point_size=max(1.0, min(6.0, float(config.get('cloud_point_size', 2.0)))),
+                                        point_size=max(1.0, min(6.0, float(config.get('cloud_point_size', 3.0)))),
                                         **metadata), stamp, age)
                 elif key == 'path':
                     rotation, offset = self.transform(msg.header.frame_id, msg.header.stamp)
@@ -570,11 +730,14 @@ def run(args):
                     state.log(f'{key}: {exc}', 'warn', 'sensor-control')
         if args.mapping:
             try:
-                state.sensor_manager.service_request('mapping', 'start')
+                state.sensor_manager.service_request('mapping', 'start', resume_params=getattr(args, 'resume_mapping_params', None))
             except (ValueError, RuntimeError) as exc:
                 state.log(f'mapping: {exc}', 'warn', 'sensor-control')
         if args.detection:
-            state.sensor_manager.start_auxiliary('head_detection', ['bash', str(Path(__file__).resolve().parent / 'start-head-detection.sh')])
+            try:
+                state.sensor_manager.service_request('detection', 'start')
+            except (ValueError, RuntimeError) as exc:
+                state.log(f'detection: {exc}', 'warn', 'sensor-control')
         print(f'INHA_CONTROL_CENTER_READY http://{args.host}:{args.port}', flush=True)
         print('Jetson web server. Ctrl+C stops processes started by this control center.', flush=True)
         while rclpy.ok() and not state.shutdown_requested.is_set():
@@ -582,6 +745,8 @@ def run(args):
     except KeyboardInterrupt:
         pass
     finally:
+        if node and hasattr(node, 'detection_approach') and rclpy.ok():
+            node.detection_approach.close()
         state.closed.set()
         with state.condition:
             state.condition.notify_all()
@@ -607,5 +772,6 @@ if __name__ == '__main__':
     parser.add_argument('--sim-time', action='store_true')
     parser.add_argument('--with-robot', action='store_true', help='Start physical TF/odom core and four owned sensor drivers')
     parser.add_argument('--mapping', action='store_true', help='Start SLAM Toolbox on the Jetson')
+    parser.add_argument('--resume-mapping-params', help='Initial SLAM profile with a serialized map and map_start_pose; later resets use the normal profile')
     parser.add_argument('--detection', action=argparse.BooleanOptionalAction, default=True, help='Start full-frame Head TensorRT by default; --no-detection disables it')
     run(parser.parse_args())

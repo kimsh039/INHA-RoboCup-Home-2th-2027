@@ -11,7 +11,7 @@
 <body class="v2">
   <header class="topbar">
     <div class="identity"><span class="brand-mark">i</span><h1>관제센터</h1></div>
-    <nav class="mode-tabs" role="tablist" aria-label="관제 모드"><button role="tab" data-mode-button="observe" aria-selected="true">관측</button><button role="tab" data-mode-button="slam" aria-selected="false">SLAM</button><button role="tab" data-mode-button="nav" aria-selected="false">NAV</button></nav>
+    <nav class="mode-tabs" role="tablist" aria-label="관제 모드"><button role="tab" data-mode-button="observe" aria-selected="true">관측</button><button role="tab" data-mode-button="slam" aria-selected="false">SLAM</button><button role="tab" data-mode-button="nav" aria-selected="false">NAV</button><button role="tab" data-mode-button="detection" aria-selected="false">Detection</button><button role="tab" data-mode-button="manipulation" aria-selected="false">Manipulation</button></nav>
     <div class="top-actions"><span id="mode-badge" class="badge amber">대기</span><span class="connection" id="connection"><i></i>연결 중</span><span class="clock" id="clock">--:--:--</span><button class="icon-button" id="settings-button" title="토픽 연결" aria-label="토픽 연결">⚙</button><button class="server-shutdown-button" id="shutdown-button" disabled title="관제센터와 여기서 시작한 센서·SLAM·검출 종료">서버 종료</button></div>
   </header>
   <div class="notice" id="notice"><span class="notice-dot"></span><span id="notice-text">연결 중</span><button id="reconnect-button">다시 연결</button></div>
@@ -55,11 +55,39 @@
         <div class="panel-header"><div><h3>NAV</h3><span class="tiny-pill" id="nav-pill" role="status">대기</span></div></div>
         <div class="mode-cards">
           <article class="mode-card"><span class="mode-card-title">위치</span><strong id="nav-localization">SLAM 상태 대기</strong><small id="nav-localization-hint"></small>
-            <div class="mode-actions"><select id="nav-map-select" aria-label="위치추정에 사용할 저장 지도"></select><button id="nav-localize">위치추정 시작</button><button id="nav-initial" data-pick="initial" title="지도에서 클릭 후 드래그로 방향 지정">초기 위치 지정</button></div></article>
+            <div class="mode-actions"><select id="nav-map-select" aria-label="위치추정에 사용할 저장 지도"></select><button id="nav-localize">자동 위치추정</button></div></article>
           <article class="mode-card"><span class="mode-card-title">Nav2</span><strong id="nav-state">상태 수신 대기</strong><small id="nav-hint">—</small>
             <div class="mode-actions"><button class="primary" id="nav-start">Nav2 시작</button><button id="nav-stop">중지</button></div></article>
+          <article class="mode-card"><span class="mode-card-title">3D 충돌 보호 · 로봇 외곽 거리</span><strong id="collision-state">보호 상태 대기</strong><small id="collision-distance">차체 기준 거리 —</small><small id="collision-point">장애물 측정 위치 대기</small><small id="collision-hint">MID-360 입력 대기</small></article>
           <article class="mode-card"><span class="mode-card-title">목표</span><strong id="goal-state">목표 없음</strong><small id="goal-hint"></small>
             <div class="mode-actions"><button class="primary" id="nav-goal" data-pick="goal">목표 지정</button><button class="danger" id="nav-cancel">이동 취소</button></div></article>
+        </div>
+      </section>
+      <section class="panel mode-section mode-panel hidden" data-mode="detection" aria-label="물체 검출과 접근">
+        <div class="panel-header"><div><h3>Detection</h3><span class="tiny-pill" id="det-pill" role="status">대기</span></div></div>
+        <div class="mode-cards">
+          <article class="mode-card"><span class="mode-card-title">YOLO 검출</span><strong id="det-state">상태 수신 대기</strong><small id="det-hint">Head RGB로 물체를 찾고 MID-360으로 위치를 측정합니다.</small>
+            <div class="mode-actions"><button class="primary" id="det-start">검출 시작</button><button id="det-stop">중지</button></div></article>
+          <article class="mode-card"><span class="mode-card-title">찾을 물체</span>
+            <form id="det-target-form" class="mode-actions"><input id="det-target-name" aria-label="찾을 물체 이름" list="det-object-names" placeholder="예: 컵 또는 cup" maxlength="48" autocomplete="off"><button class="primary" id="det-select" type="submit">찾아서 이동</button></form>
+            <datalist id="det-object-names"><option value="사과"><option value="복숭아"><option value="토마토"><option value="환타캔"><option value="컵"><option value="바나나"></datalist>
+            <strong id="det-target-state">물체 이름을 입력하세요.</strong><small>사과 · 복숭아 · 토마토 · 환타캔 · 컵 · 바나나</small>
+            <small id="det-position">LiDAR 좌표 대기</small><small id="det-inputs">3D 위치 입력 대기</small><small id="det-source"></small><small id="det-capture"></small>
+            <div class="mode-actions"><button id="det-clear">저장 좌표 지우기</button></div></article>
+          <article class="mode-card"><span class="mode-card-title">3D 물체로 이동 · 파지 접근</span><strong id="det-approach-state">접근 대기</strong><small id="det-approach-hint">YOLO 3D 좌표로 먼저 이동 → 물체 방향 정렬 → 책상 정밀 접근</small>
+            <label class="detection-distance" for="det-distance">정밀 접근 시 책상 추가 이격 (m)<input id="det-distance" type="number" min="0" max="0.1" step="0.001" value="0" inputmode="decimal"></label>
+            <div class="mode-actions"><button id="det-nav-start">Nav2 시작</button><button class="primary" id="det-approach">물체로 이동</button><button class="danger" id="det-cancel">접근 취소</button></div>
+            <small id="det-motion-hint">이동을 시작하면 YOLO 3D 좌표가 잡히는 즉시 출발합니다. 책상 경계 인식은 이동 조건이 아닙니다.</small></article>
+        </div>
+      </section>
+      <section class="panel mode-section mode-panel hidden" data-mode="manipulation" aria-label="매니퓰레이션 제어">
+        <div class="panel-header"><div><h3>Manipulation</h3><span class="tiny-pill" id="manip-pill" role="status">대기</span></div></div>
+        <div class="mode-cards">
+          <article class="mode-card"><span class="mode-card-title">실행 준비</span><strong id="manip-state">상태 수신 대기</strong><small id="manip-readiness">실제 실행기 · 손목 카메라 · 베이스 잠금 확인</small><small id="manip-blockers"></small></article>
+          <article class="mode-card"><span class="mode-card-title">작업 진행</span><strong id="manip-stage">새 물체 접근 완료 대기</strong><small id="manip-task">작업 ID —</small><small id="manip-result">손목 재관측 → 정밀 위치·마스크 → 규칙 기반 파지 → 좌/우 배치 → 팔 복귀</small><small id="manip-position">정밀 좌표 —</small><small id="manip-base">베이스 잠금 상태 대기</small>
+            <div class="mode-actions"><button class="primary" id="manip-arm" disabled>다음 접근 후 자동 실행</button><button id="manip-run" disabled>인계된 물체 픽앤플레이스</button><button class="danger" id="manip-cancel" disabled>작업 취소</button></div>
+            <small>Detection의 새 접근 완료·실측 정지 확인 후 실행합니다. 작업이 끝나도 베이스 잠금을 유지합니다.</small></article>
+          <article class="mode-card"><span class="mode-card-title">연결 및 오류</span><small id="manip-inputs">디텍션 인계 · 손목 재검출 · 실행기 · 베이스 게이트 연결 대기</small><small>오류·중단·연결 지연은 아래 공통 이벤트 목록에 발생 모듈과 원인 코드로 표시됩니다.</small></article>
         </div>
       </section>
     </aside>
