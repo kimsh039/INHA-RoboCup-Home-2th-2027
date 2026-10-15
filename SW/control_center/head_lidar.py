@@ -12,8 +12,6 @@ import time
 import cv2
 import numpy as np
 
-from head_projection import camera_ray_mask
-
 
 def seconds(stamp):
     return stamp.sec + stamp.nanosec * 1e-9
@@ -265,8 +263,6 @@ class HeadLidar:
         point_stamps = np.concatenate([np.full(len(p), s) for s, p in recent])
         camera = points @ rotation.T + offset
         valid = np.isfinite(camera).all(axis=1) & (camera[:, 2] > .15) & (camera[:, 2] < 5.)
-        # Distortion can fold off-camera rays into a valid YOLO box.
-        valid &= camera_ray_mask(camera, info.k, info.d, info.width, info.height)
         points, camera, point_stamps = points[valid], camera[valid], point_stamps[valid]
         if not len(points):
             return None, 'Head 시야 안 LiDAR 점 없음'
