@@ -13,7 +13,7 @@ ACTIVE_PHASES = {'waiting_nav', 'planning', 'navigating', 'settling',
                  'aligning', 'approaching', 'final_align', 'waiting_target',
                  'navigating_target', 'rerouting_table', 'planning_table',
                  'target_settling', 'point_aligning', 'point_approaching',
-                 'recovering', 'observing_table'}
+                 'recovering', 'observing_table', 'realigning'}
 INACTIVE_PHASES = {'idle', 'searching', 'confirming', 'ready', 'canceled', 'error', 'at_target'}
 
 

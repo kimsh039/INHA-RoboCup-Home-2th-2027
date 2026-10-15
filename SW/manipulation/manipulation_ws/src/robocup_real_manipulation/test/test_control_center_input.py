@@ -132,7 +132,7 @@ def test_existing_target_lost_during_wait_invalidates_session():
 def test_full_current_web_phase_sequence_keeps_one_frozen_job():
     s = running(); task = s.task
     phases = ('navigating_target', 'target_settling', 'point_aligning',
-              'point_approaching', 'recovering', 'navigating', 'observing_table',
+              'point_approaching', 'recovering', 'realigning', 'navigating', 'observing_table',
               'settling', 'aligning', 'approaching', 'final_align')
     now = 100.1
     for phase in phases:
@@ -162,3 +162,13 @@ def test_inactive_nav_success_and_recovery_cancel_never_hand_off():
         v = status(phase); v['navigation'] = dict(state='succeeded')
         s.update(v, 100.3)
         assert s.take(100.9, 90.) is None
+
+
+def test_realigning_does_not_allow_premature_grasp_handoff():
+    s = running(); task = s.task
+    s.update(status('recovering', True), 100.2)
+    s.update(status('realigning', True), 100.3)
+    assert s.task == task and s.take(100.4, 99.) is None
+    s.update(status('final_align', True), 100.5)
+    s.update(status('at_target'), 100.6)
+    assert s.take(101., 99.) is None

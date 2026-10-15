@@ -1,5 +1,13 @@
 # 2026-10-15 검증 기록
 
+## 이번 요청 한정 재점검
+
+- 사용자는 이번 점검만 요청했으며 주기 자동 실행은 생성하지 않았다.
+- 최신 웹의 realigning 복구 후 선정렬 단계가 추가 확인돼 어댑터에 반영했다. 같은 task ID를 유지하며 정렬 완료나 at_target만으로 성공 인계하지 않는다.
+- 수동 정적 계약 검사 도구로 최신 Jetson 소스를 저장 없이 읽어 검사했다. 클래스 순서 일치, 직접/최종 정렬을 통한 단계20개 인식, unknown phase0개, 필수 상태/목표 토픽 누락0개였다. 실제 ROS 그래프에서 status=std_msgs/String, target=geometry_msgs/PointStamped도 확인했다.
+- Python111개 통과, realigning을 포함한 격리 ROS187 메시지 인계 검증 및 로컬 Humble 빌드 성공. Jetson 변경·서버 재시작·구동은 하지 않았다.
+- 실제 그래프에는 read-only /piper/joint_states_feedback와 보정된 /robot/joint_states가 있었고 제어 드라이버의 gripper feedback/arm status 및 매니퓰 노드는 없었다. 이를 이름 변경만으로 대체하지 않는다. 실제 제어 드라이버 배포 전에는 전체 팔 실행 준비 완료로 표현하지 않는다.
+
 ## 최신 로그 이후 추가 호환성 감사
 
 - 실제 Jetson `detection_approach.py`의 report phase 목록, 성공/취소 및 3D 목표 계약을 읽기 전용으로 재확인했다. 관측된 전체 단계에 맞춰 target_settling/point_aligning/point_approaching/recovering/observing_table을 추가했다. 정밀 접근·복구 도중 기존 UUID/원본 좌표가 유지된다.

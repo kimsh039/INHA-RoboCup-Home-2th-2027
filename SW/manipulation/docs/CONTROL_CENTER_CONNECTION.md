@@ -19,6 +19,15 @@ JSON에는 `phase`, `active`, `label`, canonical `classes`, `target`이 함께 �
 
 추가 최신 phase `target_settling`, `point_aligning`, `point_approaching`, `recovering`, `observing_table`에서도 같은 작업 ID와 원본 좌표를 유지한다. `at_target`은 현재 웹 정의상 '3D 목표 도착/몸체 한계 접근, 파지 위치 별도·미확정'이므로 성공 인계하지 않고 `GRASP_STAGING_NOT_CONFIRMED`로 대기한다. 이후 새 active 접근은 새 ID로 받을 수 있다. 오직 관제 `phase=succeeded, active=false`와 측정 정지가 완료됐을 때만 인계한다. 내부 Nav2의 succeeded·복구 완료·차단·취소를 팔 시작으로 해석하지 않는다.
 
+최신 복구 후 선정렬 단계 `realigning`도 같은 작업을 유지한다. 최종 정렬이 `begin_final_alignment`를 통해 지연된 `succeeded`/`at_target`을 내보내는 구조도 확인했다. 두 도착 의미는 위와 같이 계속 구별한다.
+
+관제 소스 변경 후 이름/단계 누락을 수동 검사할 수 있다. 이 검사는 파일의 클래스 순서·발행 토픽 문자열·정적 접근 phase만 확인하며 서버/로봇을 실행하거나 바꾸지 않는다. 실제 센서 freshness·메시지 전달·파지 준비 검증을 대신하지 않는다.
+
+```bash
+python3 SW/manipulation/tools/check_control_center_source.py \
+  --source /실제/최신/checkout/SW/control_center/detection_approach.py
+```
+
 - 실행 후 `ready/searching/idle/error/canceled` 등 비활성 상태를 본 다음 새 active 접근을 관측해야 한다. 시작 시 이미 succeeded이거나 접근 중인 경우 과거 작업을 복원·자동 시작하지 않는다.
 - 새 접근 시작 시점의 실측 odom 좌표·원본 촬영시각을 보존한다. 완료 시 클래스가 바뀌거나 위치가 25cm 이상 달라지면 인계를 거절한다. 바뀐/오래된/비정상 메시지는 작업을 무효화한다.
 - `phase=succeeded`, `active=false`를 본 후에도 실제 `/odom_ekf`를 확인한다. odom/base_link 프레임, 신선한 증가 시각, 선속도≤0.02m/s·각속도≤0.04rad/s가 완료 후 최소0.6초 유지돼야 인계한다.

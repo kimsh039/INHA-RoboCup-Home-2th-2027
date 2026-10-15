@@ -70,7 +70,7 @@ def run():
             pump(.3, 'rerouting_table', True)
             pump(.3, 'planning_table', True)
             for phase in ('target_settling', 'point_aligning', 'point_approaching',
-                          'recovering', 'observing_table', 'final_align'):
+                          'recovering', 'realigning', 'observing_table', 'final_align'):
                 pump(.2, phase, True)
             pump(.9, 'succeeded', moving=True)
             assert not targets and not results, 'Moving base was accepted'
