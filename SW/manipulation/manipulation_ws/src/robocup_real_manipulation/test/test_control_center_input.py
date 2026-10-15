@@ -127,3 +127,38 @@ def test_existing_target_lost_during_wait_invalidates_session():
     s = running(); v = status('waiting_target', True); v['target'] = None
     s.update(v, 100.2)
     assert s.task is None and not s.armed
+
+
+def test_full_current_web_phase_sequence_keeps_one_frozen_job():
+    s = running(); task = s.task
+    phases = ('navigating_target', 'target_settling', 'point_aligning',
+              'point_approaching', 'recovering', 'navigating', 'observing_table',
+              'settling', 'aligning', 'approaching', 'final_align')
+    now = 100.1
+    for phase in phases:
+        now += .2
+        s.update(status(phase, True), now)
+        assert s.task == task
+        assert s.take(now, 99.) is None
+    now += .2; s.update(status('succeeded'), now)
+    s.update(status('succeeded'), now+.7)
+    result = s.take(now+.7, now)
+    assert result['task_id'] == task and result['target']['stamp'] == 100.
+
+
+def test_at_target_is_not_grasp_success_and_next_new_approach_gets_new_id():
+    s = running(); previous = s.task
+    s.update(status('at_target'), 100.2)
+    assert s.reason == 'GRASP_STAGING_NOT_CONFIRMED'
+    assert s.take(100.8, 90.) is None
+    s.update(status('navigating_target', True), 100.9)
+    assert s.task is not None and s.task != previous
+
+
+def test_inactive_nav_success_and_recovery_cancel_never_hand_off():
+    for phase in ('canceled', 'error', 'aborted', 'at_target'):
+        s = running()
+        s.update(status('recovering', True), 100.2)
+        v = status(phase); v['navigation'] = dict(state='succeeded')
+        s.update(v, 100.3)
+        assert s.take(100.9, 90.) is None

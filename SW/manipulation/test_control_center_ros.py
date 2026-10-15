@@ -69,6 +69,9 @@ def run():
             pump(.3, 'navigating_target', True)
             pump(.3, 'rerouting_table', True)
             pump(.3, 'planning_table', True)
+            for phase in ('target_settling', 'point_aligning', 'point_approaching',
+                          'recovering', 'observing_table', 'final_align'):
+                pump(.2, phase, True)
             pump(.9, 'succeeded', moving=True)
             assert not targets and not results, 'Moving base was accepted'
             pump(.5, odometry=False)
@@ -88,6 +91,10 @@ def run():
             pump(.3, 'navigating', True)
             pump(.8, 'canceled')
             assert len(targets) == len(results) == 1, 'Canceled approach handed off'
+            pump(.3, 'ready')
+            pump(.3, 'navigating_target', True)
+            pump(.9, 'at_target')
+            assert len(targets) == len(results) == 1, 'Unconfirmed grasp staging accepted'
             assert not node.get_publishers_info_by_topic('/manipulation/base_lease')
             assert not node.get_publishers_info_by_topic('/joint_ctrl_single')
             print('PASS actual ROS adapter: startup replay, moving/stale odom rejection, '

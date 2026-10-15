@@ -17,6 +17,8 @@ JSON에는 `phase`, `active`, `label`, canonical `classes`, `target`이 함께 �
 
 관측된 최신 관제 phase `waiting_target`, `navigating_target`, `rerouting_table`, `planning_table`도 수용한다. 비활성 상태를 먼저 본 새 접근에서 `waiting_target`의 target=null은 실측 좌표 대기로 유지한다. 좌표가 실제 도착한 이후에만 UUID를 생성하며, 시작 시 이미 진행 중인 접근이나 과거 성공을 재생하지 않는다. 알 수 없는 phase는 계속 거절한다.
 
+추가 최신 phase `target_settling`, `point_aligning`, `point_approaching`, `recovering`, `observing_table`에서도 같은 작업 ID와 원본 좌표를 유지한다. `at_target`은 현재 웹 정의상 '3D 목표 도착/몸체 한계 접근, 파지 위치 별도·미확정'이므로 성공 인계하지 않고 `GRASP_STAGING_NOT_CONFIRMED`로 대기한다. 이후 새 active 접근은 새 ID로 받을 수 있다. 오직 관제 `phase=succeeded, active=false`와 측정 정지가 완료됐을 때만 인계한다. 내부 Nav2의 succeeded·복구 완료·차단·취소를 팔 시작으로 해석하지 않는다.
+
 - 실행 후 `ready/searching/idle/error/canceled` 등 비활성 상태를 본 다음 새 active 접근을 관측해야 한다. 시작 시 이미 succeeded이거나 접근 중인 경우 과거 작업을 복원·자동 시작하지 않는다.
 - 새 접근 시작 시점의 실측 odom 좌표·원본 촬영시각을 보존한다. 완료 시 클래스가 바뀌거나 위치가 25cm 이상 달라지면 인계를 거절한다. 바뀐/오래된/비정상 메시지는 작업을 무효화한다.
 - `phase=succeeded`, `active=false`를 본 후에도 실제 `/odom_ekf`를 확인한다. odom/base_link 프레임, 신선한 증가 시각, 선속도≤0.02m/s·각속도≤0.04rad/s가 완료 후 최소0.6초 유지돼야 인계한다.

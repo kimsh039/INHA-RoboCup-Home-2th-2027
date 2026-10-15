@@ -11,7 +11,10 @@ import uuid
 CLASSES = ('green_apple', 'peach', 'tomato', 'fanta_can', 'cup', 'banana')
 ACTIVE_PHASES = {'waiting_nav', 'planning', 'navigating', 'settling',
                  'aligning', 'approaching', 'final_align', 'waiting_target',
-                 'navigating_target', 'rerouting_table', 'planning_table'}
+                 'navigating_target', 'rerouting_table', 'planning_table',
+                 'target_settling', 'point_aligning', 'point_approaching',
+                 'recovering', 'observing_table'}
+INACTIVE_PHASES = {'idle', 'searching', 'confirming', 'ready', 'canceled', 'error', 'at_target'}
 
 
 def observed_target(value, now, max_age):
@@ -100,10 +103,16 @@ class ApproachSession:
                     # Preserve the measured point/time observed at approach start.
                     self.succeeded_at = now
                 self.reason = 'WAITING_FOR_MEASURED_STOP'
+        elif phase == 'at_target':
+            # The web explicitly distinguishes object arrival from a confirmed
+            # grasp staging pose. Neither obstacle-limited arrival nor Nav2
+            # success is sufficient evidence to start the arm.
+            self.invalidate('GRASP_STAGING_NOT_CONFIRMED')
+            self.armed = True
         else:
             self.invalidate('WAITING_FOR_NEW_APPROACH')
             # A live nonterminal snapshot must precede an active transition.
-            self.armed = phase in {'idle', 'searching', 'confirming', 'ready', 'canceled', 'error'}
+            self.armed = phase in INACTIVE_PHASES
 
     def take(self, now, stopped_since):
         if self.received is None or not 0 <= now-self.received <= self.timeout:

@@ -1,5 +1,13 @@
 # 2026-10-15 검증 기록
 
+## 최신 로그 이후 추가 호환성 감사
+
+- 실제 Jetson `detection_approach.py`의 report phase 목록, 성공/취소 및 3D 목표 계약을 읽기 전용으로 재확인했다. 관측된 전체 단계에 맞춰 target_settling/point_aligning/point_approaching/recovering/observing_table을 추가했다. 정밀 접근·복구 도중 기존 UUID/원본 좌표가 유지된다.
+- 현재 웹의 at_target은 파지 위치가 확정되지 않은 도착 상태다. succeeded와 구분해 GRASP_STAGING_NOT_CONFIRMED로 팔 인계를 거절한다. Nav2 단독 성공, 실패·취소·복구 종료도 성공으로 승격하지 않는다.
+- 클래스 순서, point_odom/m, 원본 capture/LiDAR 시각, String JSON 상태 토픽 및 모델 관절 이름 계약은 기존 검증 조건을 유지한다. TF 미래 외삽·오래된 관측 오류를 이유로 시각을 새로 쓰거나 시간 기준을 완화하지 않았다.
+- Python107개 통과. 격리 ROS187에서 최신 전체 접근 단계 통과 및 at_target/canceled 인계 거절을 확인했다. 노트북 Humble 빌드 성공. Jetson 배포/실물 동작 검증은 하지 않았다.
+- 당시 로그의 No valid trajectories/Controller patience exceeded/stale_collision_scene는 Nav2·공유 충돌 장면 문제다. 이를 매니퓰 호환 오류로 간주하거나 임의로 성공/정지/lease를 합성하지 않는다. 실제 base lease 구현은 기존 설명대로 최종 이동 명령 소유자와 연결해야 한다.
+
 ## 관절 호환성 및 최신 관제 단계 수정
 
 - 관제의 raw 화면 joints 입력을 접근 계획에 직접 쓰지 않도록 별도 모델 피드백 helper와 최소 변경 패치 도구를 추가했다. 매니퓰 robot.yaml의 이름과 자동 비교한다. 모델 각도에 raw 보정을 중복 적용하지 않는다.
