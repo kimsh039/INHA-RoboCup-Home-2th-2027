@@ -205,7 +205,7 @@ class Coordinator(Node):
             self.join.finish()
             self.auto_attempted.discard(handle.request.task_id)
             self.input_errors.pop(handle.request.task_id,None)
-            if outcome=='SUCCESS':
+            if outcome=='SUCCESS' and self.c.get('base_completion_policy','hold')=='release':
                 self.release_task=self.locked_task; self.locked_task=''; self.lock_requested=False
             self.publish_lock()
             self.persist()
@@ -216,7 +216,14 @@ class Coordinator(Node):
         self.goal_handle=None; self.seq=None
         return result
     def finish_success(self,seq):
-        # Final success includes the external owner's explicit release acknowledgement.
+        if self.c.get('base_completion_policy','hold')=='hold':
+            # Terminal pick/place has no following navigation. Require the real
+            # fresh lock/stop evidence, then keep requesting that same lease.
+            self.guard()
+            self.lock_requested=True
+            self.publish_lock()
+            return 'BASE_LOCK_RETAINED'
+        # Optional following-navigation flow requires a real release ACK.
         requested=self.now()
         self.lock_requested=False; self.lease=None; self.publish_lock()
         self.status(seq,'RUNNING','BASE_UNLOCK_REQUESTED')

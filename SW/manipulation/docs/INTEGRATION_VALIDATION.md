@@ -1,5 +1,12 @@
 # 2026-10-15 검증 기록
 
+## 최종 픽앤플레이스 잠금 정책 및 성공 설정 복원
+
+- 사용자 결정대로 마지막 팔 복귀 후 base_completion_policy=hold를 기본으로 했다. 실제 fresh lease 검사는 유지하고, 성공 후 locked_task/잠금 요청/journal을 보존한다. SUCCESS/BASE_LOCK_RETAINED를 보고하며 자동 다음 작업이나 해제를 실행하지 않는다. release는 명시적으로 선택한 확장 구성에서만 기존 해제 ACK를 요구한다.
+- Python124개 통과. 격리 ROS187의 mock 계약15경우 통과: 기존 release/해제 누락 실패를 유지하고, hold 성공 및 unlock_missing에서도 잠금 유지 성공·journal 보존을 추가 검증했다. 로컬 Humble 빌드 성공. 실제 구동은 하지 않았다.
+- 청사과 성공 task와 일치하는 config_2d624576... JSON의 정규화 SHA를 재계산해 일치를 확인했다. 해당 드라이버 이름·변환·포트·펌웨어 기록을 references/success_driver_contract_20261015.json에 보존하고, 비어 있는 드라이버 설정만 새 파일에 복원하는 도구를 추가했다. 기존 다른 설정·실행/commissioning 플래그·장면·검증되지 않은 gripper trial 보정은 바꾸지 않는다.
+- 당시 그리퍼 보정은 nominal_trial/width_mapping_verified=false였다. 이 불확실성을 숨기거나 현재 센서 피드백을 과거 로그로 대체하지 않는다. 실제 드라이버의 정지 피드백 확인에는 팔 이동이 필요하지 않다.
+
 ## 손목 상태 이름 및 Jetson 관절 패치 확인
 
 - 최신 디텍션 클래스 이름/ID는 매니퓰의 6클래스 순서와 일치했다. 클래스 이름을 임의 치환하지 않았다.

@@ -2,6 +2,8 @@
 
 기존 웹의 Detection/Closed approach 출력을 받는 연결은 [CONTROL_CENTER_CONNECTION.md](docs/CONTROL_CENTER_CONNECTION.md)를 참조하세요. 웹 변경 없이 ROS JSON을 수신하며, 실제 베이스 이동 잠금 응답은 별도 필수입니다.
 
+최신 종료 정책은 **픽앤플레이스·팔 복귀 후 베이스 잠금 유지**(`base_completion_policy: hold`)입니다. 다음 주행은 자동 실행하지 않습니다. 과거 성공 작업과 해시가 일치하는 드라이버 설정 복원 도구도 같은 연결 문서에 안내했습니다.
+
 # Jetson 실물 매니퓰레이션 — ROS 2 Humble
 
 외부 목표·클로즈 어프로치 완료 → 베이스 잠금 확인 → 받은 coarse 좌표 위에 탑다운 관측 배치 → 손목 재관측 → 정밀 위치 → 클래스별 탑다운 픽앤플레이스 → 후퇴 → 팔 복귀를 수행하는 패키지다. GraspNet·Gazebo·MuJoCo는 실행 의존성이 아니다. 기존 실물 PARK hand–eye 결과와 CAD 장착/TCP를 기본 설정에 반영했다. 이번 작업에서 새 실물 보정이나 실제 구동은 수행하지 않았다.

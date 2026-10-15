@@ -212,6 +212,9 @@ class_execution:
 # User-confirmed table thickness; XY bounds/pose still measured in the fixed frame.
 table_thickness_m: 0.028
 base_unlock_timeout_s: 3.0
+# Final task: keep the base locked after arm return; no automatic next drive.
+# Explicit release policy is for a future following-navigation sequence only.
+base_completion_policy: hold
 scene_depth_stride_px: 6
 scene_voxel_m: 0.02
 scene_max_voxels: 600

@@ -32,6 +32,7 @@ def transform_point(point, xyz, quaternion):
     return rotation(quaternion) @ np.array(point) + xyz
 
 def validate(cfg, hardware=False):
+    require(cfg.get('base_completion_policy', 'hold') in ('hold', 'release'), 'BASE_COMPLETION_POLICY')
     # Initial trial setting, not a zero calibration or wider command limits.
     startup_margin=cfg.get('startup_bounds_tolerance_rad',0.)
     require(finite(startup_margin) and 0<=startup_margin<=math.radians(5),'STARTUP_BOUNDS_TOLERANCE')

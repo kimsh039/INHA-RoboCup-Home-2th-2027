@@ -16,7 +16,7 @@ class Sequence:
                 if stage=='VERIFY_GRASP': self.holding='HELD'
                 if stage=='RELEASE': self.holding='EMPTY'; self.place_success=True
                 if stage=='RETURN_ARM': self.return_success=True
-            if hasattr(self.b,'finish_success'): self.b.finish_success(self)
+            if hasattr(self.b,'finish_success'): reason=self.b.finish_success(self) or ''
             outcome='SUCCESS'
         except Exception as e:
             reason=str(e); outcome='CANCELED' if reason=='CANCELED' else 'FAILED'

@@ -24,10 +24,13 @@ cases=[('target-first',{},'SUCCESS','COMPLETE'),
        ('ambiguous',{'scenario':'ambiguous'},'FAILED','WRIST_REDETECT'),
        ('cancel',{'scenario':'cancel'},'CANCELED',None),
        ('unlock-missing',{'scenario':'unlock_missing'},'FAILED','COMPLETE'),
+       ('hold-success',{},'SUCCESS','COMPLETE'),
+       ('hold-unlock-missing',{'scenario':'unlock_missing'},'SUCCESS','COMPLETE'),
        ('return-failed',{'fail_stage':'RETURN_ARM'},'FAILED','RETURN_ARM')]
 for name,params,outcome,stage in cases:
     with tempfile.TemporaryDirectory(prefix='real_manip_contract_') as td:
         cfg=yaml.safe_load(base.read_text()); cfg['log_path']=td+'/events.jsonl';cfg['journal_path']=td+'/completed.json'
+        if name.startswith('hold-'):cfg['base_completion_policy']='hold'
         path=Path(td)/'test.yaml';path.write_text(yaml.safe_dump(cfg))
         args=['--ros-args','-p','config:='+str(path)]
         for k,v in params.items():args+=['-p',k+':='+v]
@@ -41,6 +44,10 @@ for name,params,outcome,stage in cases:
             if name=='right-blocked': assert robot.place_tcp[1]>0,'Must fall back to left'
             if name=='target-first': assert robot.place_tcp[1]<0,'Must prefer right'
             if name=='return-failed':assert s.place_success and not s.return_success and s.holding=='EMPTY'
+            if name.startswith('hold-'):
+                assert s.reason=='BASE_LOCK_RETAINED'
+                assert robot.locked_task==s.task_id and robot.lock_requested
+                assert __import__('json').loads(Path(cfg['journal_path']).read_text())['locked_task']==s.task_id
             # No robot command topic may be created by this mock.
             assert '/joint_ctrl_single' not in [n for n,t in robot.get_topic_names_and_types()]
             print('PASS',name,s.stage,s.outcome,s.reason,flush=True)

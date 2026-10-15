@@ -4,6 +4,8 @@
 
 ## 연결 방식
 
+현재 사용자 흐름은 클로즈 어프로치→실제 정지·이동 잠금→픽앤플레이스·팔 복귀로 종료된다. `base_completion_policy: hold`가 기본이며 성공 후에도 동일 task ID로 잠금을 요청하고 journal에 유지한다. 마지막 결과는 `SUCCESS / BASE_LOCK_RETAINED`다. 다음 주행이나 새 팔 작업은 자동 시작하지 않는다. 해제 ACK는 이 모드의 완료 조건이 아니다. 이후 주행이 있는 별도 구성에서만 `release`를 명시하고 실제 해제 응답을 확인한다. 최초 잠금과 동작 중 fresh locked/stopped lease는 두 모드 모두 필요하다.
+
 `/detection/closed_approach/status` (`std_msgs/String` JSON)
 → `control_center_input`
 → `/manipulation/target` (`Target`)
@@ -56,6 +58,18 @@ ros2 launch robocup_real_manipulation control_center_input.launch.py
 기존 통합 launch와 함께 쓸 때는 `start_control_center_adapter:=true start_head_adapter:=false`를 지정한다. 실제 실행은 기존 measured config, 고정좌표계 scene, 실제 base lease 및 손목 카메라 조건을 충족해야 한다. 이 문서는 팔 구동 승인이나 실물 통합 성공을 뜻하지 않는다.
 
 ## 검증
+
+### 과거 성공 설정 재사용
+
+청사과 성공 task `7ece08d387f547cd942d794076f82bb0`의 config SHA `2d6245769bc5b9a4488c6d5a765120b3d797aa453bdc5f90eb45ceb674f9474a`와 일치하는 원본 snapshot을 확인했다. `references/success_driver_contract_20261015.json`에 관련 설정을 보존했다. 아래 도구는 **비어 있는 드라이버 설정만** 새 파일에 채운다. 기존 값이 다른 경우 덮어쓰지 않고 거절하며, commissioning·실행 플래그·장면·그리퍼 trial 보정은 가져오지 않는다.
+
+```bash
+python3 SW/manipulation/tools/restore_success_driver_settings.py \
+  --config SW/manipulation/manipulation_ws/src/robocup_real_manipulation/config/robot.yaml \
+  --output /원하는/새/robot.driver-reference.yaml
+```
+
+과거 성공 드라이버는 `/joint_states_feedback`, `/gripper_states_feedback`, `/arm_status`를 발행했다. 현재 관제의 read-only `/piper/joint_states_feedback`와 이름만 remap해서 대체하면 그리퍼 effort/status가 생기는 것이 아니다. 실제 제어 드라이버를 중복 없이 연결해 정지 상태에서 원본 시각·필드·타입을 확인하면 된다. 팔 이동은 이 확인의 전제 조건이 아니다. 과거 그리퍼 폭 설정은 nominal_trial/width_mapping_verified=false였으므로 자동 실측 완료 처리하지 않는다.
 
 관제 손목 상태 채널은 원래 `/detection/wrist/status`만 선택했지만 우리 frontend는 `/manipulation/wrist/status` (`std_msgs/String`)를 발행한다. 새 예제 설정은 매니퓰 상태를 우선하고 기존 검출 상태를 fallback으로 유지한다. 기존 실제 config.json은 통째로 교체하지 않고 아래 도구로 해당 채널 후보만 연결한다. 원본 설정 backup을 만들고 다른 설정은 보존하며 전체 설정/비밀값은 출력하지 않는다. 적용 후 관제센터를 운영자가 재시작해야 선택이 반영된다. 모터·팔·카메라·네비게이션을 시작하는 도구가 아니다.
 

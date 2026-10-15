@@ -1,5 +1,7 @@
 # Jetson 실물 시스템 통합 패키지 — 2026-10-15
 
+최신 사용자 결정: 픽앤플레이스·팔 복귀 후에는 다음 주행이 없다. 기본 `base_completion_policy=hold`로 성공 후에도 실제 베이스 잠금을 유지한다. 해제 ACK/다음 작업에 관한 아래 설명은 `release`를 명시한 확장 구성에만 적용한다. 실제 최초 정지·잠금 ACK와 동작 중 lease 확인은 유지한다. 구체적인 연결·성공 설정 복원은 [CONTROL_CENTER_CONNECTION.md](CONTROL_CENTER_CONNECTION.md)를 따른다.
+
 실행 코드는 기존 `robocup_real_manipulation` 및 `robocup_real_manipulation_msgs` 패키지에 있다. 새 ROS 메시지/패키지를 만들지 않았다. 실제 팔·그리퍼·MoveIt·RGB-D 입력을 사용하는 경로이며, `integrated.launch.py`는 mock/bench/phase1 client를 실행하지 않는다. 네비게이션·센서 퓨전을 대신 구현하지 않는다.
 
 **현재 납품은 로컬 소스와 업로드용 압축 파일이다. 현재 실환경은 필요한 외부 입력이 없어 전체 작업을 실행할 수 없다. 기본 `execution_enabled: false`와 미정 수치를 유지한다.** 하드웨어 구동은 하지 않았다.
@@ -29,7 +31,7 @@
      → 요청 중에만 YOLO 재검출 + SAM2 → 실제 마스크/표면점/취득 TF     │
      → 클래스별 탑다운 규칙 → MoveIt 장면/계획 → Piper bridge        │
      → 접촉폭/힘 확인 → lift → 오른쪽/왼쪽 place → retreat/return     │
-base_lock_request(false) → 외부 실제 해제 응답(BaseLease false)       │
+기본: base_lock_request(true) 유지 · SUCCESS/BASE_LOCK_RETAINED      │
      → TaskStatus/Manipulate SUCCESS → 다음 작업/다음 이동           ┘
 ```
 
@@ -68,7 +70,7 @@ base_lock_request(false) → 외부 실제 해제 응답(BaseLease false)       
 
 외부 BaseLease provider는 Nav2·dock·teleop·관제·collision-approved 경로 등 **모든** 최종 구동 입력을 gate해야 한다. 자체 odometry/구동 피드백으로 정지를 확인하고, 잠금 요청 이후 시각의 동일 task_id 응답과 설정 `base_age_s` 이내 heartbeat를 보내야 한다. provider가 죽거나 heartbeat가 오래되면 팔 실행은 중단된다. 이 provider는 현재 실물 네비게이션에 없으며 이번 패키지가 가짜로 대신 발행하지 않는다.
 
-접근이 끝나기 전에 이동 잠금을 요청하지 않는다. Action 예약과 물리 잠금 요청은 분리했다. 성공 후 잠금 해제 요청에도 동일 task_id의 **새 `locked=false, stopped=true` 응답**을 기다린다. 해제 미응답은 `BASE_UNLOCK_UNCONFIRMED` 실패이며 SUCCESS로 보고하지 않는다. 상위는 최종 결과 전 새 주행을 시작하지 않는다.
+접근이 끝나기 전에 이동 잠금을 요청하지 않는다. Action 예약과 물리 잠금 요청은 분리했다. 기본 hold 모드는 성공 후에도 잠금을 유지한다. 선택적 release 모드에서는 성공 후 해제 요청에 동일 task_id의 **새 `locked=false, stopped=true` 응답**을 기다린다. release 모드의 해제 미응답은 `BASE_UNLOCK_UNCONFIRMED` 실패다. 상위는 최종 결과 전 새 주행을 시작하지 않는다.
 
 필요 TF: `map→odom→base_link`, 실제 URDF 팔 사슬 `base_link→piper_link6`, calibrated `piper_link6→wrist_color_optical_frame`, 내부 TCP 정의. 이동 전 Target는 `coarse_fixed_frame`(기본 odom)에 고정한다. 도착 후 lease 취득시각의 base_link로 변환한다. `base_link`에 고정한 정차 좌표는 통합 action에서 거절한다. TF가 취득시각에 없으면 진행하지 않는다.
 
