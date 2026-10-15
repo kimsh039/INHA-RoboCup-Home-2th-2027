@@ -1,0 +1,37 @@
+# [INTERFACE:WRIST_TOPICS] Existing RealSense ROS owner; RGB and ALIGNED depth
+# use FACTORY RGB CameraInfo together. Do not mix corrected RGB K with a depth
+# stream aligned by a different factory calibration.
+color_topic: /wrist/wrist/color/image_raw
+depth_topic: /wrist/wrist/aligned_depth_to_color/image_raw
+camera_info_topic: /wrist/wrist/color/camera_info
+optical_frame: wrist_color_optical_frame
+sync_tolerance_s: 0.025
+# [TUNE:VISION] Relative paths are resolved against repo; no implicit downloads.
+yolo_model: SW/detection/head/models/head_yolo11n_20261013.pt
+yolo_task: detect
+device: '0'
+imgsz: 640
+nms_iou: 0.45
+# Existing generic SAM2.1 small model/config; bbox prompts come from real YOLO.
+# The .pt checkpoint must exist on Jetson; a git pull of source is insufficient.
+mask_source: sam2
+sam_checkpoint: third_party/sam2/checkpoints/sam2.1_hiera_small.pt
+sam_config: configs/sam2.1/sam2.1_hiera_s.yaml
+sam_min_score: 0.85
+# [TUNE:QUALITY] Explicit depth systematic-error allowance; tune from measurements.
+position_error_floor_m: 0.003
+# [TUNE:BANANA_PCA] Global PCA direction; translated to a thick real body pixel.
+# No grasp at the silhouette centroid or in the concave empty region.
+banana:
+  min_mask_pixels: 200
+  component_fraction: 0.90
+  min_pca_ratio: 1.15
+  end_trim_fraction: 0.05
+  center_fraction: 0.50
+  center_band_fraction: 0.15
+  min_clearance_px: 3.0
+  clearance_fraction: 0.85
+
+# Fixed resource limits; one worker, no queue of inference jobs.
+max_candidates: 8
+max_frames_per_request: 12

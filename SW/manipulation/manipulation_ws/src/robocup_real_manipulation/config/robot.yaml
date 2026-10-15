@@ -1,0 +1,220 @@
+# 모든 길이 m, 각도 rad. null은 미정: 실물 모드가 시작되지 않는다.
+execution_enabled: false
+commissioned: false
+calibration_verified: false
+scene_verified: false
+model_names_verified: false
+# Canonical detector OUTPUT schema, after Head's legacy-checkpoint adapter.
+# Raw 20261007 checkpoint still has 7 names; never feed its raw IDs directly here.
+model_names: [green_apple, peach, tomato, fanta_can, cup, banana]
+gravity_frame: base_link
+planning_group: piper_arm
+tcp_frame: tcp
+wrist_optical_frame: wrist_camera_optical_frame
+# [INTERFACE:TF_OWNERS] Real sensor_tf + RealSense own public sensor frames.
+# This private calibrated wrist frame and TCP remain in the arm model.
+external_sensor_tf: true
+joint_names: [piper_joint1, piper_joint2, piper_joint3, piper_joint4, piper_joint5, piper_joint6]
+driver_joint_names: [joint1, joint2, joint3, joint4, joint5, joint6]
+# q_URDF = sign * q_driver + offset. q1=-1.6 is a CAD convention, NOT a physical calibration.
+# [CALIB:JOINT_MAPPING] Actual driver-to-URDF signs/zeros.
+joint_signs: null
+joint_offsets: null
+joint_limits: [[-4.2179938, 1.0179938], [0, 3.1415926], [-2.9670597, 0], [-1.7453292, 1.7453292], [-1.2217304, 1.2217304], [-2.0943951, 2.0943951]]
+# Optional safe transit joint pose; final observation is above the received coarse target.
+observation_joints: null
+# Optional optical center-distance override. Default derives from surface clearance + center height.
+observation_camera_distance_m: null
+# [TUNE:OBSERVATION_ORIENTATION] Desired OPTICAL-frame attitude: optical +Z down.
+# The resulting TCP observation attitude is calculated from measured hand-eye/TCP.
+observation_camera_quaternion: [1.0, 0.0, 0.0, 0.0]
+# D435 initial experiment recommendation, not validated on this robot.
+# [TUNE:OBSERVATION] Lens-to-object-TOP clearance, not TCP height or center distance.
+observation_surface_clearance_m: 0.25
+# Fill from the actual camera/depth profile and measured coarse Z error bound.
+camera_min_depth_m: null
+coarse_z_error_bound_m: null
+observation_depth_margin_m: 0.02
+coarse_collision_padding_m: 0.02
+return_joints: null
+# TCP axes and finger closing direction must be measured. quaternion xyzw.
+# [TUNE:ORIENTATION] TCP +Z down; calibrated closing axis is independent.
+# CAD TCP axes parallel to link6; initial vertical +Z-down attitude, adjustable.
+topdown_quaternion: [1.0, 0.0, 0.0, 0.0]
+# grasp TCP position = grip center - R_tcp * tcp_to_grip_center_m
+# [CALIB:GRIP_CENTER] Set [0,0,0] only if TCP is the chosen grip center.
+tcp_to_grip_center_m: [0.0, 0.0, 0.0]
+# Gravity frame must be level (+Z up, +X forward, +Y left).
+gravity_frame_verified: false
+# Explicit physical transforms, not simulated calibration; xyz and quaternion xyzw.
+# [CALIB:BASE_ARM] Physical base_link -> piper_link6 chain root.
+# User: mount at the same position/orientation as URDF. CAD reference, not a measurement.
+base_arm_transform: {xyz: [-0.0195, 0.0, 0.80611], quaternion_xyzw: [0.0, 0.0, 0.0, 1.0]}
+# [CALIB:HAND_EYE] Physical piper_link6/flange -> camera optical, NOT gripper fingertips.
+# Physical PARK result, feature/wrist-handeye-calibration @ 0bac1e558075600d21c6b7273f26a6858266ea0d.
+# Child optical coordinates -> parent link6. Reported live max deviation: 12.71mm / 1.25deg.
+handeye_transform: {xyz: [-0.063877, 0.028728, -0.012631], quaternion_xyzw: [0.018698, -0.005325, -0.705684, 0.708260]}
+# [CALIB:TCP] Physical piper_link6/flange -> tool TCP xyz + quaternion.
+# Repository STL confirms jaw-tip height on center axis = 142.5 mm.
+# This is a usable CAD tool definition; pivot refinement remains optional until error assessment.
+link6_tcp_transform: {xyz: [0.0, 0.0, 0.1425], quaternion_xyzw: [0.0, 0.0, 0.0, 1.0]}
+# Table top and support rectangle in gravity_frame. Include body/sensor meshes in URDF.
+table_z_m: null
+table_bounds_xy: null
+# Boxes {id, center: [x,y,z], size: [x,y,z]} incl surrounding objects; required even if []
+obstacles: null
+support_margin_m: 0.015
+# [TUNE:MOTION] Vertical clearances, placement shift and speed/acceleration.
+pregrasp_m: 0.10
+lift_m: 0.12
+retreat_m: 0.10
+place_offset_m: 0.10
+velocity_scale: 0.05
+acceleration_scale: 0.05
+cartesian_step_m: 0.005
+position_tolerance_m: 0.003
+orientation_tolerance_rad: 0.03
+association_radius_m: 0.12
+association_margin_m: 0.02
+# [TUNE:QUALITY] Detection/depth/association gates.
+min_confidence: 0.65
+max_position_std_m: 0.008
+max_observation_age_s: 0.7
+max_event_age_s: 30.0
+max_target_age_s: 120.0
+feedback_age_s: 0.3
+base_age_s: 0.3
+joint_stable_s: 0.4
+stable_speed_rad_s: 0.02
+future_tolerance_s: 0.05
+depth_min_m: 0.10
+depth_max_m: 1.5
+depth_min_pixels: 40
+depth_min_fraction: 0.65
+depth_max_mad_m: 0.008
+# robust patch around mask centroid, avoids bbox single-pixel depth
+mask_erosion_px: 2
+depth_patch_radius_px: 5
+# [TUNE:TIMEOUT] Bounded observation retries; physical motions never auto-retry.
+observation_retries: 1
+stage_timeout_s: 120.0
+approach_timeout_s: 60.0
+observation_timeout_s: 5.0
+stop_timeout_s: 3.0
+log_path: ~/.ros/robocup_real_manipulation/events.jsonl
+journal_path: ~/.ros/robocup_real_manipulation/completed_ids.json
+# New integration contract, not asserted to exist in Tracer driver.
+base_lease_topic: /manipulation/base_lease
+base_lock_topic: /manipulation/base_lock_request
+# Confirm actual names/remaps on robot, from checked upstream driver source.
+feedback_topic: /joint_states_feedback
+command_topic: /joint_ctrl_single
+arm_status_topic: /arm_status
+enable_service: /enable_srv
+can_port: null
+firmware: null
+# GitHub physical intrinsic record, 2026-10-10. Confirm this is the mounted unit.
+wrist_camera_model: RealSense D435IF
+wrist_camera_serial: '243222070076'
+# gripper raw driver position = (physical_width - bias) / scale
+# Do not assume the upstream 0..0.08 m range equals the physical 100mm opening.
+# [CALIB:GRIPPER_UNITS] Physical aperture vs raw driver position.
+width_scale: null
+width_bias_m: null
+driver_width_max: null
+width_mapping_verified: false
+# [TUNE:WIDTH_TRIAL] measured requires width_mapping_verified; nominal_trial
+# explicitly accepts an initial approximation ONLY for green_apple at <=5% speed.
+# Does not bypass commissioning, geometry, scene, feedback, or collision checks.
+width_mapping_mode: measured
+gripper_max_m: 0.100
+gripper_tolerance_m: 0.001
+# Physical effort calibration must distinguish contact from empty close.
+grasp_min_effort: null
+gripper_command_effort: 1.0
+gripper_settle_s: 0.4
+driver_speed_percent: 5
+max_joint_speed_rad_s: 0.15
+max_joint_acceleration_rad_s2: 0.3
+path_tolerance_rad: 0.12
+goal_tolerance_rad: 0.015
+# Per-finger URDF coordinate = sign * physical_gap / 2, only after measurement.
+gripper_joint_names: [piper_gripper_joint1, piper_gripper_joint2]
+gripper_joint_signs: [1.0, -1.0]
+# Current 20261012 output IDs. Plate is excluded by Head and has no grasp rule.
+# [TUNE:GRIPPER] All per-class open_m/close_m in meters; initial heuristic values.
+# [TUNE:GRASP_HEIGHT] grip_height_m = grip center above the measured table.
+classes:
+  # User heights 2026-10-12; all meters. Geometry center at half height for tabletop placement.
+  # [TUNE:GRASP_HEIGHT] Initial grip at body midpoint; tune against actual contact pads.
+  green_apple: {display_name: 청사과, class_id: 0, enabled: true, size_m: [0.080, 0.080], height_m: 0.068, open_m: 0.100, close_m: 0.079, center_height_m: 0.034, grip_height_m: 0.034, radius_m: 0.040}
+  peach: {display_name: 복숭아, class_id: 1, enabled: true, size_m: [0.080, 0.070], height_m: 0.068, open_m: 0.100, close_m: 0.079, center_height_m: 0.034, grip_height_m: 0.034, radius_m: 0.040}
+  tomato: {display_name: 토마토, class_id: 2, enabled: true, size_m: [0.083, 0.078], height_m: 0.068, open_m: 0.100, close_m: 0.082, center_height_m: 0.034, grip_height_m: 0.034, radius_m: 0.0415}
+  fanta_can: {display_name: 환타, class_id: 3, enabled: true, size_m: [0.0646], height_m: 0.124, open_m: 0.080, close_m: 0.064, center_height_m: 0.062, grip_height_m: 0.062, radius_m: 0.0323}
+  cup: {display_name: 컵, class_id: 4, enabled: true, size_m: [0.091], height_m: 0.078, open_m: 0.100, close_m: 0.090, center_height_m: 0.039, grip_height_m: 0.039, radius_m: 0.0455}
+  # [CALIB:BANANA] User length=160mm,width=30mm. ASSUMPTION: lying body height
+  # equals width=30mm, center/contact=15mm; confirm the actual vertical thickness.
+  # Radius=110mm is a conservative INITIAL bound about the selected BODY point;
+  # wrist measures the full silhouette extent and rejects a smaller-than-object bound.
+  # CAD fingers translate along TCP +/-Y. With Rx(pi) topdown, offset=-pi/2
+  # cancels the formula's +pi/2: TCP X follows PCA, closure Y is perpendicular.
+  banana: {display_name: 바나나, class_id: 5, enabled: false, size_m: [0.160, 0.030], length_m: 0.160, width_m: 0.030, height_m: 0.030, open_m: 0.040, close_m: 0.026, center_height_m: 0.015, grip_height_m: 0.015, radius_m: 0.110, axis_required: true, closing_axis_yaw_offset_rad: -1.5707963267948966}
+
+# Actual finger links from CAD; confirm on physical collision model.
+touch_links: [piper_gripper_base, piper_gripper_link1, piper_gripper_link2]
+gripper_feedback_topic: /gripper_states_feedback
+
+observation_stable_frames: 3
+# [TUNE:BANANA_PCA] Angular spread of 3 wrist estimates, modulo pi (rad).
+axis_stability_tolerance_rad: 0.15
+
+# Coarse target captured before base approach: transform across two acquisition times.
+coarse_fixed_frame: odom
+
+# Provenance only; these entries never enable motors or certify physical accuracy.
+reference_sources:
+  base_arm: URDF nominal fixed chain; user plans identical mounting
+  tcp: repository jaw-tip CAD datum; xyz in link6, axes parallel to link6
+  wrist_intrinsics: HW/calibration/camera_intrinsics/wrist/ost.yaml
+  physical_handeye: feature/wrist-handeye-calibration@0bac1e558075600d21c6b7273f26a6858266ea0d
+  handeye_file: SW/simulation/calibration/wrist_handeye/wrist_handeye_calibration.yaml
+  handeye_note: Physical best15 PARK result; reproduced offline. Branch README predates result.
+  detector_class_map: SW/detection/head/datasets/20261012/data.yaml
+  detector_class_map_commit: ddae58cb002ae533989bddd3f2b8147029a5ad0f
+  detector_class_map_note: Current 6-class output. Old checkpoint names are adapted in Head class_schema.py; plate excluded.
+
+# Integration scene coordinates MUST be measured in coarse_fixed_frame before motion.
+# Old stationary base_link bounds are intentionally not accepted by the coordinator.
+scene_frame: null
+wrist_info_topic: /wrist/wrist/color/camera_info
+coarse_xy_error_bound_m: 0.08   # trial bound, not an accuracy claim
+observation_image_margin_fraction: 0.12
+observation_max_distance_m: 0.65
+wrist_search_offsets_m: [[0.0, 0.0], [0.05, 0.0], [-0.05, 0.0], [0.0, 0.05]]
+wrist_search_radius_m: 0.08
+# Magnitude is used because squeezing feedback is negative in the recorded trial.
+grasp_min_width_m: 0.01
+grasp_open_margin_m: 0.005
+hold_min_effort: 0.1      # trial from successful grip, requires configuration review
+hold_width_slip_m: 0.004 # trial, measured relative to INITIAL CONTACT aperture
+gripper_stall_m: 0.0005
+# Explicit class execution gates: structures exist for all six classes.
+# Only green_apple has the cited physical pick/place success. Other classes must
+# have contact/clearance/geometry reviewed before setting ready=true in measured config.
+class_execution:
+  green_apple: {ready: true, reason: '20261015 stationary success; integration still unverified'}
+  peach: {ready: false, reason: 'contact aperture/effort and collision extent not commissioned'}
+  tomato: {ready: false, reason: 'contact aperture/effort and soft-object grip not commissioned'}
+  fanta_can: {ready: false, reason: 'contact aperture/effort and clearance not commissioned'}
+  cup: {ready: false, reason: 'handle-inclusive collision extent and grip contact not commissioned'}
+  banana: {ready: false, reason: 'vertical body thickness, full extent and CAD closure-axis trial unverified'}
+
+# User-confirmed table thickness; XY bounds/pose still measured in the fixed frame.
+table_thickness_m: 0.028
+base_unlock_timeout_s: 3.0
+scene_depth_stride_px: 6
+scene_voxel_m: 0.02
+scene_max_voxels: 600
+scene_table_margin_m: 0.008
+mask_extent_tolerance_m: 0.008
+placed_history_limit: 32

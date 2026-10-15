@@ -1,0 +1,452 @@
+{
+  "source": "artifacts/jetson_pick_place_20261015/manip_fix/pick_logs/events.jsonl",
+  "source_sha256": "88c9ad32afbb25847b10d804a4160cf9044d501ee50489e4944645fb701b4f49",
+  "records": [
+    {
+      "task_id": "7ece08d387f547cd942d794076f82bb0",
+      "stage": "WAIT_FOR_APPROACH",
+      "outcome": "RUNNING",
+      "reason": "",
+      "holding": "EMPTY",
+      "config_sha256": "2d6245769bc5b9a4488c6d5a765120b3d797aa453bdc5f90eb45ceb674f9474a",
+      "stamp": 1791991831.9434066,
+      "place_success": false,
+      "return_success": false,
+      "stop_confirmed": false
+    },
+    {
+      "task_id": "7ece08d387f547cd942d794076f82bb0",
+      "stage": "MOVE_TO_OBSERVATION",
+      "outcome": "RUNNING",
+      "reason": "",
+      "holding": "EMPTY",
+      "config_sha256": "2d6245769bc5b9a4488c6d5a765120b3d797aa453bdc5f90eb45ceb674f9474a",
+      "stamp": 1791991831.9793036,
+      "place_success": false,
+      "return_success": false,
+      "stop_confirmed": false
+    },
+    {
+      "task_id": "7ece08d387f547cd942d794076f82bb0",
+      "stage": "MOVE_TO_OBSERVATION",
+      "outcome": "RUNNING",
+      "reason": "MOVE_TO_INITIAL_POSE",
+      "holding": "EMPTY",
+      "config_sha256": "2d6245769bc5b9a4488c6d5a765120b3d797aa453bdc5f90eb45ceb674f9474a",
+      "stamp": 1791991832.0004818,
+      "place_success": false,
+      "return_success": false,
+      "stop_confirmed": false
+    },
+    {
+      "task_id": "7ece08d387f547cd942d794076f82bb0",
+      "stage": "MOVE_TO_OBSERVATION",
+      "outcome": "RUNNING",
+      "reason": "COARSE_TOPDOWN_OBSERVATION_TARGET",
+      "holding": "EMPTY",
+      "config_sha256": "2d6245769bc5b9a4488c6d5a765120b3d797aa453bdc5f90eb45ceb674f9474a",
+      "stamp": 1791991855.9255877,
+      "place_success": false,
+      "return_success": false,
+      "stop_confirmed": false,
+      "observation_tcp": [
+        0.3065521281965968,
+        -0.06901901491467723,
+        0.7921087717238092
+      ]
+    },
+    {
+      "task_id": "7ece08d387f547cd942d794076f82bb0",
+      "stage": "WRIST_REDETECT",
+      "outcome": "RUNNING",
+      "reason": "",
+      "holding": "EMPTY",
+      "config_sha256": "2d6245769bc5b9a4488c6d5a765120b3d797aa453bdc5f90eb45ceb674f9474a",
+      "stamp": 1791991876.817849,
+      "place_success": false,
+      "return_success": false,
+      "stop_confirmed": false,
+      "observation_tcp": [
+        0.3065521281965968,
+        -0.06901901491467723,
+        0.7921087717238092
+      ]
+    },
+    {
+      "task_id": "7ece08d387f547cd942d794076f82bb0",
+      "stage": "COMPUTE_GRASP",
+      "outcome": "RUNNING",
+      "reason": "",
+      "holding": "EMPTY",
+      "config_sha256": "2d6245769bc5b9a4488c6d5a765120b3d797aa453bdc5f90eb45ceb674f9474a",
+      "stamp": 1791991880.2668982,
+      "place_success": false,
+      "return_success": false,
+      "stop_confirmed": false,
+      "observation_tcp": [
+        0.3065521281965968,
+        -0.06901901491467723,
+        0.7921087717238092
+      ],
+      "center": [
+        0.3292720355982992,
+        0.01619659625348707,
+        0.6115
+      ],
+      "grasp_tcp": [
+        0.3292720355982992,
+        0.01619659625348707,
+        0.6115
+      ],
+      "association_error_m": 0.051502121624254486
+    },
+    {
+      "task_id": "7ece08d387f547cd942d794076f82bb0",
+      "stage": "MOVE_TO_PREGRASP",
+      "outcome": "RUNNING",
+      "reason": "",
+      "holding": "EMPTY",
+      "config_sha256": "2d6245769bc5b9a4488c6d5a765120b3d797aa453bdc5f90eb45ceb674f9474a",
+      "stamp": 1791991880.2859306,
+      "place_success": false,
+      "return_success": false,
+      "stop_confirmed": false,
+      "observation_tcp": [
+        0.3065521281965968,
+        -0.06901901491467723,
+        0.7921087717238092
+      ],
+      "center": [
+        0.3292720355982992,
+        0.01619659625348707,
+        0.6115
+      ],
+      "grasp_tcp": [
+        0.3292720355982992,
+        0.01619659625348707,
+        0.6115
+      ],
+      "association_error_m": 0.051502121624254486
+    },
+    {
+      "task_id": "7ece08d387f547cd942d794076f82bb0",
+      "stage": "MOVE_TO_PREGRASP",
+      "event": "GRIPPER_FEEDBACK",
+      "command_width_m": 0.1,
+      "measured_width_m": 0.099098609354,
+      "effort": 0.055,
+      "config_sha256": "2d6245769bc5b9a4488c6d5a765120b3d797aa453bdc5f90eb45ceb674f9474a",
+      "stamp": 1791991884.8968258
+    },
+    {
+      "task_id": "7ece08d387f547cd942d794076f82bb0",
+      "stage": "DESCEND",
+      "outcome": "RUNNING",
+      "reason": "",
+      "holding": "EMPTY",
+      "config_sha256": "2d6245769bc5b9a4488c6d5a765120b3d797aa453bdc5f90eb45ceb674f9474a",
+      "stamp": 1791991905.3269625,
+      "place_success": false,
+      "return_success": false,
+      "stop_confirmed": false,
+      "observation_tcp": [
+        0.3065521281965968,
+        -0.06901901491467723,
+        0.7921087717238092
+      ],
+      "center": [
+        0.3292720355982992,
+        0.01619659625348707,
+        0.6115
+      ],
+      "grasp_tcp": [
+        0.3292720355982992,
+        0.01619659625348707,
+        0.6115
+      ],
+      "association_error_m": 0.051502121624254486
+    },
+    {
+      "task_id": "7ece08d387f547cd942d794076f82bb0",
+      "stage": "CLOSE_GRIPPER",
+      "outcome": "RUNNING",
+      "reason": "",
+      "holding": "EMPTY",
+      "config_sha256": "2d6245769bc5b9a4488c6d5a765120b3d797aa453bdc5f90eb45ceb674f9474a",
+      "stamp": 1791991915.6487808,
+      "place_success": false,
+      "return_success": false,
+      "stop_confirmed": false,
+      "observation_tcp": [
+        0.3065521281965968,
+        -0.06901901491467723,
+        0.7921087717238092
+      ],
+      "center": [
+        0.3292720355982992,
+        0.01619659625348707,
+        0.6115
+      ],
+      "grasp_tcp": [
+        0.3292720355982992,
+        0.01619659625348707,
+        0.6115
+      ],
+      "association_error_m": 0.051502121624254486
+    },
+    {
+      "task_id": "7ece08d387f547cd942d794076f82bb0",
+      "stage": "CLOSE_GRIPPER",
+      "event": "GRIPPER_FEEDBACK",
+      "command_width_m": 0.079,
+      "measured_width_m": 0.080605562578,
+      "effort": -0.358,
+      "config_sha256": "2d6245769bc5b9a4488c6d5a765120b3d797aa453bdc5f90eb45ceb674f9474a",
+      "stamp": 1791991916.351247
+    },
+    {
+      "task_id": "7ece08d387f547cd942d794076f82bb0",
+      "stage": "VERIFY_GRASP",
+      "outcome": "RUNNING",
+      "reason": "",
+      "holding": "UNKNOWN",
+      "config_sha256": "2d6245769bc5b9a4488c6d5a765120b3d797aa453bdc5f90eb45ceb674f9474a",
+      "stamp": 1791991916.3530483,
+      "place_success": false,
+      "return_success": false,
+      "stop_confirmed": false,
+      "observation_tcp": [
+        0.3065521281965968,
+        -0.06901901491467723,
+        0.7921087717238092
+      ],
+      "center": [
+        0.3292720355982992,
+        0.01619659625348707,
+        0.6115
+      ],
+      "grasp_tcp": [
+        0.3292720355982992,
+        0.01619659625348707,
+        0.6115
+      ],
+      "association_error_m": 0.051502121624254486
+    },
+    {
+      "task_id": "7ece08d387f547cd942d794076f82bb0",
+      "stage": "LIFT",
+      "outcome": "RUNNING",
+      "reason": "",
+      "holding": "HELD",
+      "config_sha256": "2d6245769bc5b9a4488c6d5a765120b3d797aa453bdc5f90eb45ceb674f9474a",
+      "stamp": 1791991916.4090614,
+      "place_success": false,
+      "return_success": false,
+      "stop_confirmed": false,
+      "observation_tcp": [
+        0.3065521281965968,
+        -0.06901901491467723,
+        0.7921087717238092
+      ],
+      "center": [
+        0.3292720355982992,
+        0.01619659625348707,
+        0.6115
+      ],
+      "grasp_tcp": [
+        0.3292720355982992,
+        0.01619659625348707,
+        0.6115
+      ],
+      "association_error_m": 0.051502121624254486
+    },
+    {
+      "task_id": "7ece08d387f547cd942d794076f82bb0",
+      "stage": "MOVE_TO_PLACE",
+      "outcome": "RUNNING",
+      "reason": "",
+      "holding": "HELD",
+      "config_sha256": "2d6245769bc5b9a4488c6d5a765120b3d797aa453bdc5f90eb45ceb674f9474a",
+      "stamp": 1791991928.001536,
+      "place_success": false,
+      "return_success": false,
+      "stop_confirmed": false,
+      "observation_tcp": [
+        0.3065521281965968,
+        -0.06901901491467723,
+        0.7921087717238092
+      ],
+      "center": [
+        0.3292720355982992,
+        0.01619659625348707,
+        0.6115
+      ],
+      "grasp_tcp": [
+        0.3292720355982992,
+        0.01619659625348707,
+        0.6115
+      ],
+      "association_error_m": 0.051502121624254486
+    },
+    {
+      "task_id": "7ece08d387f547cd942d794076f82bb0",
+      "stage": "RELEASE",
+      "outcome": "RUNNING",
+      "reason": "",
+      "holding": "HELD",
+      "config_sha256": "2d6245769bc5b9a4488c6d5a765120b3d797aa453bdc5f90eb45ceb674f9474a",
+      "stamp": 1791991946.4039972,
+      "place_success": false,
+      "return_success": false,
+      "stop_confirmed": false,
+      "observation_tcp": [
+        0.3065521281965968,
+        -0.06901901491467723,
+        0.7921087717238092
+      ],
+      "center": [
+        0.3292720355982992,
+        0.01619659625348707,
+        0.6115
+      ],
+      "grasp_tcp": [
+        0.3292720355982992,
+        0.01619659625348707,
+        0.6115
+      ],
+      "association_error_m": 0.051502121624254486
+    },
+    {
+      "task_id": "7ece08d387f547cd942d794076f82bb0",
+      "stage": "RELEASE",
+      "event": "GRIPPER_FEEDBACK",
+      "command_width_m": 0.1,
+      "measured_width_m": 0.099098609354,
+      "effort": 0.03,
+      "config_sha256": "2d6245769bc5b9a4488c6d5a765120b3d797aa453bdc5f90eb45ceb674f9474a",
+      "stamp": 1791991952.723496
+    },
+    {
+      "task_id": "7ece08d387f547cd942d794076f82bb0",
+      "stage": "RETREAT",
+      "outcome": "RUNNING",
+      "reason": "",
+      "holding": "EMPTY",
+      "config_sha256": "2d6245769bc5b9a4488c6d5a765120b3d797aa453bdc5f90eb45ceb674f9474a",
+      "stamp": 1791991952.743063,
+      "place_success": true,
+      "return_success": false,
+      "stop_confirmed": false,
+      "observation_tcp": [
+        0.3065521281965968,
+        -0.06901901491467723,
+        0.7921087717238092
+      ],
+      "center": [
+        0.3292720355982992,
+        0.01619659625348707,
+        0.6115
+      ],
+      "grasp_tcp": [
+        0.3292720355982992,
+        0.01619659625348707,
+        0.6115
+      ],
+      "association_error_m": 0.051502121624254486
+    },
+    {
+      "task_id": "7ece08d387f547cd942d794076f82bb0",
+      "stage": "RETURN_ARM",
+      "outcome": "RUNNING",
+      "reason": "",
+      "holding": "EMPTY",
+      "config_sha256": "2d6245769bc5b9a4488c6d5a765120b3d797aa453bdc5f90eb45ceb674f9474a",
+      "stamp": 1791991964.071951,
+      "place_success": true,
+      "return_success": false,
+      "stop_confirmed": false,
+      "observation_tcp": [
+        0.3065521281965968,
+        -0.06901901491467723,
+        0.7921087717238092
+      ],
+      "center": [
+        0.3292720355982992,
+        0.01619659625348707,
+        0.6115
+      ],
+      "grasp_tcp": [
+        0.3292720355982992,
+        0.01619659625348707,
+        0.6115
+      ],
+      "association_error_m": 0.051502121624254486
+    },
+    {
+      "task_id": "7ece08d387f547cd942d794076f82bb0",
+      "stage": "RETURN_ARM",
+      "event": "GRIPPER_FEEDBACK",
+      "command_width_m": 0.0,
+      "measured_width_m": 0.0,
+      "effort": -0.056,
+      "config_sha256": "2d6245769bc5b9a4488c6d5a765120b3d797aa453bdc5f90eb45ceb674f9474a",
+      "stamp": 1791991965.0108883
+    },
+    {
+      "task_id": "7ece08d387f547cd942d794076f82bb0",
+      "stage": "COMPLETE",
+      "outcome": "RUNNING",
+      "reason": "",
+      "holding": "EMPTY",
+      "config_sha256": "2d6245769bc5b9a4488c6d5a765120b3d797aa453bdc5f90eb45ceb674f9474a",
+      "stamp": 1791992000.0451894,
+      "place_success": true,
+      "return_success": true,
+      "stop_confirmed": false,
+      "observation_tcp": [
+        0.3065521281965968,
+        -0.06901901491467723,
+        0.7921087717238092
+      ],
+      "center": [
+        0.3292720355982992,
+        0.01619659625348707,
+        0.6115
+      ],
+      "grasp_tcp": [
+        0.3292720355982992,
+        0.01619659625348707,
+        0.6115
+      ],
+      "association_error_m": 0.051502121624254486
+    },
+    {
+      "task_id": "7ece08d387f547cd942d794076f82bb0",
+      "stage": "COMPLETE",
+      "outcome": "SUCCESS",
+      "reason": "",
+      "holding": "EMPTY",
+      "config_sha256": "2d6245769bc5b9a4488c6d5a765120b3d797aa453bdc5f90eb45ceb674f9474a",
+      "stamp": 1791992000.046874,
+      "place_success": true,
+      "return_success": true,
+      "stop_confirmed": true,
+      "observation_tcp": [
+        0.3065521281965968,
+        -0.06901901491467723,
+        0.7921087717238092
+      ],
+      "center": [
+        0.3292720355982992,
+        0.01619659625348707,
+        0.6115
+      ],
+      "grasp_tcp": [
+        0.3292720355982992,
+        0.01619659625348707,
+        0.6115
+      ],
+      "association_error_m": 0.051502121624254486
+    }
+  ]
+}

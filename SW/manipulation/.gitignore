@@ -1,0 +1,10 @@
+__pycache__/
+*.py[cod]
+manipulation_ws/build/
+manipulation_ws/install/
+manipulation_ws/log/
+build/
+install/
+*.egg-info/
+.pytest_cache/
+validation/
