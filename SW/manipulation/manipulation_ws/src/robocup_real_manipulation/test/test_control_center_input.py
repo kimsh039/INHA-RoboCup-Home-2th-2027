@@ -99,3 +99,31 @@ def test_new_observed_approach_has_new_uuid_and_frozen_start_measurement():
 def test_clock_rollback_invalidates_task():
     s = running(); s.update(status('succeeded'), 99.9)
     assert s.take(100., 90.) is None
+
+
+def test_auto_approach_waits_for_real_target_before_assigning_id():
+    s = ApproachSession(); s.update(status(), 100.)
+    v = status('waiting_target', True); v['target'] = None
+    s.update(v, 100.1)
+    assert s.task is None and s.armed
+    s.update(status('navigating_target', True), 100.2)
+    assert s.task is not None
+    for i, phase in enumerate(('rerouting_table', 'planning_table')):
+        s.update(status(phase, True), 100.3+i*.1)
+    s.update(status('succeeded'), 100.5)
+    s.update(status('succeeded'), 101.2)
+    assert s.take(101.2, 100.5)['target']['frame'] == 'odom'
+
+
+def test_waiting_target_at_startup_cannot_adopt_in_progress_approach():
+    s = ApproachSession(); v = status('waiting_target', True); v['target'] = None
+    s.update(v, 100.)
+    s.update(status('navigating_target', True), 100.2)
+    s.update(status('succeeded'), 100.5)
+    assert s.take(101., 100.) is None
+
+
+def test_existing_target_lost_during_wait_invalidates_session():
+    s = running(); v = status('waiting_target', True); v['target'] = None
+    s.update(v, 100.2)
+    assert s.task is None and not s.armed

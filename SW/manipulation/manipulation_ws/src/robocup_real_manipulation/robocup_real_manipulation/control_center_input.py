@@ -10,7 +10,8 @@ import uuid
 
 CLASSES = ('green_apple', 'peach', 'tomato', 'fanta_can', 'cup', 'banana')
 ACTIVE_PHASES = {'waiting_nav', 'planning', 'navigating', 'settling',
-                 'aligning', 'approaching', 'final_align'}
+                 'aligning', 'approaching', 'final_align', 'waiting_target',
+                 'navigating_target', 'rerouting_table', 'planning_table'}
 
 
 def observed_target(value, now, max_age):
@@ -69,6 +70,12 @@ class ApproachSession:
         if active:
             if phase not in ACTIVE_PHASES:
                 raise ValueError('CONTROL_CENTER_INVALID_ACTIVE_PHASE')
+            if phase == 'waiting_target' and value.get('target') is None:
+                if self.task is not None:
+                    self.invalidate('CONTROL_CENTER_TARGET_LOST')
+                else:
+                    self.reason = 'WAITING_FOR_MEASURED_TARGET'
+                return
             target = observed_target(value, now, self.target_age)
             if self.task is None and self.armed:
                 self.task = uuid.uuid4().hex

@@ -1,5 +1,12 @@
 # 2026-10-15 검증 기록
 
+## 관절 호환성 및 최신 관제 단계 수정
+
+- 관제의 raw 화면 joints 입력을 접근 계획에 직접 쓰지 않도록 별도 모델 피드백 helper와 최소 변경 패치 도구를 추가했다. 매니퓰 robot.yaml의 이름과 자동 비교한다. 모델 각도에 raw 보정을 중복 적용하지 않는다.
+- 최신 관제의 waiting_target/navigating_target/rerouting_table/planning_table을 수용한다. 좌표 없는 waiting_target에서는 인계를 보류하며 실측 좌표가 온 뒤에만 새 접근 ID를 만든다.
+- 변경 후 로컬 Humble colcon 빌드 성공, Python 테스트104개 통과(매니퓰95+관절 입력9). 격리 ROS187에서 실제 관절 입력 helper와 최신 관제 단계의 인계 어댑터 토픽 교환도 각각 통과했다. 실제 로봇 동작 검증은 아니다.
+- Jetson은 사용자 안내에 따라 재부팅 중이며, 이 수정본은 로컬 작업이다. 원격 소스 변경·서버 재시작·실물 구동은 하지 않았다. 아래 기존 ARM64/실물 기록은 이번 수정본의 배포 검증이 아니다.
+
 ## 관제센터 입력 연결 추가 검증
 
 - 로컬 Humble overlay에서 변경된 `robocup_real_manipulation` colcon 빌드 성공.

@@ -20,6 +20,10 @@ for root in roots:
         if any(x in ('build','install','log','__pycache__','.pytest_cache') or x.endswith('.egg-info') for x in relative.parts):continue
         if 'validation' in relative.parts and path.name not in current_validation:continue
         files.append((path,relative.as_posix()))
+# Small compatibility module only; do not bundle/overwrite an older whole web.
+for name in ('joint_contract.py', 'tests/test_joint_contract.py', 'JOINT_COMPATIBILITY.md'):
+    path=repo/'SW/control_center'/name
+    files.append((path,path.relative_to(repo).as_posix()))
 a.output.parent.mkdir(parents=True,exist_ok=True)
 manifest=''.join(hashlib.sha256(path.read_bytes()).hexdigest()+'  '+name+'\n' for path,name in files)
 with tarfile.open(a.output,'w:gz') as tar:

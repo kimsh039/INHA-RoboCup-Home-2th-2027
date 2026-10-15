@@ -61,7 +61,14 @@ def run():
             pump(1.0)
             assert not targets and not results, 'Startup succeeded snapshot was replayed'
             pump(.3, 'ready')
-            pump(.4, 'navigating', True)
+            measured_target = value['target']
+            value['target'] = None
+            pump(.3, 'waiting_target', True)
+            assert not targets and not results, 'Missing coarse coordinates accepted'
+            value['target'] = measured_target
+            pump(.3, 'navigating_target', True)
+            pump(.3, 'rerouting_table', True)
+            pump(.3, 'planning_table', True)
             pump(.9, 'succeeded', moving=True)
             assert not targets and not results, 'Moving base was accepted'
             pump(.5, odometry=False)
