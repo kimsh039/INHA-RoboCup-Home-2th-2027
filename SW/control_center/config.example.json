@@ -13,8 +13,16 @@
   "use_sim_time": false,
   "can": {
     "auto_connect": true,
-    "tracer": {"interface": "can_tracer", "usb_serial": "", "bitrate": 500000},
-    "piper": {"interface": "can_arm", "usb_serial": "", "bitrate": 1000000}
+    "tracer": {
+      "interface": "can_tracer",
+      "usb_serial": "",
+      "bitrate": 500000
+    },
+    "piper": {
+      "interface": "can_arm",
+      "usb_serial": "",
+      "bitrate": 1000000
+    }
   },
   "channels": {
     "map": [
@@ -34,8 +42,8 @@
       "/navigate_to_pose/plan"
     ],
     "cloud": [
-      "/livox/lidar",
       "/mid360/points_filtered",
+      "/livox/lidar",
       "/mid360/points"
     ],
     "object_cloud": [
@@ -97,5 +105,6 @@
     "mid360_lidar": {
       "config_file": "~/ws_livox/src/livox_ros_driver2/config/MID360s_config.json"
     }
-  }
+  },
+  "slam_scan": "g2"
 }

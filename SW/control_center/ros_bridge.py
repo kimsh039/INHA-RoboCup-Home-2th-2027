@@ -55,7 +55,7 @@ def run(args):
         from tf2_ros import Buffer, TransformListener
         from nav_msgs.msg import Odometry
         from sensor_msgs.msg import Imu
-        from geometry_msgs.msg import PoseWithCovarianceStamped
+        from std_msgs.msg import String
         from rclpy.action import ActionClient
     except ImportError as exc:
         raise SystemExit(f'ROS 의존성 없음: {exc}\nsource /opt/ros/humble/setup.bash 후 /usr/bin/python3로 실행하세요.\n'
@@ -119,7 +119,12 @@ def run(args):
             self.nav_goal = None
             self.nav_status = dict(state='idle', message='목표 없음', goal=None)
             self.nav_client = ActionClient(self, NavigateToPose, '/navigate_to_pose') if NavigateToPose else None
-            self.initial_pose = self.create_publisher(PoseWithCovarianceStamped, '/initialpose', 1)
+            self.create_subscription(String, '/localization/status', self.localization_status,
+                                     QoSProfile(depth=1, reliability=ReliabilityPolicy.RELIABLE,
+                                                durability=DurabilityPolicy.TRANSIENT_LOCAL))
+            self.create_subscription(String, '/collision/status', self.collision_status, 10)
+            self.create_subscription(String, '/collision/actuator_status', self.collision_actuator_status, 10)
+            self.create_subscription(String, '/piper/feedback_status', self.piper_feedback_status, 10)
             state.navigation_request = self.nav_requests.append  # deque.append is thread-safe
             self.create_timer(0.1, self.navigation)
             self.discover()
@@ -236,6 +241,53 @@ def run(args):
                     pass
             return rotation, offset, 'odom'
 
+        def collision_status(self, msg):
+            try:
+                value = json.loads(msg.data)
+                if not isinstance(value, dict):
+                    raise ValueError('invalid collision status')
+                closest = value.get('nearest_point')
+                if closest is not None:
+                    try:
+                        matrix, offset = self.transform(value.get('frame', 'odom'))
+                        value['display_point'] = (matrix @ np.asarray(closest, dtype=float) + offset).tolist()
+                        value['display_frame'] = self.fixed
+                    except Exception:
+                        pass
+                stamp = value.get('stamp')
+                age = self.get_clock().now().nanoseconds/1e9-stamp if isinstance(stamp, (int, float)) else None
+                state.put('collision_safety', value, stamp, age)
+                with state.condition:
+                    state.channels['collision_safety'].update(topic='/collision/status', type='std_msgs/msg/String', publishers=1)
+            except (ValueError, TypeError, KeyError):
+                state.put('collision_safety', dict(ready=False, reason='invalid_status'))
+                state.error('collision_safety', '충돌 보호 상태 형식 오류')
+
+        def piper_feedback_status(self, msg):
+            try:
+                value = json.loads(msg.data)
+                if not isinstance(value, dict) or value.get('state') not in ('live', 'waiting', 'stale'):
+                    raise ValueError('invalid PiPER feedback status')
+                state.put('piper_feedback', value)
+                with state.condition:
+                    state.channels['piper_feedback'].update(topic='/piper/feedback_status',
+                                                           type='std_msgs/msg/String', publishers=1)
+            except (ValueError, TypeError):
+                state.put('piper_feedback', dict(state='stale', reason='invalid_status'))
+                state.error('piper_feedback', 'PiPER 피드백 상태 형식 오류')
+
+        def collision_actuator_status(self, msg):
+            try:
+                value = json.loads(msg.data)
+                if not isinstance(value, dict):
+                    raise ValueError('invalid actuator status')
+                state.put('collision_actuator', value)
+                with state.condition:
+                    state.channels['collision_actuator'].update(topic='/collision/actuator_status', type='std_msgs/msg/String', publishers=1)
+            except (ValueError, TypeError):
+                state.put('collision_actuator', dict(ready=False, reason='invalid_status'))
+                state.error('collision_actuator', '차체 보호 출력 상태 형식 오류')
+
         def navigation(self):
             while self.nav_requests:
                 request = self.nav_requests.popleft()
@@ -244,8 +296,6 @@ def run(args):
                         self.send_goal(request)
                     elif request['action'] == 'cancel':
                         self.cancel_goal()
-                    elif request['action'] == 'initial_pose':
-                        self.publish_initial_pose(request)
                 except Exception as exc:
                     self.nav_update(state='error', message=str(exc)[:300])
             state.put('navigation', dict(self.nav_status, available=bool(
@@ -266,6 +316,8 @@ def run(args):
             return message
 
         def send_goal(self, request):
+            if state.sensor_manager:
+                state.sensor_manager.require_collision_ready()
             if not self.nav_client:
                 raise RuntimeError('nav2_msgs가 없습니다. Nav2를 설치하세요.')
             if not self.nav_client.server_is_ready():
@@ -317,13 +369,13 @@ def run(args):
             else:  # a goal still being sent is cancelled as soon as it is accepted
                 self.nav_update(state='idle', message='목표 취소', goal=None)
 
-        def publish_initial_pose(self, request):
-            message = self.pose_msg(request, PoseWithCovarianceStamped)
-            message.pose.covariance[0] = message.pose.covariance[7] = 0.25 ** 2
-            message.pose.covariance[35] = math.radians(15) ** 2
-            self.initial_pose.publish(message)
-            state.log(f'초기 위치 지정 · {self.fixed} ({request["x"]:.2f}, {request["y"]:.2f}) '
-                      f'{math.degrees(request["yaw"]):.0f}°', source='navigation')
+        def localization_status(self, message):
+            try:
+                value = json.loads(message.data)
+                if isinstance(value, dict):
+                    state.put('localization', value)
+            except (ValueError, TypeError):
+                pass
 
         def receive(self, key, msg):
             limit = config.get('image_hz', 6) if key in ('head_image', 'head_debug', 'wrist_image', 'wrist_debug') else (

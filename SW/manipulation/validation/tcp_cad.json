@@ -1,0 +1,27 @@
+{
+  "parent_frame": "piper_link6",
+  "child_frame": "tcp",
+  "link6_tcp_transform": {
+    "xyz": [
+      0.0,
+      0.0,
+      0.1425000001875643
+    ],
+    "quaternion_xyzw": [
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ]
+  },
+  "jaw_tip_z_m": [
+    0.1425000001875643,
+    0.1425000001875643
+  ],
+  "urdf_sha256": "19d65a7e711138d4be9b10abc0ebb1de185e8ccb41eaee54d8cdc41562bba414",
+  "source": "CAD symmetric closed jaw-tip height on center axis",
+  "independent_measurement": false,
+  "hardware_accuracy_established": false,
+  "orientation_estimated": false,
+  "note": "A is link6 coordinate origin, not an assumed physical plate surface. B is the jaw-tip datum, not pad centroid."
+}

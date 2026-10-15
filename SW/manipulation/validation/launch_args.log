@@ -1,0 +1,25 @@
+Arguments (pass arguments as '<name>:=<value>'):
+
+    'config':
+        no description given
+        (default: '/tmp/real_manip_install/robocup_real_manipulation/share/robocup_real_manipulation/config/robot.yaml')
+
+    'tuning_file':
+        no description given
+        (default: '')
+
+    'hardware':
+        no description given
+        (default: 'false')
+
+    'start_driver':
+        no description given
+        (default: 'false')
+
+    'repo':
+        no description given
+        (default: '')
+
+    'description_output':
+        no description given
+        (default: '~/.ros/robocup_real_manipulation/model')

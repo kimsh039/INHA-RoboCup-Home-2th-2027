@@ -1,0 +1,9 @@
+float64 width_m
+float64 timeout_s
+---
+bool success
+float64 measured_width_m
+float64 effort
+string reason
+---
+float64 measured_width_m

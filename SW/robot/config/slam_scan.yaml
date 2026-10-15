@@ -1,0 +1,50 @@
+# Common-time scans for SLAM only. /scan remains a full-rate obstacle/display stream.
+# EKF owns odom -> base_link; these processors publish no TF and do not command motion.
+/**:
+  ros__parameters:
+    odom_topic: /odom_ekf
+    odom_frame: odom
+    base_frame: base_link
+    odom_history_sec: 3.0
+    max_odom_gap_sec: 0.08
+    max_pending_sec: 0.4
+    minimum_time_interval: 0.2
+    minimum_travel_distance: 0.04
+    minimum_travel_heading: 0.02
+    # 0 disables forced insertion of stationary scans. Obstacle scans still run at full rate.
+    stationary_refresh_interval: 0.0
+    minimum_valid_beams: 40
+    # Endpoint discovery precedes DDS matching and the new consumer's TF history.
+    subscriber_warmup_sec: 0.5
+    slam_pose_topic: /pose
+    slam_node_name: slam_toolbox
+    initial_pose_topic: /initialpose
+    map_frame: map
+    # Seed cell pass counts, then stop adding constraints while stationary.
+    initial_slam_scans: 3
+    deskew_enabled: true
+    max_scan_duration: 0.25
+g2_slam_scan:
+  ros__parameters:
+    source: g2
+    scan_topic: /scan
+    timed_cloud_topic: /g2/points_raw
+    output_topic: /scan_slam
+    min_range: 0.35
+    max_range: 8.0
+mid360_slam_scan:
+  ros__parameters:
+    source: mid360
+    timed_cloud_topic: /livox/lidar
+    output_topic: /scan_mid360_slam
+    # Installed livox_ros_driver2 writes absolute nanoseconds to FLOAT64 timestamp.
+    point_time_field: timestamp
+    point_time_format: absolute_ns
+    min_range: 0.55
+    max_range: 15.0
+    # Same height band as scan-mid360.yaml; values are in base_link.
+    min_height: 0.1075
+    max_height: 1.0575
+    angle_min: -3.14159
+    angle_max: 3.14159
+    angle_increment: 0.017453

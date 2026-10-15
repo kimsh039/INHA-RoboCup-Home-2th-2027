@@ -1,5 +1,5 @@
-# Jetson web mapping profile derived from SW/simulation/ros2/slam_params.yaml.
-# Real ROS time; review G2 filtering and mapping thresholds for the physical environment.
+# Physical mapping backend; SW/robot/slam_scan.py owns input filtering and motion gating.
+# See SW/robot/slam-scan-processing.md for sensor timing and common-time scan semantics.
 slam_toolbox:
   ros__parameters:
     use_sim_time: false
@@ -16,7 +16,7 @@ slam_toolbox:
     odom_frame: odom
     map_frame: map
     base_frame: base_link
-    scan_topic: /scan
+    scan_topic: /scan_slam
     use_map_saver: true
     mode: mapping #localization
 
@@ -32,10 +32,10 @@ slam_toolbox:
     transform_publish_period: 0.02 #if 0 never publishes odometry
     map_update_interval: 1.0
     resolution: 0.05
-    restamp_tf: false
-    min_laser_range: 0.35 # drop G2 hits on the rack posts (0.20-0.28 m)
-    max_laser_range: 12.0 # G2 sim range
-    minimum_time_interval: 0.5
+    # Humble 2.6.10 has no restamp_tf; slam-runtime.launch.py owns the TF clock adapter.
+    min_laser_range: 0.35 # metadata; the SLAM front-end explicitly turns excluded ranges into NaN
+    max_laser_range: 8.0 # same limit as g2_slam_scan in SW/robot/config/slam_scan.yaml
+    minimum_time_interval: 0.0 # the front-end alone applies the 0.2 s motion/time gate
     transform_timeout: 0.2
     tf_buffer_duration: 30.
     stack_size_to_use: 40000000 #// program needs a larger stack size to serialize large maps
@@ -44,8 +44,8 @@ slam_toolbox:
     # General Parameters
     use_scan_matching: true
     use_scan_barycenter: true
-    # Humble shouldProcessScan gates on translation before scan matching.
-    # Zero bypasses that gate for in-place turns; minimum_time_interval caps processing at 2 Hz.
+    # Keep Humble's translation gate open for pure rotations. The front-end accepts
+    # translation OR heading change, and suppresses repeated stationary constraints.
     minimum_travel_distance: 0.0
     minimum_travel_heading: 0.1
     scan_buffer_size: 10
@@ -60,7 +60,7 @@ slam_toolbox:
     loop_match_minimum_response_fine: 0.45
 
     # Correlation Parameters - Correlation Parameters
-    correlation_search_space_dimension: 0.5
+    correlation_search_space_dimension: 0.3 # smaller jumps along the partitions (sim 0.5)
     correlation_search_space_resolution: 0.01
     correlation_search_space_smear_deviation: 0.1 
 
@@ -70,14 +70,14 @@ slam_toolbox:
     loop_search_space_smear_deviation: 0.03
 
     # Scan Matcher Parameters
-    distance_variance_penalty: 0.5      
-    angle_variance_penalty: 1.0    
+    distance_variance_penalty: 0.2 # retain existing prior; low-speed calibration is not a high-speed guarantee
+    angle_variance_penalty: 0.4
 
     fine_search_angle_offset: 0.00349     
     coarse_search_angle_offset: 0.349   
     coarse_angle_resolution: 0.0349        
-    minimum_angle_penalty: 0.9
-    minimum_distance_penalty: 0.5
+    minimum_angle_penalty: 0.5 # (sim 0.9)
+    minimum_distance_penalty: 0.2 # let far-off matches lose more score (sim 0.5)
     use_response_expansion: true
-    min_pass_through: 1 # noise-free sim lidar: one ray through a cell is enough to mark it free
+    min_pass_through: 2 # cell pass-count threshold; this does not correct scan poses
     occupancy_threshold: 0.1

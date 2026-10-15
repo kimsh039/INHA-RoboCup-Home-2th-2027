@@ -1,0 +1,68 @@
+[INFO] [1791721934.772244960] [real_manipulation]: READ-ONLY: physical goals rejected; fill config before commissioning
+[WARN] [1791721934.772622576] [real_manipulation]: MOCK: all motion results are synthetic; no hardware commands
+[WARN] [1791721934.775120958] [manipulation_test_sender]: TEST INPUTS ONLY: isolate ROS_DOMAIN_ID from real robot
+[INFO] [1791721935.441293263] [manipulation_test_sender]: TEST RESULT SUCCESS stage=COMPLETE holding=EMPTY place=True return=True reason=
+PASS target-first COMPLETE SUCCESS 
+[INFO] [1791721935.693769192] [real_manipulation]: READ-ONLY: physical goals rejected; fill config before commissioning
+[WARN] [1791721935.694670181] [real_manipulation]: MOCK: all motion results are synthetic; no hardware commands
+[WARN] [1791721935.701787888] [manipulation_test_sender]: TEST INPUTS ONLY: isolate ROS_DOMAIN_ID from real robot
+PASS approach-first COMPLETE SUCCESS 
+[INFO] [1791721936.336659533] [manipulation_test_sender]: TEST RESULT SUCCESS stage=COMPLETE holding=EMPTY place=True return=True reason=
+[INFO] [1791721936.517671848] [real_manipulation]: READ-ONLY: physical goals rejected; fill config before commissioning
+[WARN] [1791721936.517999148] [real_manipulation]: MOCK: all motion results are synthetic; no hardware commands
+[WARN] [1791721936.521020868] [manipulation_test_sender]: TEST INPUTS ONLY: isolate ROS_DOMAIN_ID from real robot
+PASS right-blocked COMPLETE SUCCESS 
+[INFO] [1791721937.178596476] [manipulation_test_sender]: TEST RESULT SUCCESS stage=COMPLETE holding=EMPTY place=True return=True reason=
+[INFO] [1791721937.424291067] [real_manipulation]: READ-ONLY: physical goals rejected; fill config before commissioning
+[WARN] [1791721937.425289262] [real_manipulation]: MOCK: all motion results are synthetic; no hardware commands
+[WARN] [1791721937.434363826] [manipulation_test_sender]: TEST INPUTS ONLY: isolate ROS_DOMAIN_ID from real robot
+[INFO] [1791721937.505590882] [manipulation_test_sender]: TEST RESULT FAILED stage=WAIT_FOR_APPROACH holding=EMPTY place=False return=False reason=APPROACH_FAILED
+PASS approach-failed WAIT_FOR_APPROACH FAILED APPROACH_FAILED
+[INFO] [1791721937.819275470] [real_manipulation]: READ-ONLY: physical goals rejected; fill config before commissioning
+[WARN] [1791721937.820665910] [real_manipulation]: MOCK: all motion results are synthetic; no hardware commands
+[WARN] [1791721937.834981107] [manipulation_test_sender]: TEST INPUTS ONLY: isolate ROS_DOMAIN_ID from real robot
+PASS base-moving WAIT_FOR_APPROACH FAILED APPROACH_BASE_NOT_STOPPED
+[INFO] [1791721937.909832883] [manipulation_test_sender]: TEST RESULT FAILED stage=WAIT_FOR_APPROACH holding=EMPTY place=False return=False reason=APPROACH_BASE_NOT_STOPPED
+[INFO] [1791721938.149572746] [real_manipulation]: READ-ONLY: physical goals rejected; fill config before commissioning
+[WARN] [1791721938.150077370] [real_manipulation]: MOCK: all motion results are synthetic; no hardware commands
+[WARN] [1791721938.155805409] [manipulation_test_sender]: TEST INPUTS ONLY: isolate ROS_DOMAIN_ID from real robot
+[WARN] [1791721939.621826931] [real_manipulation]: wrist attempt 0: 
+[WARN] [1791721940.625760925] [real_manipulation]: wrist attempt 1: 
+[INFO] [1791721940.638724835] [manipulation_test_sender]: TEST RESULT FAILED stage=WRIST_REDETECT holding=EMPTY place=False return=False reason=WRIST_REDETECT_TIMEOUT
+PASS wrist-timeout WRIST_REDETECT FAILED WRIST_REDETECT_TIMEOUT
+[INFO] [1791721940.916308574] [real_manipulation]: READ-ONLY: physical goals rejected; fill config before commissioning
+[WARN] [1791721940.916801224] [real_manipulation]: MOCK: all motion results are synthetic; no hardware commands
+[WARN] [1791721940.922929504] [manipulation_test_sender]: TEST INPUTS ONLY: isolate ROS_DOMAIN_ID from real robot
+[WARN] [1791721942.388915578] [real_manipulation]: wrist attempt 0: STALE_OR_FUTURE_DATA,STALE_OR_FUTURE_DATA,STALE_OR_FUTURE_DATA
+[WARN] [1791721943.395019658] [real_manipulation]: wrist attempt 1: STALE_OR_FUTURE_DATA,STALE_OR_FUTURE_DATA,STALE_OR_FUTURE_DATA
+[INFO] [1791721943.403302200] [manipulation_test_sender]: TEST RESULT FAILED stage=WRIST_REDETECT holding=EMPTY place=False return=False reason=WRIST_REDETECT_TIMEOUT:STALE_OR_FUTURE_DATA
+PASS stale-wrist WRIST_REDETECT FAILED WRIST_REDETECT_TIMEOUT:STALE_OR_FUTURE_DATA
+[INFO] [1791721943.615005744] [real_manipulation]: READ-ONLY: physical goals rejected; fill config before commissioning
+[WARN] [1791721943.615566468] [real_manipulation]: MOCK: all motion results are synthetic; no hardware commands
+[WARN] [1791721943.622727512] [manipulation_test_sender]: TEST INPUTS ONLY: isolate ROS_DOMAIN_ID from real robot
+[WARN] [1791721945.083520305] [real_manipulation]: wrist attempt 0: INVALID_DEPTH,INVALID_DEPTH,INVALID_DEPTH
+[WARN] [1791721946.092170604] [real_manipulation]: wrist attempt 1: INVALID_DEPTH,INVALID_DEPTH,INVALID_DEPTH
+[INFO] [1791721946.103817117] [manipulation_test_sender]: TEST RESULT FAILED stage=WRIST_REDETECT holding=EMPTY place=False return=False reason=WRIST_REDETECT_TIMEOUT:INVALID_DEPTH
+PASS invalid-depth WRIST_REDETECT FAILED WRIST_REDETECT_TIMEOUT:INVALID_DEPTH
+[INFO] [1791721946.391055460] [real_manipulation]: READ-ONLY: physical goals rejected; fill config before commissioning
+[WARN] [1791721946.392333765] [real_manipulation]: MOCK: all motion results are synthetic; no hardware commands
+[WARN] [1791721946.424181244] [manipulation_test_sender]: TEST INPUTS ONLY: isolate ROS_DOMAIN_ID from real robot
+[WARN] [1791721947.900282091] [real_manipulation]: wrist attempt 0: TF_MISSING_AT_CAPTURE,TF_MISSING_AT_CAPTURE,TF_MISSING_AT_CAPTURE
+[WARN] [1791721948.901935475] [real_manipulation]: wrist attempt 1: TF_MISSING_AT_CAPTURE,TF_MISSING_AT_CAPTURE,TF_MISSING_AT_CAPTURE
+[INFO] [1791721948.915528086] [manipulation_test_sender]: TEST RESULT FAILED stage=WRIST_REDETECT holding=EMPTY place=False return=False reason=WRIST_REDETECT_TIMEOUT:TF_MISSING_AT_CAPTURE
+PASS missing-tf WRIST_REDETECT FAILED WRIST_REDETECT_TIMEOUT:TF_MISSING_AT_CAPTURE
+[INFO] [1791721949.194926490] [real_manipulation]: READ-ONLY: physical goals rejected; fill config before commissioning
+[WARN] [1791721949.195930551] [real_manipulation]: MOCK: all motion results are synthetic; no hardware commands
+[WARN] [1791721949.210289893] [manipulation_test_sender]: TEST INPUTS ONLY: isolate ROS_DOMAIN_ID from real robot
+[INFO] [1791721949.721571893] [manipulation_test_sender]: TEST RESULT FAILED stage=WRIST_REDETECT holding=EMPTY place=False return=False reason=AMBIGUOUS_TARGET
+PASS ambiguous WRIST_REDETECT FAILED AMBIGUOUS_TARGET
+[INFO] [1791721949.965885029] [real_manipulation]: READ-ONLY: physical goals rejected; fill config before commissioning
+[WARN] [1791721949.966446320] [real_manipulation]: MOCK: all motion results are synthetic; no hardware commands
+[WARN] [1791721949.974862325] [manipulation_test_sender]: TEST INPUTS ONLY: isolate ROS_DOMAIN_ID from real robot
+[INFO] [1791721950.057263248] [manipulation_test_sender]: TEST RESULT CANCELED stage=WAIT_FOR_APPROACH holding=EMPTY place=False return=False reason=CANCELED
+PASS cancel WAIT_FOR_APPROACH CANCELED CANCELED
+[INFO] [1791721950.317694068] [real_manipulation]: READ-ONLY: physical goals rejected; fill config before commissioning
+[WARN] [1791721950.318300991] [real_manipulation]: MOCK: all motion results are synthetic; no hardware commands
+[WARN] [1791721950.324949211] [manipulation_test_sender]: TEST INPUTS ONLY: isolate ROS_DOMAIN_ID from real robot
+[INFO] [1791721950.953878079] [manipulation_test_sender]: TEST RESULT FAILED stage=RETURN_ARM holding=EMPTY place=True return=False reason=MOCK_STAGE_FAILURE:RETURN_ARM
+PASS return-failed RETURN_ARM FAILED MOCK_STAGE_FAILURE:RETURN_ARM

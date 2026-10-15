@@ -36,6 +36,7 @@ case "${1:-}" in
       -e "ROBOCUP_YOLO_PYTHON=${ROBOCUP_YOLO_PYTHON:-}" \
       -e "ROBOCUP_DEVICE=${ROBOCUP_DEVICE:-0}" \
       -e "ROBOCUP_SLAM_PARAMS=${ROBOCUP_SLAM_PARAMS:-}" \
+      -e "ROBOCUP_SLAM_SCAN=${ROBOCUP_SLAM_SCAN:-}" \
       -e "ROBOCUP_USE_SIM_TIME=${ROBOCUP_USE_SIM_TIME:-false}" \
       "$CONTROL_CENTER_COMMAND"
     echo '젯슨 관제센터 시작 중 · 서버 준비를 기다립니다.'

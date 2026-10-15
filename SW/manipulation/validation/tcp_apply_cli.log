@@ -1,0 +1,10 @@
+usage: tcp_calibration apply [-h] --result RESULT --urdf URDF --config CONFIG
+                             --output OUTPUT [--tcp-verified]
+
+options:
+  -h, --help       show this help message and exit
+  --result RESULT
+  --urdf URDF
+  --config CONFIG
+  --output OUTPUT
+  --tcp-verified

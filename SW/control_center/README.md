@@ -44,7 +44,7 @@ bash ~/robocup/SW/control_center/jetson-center.sh start --mapping --detection
 
 회전은 보정된 `/imu/base`가 신선하게 들어올 때 MID-360 gyro를 사용합니다. IMU 시작 전·중지·수신 지연에는 `/odom`의 바퀴 각속도만 `/odom/rotation_fallback`으로 전달해 EKF 회전 입력을 이어갑니다. 대체 입력에는 유한 공분산을 넣고, gyro 수신이 돌아오면 발행을 중지합니다. 바퀴 회전 입력은 IMU 대체이며 같은 정확도를 보장하지 않습니다. CAN·오도메트리 패널에 바퀴/융합 yaw·각속도와 현재 회전 소스를 표시합니다.
 
-Humble SLAM Toolbox의 translation gate가 제자리 회전 스캔을 버리지 않도록 `minimum_travel_distance: 0.0`을 사용합니다. 스캔 처리는 최소 0.5초 간격, 지도 출력은 1초 간격이며 정지 중에도 스캔 처리량이 증가할 수 있습니다. 다른 `ROBOCUP_SLAM_PARAMS` 파일을 지정하면 그 파일의 설정이 우선합니다.
+실물 G2 SLAM은 `/scan_slam`을 사용합니다. sensor_core의 `slam_scan.py`가 취득 순서 점군의 빔별 시각과 `/odom_ekf`로 운동 보상하고, 초기 3개의 처리 응답을 받은 뒤 최소 0.2초 간격에서 4 cm 이동 또는 0.02 rad 회전한 스캔을 채택합니다. `/scan`은 관제·Nav2에 매 스캔마다 전달하며 무효/가림 빔은 NaN입니다. Humble의 외부 translation/time gate는 0으로 두어 제자리 회전이 중복 gate에서 버려지지 않게 합니다. 다른 `ROBOCUP_SLAM_PARAMS` 파일의 solver/graph 설정은 유지하고, 입력 토픽·범위·외부 gate는 `prepare-slam-profile.py`가 선택된 전처리 설정과 맞춥니다. 설치된 2.6.10의 오래된 TF 시각은 `slam_tf_clock`이 backend 변환을 받아 공개 TF에 단독 전달하며 해결합니다. [스캔 처리·시간·연구 근거](../robot/slam-scan-processing.md)
 
 ### 현재 젯슨의 최초 설정과 재부팅 후 실행
 
@@ -117,7 +117,9 @@ bash SW/control_center/jetson-center.sh start --mapping --detection
 - `--detection`: 현재 Head 6종 전체 객체 YOLO (`/detection/head/objects`, `/detection/head/debug_image`)
 - ROS 구독 bridge와 HTTP 서버 (`127.0.0.1:8765`)
 
-차체와 팔의 상태 노드는 실행하지만, 이 관제센터는 주행 속도·접근·파지 명령을 발행하지 않습니다. 지도는 LiDAR 스캔과 오도메트리 입력이 들어올 때 생성됩니다.
+NAV에서 목표를 지정하면 Nav2가 주행하고 [URDF 기준 10 cm의 3D 충돌 보호](../robot/collision-avoidance.md)가 최종 차체 속도를 제한합니다. Nav2 서버 시작은 보호 상태와 독립적이며, 목표 전송과 실제 주행은 보호 입력·출력이 준비돼야 가능합니다. 초기 실행은 목표·접근·파지 명령을 자동 생성하지 않으며, 차체 watchdog은 정지 출력을 지속합니다. 지도는 LiDAR 스캔과 오도메트리 입력이 들어올 때 생성됩니다.
+
+2D와 3D는 같은 `map` 좌표를 표시합니다. 3D 기본 시점과 화면 맞춤은 지도 방향을 사용하며, `+X`는 오른쪽, 지면의 `+Y`는 위쪽으로 향합니다. 3D의 녹색 차체 윤곽과 방향 화살표도 2D와 같은 위치추정값을 사용합니다. 3D 화면 투영의 Y축 반전은 웹 투영식에서 수정하며 센서 보정·TF를 반전시키지 않습니다.
 
 이미 SLAM이나 검출을 다른 실행기로 켜 두었다면 해당 옵션을 생략합니다. 예를 들어 센서와 관제만 시작하려면:
 
@@ -296,17 +298,19 @@ bash SW/control_center/jetson-center.sh start --observe
 |---|---|---|
 | **관측** | 카메라·LiDAR 켜기/끄기, CAN·오도메트리 | 기존 화면 |
 | **SLAM** | SLAM 시작 · 중지 · **초기화** · 저장 · 저장된 지도 | `start-mapping.sh`(SLAM Toolbox)를 관제센터가 소유해 실행합니다. **초기화**는 SLAM 프로세스를 다시 시작해 현재 지도를 지우고 지금 위치를 원점으로 새로 만듭니다. **저장**은 `save-map.sh`로 `~/maps/<이름>.{pgm,yaml}`(Nav2 map_server)과 `.posegraph/.data`(SLAM Toolbox 위치추정)를 남깁니다. |
-| **NAV** | 위치추정 시작 · 초기 위치 지정 · Nav2 시작/중지 · 목표 지정 · 이동 취소 | 저장 지도 위치추정은 `start-localization.sh`(SLAM Toolbox localization)입니다. `start-navigation.sh`가 Mid-360S 자기 점 필터(`/livox/lidar` → `/mid360/points_filtered`)와 Nav2(`nav2-web.yaml`)를 올립니다. **목표 지정**/**초기 위치 지정**은 2D 지도에서 클릭한 뒤 드래그해 방향을 정합니다(Esc 취소). |
+| **NAV** | 자동 위치추정 · Nav2 시작/중지 · 목표 지정 · 이동 취소 | `start-localization.sh`가 지도 전체의 위치·방향을 자동 탐색하고 SLAM Toolbox localization이 정합을 확인·추적합니다. `start-navigation.sh`가 Mid-360S 자기 점 필터(`/livox/lidar` → `/mid360/points_filtered`)와 Nav2(`nav2-web.yaml`)를 올립니다. **목표 지정**은 지도에서 클릭한 뒤 드래그해 방향을 정합니다(Esc 취소). |
 
-- API: `POST /api/mapping {action: start|stop|reset|localize|save, map?, name?}`, `POST /api/navigation {action: start|stop|goal|cancel|initial_pose, x?, y?, yaw?}` (map 좌표, `X-Control-Token` 필요).
+- API: `POST /api/mapping {action: start|stop|reset|localize|save, map?, name?}`, `POST /api/navigation {action: start|stop|goal|cancel, x?, y?, yaw?}` (map 좌표, `X-Control-Token` 필요).
 - Nav2가 실행 중이면 SLAM 중지·초기화·위치추정 전환을 막습니다(목표 좌표계가 바뀌지 않게). 먼저 Nav2를 중지합니다.
 - Nav2 설치(최초 1회): `sudo apt-get install -y ros-humble-navigation2 ros-humble-nav2-bringup`
 - 실물 Nav2 설정 `nav2-web.yaml`: 최대 0.25 m/s · 0.6 rad/s, 가속 0.5 m/s²([Tracer odom 보정](../../HW/calibration/physical/tracer_odom/README.md) 권장), 목표 허용 0.15 m · 0.2 rad(정밀 접근은 dock 노드), Mid-360S 장애물 높이 바닥 위 0.11–1.39 m. Tracer가 리모컨(RC) 모드면 속도 명령이 적용되지 않습니다.
-- 3D 점군과 2D 스캔은 메시지 시각의 `map ← 센서` TF로 변환합니다. SLAM의 `map → odom`은 스캔 주기로만 갱신되어 정확한 시각 조회가 가끔 실패하므로, 그때는 최신 `map → odom`과 메시지 시각의 `odom → 센서`를 합성해 `map` 좌표를 유지합니다.
+- 3D 점군과 2D 스캔은 메시지 시각의 `map ← 센서` TF로 변환합니다. 관제 관리 SLAM의 `map → odom`은 `slam_tf_clock`을 통해 유효 시각이 진행합니다. 외부 SLAM을 사용하거나 초기 TF 이력이 부족해 정확한 시각 조회가 실패하면 기존 대체 표시 경로가 최신 `map → odom`과 메시지 시각의 `odom → 센서`를 합성합니다.
 
 ## SLAM과 검출 준비
 
-`--mapping`은 이 폴더의 `slam-web.yaml`을 사용합니다. 기존 `SW/simulation/ros2/slam_params.yaml`에서 가져온 설정에 실물 시간 `use_sim_time=false`를 적용했습니다. `/scan`, `odom → base_link` TF가 필요하며 물리 환경의 G2 필터링·SLAM 임계값은 환경에 맞춰 조정하세요. 다른 YAML은 `ROBOCUP_SLAM_PARAMS=/절대/경로.yaml`로 선택합니다.
+`--mapping`은 이 폴더의 `slam-web.yaml`을 backend 기준으로 사용합니다. 실물 기본 입력은 `/scan_slam`이며 sensor_core, `/g2/points_raw`, `/odom_ekf`와 측정된 센서 TF가 필요합니다. `slam_scan: mid360` 또는 `ROBOCUP_SLAM_SCAN=mid360`이면 점별 timestamp로 운동 보상한 `/scan_mid360_slam`을 사용합니다. 기존 `/scan_mid360` 진단 투영과 Nav2의 G2/MID-360 장애물 경로도 유지합니다. 입력 설정은 `SW/robot/config/slam_scan.yaml`, 별도 solver/graph YAML은 `ROBOCUP_SLAM_PARAMS=/절대/경로.yaml`로 선택합니다. `/scan_slam/status` 및 `/scan_mid360_slam/status`에는 입력 대기/발행/필터 사유가 기록됩니다. 기존 저장 지도에 위치추정할 때는 그 지도를 만든 센서를 선택하세요.
+
+저장 지도를 선택하고 **자동 위치추정**을 누르면 점유 지도 전체의 알려진 자유 공간과 360° 방향에서 스캔 정합 후보를 비교합니다. 충분히 일치하고 경쟁 후보와 구별되는 위치를 SLAM Toolbox에 자동 전달하고, 실제 `/pose` 응답 2개를 확인합니다. 수동 초기 위치 지정 버튼/API는 없습니다. 후보가 모호하면 현재 스캔으로 다시 탐색하며 관제에 그 상태를 표시합니다. 자동 위치 확인 후 Nav2를 시작할 수 있습니다. 설정은 `global-localization.yaml`, 상태는 `/localization/status`입니다. 자세·TF 추정은 기존 SLAM Toolbox/EKF 경로이며 AMCL을 실행하지 않습니다. 자세한 방식과 범위는 [자동 위치추정 안내](automatic-localization.md)를 참고하세요.
 
 `--detection`에는 기존 `robocup_head_detection`과 `robocup_detection_msgs`의 ROS 빌드, GPU YOLO 가상환경, 모델이 필요합니다. 패키지 설치가 아직 안 됐다면 기존 [Head 구현 안내](../detection/head/README.md)에 따라 설치하거나 젯슨에서 다음과 같이 해당 워크스페이스를 빌드합니다.
 

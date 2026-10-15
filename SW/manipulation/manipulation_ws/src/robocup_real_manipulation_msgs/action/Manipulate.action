@@ -1,0 +1,6 @@
+# Target and approach may arrive before or after this goal. IDs cannot be reused.
+string task_id
+---
+robocup_real_manipulation_msgs/TaskStatus status
+---
+robocup_real_manipulation_msgs/TaskStatus status

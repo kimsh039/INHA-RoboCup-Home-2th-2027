@@ -1,0 +1,19 @@
+usage: phase1_pick [-h] --config CONFIG [--already-docked]
+                   [--base-drive-isolated] [--input-topic INPUT_TOPIC]
+                   [--input-durable] [--timeout TIMEOUT]
+                   {green_apple,peach,tomato,fanta_can,cup,banana}
+
+Already-docked, physically isolated base trial; wrist inputs always real.
+
+positional arguments:
+  {green_apple,peach,tomato,fanta_can,cup,banana}
+
+options:
+  -h, --help            show this help message and exit
+  --config CONFIG
+  --already-docked
+  --base-drive-isolated
+  --input-topic INPUT_TOPIC
+  --input-durable       Use for the supplied Head/fusion adapter (retains six
+                        targets)
+  --timeout TIMEOUT

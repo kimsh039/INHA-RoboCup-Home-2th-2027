@@ -1,7 +1,7 @@
 'use strict';
 const $ = id => document.getElementById(id);
 const data = { values: {}, meta: {}, versions: {}, mode: '', connected: false, received: 0, logs: [], uptime: 0 };
-const view = { kind: '2d', x: 0, y: 0, scale: 43, follow: false, yaw: -.8, pitch: .65, distance: 14,
+const view = { kind: '2d', x: 0, y: 0, scale: 43, follow: false, yaw: 0, pitch: .65, distance: 14,
   center: [0, 0, 0], image: null, mapVersion: 0, fitted: false, cloudFitted: '', width: 0, height: 0 };
 let source, session = 0, lastLog = '', toastTimer;
 const cameras = {};
@@ -119,6 +119,12 @@ function renderCanOdometry() {
     const summary = !canFresh ? '상태 수신 대기 / 지연' : c?.ready ? c.receiving ? 'CAN 데이터 수신 중' : '인터페이스 연결 · 수신 대기' : labels[c?.state] || '입력 대기';
     row(title + ' (설정)', summary, c ? `${c.interface}${c.hardware ? ' · ' + c.hardware : ''} · ${fmt((c.bitrate ?? c.expected_bitrate) / 1000, 0)} kbps · RX ${c.rx_packets ?? '—'}${c.error ? ' · ' + c.error : ''}${c.bus_state ? ' · ' + c.bus_state : ''}` : 'CAN 입력 대기', canFresh && c?.ready && c.receiving);
   }
+  const arm = data.values.piper_feedback, armFresh = live && quality('piper_feedback') === 'live';
+  const armGood = armFresh && arm?.state === 'live';
+  const armReasons = { waiting_for_joint_frames: '관절 응답 없음', missing_joint_frames: '관절 응답 누락 / 지연',
+    incomplete_joint_sample: '관절 데이터 시각 불일치', invalid_joint_angles: '관절 각도 형식 오류', invalid_status: '상태 형식 오류' };
+  row('PiPER 관절 피드백', armGood ? '6개 관절 실측 수신 중' : !armFresh ? '피드백 노드 입력 대기 / 지연' : armReasons[arm.reason] || '관절 수신 대기 / 이상',
+    `/piper/joint_states_feedback · 누락 ${(arm?.missing_frames || []).join(', ') || '없음'} · ${arm?.reason || '노드 대기'}`, armGood);
   for (const [key, title, topic] of [['wheel', '바퀴 오도메트리', '/odom'], ['fused', '융합 오도메트리', '/odom_ekf']]) {
     const o = odometry?.[key];
     const good = odomFresh && o?.state === 'live';
@@ -281,15 +287,16 @@ function fitMap() {
   const b = view.known || mapBounds(); view.x = (b[0] + b[2]) / 2; view.y = (b[1] + b[3]) / 2;
   view.scale = Math.max(2, Math.min((view.width - 40) / Math.max(b[2] - b[0], .1), (view.height - 40) / Math.max(b[3] - b[1], .1)));
 }
-function fitCloud() {
+function fitCloud(resetOrientation = false) {
   const cloud = data.values[$('cloud-source').value];
   if (!cloud?.points.length) return;
+  if (resetOrientation) { view.yaw = 0; view.pitch = .65; }
   let min = [Infinity, Infinity, Infinity], max = [-Infinity, -Infinity, -Infinity];
   for (const p of cloud.points) for (let i = 0; i < 3; i++) { min[i] = Math.min(min[i], p[i]); max[i] = Math.max(max[i], p[i]); }
   view.center = min.map((v, i) => (v + max[i]) / 2);
   view.distance = Math.max(.4, Math.hypot(...min.map((v, i) => max[i] - v)) * .95);
 }
-function fit() { view.touched = false; if (view.kind === '2d') fitMap(); else fitCloud(); draw(); }
+function fit() { view.touched = false; if (view.kind === '2d') fitMap(); else fitCloud(true); draw(); }
 function spacing(value) { const power = 10 ** Math.floor(Math.log10(Math.max(value, .001))); return ([1, 2, 5, 10].find(n => n * power >= value) || 10) * power; }
 function world(p) { return [view.width / 2 + (p[0] - view.x) * view.scale, view.height / 2 - (p[1] - view.y) * view.scale]; }
 function worldLine(points, color, width = 1, dashed = false) {
@@ -309,6 +316,27 @@ function draw() {
   ctx.fillStyle = '#111b25'; ctx.fillRect(0, 0, view.width, view.height);
   if (view.kind === '2d') drawMap(); else drawCloud();
 }
+function collisionMarker(frame) {
+  const safety = data.values.collision_safety, robot = data.values.pose;
+  if (!safety || !fresh('collision_safety')) return null;
+  const blocking = Boolean(safety.blocking_point);
+  const source = blocking ? safety.blocking_source_point : safety.nearest_source_point;
+  const point = source || (blocking ? safety.blocking_point : safety.nearest_point);
+  if (!point) return null;
+  let placed;
+  if (frame === safety.frame) placed = point;
+  else if (robot?.frame === frame && safety.robot_pose_odom?.length === 3) {
+    const origin = safety.robot_pose_odom, yaw = robot.yaw-origin[2], c = Math.cos(yaw), s = Math.sin(yaw);
+    const dx = point[0]-origin[0], dy = point[1]-origin[1];
+    placed = [robot.x+c*dx-s*dy, robot.y+s*dx+c*dy, point[2]];
+  } else if (!blocking && safety.display_frame === frame) placed = safety.display_point;
+  if (!placed) return null;
+  const age = blocking ? safety.blocking_source_age : safety.nearest_source_age;
+  const height = blocking ? safety.blocking_height_above_floor : safety.nearest_height_above_floor;
+  const remembered = Number.isFinite(age) && age > .4;
+  const label = `${blocking ? '경로 장애물' : '최근접'}${Number.isFinite(height) ? ' · 바닥 +' + fmt(height*100, 0) + 'cm' : ''}${remembered ? ' · 기억 ' + fmt(age, 1) + '초' : ''}`;
+  return {point: placed, height, label, color: blocking ? '#ff8c73' : remembered ? '#a3adb7' : '#3ec7cf', blocking};
+}
 function drawMap() {
   const m = data.values.map, p = data.values.pose, scan = data.values.scan, route = data.values.path, frame = currentFrame();
   const grid = spacing(38 / view.scale), xMin = view.x - view.width / view.scale / 2, xMax = view.x + view.width / view.scale / 2;
@@ -325,6 +353,20 @@ function drawMap() {
   if (scan?.frame === frame && $('layer-scan').checked && fresh('scan')) {
     ctx.fillStyle = '#3ec7cf'; for (const point of scan.points) { const [x, y] = world(point); ctx.fillRect(x - 1.3, y - 1.3, 2.6, 2.6); }
   }
+  const safety = data.values.collision_safety;
+  if (p?.frame === frame && safety && fresh('collision_safety')) {
+    const c = Math.cos(p.yaw), s = Math.sin(p.yaw);
+    const polygon = points => points?.map(([x, y]) => [p.x+c*x-s*y, p.y+s*x+c*y]);
+    const outline = polygon(safety.body_footprint), clearance = polygon(safety.clearance_footprint);
+    if (outline?.length) worldLine([...outline, outline[0]], '#b8ed7a', 1.5);
+    if (clearance?.length) worldLine([...clearance, clearance[0]], safety.state === 'blocked' ? '#ff8c73' : '#e5bb71', 1.5, true);
+    const marker = collisionMarker(frame);
+    if (marker) {
+      const [x, y] = world(marker.point);
+      ctx.fillStyle = marker.color; ctx.beginPath(); ctx.arc(x, y, marker.blocking ? 4 : 3, 0, Math.PI*2); ctx.fill();
+      ctx.font = '11px sans-serif'; ctx.fillText(marker.label, x+8, y-8);
+    }
+  }
   if (p?.frame === frame) {
     const [x, y] = world([p.x, p.y]), live = fresh('pose');
     ctx.save(); ctx.translate(x, y); ctx.rotate(-p.yaw);
@@ -337,7 +379,7 @@ function drawMap() {
   if (goal?.frame === frame) drawArrow([goal.x, goal.y], goal.yaw, ['active', 'sending', 'canceling'].includes(data.values.navigation.state) ? '#c18bdf' : '#c18bdf77', '목표');
   if (pick.start) {
     const [dx, dy] = [pick.end[0] - pick.start[0], pick.end[1] - pick.start[1]];
-    drawArrow(pick.start, Math.hypot(dx, dy) * view.scale > 6 ? Math.atan2(dy, dx) : pickDefaultYaw(pick.start), pick.mode === 'goal' ? '#c18bdf' : '#5fd0da', pick.mode === 'goal' ? '목표' : '초기 위치');
+    drawArrow(pick.start, Math.hypot(dx, dy) * view.scale > 6 ? Math.atan2(dy, dx) : pickDefaultYaw(pick.start), '#c18bdf', '목표');
   }
   const useful = Boolean(m || scan?.frame === frame || p?.frame === frame);
   $('canvas-empty').classList.toggle('hidden', useful);
@@ -358,26 +400,34 @@ function drawArrow(point, angle, color, label) {
 function project(point) {
   const dx = point[0] - view.center[0], dy = point[1] - view.center[1], dz = point[2] - view.center[2];
   const rx = Math.cos(view.yaw) * dx - Math.sin(view.yaw) * dy, ry = Math.sin(view.yaw) * dx + Math.cos(view.yaw) * dy;
-  const vertical = -Math.sin(view.pitch) * ry + Math.cos(view.pitch) * dz;
-  const depth = view.distance - Math.cos(view.pitch) * ry - Math.sin(view.pitch) * dz;
+  // Right-handed camera on the -Y/+Z side of the scene. At yaw=0 the
+  // ground's +X goes right and +Y goes up, matching the 2D map convention.
+  const vertical = Math.sin(view.pitch) * ry + Math.cos(view.pitch) * dz;
+  const depth = view.distance + Math.cos(view.pitch) * ry - Math.sin(view.pitch) * dz;
   if (depth < .02) return null;
   const focal = Math.min(view.width, view.height) * .95;
   return [view.width / 2 + rx * focal / depth, view.height / 2 - vertical * focal / depth, depth];
 }
-function line3d(a, b, color) {
+function line3d(a, b, color, width = 1) {
   const p = project(a), q = project(b); if (!p || !q) return;
-  ctx.strokeStyle = color; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(p[0], p[1]); ctx.lineTo(q[0], q[1]); ctx.stroke();
+  ctx.strokeStyle = color; ctx.lineWidth = width; ctx.beginPath(); ctx.moveTo(p[0], p[1]); ctx.lineTo(q[0], q[1]); ctx.stroke();
 }
 function drawCloud() {
   const key = $('cloud-source').value, cloud = data.values[key];
   if (cloud?.points.length && view.cloudFitted !== key + cloud.frame) { fitCloud(); view.cloudFitted = key + cloud.frame; }
   const grid = spacing(view.distance / 14), span = grid * 6;
+  const floor = key === 'cloud' && cloud?.frame !== cloud?.source_frame
+    ? data.values.collision_safety?.cloud?.floor_z ?? -.1425 : 0;
   for (let i = -6; i <= 6; i++) {
-    line3d([view.center[0] + i * grid, view.center[1] - span, 0], [view.center[0] + i * grid, view.center[1] + span, 0], '#253b4a');
-    line3d([view.center[0] - span, view.center[1] + i * grid, 0], [view.center[0] + span, view.center[1] + i * grid, 0], '#253b4a');
+    line3d([view.center[0] + i * grid, view.center[1] - span, floor], [view.center[0] + i * grid, view.center[1] + span, floor], '#253b4a');
+    line3d([view.center[0] - span, view.center[1] + i * grid, floor], [view.center[0] + span, view.center[1] + i * grid, floor], '#253b4a');
   }
   const axis = Math.max(.1, view.distance / 9);
   line3d([0, 0, 0], [axis, 0, 0], '#df847f'); line3d([0, 0, 0], [0, axis, 0], '#acd477'); line3d([0, 0, 0], [0, 0, axis], '#7c9fe4');
+  for (const [tip, label, color] of [[[axis, 0, 0], '+X', '#df847f'], [[0, axis, 0], '+Y', '#acd477'], [[0, 0, axis], '+Z', '#7c9fe4']]) {
+    const point = project(tip);
+    if (point) { ctx.fillStyle = color; ctx.font = '11px sans-serif'; ctx.fillText(label, point[0]+5, point[1]); }
+  }
   if (cloud) {
     ctx.globalAlpha = fresh(key) ? .9 : .3;
     for (const point of cloud.points) {
@@ -386,6 +436,27 @@ function drawCloud() {
       const size = cloud.point_size || 2; ctx.fillRect(p[0] - size / 2, p[1] - size / 2, size, size);
     }
     ctx.globalAlpha = 1;
+  }
+  const robot = data.values.pose, body = data.values.collision_safety?.body_footprint;
+  const collision = collisionMarker(cloud?.frame);
+  if (collision) {
+    const tip = project(collision.point);
+    if (tip) {
+      const bottom = [...collision.point]; bottom[2] -= Number.isFinite(collision.height) ? collision.height : collision.point[2]-floor;
+      line3d(bottom, collision.point, collision.color);
+      ctx.fillStyle = collision.color; ctx.beginPath(); ctx.arc(tip[0], tip[1], 5, 0, Math.PI*2); ctx.fill();
+      ctx.font = '11px sans-serif'; ctx.fillText(collision.label, tip[0]+8, tip[1]-8);
+    }
+  }
+  if (robot && robot.frame === cloud?.frame) {
+    const c = Math.cos(robot.yaw), s = Math.sin(robot.yaw), z = floor+.02;
+    const place = ([x, y]) => [robot.x+c*x-s*y, robot.y+s*x+c*y, z];
+    if (body?.length) for (let i = 0; i < body.length; i++) line3d(place(body[i]), place(body[(i+1)%body.length]), '#b8ed7a', 2);
+    const origin = [robot.x, robot.y, z], tip = place([.55, 0]);
+    line3d(origin, tip, '#b8ed7a', 2);
+    line3d(tip, place([.42, .08]), '#b8ed7a', 2); line3d(tip, place([.42, -.08]), '#b8ed7a', 2);
+    const marker = project(origin);
+    if (marker) { ctx.fillStyle = '#b8ed7a'; ctx.beginPath(); ctx.arc(marker[0], marker[1], 4, 0, Math.PI*2); ctx.fill(); ctx.font = '11px sans-serif'; ctx.fillText('로봇', marker[0]+8, marker[1]-8); }
   }
   $('canvas-empty').classList.toggle('hidden', Boolean(cloud?.points.length));
   $('canvas-empty').querySelector('strong').textContent = '3D 점군 입력을 기다리고 있습니다';
@@ -400,6 +471,7 @@ function drawCloud() {
 
 function setView(kind) {
   view.kind = kind;
+  if (kind === '3d') view.pitch = Math.max(.12, Math.min(1.45, view.pitch));
   $('view-2d').classList.toggle('selected', kind === '2d'); $('view-3d').classList.toggle('selected', kind === '3d');
   $('map-layers').classList.toggle('hidden', kind === '3d'); $('cloud-source').classList.toggle('hidden', kind === '2d');
   $('follow-button').disabled = kind === '3d';
@@ -422,7 +494,7 @@ canvas.addEventListener('pointermove', e => {
   if (!dragging) return;
   const dx = e.clientX - dragging[0], dy = e.clientY - dragging[1]; dragging = [e.clientX, e.clientY];
   if (view.kind === '2d') { view.touched = true; view.x -= dx / view.scale; view.y += dy / view.scale; view.follow = false; $('follow-button').setAttribute('aria-pressed', 'false'); }
-  else { view.yaw += dx * .007; view.pitch = Math.max(-.9, Math.min(1.45, view.pitch + dy * .006)); }
+  else { view.yaw += dx * .007; view.pitch = Math.max(.12, Math.min(1.45, view.pitch + dy * .006)); }
   draw();
 });
 canvas.addEventListener('pointerup', e => { dragging = null; if (pick.start) { pick.end = screenToWorld(e); finishPick(); } });
@@ -569,10 +641,10 @@ function setMode(next) {
 }
 for (const el of document.querySelectorAll('[data-mode-button]')) el.onclick = () => setMode(el.dataset.modeButton);
 
-const pickHint = () => pick.mode === 'goal' ? '목표 지정 · 클릭 후 드래그로 방향 · Esc 취소' : '초기 위치 지정 · 클릭 후 드래그로 방향 · Esc 취소';
+const pickHint = () => '목표 지정 · 클릭 후 드래그로 방향 · Esc 취소';
 function pickDefaultYaw(point) {
   const p = data.values.pose;
-  return p && pick.mode === 'goal' ? Math.atan2(point[1] - p.y, point[0] - p.x) : p?.yaw || 0;
+  return p ? Math.atan2(point[1] - p.y, point[0] - p.x) : 0;
 }
 function setPick(next) {
   pick.mode = next; pick.start = pick.end = null;
@@ -590,18 +662,18 @@ async function post(url, body) {
 const servicePending = new Set();
 async function serviceAction(url, body, message, key) {
   servicePending.add(key); renderServices();
-  try { await post(url, body); if (message) toast(message); }
-  catch (error) { toast(error.message); }
+  try { await post(url, body); if (message) toast(message); return true; }
+  catch (error) { toast(error.message); return false; }
   finally { servicePending.delete(key); renderServices(); }
 }
 async function finishPick() {
-  const kind = pick.mode, start = pick.start, end = pick.end;
+  const start = pick.start, end = pick.end;
   const [dx, dy] = [end[0] - start[0], end[1] - start[1]];
   const yaw = Math.hypot(dx, dy) * view.scale > 6 ? Math.atan2(dy, dx) : pickDefaultYaw(start);
   setPick(null);
   if (currentFrame() !== 'map') { toast('map 좌표의 지도가 있어야 지정할 수 있습니다.'); return; }
-  await serviceAction('/api/navigation', { action: kind === 'goal' ? 'goal' : 'initial_pose', x: start[0], y: start[1], yaw },
-    kind === 'goal' ? `목표 전송 (${fmt(start[0], 2)}, ${fmt(start[1], 2)}) ${fmt(yaw * 180 / Math.PI, 0)}°` : '초기 위치를 보냈습니다.', 'pick');
+  await serviceAction('/api/navigation', { action: 'goal', x: start[0], y: start[1], yaw },
+    `목표 전송 (${fmt(start[0], 2)}, ${fmt(start[1], 2)}) ${fmt(yaw * 180 / Math.PI, 0)}°`, 'pick');
 }
 document.addEventListener('keydown', e => { if (e.key === 'Escape' && pick.mode) setPick(null); });
 for (const el of document.querySelectorAll('[data-pick]')) el.onclick = () => setPick(pick.mode === el.dataset.pick ? null : el.dataset.pick);
@@ -617,10 +689,11 @@ $('map-save').onclick = () => {
   if ((data.values.service_control?.maps?.items || []).some(m => m.name === name) && !confirm(name + ' 지도를 덮어쓸까요?')) return;
   serviceAction('/api/mapping', { action: 'save', name }, '지도 저장을 요청했습니다.', 'save');
 };
-function localize(name) {
+async function localize(name) {
   if (!name) { toast('위치추정에 쓸 저장 지도를 고르세요.'); return; }
   if (data.values.service_control?.mapping?.managed && data.values.service_control.mapping.mode === 'mapping' && !confirm('작성 중인 지도를 닫고 ' + name + ' 지도로 위치추정을 시작할까요? 저장하지 않은 지도는 사라집니다.')) return;
-  serviceAction('/api/mapping', { action: 'localize', map: name }, name + ' 지도로 위치추정을 시작합니다. 로봇이 지도를 만들기 시작한 위치에 있지 않으면 초기 위치를 지정하세요.', 'mapping');
+  const ok = await serviceAction('/api/mapping', { action: 'localize', map: name }, name + ' 지도 전체에서 위치와 방향을 자동으로 찾습니다.', 'mapping');
+  if (ok) setMode('nav');
 }
 $('nav-localize').onclick = () => localize($('nav-map-select').value);
 $('nav-start').onclick = () => serviceAction('/api/navigation', { action: 'start' }, 'Nav2 시작을 요청했습니다. 준비까지 10~20초 걸립니다.', 'navigation');
@@ -671,24 +744,66 @@ function renderServices() {
   }
   // NAV cards
   text('nav-localization', !alive ? '연결 대기' : !slamRunning ? 'SLAM / 위치추정 없음' : localizing ? '저장 지도 위치추정 · ' + slam.map : slam.state === 'external' ? '외부 SLAM 사용' : '작성 중인 지도 사용 (SLAM)');
-  text('nav-localization-hint', '');
+  const localization = data.values.localization;
+  const located = Boolean(localization?.state === 'localized' && localization.map === slam?.map);
+  text('nav-localization-hint', localizing ? localization?.reason || '자동 위치 탐색 준비 중' : '');
   $('nav-localize').disabled = !alive || navRunning || servicePending.has('mapping') || !$('nav-map-select').value;
-  $('nav-initial').disabled = !alive || !slamRunning;
   const ready = Boolean(goal?.available);
-  text('nav-state', !alive ? '연결 대기' : nav ? nav.managed && nav.state === 'running' ? ready ? '준비 완료' : '서버 활성화 대기…' : labels[nav.state] || nav.state : '상태 수신 대기');
-  text('nav-hint', !alive ? '' : nav?.error || (maps.nav2_installed === false ? 'Nav2 미설치' : !slamRunning ? 'SLAM 먼저' : ''));
+  const safety = data.values.collision_safety, actuator = data.values.collision_actuator;
+  const safetyFresh = alive && data.meta.collision_safety?.age <= .8 && data.meta.collision_actuator?.age <= .8;
+  const safetyReady = Boolean(safetyFresh && safety?.ready && actuator?.ready);
+  const safetyLabels = { clear: '보호 중', slowed: '감속 중', blocked: '정지 중', idle: '보호 대기 · 정지' };
+  const safetyReasons = {
+    waiting_for_mid360: 'MID-360 입력 대기', stale_mid360: 'MID-360 유효 관측 지연 · 정지',
+    stale_collision_scene: '충돌 점군 전달 지연 · 정지',
+    missing_cloud_health: '3D 전처리 상태 수신 대기', insufficient_raw_points: 'MID-360 유효 점 부족',
+    stale_odometry: '오도메트리 수신 지연', missing_odometry_tf: '차체 TF 대기',
+    stale_or_inconsistent_tf: '차체 TF 시간·자세 불일치', odometry_discontinuity: '오도메트리 불연속',
+    stale_arm_feedback: '팔 CAN 피드백 없음 · 팔 연결 복구 후 주행 가능', arm_is_moving: '팔 이동 중 · 차체 정지',
+    clearance_boundary: '외곽 여유 거리 부족', predicted_clearance_violation: '이동·제동 중 여유 거리 부족',
+    braking_clearance: '제동 여유 확보를 위해 감속', clear_path: '주행 경로 여유 확보',
+    command_timeout: '이동 명령 없음', zero_command: '정지 명령',
+    command_changed: '이동 명령 변경 · 다음 계산 대기',
+    computation_timeout: '충돌 계산 지연 · 차체 정지', guard_error: '충돌 보호 처리 오류',
+    tracer_requires_protected_remap: '차체 보호 입력 적용 필요 · 관제센터 재시작',
+    waiting_for_protected_tracer: '차체 보호 입력 대기', duplicate_velocity_guard: '충돌 보호 노드 중복',
+    missing_actuator_watchdog: '차체 watchdog 대기', velocity_route_unavailable: '차체 명령 연결 대기',
+    missing_per_point_time: 'MID-360 점별 시간 정보 없음', invalid_per_point_time: 'MID-360 시간 정보 오류',
+    odometry_gap: '전처리 자세 이력 공백', missing_odometry_interval: '점군 시각의 자세 이력 대기',
+    processing_deadline_exceeded: '전처리 완료 시 관측 시간 초과', obstacle_capacity_exceeded: '3D 장애물 저장 한도 초과',
+    unreliable_floor_plane: '바닥 평면 추정 대기 · 차체 정지',
+    missing_sensor_tf: 'MID-360 장착 TF 대기', invalid_cloud_health: '3D 전처리 상태 형식 오류',
+    cloud_clock_reset: 'MID-360 관측 시각 초기화'
+  };
+  text('collision-state', !safetyFresh ? '보호 상태 수신 대기 / 지연' : !actuator?.ready ? '차체 출력 정지' : safetyLabels[safety?.state] || '보호 입력 대기');
+  const clearanceCm = Number.isFinite(safety?.minimum_distance) ? safety.minimum_distance*100 : NaN;
+  text('collision-distance', `로봇 외곽 거리 ${fmt(clearanceCm, 1)} cm · 기준 ${fmt((safety?.clearance ?? .1)*100, 0)} cm`);
+  const pointKind = Array.isArray(safety?.blocking_source_point_base) ? 'blocking' : 'nearest';
+  const sensed = safety?.[pointKind + '_source_point_base'];
+  const sensedHeight = safety?.[pointKind + '_height_above_floor'];
+  const sensedAge = safety?.[pointKind + '_source_age'];
+  const sensedStamp = safety?.[pointKind + '_last_seen_stamp'];
+  const sensedWhen = Number.isFinite(sensedStamp) ? new Date(sensedStamp*1000).toLocaleTimeString('ko-KR', {hour12: false}) + ' 관측' : '';
+  text('collision-point', safetyFresh && Array.isArray(sensed)
+    ? `${pointKind === 'blocking' ? '경로 장애물' : '최근접 점'} · MID-360: ${sensed[0] >= 0 ? '앞' : '뒤'} ${fmt(Math.abs(sensed[0])*100, 0)}cm · ${sensed[1] >= 0 ? '왼쪽' : '오른쪽'} ${fmt(Math.abs(sensed[1])*100, 0)}cm${Number.isFinite(sensedHeight) ? ' · 바닥 +' + fmt(sensedHeight*100, 1) + 'cm' : ''}${Number.isFinite(sensedAge) ? ' · ' + fmt(sensedAge, 1) + '초 전' : ''}${sensedWhen ? ' (' + sensedWhen + ')' : ''}`
+    : '장애물 측정 위치 대기');
+  const cloudTiming = safety?.cloud;
+  const timingText = cloudTiming?.raw_points > 0 && Number.isFinite(cloudTiming.processing_ms)
+    ? ` · 계산 ${fmt(cloudTiming.processing_ms, 0)} ms · 대기 ${fmt(cloudTiming.queue_wait_ms, 0)} ms · 최신 관측 ${fmt(cloudTiming.source_age*1000, 0)} ms${Number.isFinite(safety?.scene_source_age) ? ' · 검사 입력 ' + fmt(safety.scene_source_age*1000, 0) + ' ms' : ''}` : '';
+  text('collision-hint', !safetyFresh ? 'MID-360·차체 보호 상태를 기다립니다.' : (safetyReasons[safety?.reason] || safety?.reason || '보호 입력 대기') + timingText);
+  text('nav-state', !alive ? '연결 대기' : nav ? nav.managed && nav.state === 'running' ? ready ? safetyReady ? '준비 완료' : '실행 중 · 주행 보호 대기' : '서버 활성화 대기…' : labels[nav.state] || nav.state : '상태 수신 대기');
+  text('nav-hint', !alive ? '' : nav?.error || (maps.nav2_installed === false ? 'Nav2 미설치' : !slamRunning ? 'SLAM 먼저' : !safetyReady ? safetyReasons[safety?.reason] || '3D 보호 입력 대기 · 서버 시작 가능, 주행은 정지' : ''));
   $('nav-hint').title = nav?.log || '';
   badge('nav-pill', !alive ? '대기' : navRunning ? ready ? goal?.state === 'active' ? 'DRIVING' : 'READY' : 'STARTING' : nav?.state === 'error' ? 'ERROR' : 'OFF', navRunning && ready ? 'live' : nav?.state === 'error' ? 'error' : 'waiting');
   const navBusy = !alive || servicePending.has('navigation') || nav?.busy;
-  $('nav-start').disabled = navBusy || navRunning || !slamRunning || maps.nav2_installed === false;
+  $('nav-start').disabled = navBusy || navRunning || !slamRunning || (localizing && !located) || maps.nav2_installed === false;
   $('nav-stop').disabled = navBusy || !nav?.managed;
   const goalLabels = { idle: '목표 없음', sending: '목표 전송 중', active: '이동 중', canceling: '취소 중', succeeded: '도착', aborted: '실패', canceled: '취소됨', rejected: '거부됨', error: '오류' };
   text('goal-state', goal ? (goalLabels[goal.state] || goal.state) + (goal.goal ? ` · (${fmt(goal.goal.x, 2)}, ${fmt(goal.goal.y, 2)})` : '') : '목표 없음');
   text('goal-hint', goal?.state === 'active' ? `남은 거리 ${fmt(goal.distance, 2)} m · 예상 ${fmt(goal.eta, 0)} s · 복구 ${goal.recoveries ?? 0}회` : goal && goal.state !== 'idle' ? goal.message : '');
-  $('nav-goal').disabled = !alive || !navRunning || !ready;
+  $('nav-goal').disabled = !alive || !navRunning || !ready || !safetyReady;
   $('nav-cancel').disabled = !alive || !goal || !['active', 'sending', 'canceling'].includes(goal.state);
   if (pick.mode === 'goal' && $('nav-goal').disabled) setPick(null);
-  if (pick.mode === 'initial' && $('nav-initial').disabled) setPick(null);
 }
 let savedMode = 'observe';
 try { savedMode = localStorage.getItem('inha-cc-mode') || 'observe'; } catch { /* storage unavailable */ }

@@ -1,8 +1,16 @@
 # 실물 캘리브레이션을 적용한 Jetson 로봇 실행
 
+Tracer 주행은 [URDF 외곽 기준 10 cm의 3D 충돌 보호](collision-avoidance.md)를 거칩니다. 실물 core는 점군 전처리·속도 guard·별도 watchdog을 실행하고, Tracer는 `/tracer/cmd_vel_safe`를 구독합니다. 기존 실행에 적용하려면 관제센터와 실물 core를 재시작해야 합니다.
+
 2026-10-12 기준, 이 젯슨(`/home/sparo`)에서 **Git에 올라온 실물 측정값으로 Tracer·G2·Mid-360S·Head·Wrist와 팔 피드백을 실행**합니다. 실물 기록이 다른 브랜치나 `SW/simulation` 경로에 있어도 측정 내용을 기준으로 선택했습니다. Gazebo/MuJoCo 센서 보정과 시뮬레이션 TCP 보정은 실행 설정에 사용하지 않습니다.
 
 ## 바로 실행
+
+MID-360 전처리와 3D 주행 보호 계산은 C++ 실행 파일을 사용합니다. 최초 실행 또는 해당 소스 변경 후 두 실행 파일을 함께 생성합니다. 빌드에는 ROS 2 Humble 개발 환경, Eigen3, yaml-cpp, nanoflann, nlohmann-json 헤더가 필요하며 이 Jetson에는 설치돼 있습니다.
+
+```bash
+bash ~/robocup/SW/robot/build-collision.sh
+```
 
 기존 개별 센서 실행기를 쓰고 있다면 먼저 종료합니다. 이 젯슨에서는 이전 실행기를 아래 이름으로 보존했습니다.
 
@@ -19,7 +27,7 @@ cd ~/robocup
 bash SW/robot/start_robot.sh
 ```
 
-이 터미널을 유지하고 종료할 때 **Ctrl+C**를 누릅니다. 시작 후 처음 **5초 이상 로봇을 정지**시켜 Mid360 자이로 bias를 초기화하세요. 실행기는 센서·오도메트리·팔 관절 피드백을 시작하며 `/cmd_vel`이나 팔 이동 명령은 보내지 않습니다. PiPER는 피드백을 읽는 노드를 사용하며 자동 모터 활성화를 하지 않습니다.
+이 터미널을 유지하고 종료할 때 **Ctrl+C**를 누릅니다. 시작 후 처음 **5초 이상 로봇을 정지**시켜 Mid360 자이로 bias를 초기화하세요. 실행기는 센서·오도메트리·팔 관절 피드백과 차체 보호를 시작합니다. 목표나 팔 이동 명령을 자동 생성하지 않으며, 보호 출력에는 정지 명령을 지속적으로 보냅니다. PiPER는 수신 전용 `piper_feedback.py`를 사용하며 자동 모터 활성화를 하지 않습니다. 부팅 중 무응답으로 종료하지 않고, 모든 관절의 실제 응답이 돌아올 때 재개합니다.
 
 백그라운드 tmux로 실행하려면:
 
@@ -88,7 +96,10 @@ odom                                  ← EKF가 몸체 이동을 발행
 
 | 용도 | 입력 |
 |---|---|
-| 2D 스캔 / SLAM / Nav2 | `/scan` — 거리 배율이 적용된 LaserScan, `laser_frame` |
+| 2D 스캔 / 관제 / Nav2 | `/scan` — 거리 배율·가림 마스크가 적용된 full-rate LaserScan, `laser_frame`; 무효 빔은 NaN |
+| G2 SLAM 입력 | `/scan_slam` — 빔별 운동 보상 후 이동·회전 조건으로 채택한 LaserScan |
+| 자동 위치 탐색 관측 | `/scan_slam_continuous` — 같은 운동 보상 스캔을 매 프레임 제공; 정합 제약 추가와 독립 |
+| G2 취득 순서 점군 | `/g2/points_raw` — 원본 PointCloud, `stamps` 채널의 빔별 상대 시각 |
 | 원본 2D 스캔 | `/scan_raw` — 드라이버 출력, 재보정·기록용 |
 | 3D 점군 | `/livox/lidar` — PointCloud2, `livox_frame` |
 | 몸체 오도메트리 | `/odom_ekf` — 보정 바퀴 선속도 + bias 제거한 IMU yaw rate |
@@ -109,7 +120,7 @@ odom                                  ← EKF가 몸체 이동을 발행
 
 Koide Head 결과는 당시 `/camera/camera/color/camera_info`의 fx=608.926941, fy=607.607239, D=0을 사용하여 계산했습니다. 실측 Head RGB 내부 보정은 fx=605.53244, fy=608.06854, D≠0입니다. 두 결과를 각각 적용하고 있으나 **실측 K/D로 Koide를 다시 최적화한 결과는 아닙니다**. 기존 Koide 입력을 재현할 때는 원본 드라이버 영상/CameraInfo 경로를 유지합니다.
 
-Nav2/SLAM에서는 스캔 입력을 `/scan`, 오도메트리 입력을 `/odom_ekf`, 몸체 프레임을 `base_link`, odom 프레임을 `odom`으로 연결합니다. 각 노드의 설정 항목명에 맞춰 지정하세요. `map → odom`은 SLAM/위치추정 노드가 담당합니다. 이 실행기는 SLAM·지도·Nav2·인지 모델을 자동으로 시작하지 않습니다.
+Nav2의 스캔 입력은 `/scan`, G2 SLAM의 입력은 `/scan_slam`입니다. 오도메트리 입력은 `/odom_ekf`, 몸체 프레임은 `base_link`, odom 프레임은 `odom`입니다. calibration 그룹은 `slam_scan.py`도 실행하며, 거리 범위·시간·이동·회전 조건은 [config/slam_scan.yaml](config/slam_scan.yaml)을 사용합니다. 빔별 시각과 소유권은 [SLAM 스캔 처리 안내](slam-scan-processing.md)에 정리했습니다. `map → odom`은 SLAM/위치추정 노드가 담당합니다. 이 실행기는 SLAM·지도·Nav2·인지 모델을 자동으로 시작하지 않습니다.
 
 ## 오도메트리 적용 방식
 

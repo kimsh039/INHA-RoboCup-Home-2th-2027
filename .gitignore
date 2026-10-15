@@ -1,0 +1,10 @@
+# Python runtime caches
+__pycache__/
+*.py[cod]
+
+# Generated files from the former top-level workspaces
+/detection/head_detection_ws/build/
+/detection/head_detection_ws/install/
+/detection/head_detection_ws/log/
+/detection/models/*.pt
+/simulation/gazebo/build/
