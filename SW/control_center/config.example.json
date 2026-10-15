@@ -67,6 +67,7 @@
       "/head_yolo/detections"
     ],
     "wrist_status": [
+      "/manipulation/wrist/status",
       "/detection/wrist/status"
     ],
     "battery": [

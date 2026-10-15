@@ -1,5 +1,12 @@
 # 2026-10-15 검증 기록
 
+## 손목 상태 이름 및 Jetson 관절 패치 확인
+
+- 최신 디텍션 클래스 이름/ID는 매니퓰의 6클래스 순서와 일치했다. 클래스 이름을 임의 치환하지 않았다.
+- 실제 관제 설정의 wrist_status 후보는 /detection/wrist/status이고 우리 frontend는 /manipulation/wrist/status를 발행했다. 예제 후보에 매니퓰 토픽을 우선 추가하고 기존 실제 config에는 이 채널만 백업 후 변경하는 도구를 추가했다. 해당 설정 도구는 Jetson에서 실행하지 않았다.
+- 사용자가 별도 승인한 관절 입력 수정만 Jetson에 적용했다. 최신 원본 SHA-256 확인 후 두 접근 계획 입력을 ModelJointFeedback으로 바꿨다. 원본 backup은 관제 폴더의 .joint-input-backup-20261015-224319-509888이다. Jetson 순수 테스트9개/문법 검사와 실제 /robot/joint_states read-only 수신(모델6개, 해당 표본 age 약7ms)을 확인했다.
+- 패치 시 Nav2가 active였으므로 관제 서버 재시작/구동은 하지 않았다. 파일 변경은 다음 관제 시작 때 로드된다. 실제 접근 성공 검증이 아니다. 다른 Jetson 파일 변경은 하지 않았다.
+
 ## 이번 요청 한정 재점검
 
 - 사용자는 이번 점검만 요청했으며 주기 자동 실행은 생성하지 않았다.

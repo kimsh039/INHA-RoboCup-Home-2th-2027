@@ -57,4 +57,15 @@ ros2 launch robocup_real_manipulation control_center_input.launch.py
 
 ## 검증
 
+관제 손목 상태 채널은 원래 `/detection/wrist/status`만 선택했지만 우리 frontend는 `/manipulation/wrist/status` (`std_msgs/String`)를 발행한다. 새 예제 설정은 매니퓰 상태를 우선하고 기존 검출 상태를 fallback으로 유지한다. 기존 실제 config.json은 통째로 교체하지 않고 아래 도구로 해당 채널 후보만 연결한다. 원본 설정 backup을 만들고 다른 설정은 보존하며 전체 설정/비밀값은 출력하지 않는다. 적용 후 관제센터를 운영자가 재시작해야 선택이 반영된다. 모터·팔·카메라·네비게이션을 시작하는 도구가 아니다.
+
+```bash
+python3 SW/manipulation/tools/link_control_center_wrist_status.py \
+  --config /실제/최신/checkout/SW/control_center/config.json --check
+python3 SW/manipulation/tools/link_control_center_wrist_status.py \
+  --config /실제/최신/checkout/SW/control_center/config.json
+```
+
+단순 상태 표시 이름의 연결이며, 손목 이미지 입력은 실제 factory RGB+factory aligned depth+factory CameraInfo 조합을 유지한다. 화면용 calibrated RGB 토픽으로 무조건 치환하지 않는다.
+
 순수 로직 테스트는 `test_control_center_input.py`에서 클래스·시각·좌표, 시작 시 과거 성공 거절, 목표 변경·취소·스트림 공백·시계 역행, 정지 대기와 중복 방지를 검사한다. `test_control_center_ros.py`는 로봇과 격리된 ROS 도메인187에서 합성 웹 상태·합성 odom을 보내 실제 어댑터의 메시지 인계를 검사한다. 합성 검증과 실물 접근/파지 성공을 구분한다.
