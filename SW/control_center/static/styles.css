@@ -213,3 +213,21 @@ body.v2 .map-header .map-tools{display:flex;gap:6px}
 body.v2 .map-panel>.panel-footer{display:none}
 body.v2 .camera-row{height:clamp(230px,29vh,420px)}
 @media(max-width:1280px){body.v2 .map-header .layer-options{display:none}}
+
+/* Manipulation actions: long labels must fit the narrow sidebar. */
+body.v2 .mode-section[data-mode="manipulation"] .mode-actions {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 8px;
+  width: 100%;
+  min-width: 0;
+}
+body.v2 .mode-section[data-mode="manipulation"] .mode-actions button {
+  width: 100%;
+  min-width: 0;
+  min-height: 44px;
+  height: auto;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  line-height: 1.45;
+}

@@ -114,19 +114,23 @@ class ManipulationControl:
             from robocup_real_manipulation_msgs.action import Manipulate
             self.Action = Manipulate
             self.client = ActionClient(node, Manipulate, '/manipulation/run')
-            qos = QoSProfile(depth=1, reliability=ReliabilityPolicy.RELIABLE,
-                             durability=DurabilityPolicy.TRANSIENT_LOCAL)
+            latched_qos = QoSProfile(depth=1, reliability=ReliabilityPolicy.RELIABLE,
+                                     durability=DurabilityPolicy.TRANSIENT_LOCAL)
             for topic in ('/manipulation/status', '/manipulation/result'):
-                self.subscriptions.append(node.create_subscription(TaskStatus, topic, self.status, qos))
+                self.subscriptions.append(node.create_subscription(TaskStatus, topic, self.status, latched_qos))
             for key, topic in [('readiness', '/manipulation/readiness'),
                                ('adapter', '/manipulation/control_center/status'),
                                ('base', '/manipulation/base_gate/status'),
                                ('wrist', '/manipulation/wrist/status')]:
                 self.subscriptions.append(node.create_subscription(String, topic,
                     lambda msg, key=key: self.json_status(key, msg), 1))
+            # The handoff adapter publishes one-shot data with the default
+            # volatile QoS. Do not require transient-local durability here.
+            handoff_qos = QoSProfile(depth=10, reliability=ReliabilityPolicy.RELIABLE,
+                                     durability=DurabilityPolicy.VOLATILE)
             for cls, topic, callback in [(Target, '/manipulation/target', self.target),
                     (ApproachResult, '/manipulation/approach_result', self.approach)]:
-                self.subscriptions.append(node.create_subscription(cls, topic, callback, qos))
+                self.subscriptions.append(node.create_subscription(cls, topic, callback, handoff_qos))
             self.monitor.available = True
             self.monitor.reason = '실제 매니퓰레이션 상태 수신 대기'
         except ImportError as exc:

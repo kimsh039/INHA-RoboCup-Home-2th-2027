@@ -23,6 +23,10 @@ wrist=node.create_publisher(String,'/manipulation/wrist/status',1)
 try:
     deadline=time.monotonic()+2
     while time.monotonic()<deadline:rclpy.spin_once(node,timeout_sec=.02)
+    for topic in ('/manipulation/target','/manipulation/approach_result'):
+        endpoints=node.get_subscriptions_info_by_topic(topic)
+        own=[e for e in endpoints if e.node_name=='control_center_events_test']
+        assert len(own)==1 and own[0].qos_profile.durability==DurabilityPolicy.VOLATILE,(topic,own)
     msg=TaskStatus(task_id='isolated_event_task',stage='OBSERVE',outcome='FAILED',reason='CAMERA_SYNC')
     for _ in range(5):
         msg.header.stamp=node.get_clock().now().to_msg();status.publish(msg)
