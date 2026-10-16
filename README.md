@@ -23,13 +23,6 @@ flowchart LR
 
 ## **하드웨어 구성**
 
-<!-- TODO: 실물 로봇 사진 -->
-<p align="center">
-  <img src="docs/assets/hardware.png" width="500" />
-  <br/>
-  <b>TRACER × PiPER</b>
-</p>
-
 - **이동 베이스:** AgileX TRACER (차동 구동)
 - **팔:** AgileX PiPER 6자유도 팔 + 평행 그리퍼
 - **메인 컴퓨터:** NVIDIA Jetson AGX Orin (JetPack 6.2, ROS 2 Humble)
