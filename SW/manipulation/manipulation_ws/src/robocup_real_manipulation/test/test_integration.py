@@ -48,6 +48,29 @@ def test_lease_requires_post_request_evidence_not_docked_or_velocity_command():
         with pytest.raises(Fault):lease_evidence(lease,task,now,c,requested)
     lease.stopped=False
     with pytest.raises(Fault):lease_evidence(lease,'A',10.1,c,9.9)
+    lease.stopped=True;lease.locked=False
+    with pytest.raises(Fault):lease_evidence(lease,'A',10.1,c,9.9)
+
+
+def test_coordinator_requests_lock_then_waits_for_actual_locked_stopped_ack():
+    from robocup_real_manipulation.node import Coordinator
+    from unittest.mock import Mock
+    c=configured();header=NS(stamp=NS(sec=100,nanosec=0))
+    holder=NS(c=c,mutex=threading.RLock(),input_errors={},
+        join=NS(active='A',ready=lambda:True,targets={'A':NS(header=header)},
+            approaches={'A':NS(header=header,outcome='SUCCESS',base_stopped=True)}),
+        lock_requested=False,lease_requested_at=0.,lease=None,locked_task='A',
+        now=lambda:100.1,publish_lock=Mock(),joint=None,tf=NS(lookup_transform=Mock()))
+    def until(ready,timeout):
+        assert ready() is False and holder.lock_requested
+        holder.publish_lock.assert_called_once()
+        assert holder.lease_requested_at==100.1
+        for locked,stopped in [(False,True),(True,False)]:
+            holder.lease=NS(task_id='A',locked=locked,stopped=stopped,header=header)
+            assert ready() is False
+        holder.tf.lookup_transform.assert_not_called()
+    holder.until=until
+    Coordinator.perform(holder,'WAIT_FOR_APPROACH',None)
 
 def test_actual_jetson_factory_fov_fits_error_bound():
     report=json.loads((PKG/'test/fixtures/jetson_intrinsics.json').read_text())

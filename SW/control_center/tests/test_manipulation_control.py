@@ -126,13 +126,16 @@ def test_stale_or_replayed_handoff_cannot_be_run():
     from types import SimpleNamespace as NS
     import time
     c=controller()
-    c.targets['t']=(NS(),time.monotonic())
+    c.targets['t']=(NS(class_id=0,header=NS(frame_id='odom',stamp=NS(sec=99,nanosec=0)),
+        coarse_position=NS(x=.4,y=0.,z=.6)),time.monotonic())
     c.approaches['t']=(NS(outcome='SUCCESS',base_stopped=True,
         header=NS(stamp=NS(sec=100,nanosec=0))),time.monotonic())
-    c.monitor.receive('adapter',dict(task_id='t',reason='HANDED_OFF_EXTERNAL_BASE_LEASE_REQUIRED'))
+    c.monitor.receive('adapter',dict(task_id='t',reason='HANDED_OFF_EXTERNAL_BASE_LEASE_REQUIRED',
+        measured_stop_confirmed=True))
+    c.monitor.receive('base',dict(stopped=True))
     assert c.candidate() is None # No observed active approach in this session.
     c.seen_sessions.append('t');assert c.candidate()=='t'
-    c.approaches['t'][0].header.stamp.sec=80;assert c.candidate() is None
+    c.approaches['t'][0].header.stamp.sec=69;assert c.candidate() is None
     c.approaches['t'][0].header.stamp.sec=100;c.consumed.append('t');assert c.candidate() is None
 
 

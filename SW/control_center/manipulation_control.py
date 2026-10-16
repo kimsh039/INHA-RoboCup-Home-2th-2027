@@ -246,7 +246,11 @@ class ManipulationControl:
             result.append('실행 Action 서버 연결 없음')
         if not m.fresh('readiness') or m.values.get('readiness', {}).get('ready') is not True:
             result.append('실행기 준비 미완료')
-        if not m.fresh('base') or m.values.get('base', {}).get('ready') is not True:
+        base = m.values.get('base', {})
+        # Preflight checks whether we can REQUEST the lock. The coordinator
+        # still waits for the real task-matched locked/stopped ACK before motion.
+        # Older adapters without this field retain their stricter ready gate.
+        if not m.fresh('base') or base.get('lock_request_ready', base.get('ready')) is not True:
             result.append('최종 베이스 명령 잠금 경로 미확인')
         if not m.fresh('wrist') or m.values.get('wrist', {}).get('valid') is not True:
             result.append('손목 재검출 준비 미완료')

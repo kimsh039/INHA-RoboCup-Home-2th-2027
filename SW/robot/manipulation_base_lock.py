@@ -90,6 +90,9 @@ class BaseLockAdapter:
         self.last_ack = time.monotonic()
         stopped = bool(self.stopped())
         owned = self.owners_ok()
+        # The independent zero latch can be requested before upstream motion
+        # approval/zero output. This is not a locked/stopped lease ACK.
+        lock_request_ready = not self.error and owned and not self.task
         # During manipulation the independent latch itself enforces final zero.
         # An arm-is-moving rejection upstream must not revoke that real lock.
         valid = not self.error and owned and zero_output and (bool(self.task) or self.node.fresh())
@@ -102,4 +105,5 @@ class BaseLockAdapter:
         self.status_pub.publish(self.String(data=json.dumps(dict(
             task_id=self.task or self.release_task, locked=bool(self.task), stopped=stopped,
             ready=bool(valid), reason=self.error or ('BASE_LOCK_RETAINED' if self.task else 'UNLOCKED'),
+            lock_request_ready=bool(lock_request_ready),
             owner_verified=bool(owned), final_topic=self.node.output))))

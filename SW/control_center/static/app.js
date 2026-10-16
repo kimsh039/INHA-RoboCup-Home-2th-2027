@@ -920,7 +920,7 @@ function renderManipulation() {
   text('manip-result', currentStatus && status.outcome ? [status.outcome, status.reason, '물체 '+(status.holding || 'UNKNOWN')].filter(Boolean).join(' · ') : handedOff ? '물체·좌표·도킹 완료·실측 정지 인계됨 · 실행 요청 시 베이스 잠금 후 팔 동작' : '손목 재관측 → 정밀 위치·마스크 → 규칙 기반 파지 → 좌/우 배치 → 팔 복귀');
   const p = currentStatus ? status.precise_center : null, coarse = handoff.coarse_position;
   text('manip-position', p?.frame && p.xyz?.every(Number.isFinite) ? p.frame+' ('+p.xyz.map(v=>v.toFixed(3)).join(', ')+') m' : coarse?.frame && coarse.xyz?.every(Number.isFinite) ? '인계 좌표 · '+coarse.frame+' ('+coarse.xyz.map(v=>v.toFixed(3)).join(', ')+') m · 손목 정밀 재검출 대기' : '정밀 좌표 —');
-  text('manip-base', !fresh('base') ? '베이스 게이트 상태 수신 없음 / 지연' : '베이스 '+(m.base.locked ? '잠금 유지' : '잠금 해제')+' · '+(m.base.stopped ? '정지 확인' : '정지 미확인')+' · '+(m.base.reason || ''));
+  text('manip-base', !fresh('base') ? '베이스 게이트 상태 수신 없음 / 지연' : '베이스 '+(m.base.locked ? '잠금 유지' : m.base.lock_request_ready === true ? '잠금 요청 가능 · 실행 시 잠금' : '잠금 해제')+' · '+(m.base.stopped ? '정지 확인' : '정지 미확인')+' · '+(m.base.reason || ''));
   text('manip-inputs', [['adapter','디텍션 인계'],['wrist','손목'],['readiness','실행기'],['base','베이스']].map(([k,n])=>n+' '+(fresh(k)?'연결':'미수신')).join(' · '));
   $('manip-arm').disabled = !online || (m.execution?.arm_blockers || ['대기']).length > 0 || m.execution?.armed || servicePending.has('manipulation');
   $('manip-run').disabled = !online || blockers.length > 0 || servicePending.has('manipulation');

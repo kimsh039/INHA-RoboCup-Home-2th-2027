@@ -1,4 +1,5 @@
 import importlib.util
+import json
 from pathlib import Path
 from types import SimpleNamespace as NS
 from unittest.mock import patch
@@ -71,3 +72,40 @@ def test_real_locked_zero_remains_acknowledged_without_upstream_approval(tmp_pat
     leases=[];obj.pub=NS(publish=leases.append);obj.status_pub=NS(publish=lambda msg:None)
     with patch.object(gate.time,'monotonic',return_value=10.):obj.tick(zero_output=True)
     assert len(leases)==1 and leases[0].locked and leases[0].stopped
+
+
+def ticking_adapter(tmp_path):
+    obj=adapter(tmp_path);obj.last_ack=0;obj.stopped=lambda:True
+    obj.node.fresh=lambda:False;obj.node.output='/tracer/cmd_vel_safe'
+    obj.node.get_clock=lambda:NS(now=lambda:NS(to_msg=lambda:NS(sec=100,nanosec=0)))
+    obj.Lease=lambda **kw:NS(header=NS(stamp=None),**kw)
+    obj.String=lambda **kw:NS(**kw)
+    leases=[];statuses=[]
+    obj.pub=NS(publish=leases.append);obj.status_pub=NS(publish=statuses.append)
+    return obj,leases,statuses
+
+
+@pytest.mark.parametrize('zero_output', [True, False])
+def test_unlocked_request_path_does_not_require_motion_approval_or_fake_an_ack(tmp_path,zero_output):
+    obj,leases,statuses=ticking_adapter(tmp_path)
+    with patch.object(gate.time,'monotonic',return_value=10.):obj.tick(zero_output)
+    status=json.loads(statuses[-1].data)
+    assert status['lock_request_ready'] and not status['ready'] and not status['locked']
+    assert not leases
+    obj.request(request())
+    with patch.object(gate.time,'monotonic',return_value=11.):obj.tick(zero_output=False)
+    assert not leases and not json.loads(statuses[-1].data)['lock_request_ready']
+    with patch.object(gate.time,'monotonic',return_value=12.):obj.tick(zero_output=True)
+    assert len(leases)==1 and leases[0].task_id=='task' and leases[0].locked and leases[0].stopped
+
+
+@pytest.mark.parametrize('failure', ['owner','publisher','error','locked'])
+def test_request_path_rejects_missing_ownership_errors_and_existing_lock(tmp_path,failure):
+    obj,leases,statuses=ticking_adapter(tmp_path)
+    if failure=='owner':obj.node.owner_valid=False
+    elif failure=='publisher':obj.node.get_publishers_info_by_topic=lambda topic:[]
+    elif failure=='error':obj.error='BASE_LOCK_PERSIST_FAILED'
+    else:obj.task='existing-task'
+    with patch.object(gate.time,'monotonic',return_value=10.):obj.tick(zero_output=False)
+    assert not json.loads(statuses[-1].data)['lock_request_ready']
+    assert not leases

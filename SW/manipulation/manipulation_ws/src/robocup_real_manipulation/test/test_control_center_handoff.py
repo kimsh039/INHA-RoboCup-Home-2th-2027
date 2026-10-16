@@ -79,3 +79,30 @@ def test_automatic_reservation_only_adopts_a_subsequent_session():
     assert c.armed_task is None
     c = setup(); c.armed = True; complete(c, started=96.)
     assert c.armed_task == 'dock-A'
+
+
+def test_unlocked_path_allows_explicit_execution_only_after_completed_approach():
+    c=setup();c.monitor.receive('readiness',dict(ready=True,errors=[]))
+    c.monitor.receive('base',dict(ready=False,lock_request_ready=True,locked=False,stopped=True))
+    sent=[]
+    future=N(add_done_callback=lambda callback:None)
+    c.Action=N(Goal=lambda **kw:N(**kw))
+    c.client.send_goal_async=lambda goal,**kw:(sent.append(goal.task_id) or future)
+    assert c.blockers()==['새 접근 완료·실측 정지 인계 대기']
+    complete(c)
+    assert c.blockers()==[]
+    c.tick();c.tick()
+    assert sent==[]  # Existing manual/reserved execution policy is unchanged.
+    c.request(dict(action='run'));c.tick();c.tick()
+    assert sent==['dock-A']
+
+
+def test_request_readiness_does_not_bypass_stale_base_or_current_stop():
+    c=setup();complete(c);c.monitor.receive('readiness',dict(ready=True,errors=[]))
+    c.monitor.receive('base',dict(ready=True,lock_request_ready=False,stopped=True))
+    assert '최종 베이스 명령 잠금 경로 미확인' in c.blockers()
+    c.monitor.receive('base',dict(ready=False,lock_request_ready=True,stopped=False))
+    assert '새 접근 완료·실측 정지 인계 대기' in c.blockers()
+    c.monitor.receive('base',dict(ready=False,lock_request_ready=True,stopped=True))
+    c.monitor.received['base']=0.
+    assert '최종 베이스 명령 잠금 경로 미확인' in c.blockers()
