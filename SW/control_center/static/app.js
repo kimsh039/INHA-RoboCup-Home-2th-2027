@@ -89,7 +89,7 @@ function render() {
   text('detection-value', detections && fresh('detections') ? (detections.valid ? detections.objects.length : 0) : '—');
   text('detection-foot', detections ? `${detections.state} · ${fresh('detections') ? detections.valid ? '유효 관측' : '유효 목표 없음' : '수신 지연'}` : '검출 토픽 수신 대기');
   updateCamera('head'); updateCamera('wrist');
-  renderDetections(); renderSensors(); renderSensorControls(); renderCanOdometry(); renderServices(); renderManipulation(); renderLogs();
+  renderDetections(); renderSensors(); renderSensorControls(); renderCanOdometry(); renderServices(); renderManipulation(); renderTask(); renderLogs();
   text('session-time', 'SESSION ' + elapsed(data.uptime));
   $('save-map-button').disabled = !map;
   if (view.follow && p && fresh('pose') && p.frame === currentFrame() && view.kind === '2d') { view.x = p.x; view.y = p.y; }
@@ -643,7 +643,7 @@ new ResizeObserver(() => { const r = $('map-stage').getBoundingClientRect(); vie
 setInterval(() => { text('clock', new Date().toLocaleTimeString('ko-KR', { hour12: false, timeZone: 'Asia/Seoul' })); if (data.received && performance.now() - data.received > 2500) { data.connected = false; render(); } }, 1000);
 
 // ---- Modes (관측 / SLAM / NAV) ----
-const modes = { observe: 1, slam: 1, nav: 1, detection: 1, manipulation: 1 };
+const modes = { observe: 1, slam: 1, nav: 1, detection: 1, manipulation: 1, task: 1 };
 let mode = 'observe';
 function setMode(next) {
   mode = modes[next] ? next : 'observe';
@@ -674,15 +674,19 @@ function setPick(next) {
 }
 async function post(url, body) {
   const response = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Control-Token': data.controlToken || '' }, body: JSON.stringify(body) });
-  const result = await response.json(); if (!response.ok) throw new Error(result.error || response.status);
+  const raw = await response.text();
+  let result;
+  try { result = JSON.parse(raw); }
+  catch (_) { throw new Error(`관제 서버 응답 오류 (HTTP ${response.status}). 서버 버전과 연결 상태를 확인한 뒤 새로고침하세요.`); }
+  if (!response.ok) throw new Error(result?.error || `관제 요청 실패 (HTTP ${response.status})`);
   return result;
 }
 const servicePending = new Set();
 async function serviceAction(url, body, message, key) {
-  servicePending.add(key); renderServices();
+  servicePending.add(key); renderServices(); renderTask();
   try { await post(url, body); if (message) toast(message); return true; }
   catch (error) { toast(error.message); return false; }
-  finally { servicePending.delete(key); renderServices(); }
+  finally { servicePending.delete(key); renderServices(); renderTask(); }
 }
 async function finishPick() {
   const start = pick.start, end = pick.end;
@@ -698,7 +702,7 @@ for (const el of document.querySelectorAll('[data-pick]')) el.onclick = () => se
 
 const defaultMapName = () => { const d = new Date(), z = n => String(n).padStart(2, '0'); return `map_${d.getFullYear()}${z(d.getMonth() + 1)}${z(d.getDate())}_${z(d.getHours())}${z(d.getMinutes())}`; };
 $('map-name').value = defaultMapName();
-$('slam-start').onclick = () => serviceAction('/api/mapping', { action: 'start' }, 'SLAM 시작을 요청했습니다.', 'mapping');
+$('slam-start').onclick = () => serviceAction('/api/mapping', { action: 'start' }, 'SLAM 시작과 시작 위치 홈 등록을 요청했습니다. 등록 완료까지 정지해 주세요.', 'mapping');
 $('slam-stop').onclick = () => { if (confirm('SLAM을 중지할까요? 저장하지 않은 지도는 사라집니다.')) serviceAction('/api/mapping', { action: 'stop' }, 'SLAM 중지를 요청했습니다.', 'mapping'); };
 $('slam-reset').onclick = () => { if (confirm('지도를 초기화할까요? 저장하지 않은 지도는 사라지고 현재 위치에서 새로 시작합니다.')) serviceAction('/api/mapping', { action: 'reset' }, '지도를 초기화합니다.', 'mapping'); };
 $('map-save').onclick = () => {
@@ -936,3 +940,34 @@ $('manip-run').onclick = () => serviceAction('/api/manipulation', {action:'run'}
 $('manip-cancel').onclick = () => serviceAction('/api/manipulation', {action:'cancel'}, '매니퓰 작업 취소를 요청했습니다.', 'manipulation');
 
 $('manip-arm').onclick = () => serviceAction('/api/manipulation', {action:'arm'}, '새 Detection 접근 완료 후 자동 실행을 예약했습니다. 접수 결과는 이벤트에서 확인하세요.', 'manipulation');
+
+function renderTask() {
+  const task = data.values.task || {}, home = task.home;
+  const alive = data.mode === 'live' && data.connected && performance.now()-data.received < 2500;
+  const mapping = data.values.service_control?.mapping || {};
+  const mappingRunning = mapping.managed || mapping.publishers || mapping.busy;
+  const pendingHome = Boolean(task.home_pending);
+  const homeCurrent = home && home.map_id === task.current_map_id;
+  text('task-home', pendingHome ? '시작 위치 홈 등록 중' : home ? `${fmt(home.x, 2)}, ${fmt(home.y, 2)} m · ${fmt(home.yaw*180/Math.PI, 1)}°${homeCurrent ? '' : ' · 이전 지도 홈'}` : '홈 미등록');
+  text('task-home-hint', task.home_message || '홈에서 정지한 뒤 SLAM을 시작하세요. 첫 위치가 나오면 시작 위치를 자동 등록합니다.');
+  text('task-state', task.message || '물체를 선택하세요.');
+  text('task-detail', task.id ? `${task.label} · 작업 ${task.id.slice(0, 12)}` : '한 번 실행하면 준비부터 홈 복귀까지 이어집니다.');
+  badge('task-pill', task.active ? '진행 중' : task.phase === 'succeeded' ? '완료' : ['failed', 'interrupted'].includes(task.phase) ? '중단' : '대기', task.active ? 'live' : task.phase === 'failed' ? 'error' : 'waiting');
+  $('task-start').disabled = !alive || !data.values.task || task.active || pendingHome || servicePending.has('task');
+  $('task-home-save').disabled = !alive || !data.values.task || task.active || pendingHome || servicePending.has('task');
+  text('task-home-save', pendingHome ? '홈 등록 대기 중' : mappingRunning ? '현재 위치를 홈으로 등록' : 'SLAM 시작·시작 위치를 홈으로 등록');
+  $('task-cancel').disabled = !alive || (!task.active && !pendingHome);
+  $('task-object').disabled = Boolean(task.active);
+  const steps = [['sensors','센서 준비'],['mapping','SLAM·위치추정'],['navigation','NAV 준비'],['manipulation_ready','팔·손목 준비'],['detection','탐지·closed approach'],['manipulation','집기·SAM 접시 배치·팔 수납'],['departure','후진·정렬·홈 복귀'],['succeeded','완료']];
+  const list = $('task-steps'); list.replaceChildren();
+  for (const [phase, label] of steps) {
+    const item = document.createElement('li'); item.textContent = (task.phase === phase ? '▶ ' : '')+label;
+    item.className = task.phase === phase ? 'task-current' : ''; list.append(item);
+  }
+}
+$('task-form').onsubmit = event => {
+  event.preventDefault();
+  serviceAction('/api/task', {action:'start', label:$('task-object').value}, '전체 Task 실행을 요청했습니다.', 'task');
+};
+$('task-home-save').onclick = () => serviceAction('/api/task', {action:'set_home'}, '홈 등록을 예약했습니다. 첫 SLAM 좌표 수신까지 정지해 주세요.', 'task');
+$('task-cancel').onclick = () => serviceAction('/api/task', {action:'cancel'}, '전체 Task 정지를 요청했습니다.', 'task');

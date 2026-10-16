@@ -54,6 +54,9 @@ class State:
         self.detection_request = None
         self.manipulation_request = None
         self.manipulation_interlock = lambda: False
+        self.task_request = None
+        self.task_interlock = lambda: False
+        self.home_on_slam_start = None
         self.control_token = secrets.token_urlsafe(32)
         self.map_png = None
         self.clients = 0
@@ -138,6 +141,8 @@ def make_server(state, host='127.0.0.1', port=8765):
             self.send_header('Content-Length', str(len(body)))
             self.send_header('Cache-Control', 'no-store')
             self.send_header('X-Content-Type-Options', 'nosniff')
+            if self.close_connection:
+                self.send_header('Connection', 'close')
             if download:
                 self.send_header('Content-Disposition', f'attachment; filename="{download}"')
             self.end_headers()
@@ -145,6 +150,14 @@ def make_server(state, host='127.0.0.1', port=8765):
 
         def send_json(self, value, status=200):
             self.send(json.dumps(finite_json(value), ensure_ascii=False, allow_nan=False).encode(), status=status)
+
+        def send_error(self, code, message=None, explain=None):
+            # HTTP/parser errors on APIs must not become an HTML JSON-parse error in the UI.
+            if urlparse(getattr(self, 'path', '')).path.startswith('/api/'):
+                self.close_connection = True
+                self.send_json({'error': message or self.responses.get(code, ('HTTP error',))[0]}, code)
+            else:
+                super().send_error(code, message, explain)
 
         def do_GET(self):
             if urlparse('http://' + self.headers.get('Host', '')).hostname not in ('localhost', '127.0.0.1', '::1'):
@@ -182,8 +195,11 @@ def make_server(state, host='127.0.0.1', port=8765):
                 self.send((ROOT / 'static' / name).read_bytes(), mime)
 
         def do_POST(self):
+            # A rejected request may still have an unread body. Never parse that
+            # body as the next HTTP request on a reused connection.
+            self.close_connection = True
             path = urlparse(self.path).path
-            if path not in ('/api/select', '/api/sensors', '/api/shutdown', '/api/mapping', '/api/navigation', '/api/detection', '/api/manipulation'):
+            if path not in ('/api/select', '/api/sensors', '/api/shutdown', '/api/mapping', '/api/navigation', '/api/detection', '/api/manipulation', '/api/task'):
                 self.send_json({'error': 'Not found'}, 404)
                 return
             if state.mode != 'live':
@@ -204,6 +220,12 @@ def make_server(state, host='127.0.0.1', port=8765):
                 items = json.loads(self.rfile.read(length))
                 if not isinstance(items, dict):
                     raise ValueError('Expected a channel/topic object')
+                if state.task_interlock() and path != '/api/task':
+                    if items.get('action') == 'cancel' and path in ('/api/navigation', '/api/detection', '/api/manipulation'):
+                        state.task_request(dict(action='cancel'))
+                        self.send_json({'queued': '전체 Task 취소'}, 202)
+                        return
+                    raise RuntimeError('전체 Task 실행 중입니다. 전체 Task 취소 후 개별 제어하세요.')
                 if state.manipulation_interlock() and (
                         path == '/api/shutdown'
                         or path == '/api/sensors'
@@ -222,6 +244,12 @@ def make_server(state, host='127.0.0.1', port=8765):
                     return
                 if state.shutdown_requested.is_set():
                     self.send_json({'error': '관제센터 종료 중입니다.'}, 409)
+                    return
+                if path == '/api/task':
+                    if not state.task_request:
+                        raise RuntimeError('전체 Task 실행기 연결 대기')
+                    state.task_request(items)
+                    self.send_json({'queued': items}, 202)
                     return
                 if path == '/api/manipulation':
                     if set(items) != {'action'} or items.get('action') not in ('run', 'cancel', 'arm'):

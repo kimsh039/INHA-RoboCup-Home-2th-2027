@@ -4,6 +4,10 @@
 
 **웹 관제센터:** [젯슨에서 실행하고 맥 localhost로 접속](SW/control_center/README.md). 실시간 SLAM·카메라·검출·점군 관측과 카메라/LiDAR 개별 실행·중지를 제공합니다.
 
+**전체 Task 통합 (2026-10-16):** 관제센터 마지막 **전체 Task** 탭에서 물체를 선택하면 **SLAM → NAV → 탐지·closed approach → 집기 → 손목 SAM으로 책상 위 접시 관측·배치 → 팔 수납 → 직선 후진 → 정지 → 제자리 회전·Head 정렬 → 정지 → 지정 홈 복귀**를 연결합니다. 물체는 책상 위 접시에 놓고 로봇이 복귀합니다. [홈 등록·실물 설정·배포 방법 및 현재 한계](SW/control_center/TASK.md).
+
+확장된 ROS 메시지와 실행용 패키지는 로컬에 설치하고 관제센터 및 읽기 전용 팔 모니터에 적용했습니다. SLAM 시작 시 첫 유효 좌표로 시작 위치·방향을 홈에 자동 등록합니다. 전체 Task 실물 실행에는 접시 관측 자세와 실물 프로파일 설정이 남아 있습니다. 자동 테스트와 전체 작업 실물 주행·파지는 수행하지 않았습니다.
+
 인하 유나이티드 앳홈 2기 · TRACER × PiPER · ROS 2 Humble · Jetson AGX Orin
 
 | 영역 | 내용 | 시작 문서 |
@@ -20,6 +24,7 @@ HW/                         # 하드웨어 자료
         └── wrist/          # 손목 카메라
 SW/
 ├── control_center/         # Jetson 웹 관제 / Mac SSH 터널
+├── manipulation/           # 실물 팔·손목 SAM·접시 배치 및 인계
 ├── setup/                  # Jetson 설치와 실행
 ├── simulation/             # Gazebo·MuJoCo·보정
 └── detection/

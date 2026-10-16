@@ -34,8 +34,9 @@ from .sequence import Sequence
 from .wrist_geometry import mask_scene
 from .motion import Motion
 from .ros_util import read_config, seconds, wait_future, action_call, spin
+from .plate_task import PlateTaskMixin
 
-class Coordinator(Node):
+class Coordinator(PlateTaskMixin, Node):
     def __init__(self):
         super().__init__('real_manipulation')
         self.c=validate(read_config(self)); self.scene_source=copy.deepcopy(self.c); self.declare_parameter('hardware_mode',False); self.group=ReentrantCallbackGroup(); self.mutex=threading.RLock()
@@ -87,6 +88,15 @@ class Coordinator(Node):
         self.publish_lock()
         self.readiness_pub=self.create_publisher(String,'/manipulation/readiness',1)
         self.create_timer(1.,self.publish_readiness,callback_group=self.group)
+        self.departure_release = None
+        self.orchestrator = None
+        self.create_subscription(String, '/task/orchestrator', self.orchestrator_status, 1, callback_group=self.group)
+        self.departure_gate = None
+        self.departure_gate_received = 0.
+        self.drive_pub = self.create_publisher(String, '/manipulation/drive_ready', 1)
+        self.create_subscription(String, '/manipulation/departure/request', self.departure_request, 1, callback_group=self.group)
+        self.create_subscription(String, '/navigation/departure/gate', self.departure_gate_status, 1, callback_group=self.group)
+        self.create_timer(.1, self.departure_tick, callback_group=self.group)
         if not self.c['execution_enabled']: self.get_logger().info('READ-ONLY: physical goals rejected; fill config before commissioning')
     def surface(self,msg):
         with self.mutex:
@@ -116,6 +126,9 @@ class Coordinator(Node):
 
     def publish_readiness(self):
         errors=[]
+        plate_error = ''
+        try: self.plate_config()
+        except Exception as exc: plate_error = str(exc)
         if not self.get_parameter('hardware_mode').value: errors.append('READ_ONLY_MODE')
         try:
             validate(copy.deepcopy(self.c),hardware=True); validate_integration(self.c)
@@ -128,6 +141,8 @@ class Coordinator(Node):
             errors.append('MODEL_JOINT_FEEDBACK_STALE')
         if self.locked_task and self.goal_handle is None: errors.append('BASE_LOCK_RETAINED')
         self.readiness_pub.publish(String(data=json.dumps(dict(ready=not errors,errors=errors,
+            table_plate_ready=not plate_error, table_plate_error=plate_error,
+            enabled_classes=[n for n, r in self.c['classes'].items() if r['enabled'] and self.c.get('class_execution', {}).get(n, {}).get('ready')],
             hardware_mode=self.get_parameter('hardware_mode').value,locked_task=self.locked_task,
             base_completion_policy=self.c.get('base_completion_policy','hold'),config_sha256=self.config_sha256))))
     def prune_events(self):
@@ -213,9 +228,12 @@ class Coordinator(Node):
                 require(self.get_parameter('hardware_mode').value is True,'READ_ONLY_MODE')
                 validate(self.c,hardware=True)
                 validate_integration(self.c)
+                require(goal.operation in ('', 'table_plate'), 'UNSUPPORTED_OPERATION')
+                if goal.operation == 'table_plate': self.plate_config()
                 require(not self.locked_task,'RECOVERY_LOCK_ACTIVE')
                 self.join.begin(goal.task_id)
                 self.locked_task=goal.task_id; self.persist(); self.lease=None; self.lock_requested=False; self.lease_requested_at=0.
+                self.last_status=None; self.release_task=''
                 self.publish_lock()
                 return GoalResponse.ACCEPT
             except Exception as e:
@@ -223,6 +241,8 @@ class Coordinator(Node):
     def guard(self):
         require(rclpy.ok(),'SHUTDOWN')
         require(not self.goal_handle or not self.goal_handle.is_cancel_requested,'CANCELED')
+        if self.goal_handle and self.goal_handle.request.operation == 'table_plate':
+            self.require_orchestrator()
         # During WAIT_FOR_APPROACH, acquisition of base lock is a completion condition.
         if self.seq and self.seq.stage!='WAIT_FOR_APPROACH':
             with self.mutex: lease=self.lease
@@ -246,7 +266,7 @@ class Coordinator(Node):
             require(time.monotonic()<deadline,'TIMEOUT'); time.sleep(0.01)
     def execute(self,handle):
         self.goal_handle=handle
-        for attr in ('center','tcp','q','target','observation_tcp','observation_q','held_width','gripper_result','precise_observation'):
+        for attr in ('center','tcp','q','target','observation_tcp','observation_q','held_width','gripper_result','precise_observation','plate_point','plate_radius','plate_stamp'):
             if hasattr(self,attr): delattr(self,attr)
         self.seq=Sequence(self); outcome,reason=self.seq.run()
         result=Manipulate.Result(status=self.last_status)
@@ -472,6 +492,8 @@ class Coordinator(Node):
             self.until(ready,c['approach_timeout_s'])
         elif stage=='MOVE_TO_OBSERVATION':
             self.motion.setup_scene(self.coarse,self.rule,self.guard,padding=c['coarse_collision_padding_m'])
+            for waypoint in c.get('transit_waypoints', []):
+                self.motion.joint_move(waypoint, self.guard)
             if c['observation_joints'] is not None:
                 self.status(seq,'RUNNING','MOVE_TO_INITIAL_POSE')
                 with self.mutex:
@@ -529,6 +551,9 @@ class Coordinator(Node):
             self.motion.cart_move(self.tcp+up*c['lift_m'],self.q,self.guard)
             self.motion.contacts(c['touch_links'],self.guard)
         elif stage=='MOVE_TO_PLACE':
+            if self.goal_handle.request.operation == 'table_plate':
+                self.place_on_plate()
+                return
             self.place_tcp=None
             for sign in (-1,1):  # right=-Y in the level robot frame
                 candidate=self.tcp+np.array([0,sign*c['place_offset_m'],0])
@@ -553,7 +578,15 @@ class Coordinator(Node):
             self.width_move(self.rule['open_m']); seq.holding='EMPTY'; seq.place_success=True
             self.motion.detach(self.place_center,self.rule,self.guard)
         elif stage=='RETREAT': self.motion.cart_move(self.place_tcp+up*c['retreat_m'],self.q,self.guard)
-        elif stage=='RETURN_ARM': self.motion.joint_move(c['return_joints'],self.guard)
+        elif stage=='OBSERVE_PLATE': self.observe_plate()
+        elif stage=='RETURN_ARM':
+            self.motion.joint_move(c['return_joints'],self.guard)
+            if c.get('rest_joints') is not None:
+                for waypoint in reversed(c.get('transit_waypoints', [])):
+                    self.motion.joint_move(waypoint,self.guard)
+                self.motion.joint_move(c['rest_joints'],self.guard)
+            if self.goal_handle.request.operation == 'table_plate':
+                self.until(self.arm_stowed,c['stop_timeout_s'])
         elif stage=='COMPLETE':
             self.until(lambda:self.still_since is not None and time.monotonic()-self.still_since>=c['joint_stable_s'],c['stop_timeout_s'])
             seq.stop_confirmed=True

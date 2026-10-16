@@ -11,7 +11,7 @@
 <body class="v2">
   <header class="topbar">
     <div class="identity"><span class="brand-mark">i</span><h1>관제센터</h1></div>
-    <nav class="mode-tabs" role="tablist" aria-label="관제 모드"><button role="tab" data-mode-button="observe" aria-selected="true">관측</button><button role="tab" data-mode-button="slam" aria-selected="false">SLAM</button><button role="tab" data-mode-button="nav" aria-selected="false">NAV</button><button role="tab" data-mode-button="detection" aria-selected="false">Detection</button><button role="tab" data-mode-button="manipulation" aria-selected="false">Manipulation</button></nav>
+    <nav class="mode-tabs" role="tablist" aria-label="관제 모드"><button role="tab" data-mode-button="observe" aria-selected="true">관측</button><button role="tab" data-mode-button="slam" aria-selected="false">SLAM</button><button role="tab" data-mode-button="nav" aria-selected="false">NAV</button><button role="tab" data-mode-button="detection" aria-selected="false">Detection</button><button role="tab" data-mode-button="manipulation" aria-selected="false">Manipulation</button><button role="tab" data-mode-button="task" aria-selected="false">전체 Task</button></nav>
     <div class="top-actions"><span id="mode-badge" class="badge amber">대기</span><span class="connection" id="connection"><i></i>연결 중</span><span class="clock" id="clock">--:--:--</span><button class="icon-button" id="settings-button" title="토픽 연결" aria-label="토픽 연결">⚙</button><button class="server-shutdown-button" id="shutdown-button" disabled title="관제센터와 여기서 시작한 센서·SLAM·검출 종료">서버 종료</button></div>
   </header>
   <div class="notice" id="notice"><span class="notice-dot"></span><span id="notice-text">연결 중</span><button id="reconnect-button">다시 연결</button></div>
@@ -88,6 +88,22 @@
             <div class="mode-actions"><button class="primary" id="manip-arm" disabled>다음 접근 후 자동 실행</button><button id="manip-run" disabled>인계된 물체 픽앤플레이스</button><button class="danger" id="manip-cancel" disabled>작업 취소</button></div>
             <small>Detection의 새 접근 완료·실측 정지 확인 후 실행합니다. 작업이 끝나도 베이스 잠금을 유지합니다.</small></article>
           <article class="mode-card"><span class="mode-card-title">연결 및 오류</span><small id="manip-inputs">디텍션 인계 · 손목 재검출 · 실행기 · 베이스 게이트 연결 대기</small><small>오류·중단·연결 지연은 아래 공통 이벤트 목록에 발생 모듈과 원인 코드로 표시됩니다.</small></article>
+        </div>
+      </section>
+      <section class="panel mode-section mode-panel hidden" data-mode="task" aria-label="전체 작업 통합">
+        <div class="panel-header"><div><h3>전체 Task</h3><span class="tiny-pill" id="task-pill">대기</span></div></div>
+        <div class="mode-cards">
+          <article class="mode-card"><span class="mode-card-title">홈 위치·방향</span><strong id="task-home">홈 미등록</strong>
+            <small id="task-home-hint">홈에서 정지한 뒤 SLAM을 시작하세요. 첫 위치가 나오면 시작 위치를 자동 등록합니다. 지도 완성·저장은 필요하지 않습니다.</small>
+            <div class="mode-actions"><button id="task-home-save">SLAM 시작·시작 위치를 홈으로 등록</button></div></article>
+          <article class="mode-card"><span class="mode-card-title">물체를 접시에 놓고 복귀</span>
+            <form id="task-form" class="mode-actions"><select id="task-object" aria-label="작업할 물체"><option value="green_apple">청사과</option><option value="peach">복숭아</option><option value="tomato">토마토</option><option value="fanta_can">환타캔</option><option value="cup">컵</option><option value="banana">바나나</option></select><button class="primary" id="task-start" type="submit">전체 작업 실행</button></form>
+            <small>SLAM → NAV → 탐지·정밀 접근 → 집기 → 손목 SAM으로 책상 위 접시 관측 → 접시에 놓기 → 팔 수납 → 후진 → 정지 → 제자리 회전·Head 정렬 → 홈 복귀</small>
+            <small>물체는 책상 위 접시에 남습니다. 로봇이 홈으로 복귀합니다.</small>
+          </article>
+          <article class="mode-card"><span class="mode-card-title">작업 진행</span><strong id="task-state">작업 대기</strong><small id="task-detail"></small><ol id="task-steps"></ol>
+            <div class="mode-actions"><button class="danger" id="task-cancel">전체 Task 취소·정지</button></div>
+          </article>
         </div>
       </section>
     </aside>

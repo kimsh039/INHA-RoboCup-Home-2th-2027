@@ -29,6 +29,8 @@ from .core import fresh, require, rotation
 from .integration import ProcessOwner
 from .timing import Timing
 from .wrist_geometry import surface_point, banana_point_axis
+from .plate_geometry import plate_disk
+from types import SimpleNamespace
 
 
 class WristFrontend(Node):
@@ -67,23 +69,31 @@ class WristFrontend(Node):
         def local_path(value):
             path = Path(value).expanduser()
             return path if path.is_absolute() else repo / path
-        weights = local_path(self.v['yolo_model'])
-        self.detector = YoloDetector(str(weights), confidence=self.c['min_confidence'],
-            nms_iou=self.v['nms_iou'], imgsz=self.v['imgsz'], device=self.v['device'], task=self.v['yolo_task'])
-        require(self.detector.ready, 'YOLO_NOT_READY:' + self.detector.error)
-        schema=class_mapping(self.detector.model.names)
-        active={pair[0]:pair[1] for pair in schema.values() if pair is not None}
-        require(all(active.get(i)==name for i,name in enumerate(self.c['model_names'])), 'WRIST_CLASS_SCHEMA_MISMATCH')
+        self.detector = None
+        if self.v['mask_source'] != 'sam2_auto':
+            weights = local_path(self.v['yolo_model'])
+            self.detector = YoloDetector(str(weights), confidence=self.c['min_confidence'],
+                nms_iou=self.v['nms_iou'], imgsz=self.v['imgsz'], device=self.v['device'], task=self.v['yolo_task'])
+            require(self.detector.ready, 'YOLO_NOT_READY:' + self.detector.error)
+            schema=class_mapping(self.detector.model.names)
+            active={pair[0]:pair[1] for pair in schema.values() if pair is not None}
+            require(all(active.get(i)==name for i,name in enumerate(self.c['model_names'])), 'WRIST_CLASS_SCHEMA_MISMATCH')
         self.predictor = None
-        if self.v['mask_source'] == 'sam2':
+        self.automatic = None
+        if self.v['mask_source'] in ('sam2', 'sam2_auto'):
             checkpoint = local_path(self.v['sam_checkpoint'])
             require(checkpoint.is_file(), 'SAM_CHECKPOINT_MISSING:' + str(checkpoint))
             import torch
             from sam2.build_sam import build_sam2
             from sam2.sam2_image_predictor import SAM2ImagePredictor
+            from sam2.automatic_mask_generator import SAM2AutomaticMaskGenerator
             self.torch = torch
             device = 'cpu' if str(self.v['device']) == 'cpu' else 'cuda'
-            self.predictor = SAM2ImagePredictor(build_sam2(self.v['sam_config'], str(checkpoint), device=device))
+            model = build_sam2(self.v['sam_config'], str(checkpoint), device=device)
+            self.predictor = SAM2ImagePredictor(model)
+            self.automatic = SAM2AutomaticMaskGenerator(model, points_per_side=self.v.get('sam_points_per_side', 8),
+                points_per_batch=self.v.get('sam_points_per_batch', 64),
+                pred_iou_thresh=.85, stability_score_thresh=.95)
         else:
             require(self.v['mask_source'] == 'yolo_seg' and self.v['yolo_task'] == 'segment', 'MASK_SOURCE_CONFIG')
         self.worker = threading.Thread(target=self.work, daemon=True)
@@ -103,7 +113,9 @@ class WristFrontend(Node):
     def request(self, msg):
         try:
             fresh(seconds(msg.header.stamp),self.get_clock().now().nanoseconds/1e9,self.c['max_observation_age_s'])
-            require(msg.task_id and msg.observation_id and 0<=msg.class_id<len(self.c['model_names']),'INVALID_REQUEST')
+            require(msg.task_id and msg.observation_id and (msg.purpose == 'plate' or
+                0<=msg.class_id<len(self.c['model_names'])),'INVALID_REQUEST')
+            require(msg.purpose in ('', 'object', 'plate'), 'OBSERVATION_PURPOSE')
         except Exception as exc:
             self.get_logger().warning(str(exc)); return
         with self.mutex:
@@ -120,7 +132,7 @@ class WristFrontend(Node):
 
     def task_status(self,msg):
         with self.mutex:
-            if self.req and msg.task_id==self.req.task_id and seconds(msg.header.stamp)>=seconds(self.req.header.stamp) and (msg.stage!='WRIST_REDETECT' or msg.outcome!='RUNNING'):
+            if self.req and msg.task_id==self.req.task_id and seconds(msg.header.stamp)>=seconds(self.req.header.stamp) and (msg.stage not in ('WRIST_REDETECT', 'OBSERVE_PLATE') or msg.outcome!='RUNNING'):
                 self.req=None; self.worker_error=''
 
     def status(self):
@@ -139,6 +151,7 @@ class WristFrontend(Node):
         if self.worker_error: text += ':' + self.worker_error
         with self.mutex: req=self.req
         self.diagnostics.publish(String(data=json.dumps(dict(state=text,valid=ready and not bool(self.worker_error),reason=self.worker_error,
+            plate_ready=ready and self.automatic is not None,
             task_id=req.task_id if req else '',observation_id=req.observation_id if req else '',
             class_id=req.class_id if req else -1,frame=color.header.frame_id if color else '',
             capture_stamp=seconds(color.header.stamp) if color else 0.))))
@@ -155,6 +168,8 @@ class WristFrontend(Node):
         depth = self.bridge.imgmsg_to_cv2(depth_msg).astype(float)
         if depth_msg.encoding == '16UC1': depth *= .001
         require(depth.shape == bgr.shape[:2], 'DEPTH_GRID_MISMATCH')
+        if req.purpose == 'plate' or self.v['mask_source'] == 'sam2_auto':
+            return self.infer_automatic(color, depth_msg, info, req, bgr, depth)
         inference_started=time.monotonic()
         result = self.detector.model.predict(bgr, conf=self.c['min_confidence'],
             iou=self.v['nms_iou'], imgsz=self.v['imgsz'], device=self.v['device'], verbose=False)[0]
@@ -198,6 +213,68 @@ class WristFrontend(Node):
             obs.candidate_count, obs.candidate_index = len(observations), index
             obs.aligned_depth=depth_msg
         return observations
+
+    def infer_automatic(self, color, depth_msg, info, req, bgr, depth):
+        require(self.automatic is not None, 'SAM_AUTO_UNAVAILABLE')
+        start = time.monotonic()
+        device_cuda = str(self.v['device']) != 'cpu'
+        autocast = (self.torch.autocast('cuda', dtype=self.torch.bfloat16 if self.torch.cuda.is_bf16_supported() else self.torch.float16)
+                    if device_cuda else nullcontext())
+        with self.torch.inference_mode(), autocast:
+            masks = self.automatic.generate(cv2.cvtColor(bgr, cv2.COLOR_BGR2RGB))
+        output = []
+        plate = req.purpose == 'plate'
+        if plate:
+            tf = self.tf.lookup_transform(req.coarse_position.header.frame_id, color.header.frame_id,
+                Time.from_msg(color.header.stamp), timeout=Duration(seconds=.1)).transform
+            q, t = tf.rotation, tf.translation
+            r, translation = rotation([q.x, q.y, q.z, q.w]), [t.x, t.y, t.z]
+        for item in masks:
+            try:
+                if plate:
+                    p, radius, std = plate_disk(depth, item['segmentation'], info, r, translation,
+                                               req.support_z, self.v.get('plate', {}))
+                    obs = WristObservation(header=color.header, task_id=req.task_id, observation_id=req.observation_id,
+                        class_id=-1, confidence=float(item['predicted_iou']), position_kind='SURFACE',
+                        has_position=True, position_std_m=max(float(std), .003), purpose='plate', free_radius_m=radius)
+                    obs.position.x, obs.position.y, obs.position.z = map(float, p)
+                    obs.target_mask = self.bridge.cv2_to_imgmsg(item['segmentation'].astype(np.uint8)*255, 'mono8')
+                    obs.target_mask.header = color.header
+                    obs.camera_info = info
+                else:
+                    # This is geometric association of a requested Head class, not SAM classification.
+                    obs = self.observation(color, depth, info, req,
+                        SimpleNamespace(conf=[item['predicted_iou']]), item['segmentation'], item['predicted_iou'])
+                    point = np.array([obs.position.x, obs.position.y, obs.position.z])
+                    tf = self.tf.lookup_transform(req.coarse_position.header.frame_id, color.header.frame_id,
+                        Time.from_msg(color.header.stamp), timeout=Duration(seconds=.1)).transform
+                    q, t = tf.rotation, tf.translation
+                    world = rotation([q.x,q.y,q.z,q.w]) @ point + [t.x,t.y,t.z]
+                    coarse = req.coarse_position.point
+                    require(np.linalg.norm(world[:2]-[coarse.x,coarse.y]) <= self.c['association_radius_m'], 'SAM_OUTSIDE_TARGET_REGION')
+                    rule = self.c['classes'][self.c['model_names'][req.class_id]]
+                    ys, xs = np.nonzero(item['segmentation'])
+                    zs = depth[ys, xs]
+                    valid = np.isfinite(zs) & (zs >= self.c['depth_min_m']) & (zs <= self.c['depth_max_m'])
+                    require(valid.mean() >= self.c['depth_min_fraction'], 'SAM_DEPTH_COVERAGE')
+                    xs, ys, zs = xs[valid], ys[valid], zs[valid]
+                    k = np.asarray(info.k).reshape(3,3)
+                    cloud = np.column_stack(((xs-k[0,2])*zs/k[0,0], (ys-k[1,2])*zs/k[1,1], zs))
+                    cloud = cloud @ rotation([q.x,q.y,q.z,q.w]).T+[t.x,t.y,t.z]
+                    extents = np.ptp(cloud[:,:2], axis=0)
+                    require(np.all(extents >= .015) and np.all(extents <= 2*rule['radius_m']+.03), 'SAM_OBJECT_EXTENT')
+                # Collapse nested SAM proposals of the same physical patch.
+                if any(np.linalg.norm(np.array([old.position.x,old.position.y,old.position.z])-
+                    [obs.position.x,obs.position.y,obs.position.z]) < .02 for old in output): continue
+                obs.aligned_depth = depth_msg
+                output.append(obs)
+            except (RuntimeError, ValueError):
+                continue
+        require(len(output) <= self.v.get('max_candidates', 8), 'TOO_MANY_CANDIDATES')
+        fresh(seconds(color.header.stamp), self.get_clock().now().nanoseconds/1e9, self.c['max_observation_age_s'])
+        for i, obs in enumerate(output): obs.candidate_index, obs.candidate_count = i, len(output)
+        self.record_profile(seconds(color.header.stamp), 0., (time.monotonic()-start)*1000., len(output))
+        return output
 
     def record_profile(self,stamp,yolo_ms,mask_depth_ms,candidates):
         total=yolo_ms+mask_depth_ms

@@ -45,6 +45,7 @@ class DetectionApproach:
         self.requests = deque()
         state.detection_request = self.requests.append
         self.label = ''
+        self.task_id = ''
         self.phase, self.message = 'idle', '물체 이름을 입력하세요.'
         self.phase_started = time.monotonic()
         self.active = False
@@ -200,6 +201,9 @@ class DetectionApproach:
 
     def request(self, request):
         action = request['action']
+        departure = getattr(self.node, 'dock_departure', None)
+        if departure and departure.docked and action not in ('cancel', 'stop'):
+            raise RuntimeError('도킹 유지 중 · 팔 작업과 후진·정렬 이탈을 먼저 완료하세요.')
         if action == 'select':
             self.cancel('목표 변경 · 접근 취소') if self.active else None
             self.label = target_label(request['label'])
@@ -209,6 +213,7 @@ class DetectionApproach:
             label = target_label(request['label'])
             if self.active and label == self.label:
                 return
+            self.task_id = request.get('task_id') or __import__('uuid').uuid4().hex
             if self.active:
                 self.cancel('목표 변경 · 이전 접근 취소')
             if self.label != label:
@@ -236,6 +241,7 @@ class DetectionApproach:
             self.report('searching' if self.label else 'idle', '저장 좌표 삭제 · 새 관측 대기')
         elif action == 'approach':
             if not self.active:
+                self.task_id = request.get('task_id') or __import__('uuid').uuid4().hex
                 self.start(float(request.get('edge_clearance', 0.)))
 
     def observe(self, now):
@@ -1231,6 +1237,7 @@ class DetectionApproach:
             except Exception:
                 pass
         value = dict(phase=self.phase, message=self.message, label=self.label, classes=list(CLASSES),
+                     task_id=self.task_id,
                      active=self.active, distance=self.distance, edge_clearance=self.edge_clearance,
                      target=info, plan=plan, nav_ready=self.node.nav_ready(), surface_note=self.surface_note,
                      position_note=self.position_note,

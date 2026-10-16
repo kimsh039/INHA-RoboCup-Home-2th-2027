@@ -18,6 +18,7 @@ class BaseLockAdapter:
             '~/.ros/robocup_real_manipulation/base_watchdog_lock.json').value).expanduser()
         self.task, self.release_task, self.stop_since, self.odom_stamp = '', '', None, None
         self.error = ''; self.last_ack = 0.
+        self.pose = None
         if self.path.exists():
             try:
                 self.task = json.loads(self.path.read_text())['task_id']
@@ -72,6 +73,11 @@ class BaseLockAdapter:
                 or not -.05 <= now-stamp <= .3 or (previous is not None and stamp <= previous)):
             self.stop_since = None; return
         self.odom_stamp = stamp
+        p, q = msg.pose.pose.position, msg.pose.pose.orientation
+        if all(math.isfinite(x) for x in (p.x,p.y,q.x,q.y,q.z,q.w)):
+            self.pose = (p.x,p.y,math.atan2(2*(q.w*q.z+q.x*q.y),1-2*(q.y*q.y+q.z*q.z)))
+        else:
+            self.pose = None; self.stop_since = None; return
         v = msg.twist.twist
         values = (v.linear.x, v.linear.y, v.linear.z, v.angular.x, v.angular.y, v.angular.z)
         if (not all(math.isfinite(x) for x in values) or

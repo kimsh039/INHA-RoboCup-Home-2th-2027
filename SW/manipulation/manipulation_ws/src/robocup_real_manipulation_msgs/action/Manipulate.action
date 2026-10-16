@@ -1,5 +1,7 @@
 # Target and approach may arrive before or after this goal. IDs cannot be reused.
 string task_id
+# Empty preserves the stationary pick/place interface. table_plate uses measured wrist SAM placement.
+string operation
 ---
 robocup_real_manipulation_msgs/TaskStatus status
 ---

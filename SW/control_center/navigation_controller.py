@@ -38,6 +38,8 @@ class NavigationController(Node):
         self.nav_lifecycle_states, self.nav_lifecycle_pending = {}, {}
         self.detection_approach = DetectionApproach(self, state, config.get('detection', {}))
         self.front_retreat = FrontRetreat(self, state, config.get('front_retreat', {}))
+        from dock_departure import DockDeparture
+        self.dock_departure = DockDeparture(self, state, config.get('departure', {}))
         self.create_subscription(GoalStatusArray, '/backup/_action/status', self.backup_status,
             QoSProfile(depth=1, reliability=ReliabilityPolicy.RELIABLE,
                        durability=DurabilityPolicy.TRANSIENT_LOCAL))
@@ -51,6 +53,7 @@ class NavigationController(Node):
             self.state.log(message.msg, 'error' if message.level >= 40 else 'warn', message.name)
 
     def stop_control(self):
+        self.dock_departure.close()
         self.nav_requests.clear()
         self.detection_approach.requests.clear()
         self.front_retreat.cancel('관제센터 종료 · 짧은 후진 중지')
@@ -72,18 +75,24 @@ class NavigationController(Node):
             request = self.nav_requests.popleft()
             try:
                 if request['action'] == 'goal':
+                    if self.dock_departure.docked:
+                        raise RuntimeError('도킹 유지 중 · 전체 Task의 팔 작업·후진·정렬 인계 필요')
                     self.front_retreat.cancel('수동 Nav2 목표로 전환 · 짧은 후진 중지')
                     if self.detection_approach.active:
                         self.detection_approach.cancel('수동 Nav2 목표로 전환 · 접근 취소')
                     self.send_goal(request)
                 elif request['action'] == 'cancel':
+                    self.dock_departure.cancel('이동 취소 · 도킹 이탈 중지')
                     self.front_retreat.cancel('이동 취소 · 짧은 후진 중지')
                     if self.detection_approach.active:
                         self.detection_approach.cancel('이동 취소 · 물체 접근 중지')
                     self.cancel_goal()
+                elif request['action'] == 'departure':
+                    self.dock_departure.start(request)
             except Exception as exc:
                 self.nav_update(state='error', message=str(exc)[:300])
-        self.front_retreat.tick()
+        if not self.dock_departure.docked:
+            self.front_retreat.tick()
         self.state.put('navigation', dict(self.nav_status, available=self.nav_ready(),
             server_available=bool(self.nav_client and self.nav_client.server_is_ready()),
             lifecycle={k: v[1] for k, v in self.nav_lifecycle_states.items()},
@@ -163,6 +172,10 @@ class NavigationController(Node):
         return message
 
     def send_goal(self, request):
+        departure = getattr(self, 'dock_departure', None)
+        if departure and departure.docked and not (request.get('owner') == 'dock_return'
+                and departure.phase == 'returning' and departure.gate.get('phase') == 'return'):
+            raise RuntimeError('도킹 후 후진·정렬 전 Nav2 목표 금지')
         if self.state.sensor_manager:
             if request.get('owner') in ('detection', 'detection_target'):
                 self.detection_approach.require_protection_ready()

@@ -17,6 +17,7 @@ STAGES = {
     'CLOSE_GRIPPER': '그리퍼 닫기', 'VERIFY_GRASP': '파지 확인', 'LIFT': '들어 올리기',
     'MOVE_TO_PLACE': '내려놓을 위치 이동', 'RELEASE': '물체 놓기',
     'RETREAT': '팔 후퇴', 'RETURN_ARM': '팔 복귀', 'COMPLETE': '작업 종료',
+    'OBSERVE_PLATE': '손목 SAM 접시 관측·놓을 공간 확인',
 }
 IDLE_REASONS = {'', 'WAITING_FOR_NEW_APPROACH', 'APPROACH_RUNNING',
                 'WAITING_FOR_MEASURED_TARGET', 'WAITING_FOR_MEASURED_STOP',
@@ -105,6 +106,8 @@ class ManipulationControl:
         self.armed = False
         self.armed_at = 0.
         self.armed_task = None
+        self.last_error = ''
+        self.cancel_pending = False
         self.started_ros = self.now()
         self.armed_at_ros = 0.
         state.manipulation_interlock = self.interlock
@@ -258,6 +261,9 @@ class ManipulationControl:
 
     def request(self, request):
         with self.request_lock:
+            if request.get('action') == 'cancel':
+                self.requests.clear()
+                self.cancel_pending = True
             if len(self.requests) >= 4:
                 raise RuntimeError('매니퓰 명령 처리 중입니다.')
             self.requests.append(request)
@@ -275,14 +281,18 @@ class ManipulationControl:
                     self.armed_at_ros = self.now()
                     self.state.log('매니퓰 자동 인계 대기 · 이후 시작하는 새 Detection 접근 완료 후 실행', source='manipulation')
                 elif request['action'] == 'run':
+                    self.last_error = ''
                     errors = self.blockers()
                     if errors:
                         raise RuntimeError(' / '.join(errors))
                     task = self.candidate()
+                    if request.get('task_id', task) != task:
+                        raise RuntimeError('전체 Task와 도킹 인계 ID 불일치')
+                    self.cancel_pending = False
                     self.armed = False
                     self.monitor.pending = True
                     self.consumed.append(task)
-                    self.client.send_goal_async(self.Action.Goal(task_id=task),
+                    self.client.send_goal_async(self.Action.Goal(task_id=task, operation=request.get('operation', '')),
                         feedback_callback=lambda f: self.status(f.feedback.status)).add_done_callback(self.accepted)
                     self.state.log('매니퓰 실행 요청 · 작업 '+task[:12], source='manipulation')
                 elif request['action'] == 'cancel':
@@ -292,9 +302,11 @@ class ManipulationControl:
                         if not self.goal:
                             return
                     if not self.goal:
-                        raise RuntimeError('이 관제센터에서 실행한 활성 매니퓰 작업이 없습니다.')
+                        self.monitor.tick()
+                        return  # A late acceptance is canceled in accepted().
                     self.goal.cancel_goal_async().add_done_callback(self.canceled)
             except Exception as exc:
+                self.last_error = str(exc)
                 self.state.log('매니퓰 명령 거부 · '+str(exc), 'warn', 'manipulation')
         if self.armed:
             if time.monotonic()-self.armed_at > 300:
@@ -322,7 +334,10 @@ class ManipulationControl:
             self.goal = goal
             self.monitor.active = True
             goal.get_result_async().add_done_callback(self.finished)
+            if self.cancel_pending:
+                goal.cancel_goal_async().add_done_callback(self.canceled)
         except Exception as exc:
+            self.last_error = str(exc)
             self.state.log('매니퓰 실행 거부 · '+str(exc), 'error', 'manipulation')
 
     def canceled(self, future):

@@ -212,7 +212,8 @@ def run_controller(connection, config, use_sim_time):
                     continue
                 request, queued = message[1:]
                 canceling = request.get('action') in ('cancel', 'stop', 'clear')
-                if not canceling and (time.monotonic()-queued > 2. or interlocked):
+                departure = kind == 'navigation' and request.get('action') == 'departure'
+                if not canceling and (time.monotonic()-queued > 2. or (interlocked and not departure)):
                     state.log('주행 명령 거부 · 지연 또는 매니퓰레이션 잠금', 'warn', kind)
                     continue
                 if kind == 'navigation':

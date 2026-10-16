@@ -12,13 +12,16 @@ yolo_task: detect
 device: '0'
 imgsz: 640
 nms_iou: 0.45
-# Generic SAM2.1 small is intentionally retained; bbox prompts use YOLO TensorRT.
+# Generic SAM2.1 tiny already on Jetson. Automatic masks use Head-class geometric
+# association; SAM does not classify objects. sam2 selects the YOLO bbox path.
 # No custom segmentation checkpoint or implicit model download is needed.
 # The .pt checkpoint must exist on Jetson; a git pull of source is insufficient.
-mask_source: sam2
-sam_checkpoint: third_party/sam2/checkpoints/sam2.1_hiera_small.pt
-sam_config: configs/sam2.1/sam2.1_hiera_s.yaml
+mask_source: sam2_auto
+sam_checkpoint: /home/sparo/detection_data/models/sam2.1_hiera_tiny.pt
+sam_config: configs/sam2.1/sam2.1_hiera_t.yaml
 sam_min_score: 0.85
+sam_points_per_side: 8
+sam_points_per_batch: 64
 # [TUNE:QUALITY] Explicit depth systematic-error allowance; tune from measurements.
 position_error_floor_m: 0.003
 # [TUNE:BANANA_PCA] Global PCA direction; translated to a thick real body pixel.
@@ -39,3 +42,13 @@ latency_budget_ms: 50.0
 # Fixed resource limits; one worker, no queue of inference jobs.
 max_candidates: 8
 max_frames_per_request: 12
+
+# Shape/depth hypotheses, not semantic classes. Multiple plates are rejected.
+plate:
+  min_diameter_m: 0.12
+  max_diameter_m: 0.40
+  min_height_m: 0.002
+  max_height_m: 0.04
+  plane_tolerance_m: 0.006
+  edge_margin_m: 0.015
+  min_free_radius_m: 0.025

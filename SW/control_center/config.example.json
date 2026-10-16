@@ -11,6 +11,12 @@
   "max_accumulated_cloud_points": 120000,
   "cloud_point_size": 3.0,
   "use_sim_time": false,
+  "task": {
+    "state_file": "~/.ros/inha_control_center/task.json"
+  },
+  "departure": {
+    "head_optical_frame": "camera_color_optical_frame"
+  },
   "front_retreat": {
     "distance": 0.08
   },

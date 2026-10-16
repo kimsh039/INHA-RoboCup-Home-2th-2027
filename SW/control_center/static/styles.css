@@ -231,3 +231,7 @@ body.v2 .mode-section[data-mode="manipulation"] .mode-actions button {
   overflow-wrap: anywhere;
   line-height: 1.45;
 }
+
+#task-steps { padding-left: 1.4rem; color: var(--muted, #94a3b8); line-height: 1.8; }
+#task-steps .task-current { color: #b6e879; font-weight: 700; }
+.mode-tabs { overflow-x: auto; }

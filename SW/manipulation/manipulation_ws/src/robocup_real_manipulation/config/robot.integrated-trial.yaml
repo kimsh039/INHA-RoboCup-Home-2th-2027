@@ -1,0 +1,391 @@
+# Measured stationary settings migrated into current integration schema.
+# Only the recorded green-apple aperture is carried over; plate commissioning remains unset.
+execution_enabled: false
+commissioned: false
+calibration_verified: false
+scene_verified: false
+model_names_verified: false
+model_names:
+- green_apple
+- peach
+- tomato
+- fanta_can
+- cup
+- banana
+gravity_frame: base_link
+planning_group: piper_arm
+tcp_frame: tcp
+wrist_optical_frame: wrist_camera_optical_frame
+external_sensor_tf: true
+joint_names:
+- piper_joint1
+- piper_joint2
+- piper_joint3
+- piper_joint4
+- piper_joint5
+- piper_joint6
+driver_joint_names:
+- joint1
+- joint2
+- joint3
+- joint4
+- joint5
+- joint6
+joint_signs:
+- 1
+- 1
+- 1
+- 1
+- 1
+- 1
+joint_offsets:
+- -1.6
+- 0
+- 0
+- 0
+- 0
+- 0
+joint_limits:
+- - -4.2179938
+  - 1.0179938
+- - 0
+  - 3.1415926
+- - -2.9670597
+  - 0
+- - -1.7453292
+  - 1.7453292
+- - -1.2217304
+  - 1.2217304
+- - -2.0943951
+  - 2.0943951
+observation_joints: &id001
+- -1.7778
+- 1.5
+- -1.1
+- 0.013850536
+- 0.486094504
+- 0.029986236
+observation_camera_distance_m: null
+observation_camera_quaternion:
+- 1.0
+- 0.0
+- 0.0
+- 0.0
+observation_surface_clearance_m: 0.25
+camera_min_depth_m: 0.2
+coarse_z_error_bound_m: 0.02
+observation_depth_margin_m: 0.02
+coarse_collision_padding_m: 0.02
+return_joints: *id001
+topdown_quaternion:
+- 1.0
+- 0.0
+- 0.0
+- 0.0
+tcp_to_grip_center_m:
+- 0.0
+- 0.0
+- 0.0
+gravity_frame_verified: false
+base_arm_transform:
+  xyz:
+  - -0.0195
+  - 0.0
+  - 0.80611
+  quaternion_xyzw:
+  - 0.0
+  - 0.0
+  - 0.0
+  - 1.0
+handeye_transform:
+  xyz:
+  - -0.063877
+  - 0.028728
+  - -0.012631
+  quaternion_xyzw:
+  - 0.018698
+  - -0.005325
+  - -0.705684
+  - 0.70826
+link6_tcp_transform:
+  xyz:
+  - 0.0
+  - 0.0
+  - 0.1425
+  quaternion_xyzw:
+  - 0.0
+  - 0.0
+  - 0.0
+  - 1.0
+table_source: dock_surface
+table_thickness_m: 0.12
+table_z_m: null
+table_bounds_xy: null
+obstacles: null
+support_margin_m: 0.015
+pregrasp_m: 0.1
+lift_m: 0.12
+retreat_m: 0.1
+place_offset_m: 0.1
+velocity_scale: 0.05
+acceleration_scale: 0.05
+cartesian_step_m: 0.005
+position_tolerance_m: 0.003
+orientation_tolerance_rad: 0.03
+association_radius_m: 0.12
+association_margin_m: 0.02
+min_confidence: 0.65
+max_position_std_m: 0.008
+max_observation_age_s: 0.7
+max_event_age_s: 30.0
+max_target_age_s: 120.0
+feedback_age_s: 0.3
+base_age_s: 0.3
+joint_stable_s: 0.4
+stable_speed_rad_s: 0.02
+future_tolerance_s: 0.05
+depth_min_m: 0.1
+depth_max_m: 1.5
+depth_min_pixels: 40
+depth_min_fraction: 0.65
+depth_max_mad_m: 0.008
+mask_erosion_px: 2
+depth_patch_radius_px: 5
+observation_retries: 1
+stage_timeout_s: 120.0
+approach_timeout_s: 60.0
+observation_timeout_s: 5.0
+stop_timeout_s: 3.0
+log_path: ~/.ros/robocup_real_manipulation/events.jsonl
+journal_path: ~/.ros/robocup_real_manipulation/completed_ids.json
+base_lease_topic: /manipulation/base_lease
+base_lock_topic: /manipulation/base_lock_request
+feedback_topic: /joint_states_feedback
+command_topic: /joint_ctrl_single
+arm_status_topic: /arm_status
+enable_service: /enable_srv
+can_port: can_arm
+firmware: S-V1.6-5
+wrist_camera_model: RealSense D435IF
+wrist_camera_serial: '243222070076'
+width_scale: 1.00505689
+width_bias_m: 0.0
+driver_width_max: 0.1
+width_mapping_verified: false
+width_mapping_mode: nominal_trial
+gripper_max_m: 0.1
+gripper_tolerance_m: 0.001
+grasp_min_effort: 0.2
+gripper_command_effort: 1.0
+gripper_settle_s: 0.4
+gripper_stable_speed_m_s: 0.002
+gripper_contact_min_travel_m: 0.002
+driver_speed_percent: 5
+max_joint_speed_rad_s: 0.15
+max_joint_acceleration_rad_s2: 0.3
+path_tolerance_rad: 0.12
+goal_tolerance_rad: 0.015
+gripper_joint_names:
+- piper_gripper_joint1
+- piper_gripper_joint2
+gripper_joint_signs:
+- 1.0
+- -1.0
+classes:
+  green_apple:
+    display_name: 청사과
+    class_id: 0
+    enabled: true
+    size_m:
+    - 0.08
+    - 0.08
+    height_m: 0.068
+    open_m: 0.1
+    close_m: 0.079
+    center_height_m: 0.034
+    grip_height_m: 0.034
+    radius_m: 0.04
+  peach:
+    yaw_sample_degrees:
+    - 0
+    - 30
+    - 60
+    - 90
+    - 120
+    - 150
+    display_name: 복숭아
+    class_id: 1
+    enabled: false
+    size_m:
+    - 0.08
+    - 0.07
+    height_m: 0.068
+    open_m: 0.1
+    close_m: 0.079
+    center_height_m: 0.034
+    grip_height_m: 0.034
+    radius_m: 0.04
+  tomato:
+    yaw_sample_degrees:
+    - 0
+    - 30
+    - 60
+    - 90
+    - 120
+    - 150
+    display_name: 토마토
+    class_id: 2
+    enabled: false
+    size_m:
+    - 0.083
+    - 0.078
+    height_m: 0.068
+    open_m: 0.1
+    close_m: 0.082
+    center_height_m: 0.034
+    grip_height_m: 0.034
+    radius_m: 0.0415
+  fanta_can:
+    yaw_sample_degrees:
+    - 0
+    - 30
+    - 60
+    - 90
+    - 120
+    - 150
+    display_name: 환타
+    class_id: 3
+    enabled: false
+    size_m:
+    - 0.0646
+    height_m: 0.124
+    open_m: 0.08
+    close_m: 0.064
+    center_height_m: 0.062
+    grip_height_m: 0.062
+    radius_m: 0.0323
+  cup:
+    yaw_sample_degrees:
+    - 0
+    - 30
+    - 60
+    - 90
+    - 120
+    - 150
+    display_name: 컵
+    class_id: 4
+    enabled: false
+    size_m:
+    - 0.091
+    height_m: 0.078
+    open_m: 0.1
+    close_m: 0.09
+    center_height_m: 0.039
+    grip_height_m: 0.039
+    radius_m: 0.0455
+  banana:
+    display_name: 바나나
+    class_id: 5
+    enabled: false
+    size_m:
+    - 0.16
+    - 0.03
+    length_m: 0.16
+    width_m: 0.03
+    height_m: 0.03
+    open_m: 0.04
+    close_m: 0.026
+    center_height_m: 0.015
+    grip_height_m: 0.015
+    radius_m: 0.11
+    axis_required: true
+    closing_axis_yaw_offset_rad: -1.5707963267948966
+touch_links:
+- piper_gripper_base
+- piper_gripper_link1
+- piper_gripper_link2
+gripper_feedback_topic: /gripper_states_feedback
+observation_stable_frames: 3
+axis_stability_tolerance_rad: 0.15
+coarse_fixed_frame: odom
+reference_sources:
+  base_arm: URDF nominal fixed chain; user plans identical mounting
+  tcp: repository jaw-tip CAD datum; xyz in link6, axes parallel to link6
+  wrist_intrinsics: HW/calibration/camera_intrinsics/wrist/ost.yaml
+  physical_handeye: feature/wrist-handeye-calibration@0bac1e558075600d21c6b7273f26a6858266ea0d
+  handeye_file: SW/simulation/calibration/wrist_handeye/wrist_handeye_calibration.yaml
+  handeye_note: Physical best15 PARK result; reproduced offline. Branch README predates
+    result.
+  detector_class_map: SW/detection/head/datasets/20261012/data.yaml
+  detector_class_map_commit: ddae58cb002ae533989bddd3f2b8147029a5ad0f
+  detector_class_map_note: Current 6-class output. Old checkpoint names are adapted
+    in Head class_schema.py; plate excluded.
+scene_frame: odom
+wrist_info_topic: /wrist/wrist/color/camera_info
+coarse_xy_error_bound_m: 0.08
+observation_image_margin_fraction: 0.12
+observation_max_distance_m: 0.65
+wrist_search_offsets_m:
+- - 0.0
+  - 0.0
+- - 0.05
+  - 0.0
+- - -0.05
+  - 0.0
+- - 0.0
+  - 0.05
+wrist_search_radius_m: 0.08
+grasp_min_width_m: 0.01
+grasp_open_margin_m: 0.005
+hold_min_effort: 0.1
+hold_width_slip_m: 0.004
+gripper_stall_m: 0.0005
+class_execution:
+  green_apple:
+    ready: true
+    reason: 20261015 stationary success; integration still unverified
+  peach:
+    ready: false
+    reason: contact aperture/effort and collision extent not commissioned
+  tomato:
+    ready: false
+    reason: contact aperture/effort and soft-object grip not commissioned
+  fanta_can:
+    ready: false
+    reason: contact aperture/effort and clearance not commissioned
+  cup:
+    ready: false
+    reason: handle-inclusive collision extent and grip contact not commissioned
+  banana:
+    ready: false
+    reason: vertical body thickness, full extent and CAD closure-axis trial unverified
+base_unlock_timeout_s: 3.0
+base_completion_policy: hold
+scene_depth_stride_px: 6
+scene_voxel_m: 0.02
+scene_max_voxels: 600
+scene_table_margin_m: 0.008
+mask_extent_tolerance_m: 0.008
+placed_history_limit: 32
+plate_placement_verified: false
+plate_observation_joints: null
+rest_joints:
+- -0.05870049200000005
+- 0.0
+- 0.0
+- 0.013850536
+- 0.486094504
+- 0.029986236
+transit_waypoints:
+- - -0.05870049200000005
+  - 1.5
+  - -1.1
+  - 0.013850536
+  - 0.486094504
+  - 0.029986236
+plate_plan_max_age_s: 20.0
+integration_profile_source:
+  path: /home/sparo/robocup_work/manip_fix/config/robot.measured.yaml
+  stationary_success_task: 7ece08d387f547cd942d794076f82bb0
+  scope: driver and measured joint poses only; plate observation and integrated commissioning
+    still required

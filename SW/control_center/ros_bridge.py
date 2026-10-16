@@ -104,6 +104,8 @@ def run(args):
             self.create_timer(.1, self.control.dispatch_services)
             from manipulation_control import ManipulationControl
             self.manipulation = ManipulationControl(self, state)
+            from task_control import TaskControl
+            self.task_control = TaskControl(self, state, self.manipulation)
             self.discover()
 
         def discover(self):

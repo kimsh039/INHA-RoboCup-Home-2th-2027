@@ -227,3 +227,11 @@ scene_max_voxels: 600
 scene_table_margin_m: 0.008
 mask_extent_tolerance_m: 0.008
 placed_history_limit: 32
+
+# Full Task: pick -> measured tabletop plate -> arm stow -> explicit departure.
+# Fill from a measured profile; do not reuse the old stationary scene as odom.
+plate_placement_verified: false
+plate_observation_joints: null
+rest_joints: null
+transit_waypoints: []
+plate_plan_max_age_s: 20.0
