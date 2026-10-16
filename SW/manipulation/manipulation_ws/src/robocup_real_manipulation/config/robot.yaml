@@ -124,7 +124,7 @@ width_bias_m: null
 driver_width_max: null
 width_mapping_verified: false
 # [TUNE:WIDTH_TRIAL] measured requires width_mapping_verified; nominal_trial
-# explicitly accepts an initial approximation ONLY for green_apple at <=5% speed.
+# explicitly accepts nominal per-class aperture at <=5% speed.
 # Does not bypass commissioning, geometry, scene, feedback, or collision checks.
 width_mapping_mode: measured
 gripper_max_m: 0.100
@@ -158,7 +158,7 @@ classes:
   # wrist measures the full silhouette extent and rejects a smaller-than-object bound.
   # CAD fingers translate along TCP +/-Y. With Rx(pi) topdown, offset=-pi/2
   # cancels the formula's +pi/2: TCP X follows PCA, closure Y is perpendicular.
-  banana: {display_name: 바나나, class_id: 5, enabled: false, size_m: [0.160, 0.030], length_m: 0.160, width_m: 0.030, height_m: 0.030, open_m: 0.040, close_m: 0.026, center_height_m: 0.015, grip_height_m: 0.015, radius_m: 0.110, axis_required: true, closing_axis_yaw_offset_rad: -1.5707963267948966}
+  banana: {display_name: 바나나, class_id: 5, enabled: true, size_m: [0.160, 0.030], length_m: 0.160, width_m: 0.030, height_m: 0.030, open_m: 0.040, close_m: 0.026, center_height_m: 0.015, grip_height_m: 0.015, radius_m: 0.110, axis_required: true, closing_axis_yaw_offset_rad: -1.5707963267948966}
 
 # Actual finger links from CAD; confirm on physical collision model.
 touch_links: [piper_gripper_base, piper_gripper_link1, piper_gripper_link2]
@@ -198,16 +198,16 @@ grasp_open_margin_m: 0.005
 hold_min_effort: 0.1      # trial from successful grip, requires configuration review
 hold_width_slip_m: 0.004 # trial, measured relative to INITIAL CONTACT aperture
 gripper_stall_m: 0.0005
-# Explicit class execution gates: structures exist for all six classes.
-# Only green_apple has the cited physical pick/place success. Other classes must
-# have contact/clearance/geometry reviewed before setting ready=true in measured config.
-class_execution:
-  green_apple: {ready: true, reason: '20261015 stationary success; integration still unverified'}
-  peach: {ready: false, reason: 'contact aperture/effort and collision extent not commissioned'}
-  tomato: {ready: false, reason: 'contact aperture/effort and soft-object grip not commissioned'}
-  fanta_can: {ready: false, reason: 'contact aperture/effort and clearance not commissioned'}
-  cup: {ready: false, reason: 'handle-inclusive collision extent and grip contact not commissioned'}
-  banana: {ready: false, reason: 'vertical body thickness, full extent and CAD closure-axis trial unverified'}
+# Historical physical validation only; never an input acceptance gate.
+# All six enabled rules participate in the same integrated sequence.
+# False records pending physical validation, not an unsupported grasp class.
+physical_validation:
+  green_apple: {pick_place_success_recorded: true, reason: '20261015 stationary success; integration still unverified'}
+  peach: {pick_place_success_recorded: false, reason: 'contact aperture/effort and collision extent not commissioned'}
+  tomato: {pick_place_success_recorded: false, reason: 'contact aperture/effort and soft-object grip not commissioned'}
+  fanta_can: {pick_place_success_recorded: false, reason: 'contact aperture/effort and clearance not commissioned'}
+  cup: {pick_place_success_recorded: false, reason: 'handle-inclusive collision extent and grip contact not commissioned'}
+  banana: {pick_place_success_recorded: false, reason: 'vertical body thickness, full extent and CAD closure-axis trial unverified'}
 
 # User-confirmed table thickness; XY bounds/pose still measured in the fixed frame.
 table_thickness_m: 0.028

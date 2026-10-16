@@ -18,16 +18,14 @@ class CoreTests(unittest.TestCase):
         for key in ('execution_enabled','commissioned','calibration_verified','scene_verified',
                     'model_names_verified','gravity_frame_verified'):
             c[key]=True
-        with self.assertRaisesRegex(Fault,'WIDTH_TRIAL_GREEN_APPLE_ONLY'):
-            validate(c,True)
-        for name,r in c['classes'].items(): r['enabled']=name=='green_apple'
+        self.assertTrue(all(r['enabled'] for r in c['classes'].values()))
         with self.assertRaisesRegex(Fault,'UNSET:joint_signs'):
             validate(c,True)
         c['velocity_scale']=.1
         with self.assertRaisesRegex(Fault,'WIDTH_TRIAL_SPEED'):
             validate(c,True)
-        c['velocity_scale']=.05; c['classes']['green_apple']['close_m']=.06
-        with self.assertRaisesRegex(Fault,'WIDTH_TRIAL_APERTURE'):
+        c['velocity_scale']=.05; c['classes']['banana']['close_m']=.041
+        with self.assertRaisesRegex(Fault,'WIDTH_RANGE:banana'):
             validate(c,True)
     def test_both_arrival_orders_and_missing_half(self):
         for order in ('targets','approaches'),('approaches','targets'):
@@ -53,7 +51,8 @@ class CoreTests(unittest.TestCase):
         self.assertEqual(rule_for(CFG,0)['close_m'],.079)
         self.assertEqual(rule_for(CFG,2)['close_m'],.082)
         self.assertEqual(rule_for(CFG,4)['close_m'],.090)
-        for i in (5,6,99):
+        self.assertEqual(rule_for(CFG,5)['close_m'],.026)
+        for i in (6,99):
             with self.assertRaises(Fault):rule_for(CFG,i)
         c=copy.deepcopy(CFG);c.update(width_scale=1.25,width_bias_m=0.,driver_width_max=.08)
         self.assertAlmostEqual(width_to_driver(.1,c),.08)

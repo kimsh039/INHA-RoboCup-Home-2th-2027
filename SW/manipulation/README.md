@@ -1,3 +1,5 @@
+> 2026-10-16 다물체 수정: 여섯 클래스 모두 기본 활성화했다. 청사과 외 클래스를 과거 실물 성공 여부로 거절하던 조건을 제거했다. 클래스별 크기·개폐 폭·파지 높이는 `config/robot.yaml`과 `config/tuning.yaml`에 명시한다. 기존 청사과 전용 실측 config의 전환은 [통합 안내](docs/SYSTEM_INTEGRATION.md#2026-10-16-다물체-설정-전환)를 따른다.
+
 > 2026-10-15 시스템 통합 작업: 최신 실행·업로드·검증 절차는 [SYSTEM_INTEGRATION.md](docs/SYSTEM_INTEGRATION.md)를 사용하세요. 아래 정차 시험 문서는 과거 실험 기록이며 통합 실행의 기본 절차가 아닙니다. 최신 패키지는 실제 고정 좌표계 장면과 네비게이션 정지·잠금 응답을 요구합니다.
 
 기존 웹의 Detection/Closed approach 출력을 받는 연결은 [CONTROL_CENTER_CONNECTION.md](docs/CONTROL_CENTER_CONNECTION.md)를 참조하세요. 웹 변경 없이 ROS JSON을 수신하며, 실제 베이스 이동 잠금 응답은 별도 필수입니다.
@@ -28,7 +30,7 @@
 | Piper | 기록된 humble 커밋 `017ffefa64511bc6325bd77ddc4e16065c152051`이 노트북 `/home/doyeonlee/piper_ros`와 일치. JointState command/feedback, PiperStatusMsg, Enable service 소스를 확인했다. |
 | 드라이버 의존성 | 기록상 piper-sdk 0.6.2 / python-can 4.6.1, Livox SDK2/driver2 빌드. 실제 CAN·장비·firmware 연결은 미확정. |
 | RealSense | 실물 보정 브랜치에 손목 D435IF /serial243222070076이 기록되어 기본 설정에 반영했다. 현재 Jetson 설치·실물 장착 상태와 손목 detector ROS 연동은 별도 확인한다. |
-| 클래스 | 최신20261012 출력은0 green_apple,1 peach,2 tomato,3 fanta_can,4 cup,5 banana. 기존7클래스가중치도최신Head adapter가이출력으로변환하고plate를제외한다. 토마토/컵규칙활성화, 바나나파지는방향·몸통기하설정대기. |
+| 클래스 | 최신20261012 출력은0 green_apple,1 peach,2 tomato,3 fanta_can,4 cup,5 banana. 기존7클래스가중치도최신Head adapter가이출력으로변환하고plate를제외한다. 여섯 클래스 모두 기본 활성화. 클래스별 몸통 탑다운 파지, 바나나는 전체 PCA 축·몸통점 규칙 사용. |
 | Tracer | 형상과 시뮬레이션 주행 코드는 있으나 실물 접근 완료·이동 잠금 계약은 확인되지 않았다. 새 BaseLease 계약으로 외부 내비게이션에 연결한다. |
 | URDF | CAD 형상/메시/관절/센서 구조를 재사용한다. `robocup.calibrated.urdf`의 시뮬레이션 보정 완료를 실물 보정 완료로 해석하지 않는다. 원본 파일은 변경하지 않았다. |
 

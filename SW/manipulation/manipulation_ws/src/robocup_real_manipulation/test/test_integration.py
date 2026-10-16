@@ -11,7 +11,7 @@ from unittest.mock import patch
 import numpy as np
 import pytest
 import yaml
-from robocup_real_manipulation.core import Fault, grasp_geometry, support, EventJoin
+from robocup_real_manipulation.core import Fault, grasp_geometry, support, EventJoin, rule_for
 from robocup_real_manipulation.integration import (grasp_contact,hold_contact,lease_evidence,
     full_view_distance,scene_at_arrival,ProcessOwner,TerminalIDs)
 from robocup_real_manipulation.motion import Motion
@@ -61,12 +61,35 @@ def test_actual_jetson_factory_fov_fits_error_bound():
 def test_all_six_rules_use_observed_xy_and_table_relative_height_once():
     c=configured(); c['tcp_to_grip_center_m']=[0.,0.,0.]
     widths=[(.1,.079),(.1,.079),(.1,.082),(.08,.064),(.1,.09),(.04,.026)]
-    for index,r in enumerate(c['classes'].values()):
+    for index in range(6):
+        r=rule_for(c,index)
         p=np.array([.412,-.123,c['table_z_m']+r['height_m']])
         center,tcp,q=grasp_geometry(p,'SURFACE',r,c,.3 if index==5 else None)
         np.testing.assert_allclose(center[:2],p[:2]); np.testing.assert_allclose(tcp[:2],p[:2])
         assert tcp[2]==pytest.approx(c['table_z_m']+r['grip_height_m'])
         assert (r['open_m'],r['close_m'])==widths[index]
+
+@pytest.mark.parametrize('class_id', range(6))
+def test_real_coordinator_accepts_every_enabled_class_without_success_history(class_id):
+    from robocup_real_manipulation.node import Coordinator
+    c=configured()
+    # Older measured configs may still carry the old green-apple-only gate.
+    # Historical success/commissioning metadata must not discard valid targets.
+    c['class_execution']={name: {'ready':False} for name in c['model_names']}
+    warnings=[]
+    holder=NS(c=c,now=lambda:100.,join=EventJoin(),mutex=threading.RLock(),
+              input_errors={},get_logger=lambda:NS(warning=warnings.append))
+    message=NS(task_id='class-'+str(class_id),class_id=class_id,
+        header=NS(frame_id='odom',stamp=NS(sec=100,nanosec=0)),
+        coarse_position=NS(x=.4,y=.1,z=.65))
+    Coordinator.event(holder,'targets',message)
+    assert holder.join.targets[message.task_id] is message
+    assert not warnings and not holder.input_errors
+    holder.c['classes'][c['model_names'][class_id]]['enabled']=False
+    message.task_id+='-disabled'
+    Coordinator.event(holder,'targets',message)
+    assert message.task_id not in holder.join.targets
+    assert holder.input_errors[message.task_id]=='UNSUPPORTED_CLASS'
 
 def test_scene_rotates_at_arrival_and_support_excludes_bounding_box_corner():
     c=configured();c['table_bounds_xy']=[-1,1,-1,1]

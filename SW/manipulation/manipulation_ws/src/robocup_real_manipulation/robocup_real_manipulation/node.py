@@ -145,8 +145,7 @@ class Coordinator(Node):
             if kind=='targets':
                 require(msg.header.frame_id and np.isfinite([msg.coarse_position.x,msg.coarse_position.y,msg.coarse_position.z]).all(),'INVALID_TARGET')
                 rule_for(self.c,msg.class_id)
-                name=self.c['model_names'][msg.class_id]; gate=self.c.get('class_execution',{}).get(name,{})
-                require(gate.get('ready') is True,'CLASS_NOT_COMMISSIONED:'+name+':'+gate.get('reason','unset'))
+                # Class support comes from enabled geometry rules, not past trial success.
             else: require(msg.outcome in ('SUCCESS','FAILED','CANCELED'),'APPROACH_OUTCOME')
             with self.mutex: self.join.put(kind,msg.task_id,msg)
         except Exception as e:

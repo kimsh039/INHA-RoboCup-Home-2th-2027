@@ -74,11 +74,7 @@ def validate(cfg, hardware=False):
         if width_trial:
             require(cfg['velocity_scale'] <= .05 and cfg['acceleration_scale'] <= .05,
                     'WIDTH_TRIAL_SPEED')
-            enabled = [name for name, rule in cfg['classes'].items() if rule['enabled']]
-            require(enabled == ['green_apple'], 'WIDTH_TRIAL_GREEN_APPLE_ONLY')
-            require(.07 <= cfg['classes']['green_apple']['close_m'] <
-                    cfg['classes']['green_apple']['open_m'] <= .10,
-                    'WIDTH_TRIAL_APERTURE')
+            # Per-class apertures already obey WIDTH_RANGE above; no class whitelist.
         for key in ('joint_signs','joint_offsets','return_joints',
                     'topdown_quaternion','tcp_to_grip_center_m','table_z_m','table_bounds_xy',
                     'base_arm_transform','handeye_transform','link6_tcp_transform','obstacles',

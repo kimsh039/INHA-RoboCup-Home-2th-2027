@@ -14,11 +14,11 @@ observation_timeout_s: 5.0
 observation_retries: 1
 # [TUNE:GRIPPER] Search here for each class open/close width.
 classes:
-  green_apple: {open_m: 0.100, close_m: 0.079, grip_height_m: 0.034}
-  peach: {open_m: 0.100, close_m: 0.079, grip_height_m: 0.034}
-  tomato: {open_m: 0.100, close_m: 0.082, grip_height_m: 0.034}
-  fanta_can: {open_m: 0.080, close_m: 0.064, grip_height_m: 0.062}
-  cup: {open_m: 0.100, close_m: 0.090, grip_height_m: 0.039}
-  banana: {open_m: 0.040, close_m: 0.026}
+  green_apple: {enabled: true, open_m: 0.100, close_m: 0.079, grip_height_m: 0.034}
+  peach: {enabled: true, open_m: 0.100, close_m: 0.079, grip_height_m: 0.034}
+  tomato: {enabled: true, open_m: 0.100, close_m: 0.082, grip_height_m: 0.034}
+  fanta_can: {enabled: true, open_m: 0.080, close_m: 0.064, grip_height_m: 0.062}
+  cup: {enabled: true, open_m: 0.100, close_m: 0.090, grip_height_m: 0.039}
+  banana: {enabled: true, open_m: 0.040, close_m: 0.026}
 # [TUNE:GRASP_HEIGHT] Midpoint initial grip heights; tune between trials.
 # center_height_m stays in robot config: geometry, distinct from tuned contact height.

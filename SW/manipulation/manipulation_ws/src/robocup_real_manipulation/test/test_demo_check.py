@@ -21,10 +21,11 @@ class DemoCheckTests(unittest.TestCase):
         self.assertFalse(CFG['commissioned'])
 
     def test_disabled_banana_does_not_block_other_class_demo(self):
-        report=module.configuration(CFG)
-        self.assertFalse(any(k.startswith('classes.banana.') for k in report['missing_values']))
         import copy
-        cfg=copy.deepcopy(CFG); cfg['classes']['banana']['enabled']=True
+        cfg=copy.deepcopy(CFG); cfg['classes']['banana']['enabled']=False
+        report=module.configuration(cfg)
+        self.assertFalse(any(k.startswith('classes.banana.') for k in report['missing_values']))
+        cfg['classes']['banana']['enabled']=True
         cfg['classes']['banana']['radius_m']=None
         report=module.configuration(cfg)
         self.assertIn('classes.banana.radius_m',report['missing_values'])

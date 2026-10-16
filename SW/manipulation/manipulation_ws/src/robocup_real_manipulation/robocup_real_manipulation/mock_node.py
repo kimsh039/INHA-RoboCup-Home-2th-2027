@@ -32,7 +32,6 @@ class MockCoordinator(Coordinator):
         super().__init__(); require(self.c.get('fixture_only') is True,'MOCK_REQUIRES_TEST_FIXTURE')
         self.c['coarse_fixed_frame']='base_link'
         self.c['scene_frame']='base_link'; self.scene_source=dict(self.c)
-        self.c['class_execution']={name:{'ready':True} for name in self.c['classes']}
         self.motion=MockMotion(); self.declare_parameter('fail_stage',''); self.declare_parameter('right_blocked',False)
         self.motion.right_blocked=self.get_parameter('right_blocked').value
         self.get_logger().warning('MOCK: all motion results are synthetic; no hardware commands')

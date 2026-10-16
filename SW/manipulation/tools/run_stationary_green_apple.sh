@@ -132,7 +132,7 @@ guard="""        width_trial = cfg.get('width_mapping_mode', 'measured') == 'nom
 """
 for path in {source.resolve(), installed}:
     text=path.read_text()
-    if 'WIDTH_TRIAL_GREEN_APPLE_ONLY' in text: continue
+    if 'WIDTH_TRIAL_SPEED' in text: continue
     old="'gravity_frame_verified','width_mapping_verified'):"
     anchor="        for key in ('joint_signs','joint_offsets','return_joints',"
     if text.count(old)!=1 or text.count(anchor)!=1:

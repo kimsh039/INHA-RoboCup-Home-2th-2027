@@ -38,5 +38,5 @@ if a.runtime:
     for topic in (c['command_topic'],'/arm_controller/follow_joint_trajectory/_action/status','/manipulation/wrist/result'):
         if n.count_publishers(topic):errors.append('EXISTING_CONTROLLER_OR_WRIST_OWNER:'+topic)
     n.destroy_node();rclpy.shutdown()
-print(json.dumps(dict(ready=not errors,errors=errors,class_execution=c.get('class_execution',{})),ensure_ascii=False,indent=2))
+print(json.dumps(dict(ready=not errors,errors=errors,enabled_classes=[name for name,rule in c['classes'].items() if rule['enabled']],physical_validation=c.get('physical_validation',{})),ensure_ascii=False,indent=2))
 raise SystemExit(1 if errors else 0)
