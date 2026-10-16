@@ -1,43 +1,41 @@
 # INHA United @Home · 2027
 
-**실물 로봇 실행:** [Jetson에서 실물 캘리브레이션을 적용하는 방법](SW/robot/README.md). 최신 G2·Base–Mid360·Head–Mid360·Wrist hand-eye·RGB 내부 보정·Tracer 오도메트리를 사용합니다.
+TRACER × PiPER · Head D435 / Wrist D435IF · YDLIDAR G2 / Livox MID-360S · Jetson AGX Orin · ROS 2 Humble
 
-**웹 관제센터:** [젯슨에서 실행하고 맥 localhost로 접속](SW/control_center/README.md). 실시간 SLAM·카메라·검출·점군 관측과 카메라/LiDAR 개별 실행·중지를 제공합니다.
+**실물 실행과 관제:** [로봇·센서](SW/robot/README.md) · [웹 관제센터](SW/control_center/README.md) · [최신 구현 변경](SW/CHANGES_20261016.md)
+**발표 준비:** [전체 구조·공부 순서·예상 질문](SW/PRESENTATION_STUDY_GUIDE.md) · [저장소 정리 기준과 복구](SW/REPOSITORY_MAINTENANCE.md)
 
-**전체 Task 통합 (2026-10-16):** 관제센터 마지막 **전체 Task** 탭에서 물체를 선택하면 **SLAM → NAV → 탐지·closed approach → 집기 → 손목 SAM으로 책상 위 접시 관측·배치 → 팔 수납 → 직선 후진 → 정지 → 제자리 회전·Head 정렬 → 정지 → 지정 홈 복귀**를 연결합니다. 물체는 책상 위 접시에 놓고 로봇이 복귀합니다. [홈 등록·실물 설정·배포 방법 및 현재 한계](SW/control_center/TASK.md).
+## 현재 작업 흐름
 
-확장된 ROS 메시지와 실행용 패키지는 로컬에 설치하고 관제센터 및 읽기 전용 팔 모니터에 적용했습니다. SLAM 시작 시 첫 유효 좌표로 시작 위치·방향을 홈에 자동 등록합니다. 전체 Task 실물 실행에는 접시 관측 자세와 실물 프로파일 설정이 남아 있습니다. 자동 테스트와 전체 작업 실물 주행·파지는 수행하지 않았습니다.
+Head YOLO11n → RGB–LiDAR 목표 대응 → 책상 탐색·closed approach → 베이스 잠금 → Wrist SAM 2.1 Tiny 재관측 → MoveIt/PiPER 집기 → 책상 위 접시 관측·배치 → 팔 수납 → 직선 후진·정지 → 회전·정렬·정지 → 홈 복귀를 연결한다.
 
-인하 유나이티드 앳홈 2기 · TRACER × PiPER · ROS 2 Humble · Jetson AGX Orin
+전체 Task 코드는 통합됐지만 **접시 관측 자세와 실측 프로파일 commissioning이 남아 있으며, 전체 작업의 실물 성공을 확인한 상태는 아니다.** 과거 청사과 정차 실험, 오프라인 회귀, ROS 통신 검사와 전체 주행·파지 성공을 구분한다. [현재 전체 Task 조건](SW/control_center/TASK.md)
 
-| 영역 | 내용 | 시작 문서 |
+## 어디에서 무엇을 관리하는가
+
+| 경로 | 역할 | 먼저 읽을 문서 |
 |---|---|---|
-| **HW** | CAD, 메시, 하드웨어 URDF 원본 | [하드웨어](HW/README.md) |
-| **SW** | 설치·운영, 시뮬레이션, 보정, Head/Wrist 인지 | [소프트웨어](SW/README.md) |
+| `HW/` | CAD·메시·질량/관성·실물 보정 원본 | [하드웨어](HW/README.md) |
+| `SW/robot/` | 실물 센서·TF·오도메트리·충돌 보호·베이스 잠금 | [실물 로봇](SW/robot/README.md) |
+| `SW/control_center/` | 관제·SLAM/Nav2·Head/LiDAR 대응·도킹·전체 Task | [관제센터](SW/control_center/README.md) |
+| `SW/detection/head/` | YOLO 모델·공통 adapter·현재 데이터·학습/평가 | [Head](SW/detection/head/README.md) |
+| `SW/manipulation/` | 현재 Wrist SAM·점군/기하·팔 제어·접시 배치 | [Manipulation](SW/manipulation/README.md) |
+| `SW/detection/wrist/` | 현재 손목 실행 코드로 안내하는 진입 문서 | [Wrist](SW/detection/wrist/README.md) |
+| `SW/simulation/` | Gazebo/MuJoCo·CAD 및 시뮬레이션 보정 | [Simulation](SW/simulation/README.md) |
+| `SW/setup/` | Jetson 설치·버전·환경 기록 | [Setup](SW/setup/README.md) |
 
-```text
-HW/                         # 하드웨어 자료
-├── URDF/                   # 로봇 모델·기구 구조
-└── calibration/            # 캘리브레이션 결과
-    └── camera_intrinsics/  # 카메라 내부 파라미터·오차 결과
-        ├── head/           # 헤드 카메라
-        └── wrist/          # 손목 카메라
-SW/
-├── control_center/         # Jetson 웹 관제 / Mac SSH 터널
-├── manipulation/           # 실물 팔·손목 SAM·접시 배치 및 인계
-├── setup/                  # Jetson 설치와 실행
-├── simulation/             # Gazebo·MuJoCo·보정
-└── detection/
-    ├── head/               # YOLO11n 검출·추적·학습·평가
-    └── wrist/              # D435·SAM 2.1·정밀 분할
-```
+## 현재 인식 모델과 데이터
 
-새 코드와 자료는 위 구조에 맞춰 추가합니다. 저장소 루트에는 `HW/`, `SW/`, `README.md`를 유지하고, 카메라별 검출 코드·모델·실험은 `SW/detection/head/` 또는 `SW/detection/wrist/`에 둡니다. 공통 인지 문서는 `SW/detection/`에서 관리합니다. 가상환경과 빌드 산출물은 각 작업 폴더의 Git 제외 경로에 생성합니다.
+Head는 `head_yolo11n_20261013.pt`에서 만든 대상 장치의 TensorRT FP16 engine을 우선 사용한다. 클래스는 **green_apple, peach, tomato, fanta_can, cup, banana**이고 cup은 손잡이를 포함한 빨간 머그컵이다. 기본 confidence는 **cup/banana 0.50, 나머지 0.25**, NMS IoU 0.7이며 공통 adapter는 클래스별 최고 점수 박스 하나를 남긴다. 같은 클래스가 여러 테이블에 있을 때의 관측 누락은 별도 고려해야 한다.
 
-Head와 Wrist 카메라는 모두 RealSense D435를 사용합니다. Head는 목표 탐색과 두 테이블의 관측 증거 수집, Wrist는 접근 후 재관측·분할·depth 점군을 담당합니다. [인지 구성](SW/detection/README.md) · [센서 역할](SW/detection/SENSOR_ROLES.md)
+현재 학습 데이터는 [20261013 스냅샷](SW/detection/head/datasets/20261013/README.md) 2,155장(train 1,786 / val 369)이다. [검증 mAP50 0.97474 / mAP50–95 0.70237](SW/detection/head/training/experiments/20261013/TRAINING_RESULTS.md)은 부분 수동 검토 라벨 기준 학습 검증 수치이며, 현재 후처리·실물 Task 성공률과 다르다.
 
-현재 최종 보정 모델은 [robocup.calibrated.urdf](SW/simulation/robot_description/robocup.calibrated.urdf)이며, [robocup.urdf](SW/simulation/robot_description/robocup.urdf)는 CAD 기준 원본입니다. 시뮬레이션 보정 기록과 실기 검증 범위는 [SW 안내](SW/README.md)에 있습니다.
+## 모델과 좌표계 사용 기준
 
-[Head YOLO11n 7개 클래스 모델·실제 평가 결과](SW/detection/head/training/experiments/20261007/TRAINING_RESULTS.md): 100 epoch 완료, 두 보관 영상 739프레임 추론. 라벨 초안 기준 검증과 실제 누락을 함께 기록했습니다.
+- CAD 원본: [robocup.urdf](SW/simulation/robot_description/robocup.urdf).
+- 시뮬레이션/통합 보정 기록: [robocup.calibrated.urdf](SW/simulation/robot_description/robocup.calibrated.urdf).
+- 실물: [부분 arm URDF + 실측 센서 TF](SW/robot/README.md). 전체 calibrated 모델을 실물에 중복 발행하지 않는다.
+- RGB는 RealSense 원본 토픽을 사용한다. `calibrated_streams.py`는 CameraInfo를 발행하며 RGB를 중계하지 않는다.
+- 모델·실행 패키지 변경은 실행 중 프로세스를 자동 갱신하지 않는다. [전체 Task 배포/필수 조건](SW/control_center/TASK.md)을 따른다.
 
-현재 검출 대상은 **green_apple, peach, tomato, fanta_can, cup, banana**입니다. [20261013 새 6클래스 모델·학습 결과](SW/detection/head/training/experiments/20261013/TRAINING_RESULTS.md)를 게시했습니다. cup은 빨간 머그컵만 대상으로 신뢰도 0.70, 다른 클래스는 0.25를 적용합니다. [우분투 / Jetson 작업 이어가기](SW/detection/head/UBUNTU_HANDOFF_20261013.md).
+최상위는 `HW/`, `SW/`, 이 README와 Git 설정만 유지한다. 오래된 실행 예시·중복 데이터는 활성 트리에서 정리하고, 과거 실험 지표와 복구 커밋은 남긴다.

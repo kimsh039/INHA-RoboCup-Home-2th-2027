@@ -1,6 +1,6 @@
 # Head YOLO11n 학습·평가 결과 · 2026-10-07
 
-Colab Tesla T4에서 YOLO11n의 7개 클래스 fine-tuning을 100 epoch 완료했다. 최적 가중치는 [head_yolo11n_20261007.pt](../../../models/head_yolo11n_20261007.pt)이며, 독립 보관 영상 두 개의 총 **739프레임**에 실제 추론을 실행했다. 현재 용도는 실험용 검출 초안이다.
+Colab Tesla T4에서 YOLO11n의 7개 클래스 fine-tuning을 100 epoch 완료했다. 최적 가중치는 [head_yolo11n_20261007.pt](https://github.com/kimsh039/INHA-RoboCup-Home-2th-2027/blob/0c6e82043047c1a7b0181af7c333bb23d7e0992a/SW/detection/head/models/head_yolo11n_20261007.pt)이며, 독립 보관 영상 두 개의 총 **739프레임**에 실제 추론을 실행했다. 현재 용도는 실험용 검출 초안이다.
 
 | 항목 | 실제 결과 |
 |---|---|
@@ -14,7 +14,7 @@ Colab Tesla T4에서 YOLO11n의 7개 클래스 fine-tuning을 100 epoch 완료�
 | 모델 SHA256 | `c5691631b1d8516d5c62e8cd93f35928f7b5e70e7dc8cce6bebc1d03706fc2c9` |
 | 모델 크기 | 5,496,410 bytes |
 
-가중치 정리 과정에서 checkpoint epoch는 -1로 바뀌었다. 선택 epoch 6은 저장된 train_metrics와 [100 epoch CSV](results.csv)의 일치로 확인했다. [실제 인자](args.yaml) · [Colab 출력 로그](colab_training_log.txt) · [검증 지표 JSON](validation_metrics.json) · [학습 곡선](results.png) · [혼동 행렬](confusion_matrix.png). [last.pt](weights/last.pt)는 최종 epoch의 optimizer 제거 가중치이며 optimizer 상태까지 포함한 resume checkpoint는 아니다.
+가중치 정리 과정에서 checkpoint epoch는 -1로 바뀌었다. 선택 epoch 6은 저장된 train_metrics와 [100 epoch CSV](results.csv)의 일치로 확인했다. [실제 인자](args.yaml) · [Colab 출력 로그](colab_training_log.txt) · [검증 지표 JSON](validation_metrics.json) · [학습 곡선](results.png) · [혼동 행렬](confusion_matrix.png). [last.pt](https://github.com/kimsh039/INHA-RoboCup-Home-2th-2027/blob/a23d6e287a29ed34e65aaaab439b57405108636a/SW/detection/head/training/experiments/20261007/weights/last.pt)는 최종 epoch의 optimizer 제거 가중치이며 optimizer 상태까지 포함한 resume checkpoint는 아니다.
 
 | 클래스 | 검증 boxes | Precision | Recall | mAP50 | mAP50–95 |
 |---|---:|---:|---:|---:|---:|

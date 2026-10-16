@@ -186,7 +186,7 @@ reference_sources:
   physical_handeye: feature/wrist-handeye-calibration@0bac1e558075600d21c6b7273f26a6858266ea0d
   handeye_file: SW/simulation/calibration/wrist_handeye/wrist_handeye_calibration.yaml
   handeye_note: Physical best15 PARK result; reproduced offline. Branch README predates result.
-  detector_class_map: SW/detection/head/datasets/20261012/data.yaml
+  detector_class_map: https://github.com/kimsh039/INHA-RoboCup-Home-2th-2027/blob/a23d6e287a29ed34e65aaaab439b57405108636a/SW/detection/head/datasets/20261012/data.yaml
   detector_class_map_commit: ddae58cb002ae533989bddd3f2b8147029a5ad0f
   detector_class_map_note: Current 6-class output. Old checkpoint names are adapted in Head class_schema.py; plate excluded.
 

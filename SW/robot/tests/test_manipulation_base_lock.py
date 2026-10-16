@@ -51,6 +51,8 @@ def test_stale_request_cannot_lock(tmp_path):
 def test_measured_stop_requires_fresh_correct_frame_and_stationary_twist(tmp_path):
     obj=adapter(tmp_path)
     msg=NS(header=NS(frame_id='odom',stamp=NS(sec=100,nanosec=0)),child_frame_id='base_link',
+           pose=NS(pose=NS(position=NS(x=0.,y=0.,z=0.),
+                          orientation=NS(x=0.,y=0.,z=0.,w=1.))),
            twist=NS(twist=NS(linear=NS(x=0.,y=0.,z=0.),angular=NS(x=0.,y=0.,z=0.))))
     with patch.object(gate.time,'monotonic',return_value=10.):obj.odometry(msg)
     with patch.object(gate.time,'monotonic',return_value=10.7):assert obj.stopped()

@@ -1,3 +1,5 @@
+> **역사적 설계/시뮬레이션 문서.** 현재 실행은 [Detection·도킹](../control_center/DETECTION.md), [Wrist/팔](../manipulation/README.md), [전체 Task](../control_center/TASK.md)를 기준으로 한다. 아래 완료/미구현 표시는 당시 문맥이며 최신 runtime 상태와 구분한다.
+
 # Closed approach · 헤드 검출부터 손목 재관측까지
 
 헤드 카메라가 찾은 목표 앞으로 로봇을 붙이고, 팔을 들어 손목 카메라로 같은 물체를 다시 관측합니다. 출력은 `base_link` 기준의 물체 위치와 점군이며, 이후 GraspNet·MoveIt 파지가 이어받습니다.

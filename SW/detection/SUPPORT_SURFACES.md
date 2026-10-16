@@ -1,3 +1,5 @@
+> **역사적 설계/시뮬레이션 문서.** 현재 실행은 [Detection·도킹](../control_center/DETECTION.md), [Wrist/팔](../manipulation/README.md), [전체 Task](../control_center/TASK.md)를 기준으로 한다. 아래 완료/미구현 표시는 당시 문맥이며 최신 runtime 상태와 구분한다.
+
 # Mid-360 작업면 추출 (테이블·선반 윗면)
 
 Mid-360 점군에서 **수평 작업면의 높이·사각형 윤곽·가장자리**를 찾아 `map` 좌표로 발행합니다. [센서 역할](SENSOR_ROLES.md)의 구현 2순위 중 "작업면 기하 추출" 단계입니다. 접근 자세 생성과 closed approach는 이 출력을 사용하는 후속 작업입니다.

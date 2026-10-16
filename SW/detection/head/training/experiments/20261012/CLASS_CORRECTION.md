@@ -22,4 +22,4 @@
 
 게시한 영상은 브라우저 재생을 위해 H.264/yuv420p/faststart로 변환했다. 보고서의 wall FPS는 추론·원래 주석 렌더링·mp4v 쓰기 측정값이며 이후 H.264 변환 시간은 포함하지 않는다. Jetson FPS는 측정하지 않았다.
 
-[재학습 노트북](../../head_camera_yolo11n_colab.ipynb)과 학습 ZIP은 현재 6클래스 스키마로 준비했다. **재학습 시작 전 상태**이며 기존 7클래스 검증 mAP를 새 모델의 성능으로 보고하지 않는다.
+[재학습 노트북](https://github.com/kimsh039/INHA-RoboCup-Home-2th-2027/blob/a23d6e287a29ed34e65aaaab439b57405108636a/SW/detection/head/training/head_camera_yolo11n_colab.ipynb)과 학습 ZIP은 현재 6클래스 스키마로 준비했다. **재학습 시작 전 상태**이며 기존 7클래스 검증 mAP를 새 모델의 성능으로 보고하지 않는다.

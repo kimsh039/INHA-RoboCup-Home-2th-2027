@@ -1,3 +1,5 @@
+> 이 폴더는 시뮬레이션·CAD/보정 실험이다. 현재 실물은 [robot](../robot/README.md), [관제센터](../control_center/README.md), [manipulation](../manipulation/README.md) 경로를 사용한다.
+
 # RoboCup 시뮬레이션
 
 > **Gazebo·MuJoCo 개발 PC용 안내입니다.** 현재 Jetson의 실기 setup과 카메라 구성은 [프로젝트 README](../README.md)와 [Jetson 운영 문서](../setup/jetson/README.md)를 참고하세요. Jetson에는 Gazebo 및 robot-* 단축 명령을 설치하지 않았습니다.
