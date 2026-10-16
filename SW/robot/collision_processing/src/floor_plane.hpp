@@ -19,7 +19,7 @@ struct Plane {
   double height(const V3 &p) const {return p.z()-coefficients.dot(V3(p.x(),p.y(),1.));}
 };
 struct Config {
-  double nominal=-.1425,band=.02,radius=3.,search_band=.12;
+  double nominal=-.1425,band=.05,radius=3.,search_band=.12;
   double inlier_distance=.012,max_tilt=.0872664626,max_offset=.05,min_ratio=.55;
   size_t minimum_points=150,max_samples=2048,iterations=128;
 };

@@ -32,6 +32,7 @@ def transform_point(point, xyz, quaternion):
     return rotation(quaternion) @ np.array(point) + xyz
 
 def validate(cfg, hardware=False):
+    require(cfg.get('base_completion_policy', 'hold') in ('hold', 'release'), 'BASE_COMPLETION_POLICY')
     # Initial trial setting, not a zero calibration or wider command limits.
     startup_margin=cfg.get('startup_bounds_tolerance_rad',0.)
     require(finite(startup_margin) and 0<=startup_margin<=math.radians(5),'STARTUP_BOUNDS_TOLERANCE')
@@ -46,6 +47,9 @@ def validate(cfg, hardware=False):
     require(isinstance(cfg['observation_retries'],int) and 0<=cfg['observation_retries']<=3, 'INVALID_RETRY')
     require(isinstance(cfg['observation_stable_frames'],int) and 2<=cfg['observation_stable_frames']<=10,'INVALID_STABLE_FRAMES')
     require(0.5<=cfg['gripper_command_effort']<=3 and 1<=cfg['driver_speed_percent']<=20,'DRIVER_COMMAND_RANGE')
+    for key, default in (('gripper_stable_speed_m_s', .002), ('gripper_contact_min_travel_m', .002)):
+        value=cfg.get(key,default)
+        require(finite(value) and 0<value<=.02,'INVALID_SETTING:'+key)
     require(0<cfg['depth_min_fraction']<=1 and 0<cfg['depth_min_m']<cfg['depth_max_m'] and cfg['depth_min_pixels']>=3,'DEPTH_CONFIG')
     require(0<=cfg['mask_erosion_px']<=10 and 1<=cfg['depth_patch_radius_px']<=100,'DEPTH_REGION_CONFIG')
     for key in ('joint_stable_s','stable_speed_rad_s','gripper_tolerance_m','gripper_max_m','goal_tolerance_rad','path_tolerance_rad','support_margin_m'):
@@ -54,12 +58,18 @@ def validate(cfg, hardware=False):
     require(0<cfg['min_confidence']<=1 and cfg['gripper_max_m']==0.100, 'QUALITY_OR_WIDTH')
     ids=[]
     for name,r in cfg['classes'].items():
+        angles=r.get('yaw_sample_degrees',[0])
+        require(isinstance(angles,list) and 1<=len(angles)<=12 and
+                all(isinstance(a,(int,float)) and math.isfinite(a) and 0<=a<180 for a in angles),
+                'GRASP_YAW_SAMPLES:'+name)
         require(0<r['close_m']<r['open_m']<=cfg['gripper_max_m'], 'WIDTH_RANGE:'+name)
         if r['class_id'] is not None:
             require(r['class_id']>=0 and r['class_id']<len(cfg['model_names']), 'CLASS_ID:'+name)
             require(cfg['model_names'][r['class_id']]==r.get('detector_name',name), 'CLASS_NAME:'+name)
             ids.append(r['class_id'])
     require(len(ids)==len(set(ids)), 'DUPLICATE_CLASS_ID')
+    require(cfg.get('table_source','static') in ('static','dock_surface'),'TABLE_SOURCE')
+    require((.04 if cfg.get('table_source','static')=='dock_surface' else .005)<=cfg.get('table_thickness_m',.12)<=.30,'TABLE_THICKNESS')
     if hardware:
         require(not cfg.get('fixture_only',False), 'TEST_FIXTURE_NOT_HARDWARE')
         for key in ('execution_enabled','commissioned','calibration_verified','scene_verified',
@@ -79,7 +89,7 @@ def validate(cfg, hardware=False):
                     cfg['classes']['green_apple']['open_m'] <= .10,
                     'WIDTH_TRIAL_APERTURE')
         for key in ('joint_signs','joint_offsets','return_joints',
-                    'topdown_quaternion','tcp_to_grip_center_m','table_z_m','table_bounds_xy',
+                    'topdown_quaternion','tcp_to_grip_center_m',
                     'base_arm_transform','handeye_transform','link6_tcp_transform','obstacles',
                     'width_scale','width_bias_m','driver_width_max','grasp_min_effort','can_port','firmware',
                     'wrist_camera_model','wrist_camera_serial','camera_min_depth_m','coarse_z_error_bound_m'):
@@ -122,7 +132,10 @@ def validate(cfg, hardware=False):
             require(box.get('id') and box['id'] not in obstacle_ids and box['id'] not in ('manip_table','manip_target'),'OBSTACLE_ID')
             require(len(box['center'])==3 and len(box['size'])==3 and finite(box['center']) and finite(box['size']) and min(box['size'])>0,'OBSTACLE_BOX')
             obstacle_ids.add(box['id'])
-        bounds=cfg['table_bounds_xy']; require(len(bounds)==4 and finite(bounds) and bounds[0]<bounds[1] and bounds[2]<bounds[3], 'TABLE_BOUNDS')
+        if cfg.get('table_source','static')=='static':
+            require(cfg['table_z_m'] is not None and finite(cfg['table_z_m']),'UNSET:table_z_m')
+            bounds=cfg['table_bounds_xy']
+            require(bounds is not None and len(bounds)==4 and finite(bounds) and bounds[0]<bounds[1] and bounds[2]<bounds[3], 'TABLE_BOUNDS')
     return cfg
 
 def rule_for(cfg, class_id):
@@ -137,6 +150,14 @@ def width_to_driver(width, cfg):
     require(finite(raw) and 0<=raw<=cfg['driver_width_max'], 'DRIVER_WIDTH_RANGE')
     return raw
 
+def grasp_contact(width, effort, close_width, open_width, cfg):
+    """Contact may stop closure above the target; an open jaw is not a grasp."""
+    threshold=cfg.get('grasp_min_effort')
+    return bool(threshold is not None and finite([width,effort,threshold,close_width,open_width])
+                and threshold>0 and abs(effort)>=threshold
+                and max(cfg['gripper_tolerance_m'],close_width-cfg['gripper_tolerance_m'])<=width
+                and width<=open_width-cfg.get('gripper_contact_min_travel_m',.002))
+
 class EventJoin:
     """Bounded cache. Active tasks reject new tasks; durable terminal IDs block replay."""
     def __init__(self, completed=()):
@@ -147,7 +168,7 @@ class EventJoin:
         require(task_id not in self.completed, 'DUPLICATE_TASK')
         self.active=task_id
     def put(self, kind, task_id, value):
-        require(task_id and task_id not in self.completed, 'PREVIOUS_TASK_EVENT')
+        require(task_id and len(task_id)<=128 and task_id not in self.completed, 'PREVIOUS_TASK_EVENT')
         require(self.active in (None,task_id), 'BUSY')
         cache=getattr(self,kind)
         require(task_id not in cache, 'DUPLICATE_EVENT')
@@ -212,6 +233,9 @@ def grasp_geometry(point, kind, rule, cfg, axis=None):
     return center,tcp,q
 
 def support(point,radius,cfg):
+    if cfg.get('table_polygon_xy') is not None:
+        from .table_scene import contains_disk
+        return contains_disk(point,radius+cfg['support_margin_m'],cfg['table_polygon_xy'])
     x0,x1,y0,y1=cfg['table_bounds_xy']; pad=radius+cfg['support_margin_m']
     return x0+pad<=point[0]<=x1-pad and y0+pad<=point[1]<=y1-pad
 

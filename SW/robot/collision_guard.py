@@ -24,7 +24,7 @@ from std_msgs.msg import String
 from tf2_ros import Buffer, TransformListener
 from rclpy.qos import QoSProfile, ReliabilityPolicy
 
-from collision_geometry import RobotGeometry, rectangle
+from collision_geometry import RobotGeometry, convex_footprint, rectangle
 from collision_distance import ComputationExpired, PreparedBoxes, build_scene
 from slam_scan import NS, stamp_ns, yaw
 
@@ -37,7 +37,7 @@ class CollisionGuard(Node):
                         cloud_status_topic='/collision/cloud_status', command_topic='/cmd_vel',
                         approved_topic='/collision/cmd_vel_approved',
                         protected_topic='/tracer/cmd_vel_safe', status_topic='/collision/status',
-                        clearance=0.1, uncertainty_margin=0.05, safety_voxel=0.04,
+                        body_only=True, clearance=0.0, uncertainty_margin=0.0, safety_voxel=0.04,
                         cloud_timeout=0.4, odom_timeout=0.2, joint_timeout=0.5,
                         require_arm_feedback=True, arm_motion_limit=0.08, arm_settle_sec=0.5,
                         command_timeout=0.25, control_frequency=20., reaction_time=0.3,
@@ -46,10 +46,13 @@ class CollisionGuard(Node):
                         max_angular_velocity=0.6, prediction_step=0.04, minimum_speed_scale=0.1,
                         computation_budget=0.04, costmap_resolution=0.05)
         self.cfg = {k: self.declare_parameter(k, v).value for k, v in defaults.items()}
-        for key in ('clearance', 'cloud_timeout', 'odom_timeout', 'joint_timeout',
+        for key in ('cloud_timeout', 'odom_timeout', 'joint_timeout',
                     'command_timeout', 'control_frequency', 'linear_deceleration',
                     'angular_deceleration', 'prediction_step', 'computation_budget'):
             if not math.isfinite(self.cfg[key]) or self.cfg[key] <= 0:
+                raise ValueError('Invalid collision guard parameter: '+key)
+        for key in ('clearance', 'uncertainty_margin'):
+            if not math.isfinite(self.cfg[key]) or self.cfg[key] < 0:
                 raise ValueError('Invalid collision guard parameter: '+key)
         if len({self.cfg['command_topic'], self.cfg['approved_topic'], self.cfg['protected_topic']}) != 3:
             raise ValueError('Raw and protected velocity topics must differ')
@@ -141,6 +144,8 @@ class CollisionGuard(Node):
             if not np.isfinite(points).all():
                 raise ValueError('invalid retained scene')
             sources = np.column_stack([data[name].ravel() for name in names[3:]]) if len(names) == 6 else None
+            if self.cfg.get('body_only', False) and sources is not None:
+                points = sources
             stamp = stamp_ns(msg.header)
             tree_began = time.monotonic()
             scene = build_scene(points)
@@ -279,6 +284,11 @@ class CollisionGuard(Node):
                 pose += np.array([v*math.cos(theta)*dt, v*math.sin(theta)*dt, w*dt])
                 # Enclose motion between discrete pose samples, including corners.
                 sampling_margin = (abs(v)+abs(w)*extent)*dt
+                if self.cfg.get('body_only', False) and boundary == 0.:
+                    if boxes.swept_contact(self.scene, previous, pose, sampling_margin, deadline):
+                        return None
+                    velocity, elapsed = following, elapsed+dt
+                    continue
                 distance, _, _ = boxes.nearest(self.scene, pose, boundary+sampling_margin, deadline,
                                                 from_pose=previous, sources=self.scene_sources)
                 if distance < boundary+sampling_margin:
@@ -303,9 +313,10 @@ class CollisionGuard(Node):
             if ready:
                 deadline = time.monotonic()+self.cfg['computation_budget']
                 boxes = self.geometry(self.cfg['require_arm_feedback'])
-                boundary = self.cfg['clearance']+self.cfg['uncertainty_margin']+math.sqrt(3)*self.cfg['safety_voxel']/2
+                voxel_margin = 0. if self.cfg.get('body_only', False) else math.sqrt(3)*self.cfg['safety_voxel']/2
+                boundary = self.cfg['clearance']+self.cfg['uncertainty_margin']+voxel_margin
                 measured, point, link = self.distance(boxes, self.pose, boundary+0.1, deadline)
-                distance = max(0., measured-math.sqrt(3)*self.cfg['safety_voxel']/2) if math.isfinite(measured) else None
+                distance = max(0., measured-voxel_margin) if math.isfinite(measured) else None
                 if self.command_error:
                     reason = self.command_error
                 elif self.command_received is None or time.monotonic()-self.command_received > self.cfg['command_timeout']:
@@ -364,19 +375,19 @@ class CollisionGuard(Node):
     def status(self):
         try:
             boxes = self.geometry(self.model.required_joints.issubset(self.joints))
-            padding = 0.  # Direction-dependent clearance is enforced by predict().
-            footprint = rectangle(boxes, padding)
+            footprint = convex_footprint(boxes)
             if self.cfg['require_arm_feedback'] and not self.model.required_joints.issubset(self.joints):
                 # Nav2 is blocked by readiness while feedback is missing.
-                footprint = rectangle(self.geometry(False), padding)
+                footprint = convex_footprint(self.geometry(False))
             polygon = Polygon(points=[Point32(x=x, y=y, z=0.) for x, y in footprint])
             for publisher in self.footprint_pubs:
                 publisher.publish(polygon)
             result = dict(self.result, clearance=self.cfg['clearance'], uncertainty=self.cfg['uncertainty_margin'],
                           frame=self.cfg['odom_frame'], base_frame=self.cfg['base_frame'],
                           tracer_bounds=[self.model.tracer_low.tolist(), self.model.tracer_high.tolist()],
-                          body_footprint=rectangle(self.model.tracer),
-                          clearance_footprint=rectangle(self.model.tracer, self.cfg['clearance']),
+                          body_footprint=convex_footprint(self.model.tracer),
+                          clearance_footprint=(convex_footprint(self.model.tracer) if self.cfg['clearance'] == 0.
+                                               else rectangle(self.model.tracer, self.cfg['clearance'])),
                           planning_footprint=footprint, protected_topic=self.cfg['protected_topic'],
                           scene_parse_ms=getattr(self, 'scene_parse_ms', 0.),
                           scene_tree_build_ms=getattr(self, 'scene_tree_build_ms', 0.),

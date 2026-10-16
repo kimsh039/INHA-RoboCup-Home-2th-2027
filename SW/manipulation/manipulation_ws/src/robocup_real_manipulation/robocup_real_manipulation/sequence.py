@@ -8,7 +8,11 @@ class Sequence:
     def run(self):
         outcome='FAILED'; reason=''
         try:
-            for stage in STAGES:
+            stages = list(STAGES)
+            handle = getattr(self.b, 'goal_handle', None)
+            if handle and getattr(handle.request, 'operation', '') == 'table_plate':
+                stages.insert(stages.index('MOVE_TO_PLACE'), 'OBSERVE_PLATE')
+            for stage in stages:
                 self.stage=stage; self.b.status(self,'RUNNING','')
                 self.b.guard()
                 if stage=='CLOSE_GRIPPER': self.holding='UNKNOWN'
@@ -16,6 +20,7 @@ class Sequence:
                 if stage=='VERIFY_GRASP': self.holding='HELD'
                 if stage=='RELEASE': self.holding='EMPTY'; self.place_success=True
                 if stage=='RETURN_ARM': self.return_success=True
+            if hasattr(self.b,'finish_success'): reason=self.b.finish_success(self) or ''
             outcome='SUCCESS'
         except Exception as e:
             reason=str(e); outcome='CANCELED' if reason=='CANCELED' else 'FAILED'

@@ -146,7 +146,7 @@ handeye_transform/CAD base/TCP와 최신6클래스 이름은 이미 반영돼 �
 
 Head의 현재 /detection/head/target은2D HeadTarget이다. 매니퓰레이션의 /manipulation/target은3D Target이다. topic remap만으로 변환되지 않는다. 실제 head/융합 adapter는3D·frame·취득시각·task_id를 채워야 한다. navigation adapter는 실제 접근 결과와 모든 이동 명령의 잠금/정지 heartbeat를 연결해야 한다. wrist adapter는 ObservationRequest에 응답해 새 영상의 같은6클래스ID·중심3D/표면구분·후보batch를 반환해야 한다. HeadTarget+동일 취득시각 퓨전3D 수신부는 [EXTERNAL_INPUT.md](EXTERNAL_INPUT.md)에 추가했다. 실제 navigation의 task_id/이동 잠금 응답과 wrist 요청·정밀 결과 연결은 여전히 확인해야 한다. [INTERFACES.md](INTERFACES.md)에 구현할 계약이 있다.
 
-closed_approach.launch.py는 기본 use_sim_time=true와 Gazebo 손목 이동 경로를 포함하므로 실물 통합 실행기로 그대로 쓰지 않는다. Head만 실행할 경우도 최신 실제 영상 토픽(/head/calibrated/color/image_raw), 가중치, Jetson inference Python 환경을 맞춰야 한다. 이것만 실행해도 자동 픽앤플레이스 입력 계약은 완성되지 않는다.
+closed_approach.launch.py는 기본 use_sim_time=true와 Gazebo 손목 이동 경로를 포함하므로 실물 통합 실행기로 그대로 쓰지 않는다. Head만 실행할 경우도 최신 실제 영상 토픽(/head/camera/color/image_raw), 가중치, Jetson inference Python 환경을 맞춰야 한다. 이것만 실행해도 자동 픽앤플레이스 입력 계약은 완성되지 않는다.
 
 ## 6. 빌드와 읽기 전용 점검
 

@@ -1,5 +1,6 @@
 """Explicit test traffic only. Never run on the robot DDS domain."""
 import uuid
+import os
 import time
 import rclpy
 from rclpy.node import Node
@@ -12,28 +13,32 @@ from .ros_util import spin
 
 class Sender(Node):
     def __init__(self):
+        if os.environ.get('ROS_DOMAIN_ID')!='187': raise RuntimeError('TEST_REQUIRES_ISOLATED_DOMAIN_187')
         super().__init__('manipulation_test_sender')
         self.declare_parameter('approach_first',False); self.declare_parameter('approach_outcome','SUCCESS')
         self.declare_parameter('base_stopped',True); self.declare_parameter('scenario','normal')
-        self.task=uuid.uuid4().hex; self.lock=''; self.pending=[]; self.result=None; self.started=False
+        self.task=uuid.uuid4().hex; self.lock=''; self.lease_task=''; self.pending=[]; self.result=None; self.started=False
         self.target=self.create_publisher(Target,'/manipulation/target',10)
         self.approach=self.create_publisher(ApproachResult,'/manipulation/approach_result',10)
         self.lease=self.create_publisher(BaseLease,'/manipulation/base_lease',10)
         self.joint=self.create_publisher(JointState,'/joint_states',10)
         self.wrist=self.create_publisher(WristObservation,'/manipulation/wrist/result',10)
         qos=QoSProfile(depth=1,durability=DurabilityPolicy.TRANSIENT_LOCAL,reliability=ReliabilityPolicy.RELIABLE)
-        self.create_subscription(BaseLease,'/manipulation/base_lock_request',lambda m:setattr(self,'lock',m.task_id if m.locked else ''),qos)
+        self.create_subscription(BaseLease,'/manipulation/base_lock_request',self.lock_request,qos)
         self.create_subscription(ObservationRequest,'/manipulation/wrist/request',self.observe,10)
         self.client=ActionClient(self,Manipulate,'/manipulation/run')
         self.create_timer(.05,self.tick)
         self.get_logger().warning('TEST INPUTS ONLY: isolate ROS_DOMAIN_ID from real robot')
+    def lock_request(self,msg):
+        self.lock=msg.task_id if msg.locked else ''
+        self.lease_task=msg.task_id
     def stamp(self,msg): msg.header.stamp=self.get_clock().now().to_msg(); msg.header.frame_id='base_link'; return msg
     def observe(self,req):
         if self.get_parameter('scenario').value=='wrist_timeout': return
         self.pending.extend([req]*3)
     def tick(self):
-        if self.lock:
-            self.lease.publish(self.stamp(BaseLease(task_id=self.lock,locked=True,stopped=self.get_parameter('base_stopped').value)))
+        if self.lease_task and not (self.get_parameter('scenario').value=='unlock_missing' and not self.lock):
+            self.lease.publish(self.stamp(BaseLease(task_id=self.lease_task,locked=bool(self.lock),stopped=self.get_parameter('base_stopped').value)))
         self.joint.publish(self.stamp(JointState(name=[f'piper_joint{i}' for i in range(1,7)],position=[0.]*6,velocity=[0.]*6)))
         if self.pending:
             req=self.pending.pop(0)

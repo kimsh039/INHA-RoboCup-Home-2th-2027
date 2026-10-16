@@ -45,7 +45,7 @@ python SW/detection/head/scripts/live_ros_viewer.py \
   --host 0.0.0.0 --port 8787
 ```
 
-물리 센서 실행기의 보정 토픽을 쓰려면 `--topic /head/calibrated/color/image_raw`로 바꾼다. 우분투 자체 브라우저는 **http://127.0.0.1:8787/**, 같은 LAN의 다른 PC는 **http://192.168.50.70:8787/**에서 화면을 확인한다. 로봇 IP가 바뀌면 주소를 바꾼다. 터미널에 매초 Camera FPS / Detection FPS / detect ms / callback-to-preview ms가 출력된다. 종료는 실행 터미널에서 Ctrl+C다. 이 화면 실행기는 `/cmd_vel`을 발행하지 않는다.
+물리 센서 실행기의 보정 토픽을 쓰려면 `--topic /head/camera/color/image_raw`로 바꾼다. 우분투 자체 브라우저는 **http://127.0.0.1:8787/**, 같은 LAN의 다른 PC는 **http://192.168.50.70:8787/**에서 화면을 확인한다. 로봇 IP가 바뀌면 주소를 바꾼다. 터미널에 매초 Camera FPS / Detection FPS / detect ms / callback-to-preview ms가 출력된다. 종료는 실행 터미널에서 Ctrl+C다. 이 화면 실행기는 `/cmd_vel`을 발행하지 않는다.
 
 ## 3. 관제센터 / ROS 추적 노드
 

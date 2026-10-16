@@ -85,7 +85,7 @@ def make_server(preview, host, port):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--model', type=Path, default=current_model_path(Path(__file__).resolve().parents[1]))
-    parser.add_argument('--topic', default='/head/calibrated/color/image_raw')
+    parser.add_argument('--topic', default='/head/camera/color/image_raw')
     parser.add_argument('--device', default='0')
     parser.add_argument('--imgsz', type=int, default=640)
     parser.add_argument('--conf', type=float, default=0.25)

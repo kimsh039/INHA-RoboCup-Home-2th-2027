@@ -33,7 +33,7 @@ class HeadInput(Node):
         # Optional measured RGB-D conversion of existing Head boxes. Not a new
         # detector; use only when the external module publishes no 3D point.
         self.mode=self.declare_parameter('point_source','fusion').value
-        self.freeze=self.declare_parameter('freeze_to_fixed_frame',False).value
+        self.freeze=self.declare_parameter('freeze_to_fixed_frame',True).value
         require(self.mode in ('fusion','aligned_depth'),'POINT_SOURCE')
         self.depths=OrderedDict(); self.infos=OrderedDict()
         if self.freeze or self.mode=='aligned_depth':
@@ -47,14 +47,14 @@ class HeadInput(Node):
         output_topic = self.declare_parameter('output_topic', '/manipulation/target').value
         self.pub = self.create_publisher(Target, output_topic, QoSProfile(depth=6,
             durability=DurabilityPolicy.TRANSIENT_LOCAL, reliability=ReliabilityPolicy.RELIABLE))
-        self.create_subscription(HeadTarget, head_topic, lambda m: self.receive('head', m), 20)
+        self.create_subscription(HeadTarget, head_topic, lambda m: self.receive('head', m), 6)
         if self.mode=='fusion':
-            self.create_subscription(PointStamped, point_topic, lambda m: self.receive('point', m), 20)
+            self.create_subscription(PointStamped, point_topic, lambda m: self.receive('point', m), 6)
 
     def depth_input(self,kind,msg):
         cache=self.depths if kind=='depth' else self.infos
         key=capture_key(msg.header); cache[key]=msg
-        if len(cache)>64: cache.popitem(last=False)
+        if len(cache)>6: cache.popitem(last=False)
         if key in self.heads: self.make_depth_point(key)
 
     def make_depth_point(self,key):
@@ -92,7 +92,7 @@ class HeadInput(Node):
         key = capture_key(msg.header)
         cache = self.heads if kind == 'head' else self.points
         cache[key] = msg
-        if len(cache) > 64:
+        if len(cache) > 6:
             cache.popitem(last=False)
         if kind=='head' and self.mode=='aligned_depth':
             self.make_depth_point(key)

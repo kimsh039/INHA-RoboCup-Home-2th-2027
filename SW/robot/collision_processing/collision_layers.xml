@@ -1,0 +1,12 @@
+<library path="collision_scene_layer">
+  <class name="robocup_collision_processing::SceneLayer"
+         type="robocup_collision_processing::SceneLayer"
+         base_class_type="nav2_costmap_2d::Layer">
+    <description>Replace Nav2's MID-360 occupancy with the 3D guard's current scene.</description>
+  </class>
+  <class name="robocup_collision_processing::RouteAvoidanceLayer"
+         type="robocup_collision_processing::RouteAvoidanceLayer"
+         base_class_type="nav2_costmap_2d::Layer">
+    <description>Temporarily exclude failed entrances from global route planning.</description>
+  </class>
+</library>

@@ -83,3 +83,40 @@ def banana_point_axis(depth, mask, info, cfg, error_floor, R_base_camera, settin
     require(rule['radius_m'] is not None and extent<=rule['radius_m'],'BANANA_COLLISION_RADIUS_TOO_SMALL')
     yaw=float(np.arctan2(axis[1],axis[0]))
     return p,std,yaw,{'body_pixel':[u,v],'pca_ratio':ratio,'extent_m':extent}
+
+
+def mask_scene(depth,mask,info,R,translation,surface,rule,cfg):
+    """Bounded measured occupancy around the target, excluding its dilated silhouette.
+
+    Optical depth -> capture-time gravity transform. No fabricated obstacle-free scene.
+    Unknown/occluded space is not certified free by this observed-surface representation.
+    """
+    require(mask.shape==depth.shape,'SCENE_DEPTH_GRID')
+    stride=int(cfg.get('scene_depth_stride_px',6)); voxel=float(cfg.get('scene_voxel_m',.02))
+    require(2<=stride<=16 and .005<=voxel<=.04,'SCENE_SAMPLING_CONFIG')
+    h,w=depth.shape; yy,xx=np.mgrid[0:h:stride,0:w:stride]
+    zz=depth[yy,xx]; good=np.isfinite(zz)&(zz>=cfg['camera_min_depth_m'])&(zz<=cfg['depth_max_m'])
+    xx,yy,zz=xx[good],yy[good],zz[good]
+    require(len(zz)>=cfg['depth_min_pixels'],'SCENE_DEPTH_MISSING')
+    K=np.asarray(info.k,float).reshape(3,3)
+    rays=cv2.undistortPoints(np.c_[xx,yy].astype(float).reshape(-1,1,2),K,np.asarray(info.d,float) if len(info.d) else None).reshape(-1,2)
+    points=(np.c_[rays,np.ones(len(rays))]*zz[:,None])@np.asarray(R).T+translation
+    selected=mask[yy,xx]!=0
+    target_points=points[selected]
+    require(len(target_points)>=3,'TARGET_EXTENT_UNOBSERVED')
+    # Entire silhouette, including a cup handle, must fit configured collision extent.
+    radial=np.linalg.norm(target_points[:,:2]-np.asarray(surface)[:2],axis=1)
+    require(float(np.max(radial))<=rule['radius_m']+cfg.get('mask_extent_tolerance_m',.008),'MASK_EXCEEDS_COLLISION_EXTENT')
+    dilated=cv2.dilate((mask!=0).astype(np.uint8),np.ones((5,5),np.uint8))
+    outside=dilated[yy,xx]==0
+    floor=cfg['table_z_m']+cfg.get('scene_table_margin_m',.008)
+    occupied=points[outside & (points[:,2]>floor)]
+    # Restrict measured boxes to manipulation support area + a configurable margin.
+    if cfg.get('table_polygon_xy') is not None:
+        polygon=np.asarray(cfg['table_polygon_xy']); lo=polygon.min(axis=0)-.15; hi=polygon.max(axis=0)+.15
+    else:
+        x0,x1,y0,y1=cfg['table_bounds_xy']; lo=np.array([x0,y0])-.15; hi=np.array([x1,y1])+.15
+    occupied=occupied[np.all((occupied[:,:2]>=lo)&(occupied[:,:2]<=hi),axis=1)]
+    cells=np.unique(np.floor(occupied/voxel).astype(int),axis=0)
+    require(len(cells)<=cfg.get('scene_max_voxels',600),'SCENE_OCCUPANCY_LIMIT')
+    return [dict(id='wrist_obstacle_'+str(i),center=((cell+.5)*voxel).tolist(),size=[voxel]*3) for i,cell in enumerate(cells)]

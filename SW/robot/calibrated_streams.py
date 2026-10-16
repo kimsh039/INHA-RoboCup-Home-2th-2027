@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Publish G2 distance-scaled scans and RGB images paired with measured CameraInfo."""
+"""Publish G2 distance-scaled scans and measured CameraInfo without RGB relay."""
 import copy
 import json
 from pathlib import Path
@@ -10,7 +10,7 @@ import numpy as np
 import rclpy
 from rclpy.node import Node
 from rclpy.qos import qos_profile_sensor_data, QoSProfile, ReliabilityPolicy
-from sensor_msgs.msg import CameraInfo, Image, LaserScan
+from sensor_msgs.msg import CameraInfo, LaserScan
 from std_msgs.msg import String
 import yaml
 
@@ -62,12 +62,10 @@ class Streams(Node):
             info.r = list(map(float, d['rectification_matrix']['data']))
             info.p = list(map(float, d['projection_matrix']['data']))
             self.camera_info[role] = info
-            self.camera_publishers[role] = (
-                self.create_publisher(Image, f'/{role}/calibrated/color/image_raw', qos_profile_sensor_data),
-                self.create_publisher(CameraInfo, f'/{role}/calibrated/color/camera_info', qos_profile_sensor_data),
-            )
-            self.create_subscription(Image, driver + '/color/image_raw',
-                                     lambda msg, role=role: self.image(role, msg), qos_profile_sensor_data)
+            self.camera_publishers[role] = self.create_publisher(
+                CameraInfo, f'/{role}/calibrated/color/camera_info', qos_profile_sensor_data)
+            self.create_subscription(CameraInfo, driver + '/color/camera_info',
+                                     lambda msg, role=role: self.info(role, msg), qos_profile_sensor_data)
         self.get_logger().info(f'G2 /scan_raw -> /scan: range scale {self.scale}, {len(self.mask_sectors)} self-occlusion '
                                f'sectors and URDF body/rack interior masked; measured Head/Wrist RGB CameraInfo enabled')
 
@@ -82,16 +80,17 @@ class Streams(Node):
             self.scan_stats = dict(ready=False, reason=str(exc))
             self.get_logger().error('G2 self-filter rejected scan: '+str(exc), throttle_duration_sec=2.)
 
-    def image(self, role, msg):
+    def info(self, role, msg):
         source = self.camera_info[role]
         if (msg.width, msg.height) != (source.width, source.height):
             self.get_logger().error(f'{role}: calibration requires {source.width}x{source.height}; received {msg.width}x{msg.height}', throttle_duration_sec=10.)
             return
+        if msg.binning_x > 1 or msg.binning_y > 1 or msg.roi.do_rectify or msg.roi.x_offset or msg.roi.y_offset:
+            self.get_logger().error(f'{role}: cropped/binned calibration unsupported', throttle_duration_sec=10.)
+            return
         info = copy.copy(source)
         info.header = msg.header
-        image_pub, info_pub = self.camera_publishers[role]
-        image_pub.publish(msg)
-        info_pub.publish(info)
+        self.camera_publishers[role].publish(info)
 
 
 def main():

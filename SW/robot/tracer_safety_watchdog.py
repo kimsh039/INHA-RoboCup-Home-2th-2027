@@ -31,6 +31,10 @@ class SafetyWatchdog(Node):
         self.clock = Clock(clock_type=ClockType.STEADY_TIME)
         self.create_timer(0.025, self.forward, clock=self.clock)
         self.create_timer(0.2, self.status, clock=self.clock)
+        from manipulation_base_lock import BaseLockAdapter
+        self.manipulation_lock = BaseLockAdapter(self)
+        from dock_motion_gate import DockMotionGate
+        self.dock_gate = DockMotionGate(self)
 
     def receive(self, msg):
         stamp = msg.header.stamp.sec*1_000_000_000+msg.header.stamp.nanosec
@@ -53,7 +57,10 @@ class SafetyWatchdog(Node):
                 -0.05 <= (self.get_clock().now().nanoseconds-self.stamp)/1e9 <= self.timeout)
 
     def forward(self):
-        self.pub.publish(self.velocity if self.fresh() else Twist())
+        command = self.velocity if (self.fresh() and not self.manipulation_lock.task
+            and self.dock_gate.allows(self.velocity, self.stamp)) else Twist()
+        self.pub.publish(command)
+        self.manipulation_lock.tick(abs(command.linear.x) <= 1e-6 and abs(command.angular.z) <= 1e-6)
 
     def status(self):
         try:
@@ -65,6 +72,7 @@ class SafetyWatchdog(Node):
             self.owner_valid = False
         self.status_pub.publish(String(data=json.dumps(dict(ready=self.fresh(),
                                     reason='live' if self.fresh() else 'missing_fresh_approval'))))
+        self.dock_gate.publish()
 
 
 def main():

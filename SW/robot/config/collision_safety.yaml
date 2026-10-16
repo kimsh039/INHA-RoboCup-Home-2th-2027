@@ -6,10 +6,14 @@
     odom_frame: odom
     odom_topic: /odom_ekf
     joint_topic: /robot/joint_states
-    clearance: 0.10
-    uncertainty_margin: 0.05
+    # Physical URDF geometry only: no clearance, uncertainty or voxel inflation.
+    body_only: true
+    clearance: 0.0
+    uncertainty_margin: 0.0
     floor_z: -0.1425
-    floor_band: 0.02
+    # Flat indoor floor: exclude the observed 3-4 cm floor-return errors.
+    # Furniture legs remain obstacles where they extend above this band.
+    floor_band: 0.05
     floor_fit_radius: 3.0
     floor_fit_interval: 0.25
     floor_model_timeout: 2.0
@@ -29,6 +33,10 @@
     rack_self_padding: 0.03
     # 3D Euclidean radius about the MID-360 measurement frame, before deskew.
     min_sensor_range: 0.15
+    # Mixed returns from beams grazing the arm: drop points on such rays up to
+    # this far beyond the arm box inflated by the radius.
+    arm_shadow_radius: 0.03
+    arm_shadow_depth: 0.6
     # Remove only single returns with no other return within 5 cm in 3D.
     # The query point is not counted. Zero neighbors disables this filter.
     outlier_radius: 0.05
@@ -49,15 +57,15 @@
     odom_timeout: 0.20
     joint_timeout: 0.50
     require_arm_feedback: true
-    arm_motion_limit: 0.08
-    arm_settle_sec: 0.50
+    arm_motion_limit: 0.5
+    arm_settle_sec: 0.4
     minimum_raw_points: 100
     # All ROS commands (Nav2, behavior recovery, teleop) pass through this gate.
     command_topic: /cmd_vel
     approved_topic: /collision/cmd_vel_approved
     protected_topic: /tracer/cmd_vel_safe
     status_topic: /collision/status
-    command_timeout: 0.25
+    command_timeout: 0.5
     approval_timeout: 0.15
     control_frequency: 20.0
     reaction_time: 0.30

@@ -1,5 +1,6 @@
 """Contract-only mock: no driver publishers, SDK calls or motion execution."""
 import time
+import os
 import numpy as np
 import rclpy
 from rclpy.action import GoalResponse
@@ -27,7 +28,11 @@ class MockMotion:
 
 class MockCoordinator(Coordinator):
     def __init__(self):
+        require(os.environ.get('ROS_DOMAIN_ID')=='187','MOCK_REQUIRES_ISOLATED_DOMAIN_187')
         super().__init__(); require(self.c.get('fixture_only') is True,'MOCK_REQUIRES_TEST_FIXTURE')
+        self.c['coarse_fixed_frame']='base_link'
+        self.c['scene_frame']='base_link'; self.scene_source=dict(self.c)
+        self.c['class_execution']={name:{'ready':True} for name in self.c['classes']}
         self.motion=MockMotion(); self.declare_parameter('fail_stage',''); self.declare_parameter('right_blocked',False)
         self.motion.right_blocked=self.get_parameter('right_blocked').value
         self.get_logger().warning('MOCK: all motion results are synthetic; no hardware commands')
@@ -53,6 +58,15 @@ class MockCoordinator(Coordinator):
     def stop(self): return True
     def perform(self,stage,seq):
         require(stage!=self.get_parameter('fail_stage').value,'MOCK_STAGE_FAILURE:'+stage)
+        if stage=='COMPUTE_GRASP':
+            from .core import rule_for, support
+            self.rule=rule_for(self.c,self.target.class_id)
+            require(support(self.center,self.rule['radius_m'],self.c),'GRASP_OUTSIDE_SUPPORT')
+            return  # Synthetic contract test has no real RGB-D scene.
+        if stage=='MOVE_TO_OBSERVATION':
+            from sensor_msgs.msg import CameraInfo
+            self.camera_info=CameraInfo(width=640,height=480,k=[600.,0.,320.,0.,600.,240.,0.,0.,1.])
+            self.camera_info.header.stamp=self.get_clock().now().to_msg()
         super().perform(stage,seq)
 
 def main():

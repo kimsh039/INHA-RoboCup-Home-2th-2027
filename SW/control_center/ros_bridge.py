@@ -11,9 +11,9 @@ import struct
 import threading
 import time
 
-from server import State, load_config, make_server, png_gray
+from server import State, finite_json, load_config, make_server, png_gray
 from sensor_manager import SensorManager, SENSORS
-from can_monitor import CanMonitor, OdometryMonitor
+from can_monitor import CanMonitor, OdometryInputs
 
 TYPES = {
     'map': ['nav_msgs/msg/OccupancyGrid'],
@@ -52,11 +52,11 @@ def run(args):
         from rclpy.qos import QoSProfile, ReliabilityPolicy, DurabilityPolicy
         from rclpy.time import Time
         from rosidl_runtime_py.utilities import get_message
+        from rclpy.serialization import deserialize_message
         from tf2_ros import Buffer, TransformListener
         from nav_msgs.msg import Odometry
         from sensor_msgs.msg import Imu
         from std_msgs.msg import String
-        from rclpy.action import ActionClient
     except ImportError as exc:
         raise SystemExit(f'ROS 의존성 없음: {exc}\nsource /opt/ros/humble/setup.bash 후 /usr/bin/python3로 실행하세요.\n'
                          '영상 변환에는 ros-humble-cv-bridge와 python3-opencv가 필요합니다.')
@@ -67,10 +67,6 @@ def run(args):
         raise SystemExit('--with-robot은 실물 센서 실행입니다. 시뮬레이션은 --observe --sim-time으로 실행하세요.')
     if use_sim_time:
         os.environ['ROBOCUP_USE_SIM_TIME'] = 'true'
-    try:
-        from nav2_msgs.action import NavigateToPose
-    except ImportError:
-        NavigateToPose = None
     state = State('live', config)
     rclpy.init(args=['--ros-args', '-p', 'use_sim_time:=' + str(use_sim_time).lower()])
 
@@ -90,43 +86,26 @@ def run(args):
             self.fixed = config.get('fixed_frame', 'map')
             self.base = config.get('base_frame', 'base_link')
             self.last_cpu = None
-            self.odom_monitor = OdometryMonitor(state)
-            odom_qos = QoSProfile(depth=20, reliability=ReliabilityPolicy.BEST_EFFORT,
-                                 durability=DurabilityPolicy.VOLATILE)
-            self.odom_subscriptions = []
-            for key, topic in [('wheel', '/odom'), ('fused', '/odom_ekf')]:
-                subscription = self.create_subscription(
-                    Odometry, topic,
-                    lambda msg, key=key: self.odom_monitor.receive(
-                        key, msg, self.get_clock().now().nanoseconds / 1e9),
-                    odom_qos)
-                self.odom_subscriptions.append(subscription)
-            for key, topic, message_type in [('imu', '/imu/base', Imu),
-                                               ('wheel_fallback', '/odom/rotation_fallback', Odometry)]:
-                subscription = self.create_subscription(
-                    message_type, topic,
-                    lambda msg, key=key: self.odom_monitor.receive_rotation(
-                        key, msg, self.get_clock().now().nanoseconds / 1e9), odom_qos)
-                self.odom_subscriptions.append(subscription)
-            self.create_timer(1.0, self.odometry_health)
+            self.odom_inputs = OdometryInputs(state, use_sim_time)
             self.create_timer(2.0, self.discover)
             self.create_timer(0.2, self.update_pose)
             self.create_timer(3.0, self.health)
             state.log('ROS 수신 모드 · ROS_DOMAIN_ID=' + os.environ.get('ROS_DOMAIN_ID', '0'))
             self.create_timer(1.0, lambda: state.sensor_manager.refresh() if state.sensor_manager else None)
             state.log('카메라·LiDAR 드라이버는 센서 제어 버튼에서 실행/중지합니다.')
-            self.nav_requests = deque(maxlen=8)
-            self.nav_goal = None
-            self.nav_status = dict(state='idle', message='목표 없음', goal=None)
-            self.nav_client = ActionClient(self, NavigateToPose, '/navigate_to_pose') if NavigateToPose else None
             self.create_subscription(String, '/localization/status', self.localization_status,
                                      QoSProfile(depth=1, reliability=ReliabilityPolicy.RELIABLE,
                                                 durability=DurabilityPolicy.TRANSIENT_LOCAL))
             self.create_subscription(String, '/collision/status', self.collision_status, 10)
             self.create_subscription(String, '/collision/actuator_status', self.collision_actuator_status, 10)
             self.create_subscription(String, '/piper/feedback_status', self.piper_feedback_status, 10)
-            state.navigation_request = self.nav_requests.append  # deque.append is thread-safe
-            self.create_timer(0.1, self.navigation)
+            from control_process import ControllerProcess
+            self.control = ControllerProcess(state, config, use_sim_time)
+            self.create_timer(.1, self.control.dispatch_services)
+            from manipulation_control import ManipulationControl
+            self.manipulation = ManipulationControl(self, state)
+            from task_control import TaskControl
+            self.task_control = TaskControl(self, state, self.manipulation)
             self.discover()
 
         def discover(self):
@@ -138,7 +117,8 @@ def run(args):
                 else:
                     self.overrides.pop(key, None)
                 if key in self.bound:
-                    self.destroy_subscription(self.bound.pop(key)[3])
+                    owner = self.odom_inputs.node if key == 'odom' else self
+                    owner.destroy_subscription(self.bound.pop(key)[3])
                 self.last_processed.pop(key, None)
                 self.cloud_history.frames.pop(key, None)
                 state.clear(key)
@@ -181,11 +161,16 @@ def run(args):
                     state.clear(key)
                 try:
                     message_type = get_message(typ)
-                    qos = QoSProfile(depth=20 if key == 'rosout' else 1,
+                    qos = QoSProfile(depth=100 if key == 'odom' else 20 if key == 'rosout' else 1,
                                      reliability=ReliabilityPolicy.BEST_EFFORT,
                                      durability=DurabilityPolicy.TRANSIENT_LOCAL if transient else DurabilityPolicy.VOLATILE)
-                    subscription = self.create_subscription(message_type, topic,
-                                                            lambda msg, key=key: self.receive(key, msg), qos)
+                    # Cameras publish ~1 MB frames at 20-30 Hz but the web shows a few per
+                    # second. Deserializing every frame starved odometry/TF on this executor.
+                    heavy = key in ('cloud', 'object_cloud', 'joints') or key.endswith('_image') or key.endswith('_debug')
+                    callback = ((lambda data, key=key, kind=message_type: self.receive_serialized(key, data, kind))
+                                if heavy else (lambda msg, key=key: self.receive(key, msg)))
+                    owner = self.odom_inputs.node if key == 'odom' else self
+                    subscription = owner.create_subscription(message_type, topic, callback, qos, raw=heavy)
                     self.bound[key] = signature + (subscription,)
                     state.log(f'{key} ← {topic}')
                 except Exception as exc:
@@ -288,87 +273,6 @@ def run(args):
                 state.put('collision_actuator', dict(ready=False, reason='invalid_status'))
                 state.error('collision_actuator', '차체 보호 출력 상태 형식 오류')
 
-        def navigation(self):
-            while self.nav_requests:
-                request = self.nav_requests.popleft()
-                try:
-                    if request['action'] == 'goal':
-                        self.send_goal(request)
-                    elif request['action'] == 'cancel':
-                        self.cancel_goal()
-                except Exception as exc:
-                    self.nav_update(state='error', message=str(exc)[:300])
-            state.put('navigation', dict(self.nav_status, available=bool(
-                self.nav_client and self.nav_client.server_is_ready())))
-
-        def nav_update(self, **values):
-            self.nav_status.update(values)
-            if values.get('state') in ('succeeded', 'aborted', 'canceled', 'rejected', 'error'):
-                state.log('Nav2 · ' + self.nav_status.get('message', ''), 'info' if values['state'] == 'succeeded' else 'warn', 'navigation')
-
-        def pose_msg(self, request, message_type):
-            message = message_type()
-            message.header.frame_id = self.fixed
-            message.header.stamp = self.get_clock().now().to_msg()
-            target = message.pose.pose if hasattr(message.pose, 'pose') else message.pose
-            target.position.x, target.position.y = float(request['x']), float(request['y'])
-            target.orientation.z, target.orientation.w = math.sin(request['yaw'] / 2), math.cos(request['yaw'] / 2)
-            return message
-
-        def send_goal(self, request):
-            if state.sensor_manager:
-                state.sensor_manager.require_collision_ready()
-            if not self.nav_client:
-                raise RuntimeError('nav2_msgs가 없습니다. Nav2를 설치하세요.')
-            if not self.nav_client.server_is_ready():
-                raise RuntimeError('Nav2 /navigate_to_pose 서버 대기 중입니다.')
-            goal = NavigateToPose.Goal()
-            goal.pose = self.pose_msg(request, type(goal.pose))
-            target = dict(x=request['x'], y=request['y'], yaw=request['yaw'], frame=self.fixed)
-            self.nav_update(state='sending', message='목표 전송 중', goal=target, distance=None, eta=None,
-                            recoveries=0, started=time.time())
-            state.log(f'Nav2 목표 전송 · {self.fixed} ({target["x"]:.2f}, {target["y"]:.2f}) '
-                      f'{math.degrees(target["yaw"]):.0f}°', source='navigation')
-            future = self.nav_client.send_goal_async(goal, feedback_callback=lambda f, t=target: self.nav_feedback(f, t))
-            future.add_done_callback(lambda f, t=target: self.nav_accepted(f, t))
-
-        def nav_accepted(self, future, target):
-            handle = future.result()
-            if self.nav_status.get('goal') is not target:
-                if handle.accepted:
-                    handle.cancel_goal_async()  # superseded while it was being sent
-                return
-            if not handle.accepted:
-                self.nav_update(state='rejected', message='Nav2가 목표를 거부했습니다.')
-                return
-            self.nav_goal = handle
-            self.nav_update(state='active', message='이동 중')
-            handle.get_result_async().add_done_callback(lambda f, h=handle: self.nav_result(f, h))
-
-        def nav_feedback(self, message, target):
-            if self.nav_status.get('goal') is not target:
-                return
-            feedback = message.feedback
-            self.nav_status.update(distance=float(feedback.distance_remaining),
-                                   eta=feedback.estimated_time_remaining.sec + feedback.estimated_time_remaining.nanosec * 1e-9,
-                                   recoveries=int(feedback.number_of_recoveries))
-
-        def nav_result(self, future, handle):
-            if handle is not self.nav_goal:
-                return
-            self.nav_goal = None
-            code = future.result().status
-            names = {4: ('succeeded', '목표 도착'), 5: ('canceled', '이동 취소됨'), 6: ('aborted', '이동 실패 · 경로 또는 진행 불가')}
-            result, message = names.get(code, ('aborted', f'종료 상태 {code}'))
-            self.nav_update(state=result, message=message)
-
-        def cancel_goal(self):
-            if self.nav_goal is not None:
-                self.nav_goal.cancel_goal_async()
-                self.nav_update(state='canceling', message='취소 요청')
-            else:  # a goal still being sent is cancelled as soon as it is accepted
-                self.nav_update(state='idle', message='목표 취소', goal=None)
-
         def localization_status(self, message):
             try:
                 value = json.loads(message.data)
@@ -376,6 +280,18 @@ def run(args):
                     state.put('localization', value)
             except (ValueError, TypeError):
                 pass
+
+        def receive_serialized(self, key, data, kind):
+            limit = (config.get('image_hz', 6) if key in ('head_image', 'head_debug', 'wrist_image', 'wrist_debug')
+                     else config.get('joint_hz', 15) if key == 'joints' else config.get('cloud_hz', 5))
+            if time.monotonic() - self.last_processed.get(key, 0) < 1 / max(float(limit), 0.1):
+                return
+            try:
+                msg = deserialize_message(data, kind)
+            except Exception as exc:
+                state.error(key, f'deserialize: {exc}')
+                return
+            self.receive(key, msg)
 
         def receive(self, key, msg):
             limit = config.get('image_hz', 6) if key in ('head_image', 'head_debug', 'wrist_image', 'wrist_debug') else (
@@ -446,10 +362,12 @@ def run(args):
                         msg.width * msg.height, stable)
                     if points is None:
                         return  # accumulated cloud is rebuilt at most every cloud_accumulated_period_sec
-                    state.put(key, dict(points=points.round(3).tolist(), frame=frame,
-                                        source_frame=msg.header.frame_id,
-                                        point_size=max(1.0, min(6.0, float(config.get('cloud_point_size', 2.0)))),
-                                        **metadata), stamp, age)
+                    value = finite_json(dict(frame=frame, source_frame=msg.header.frame_id,
+                                             point_size=max(1.0, min(6.0, float(config.get('cloud_point_size', 3.0)))),
+                                             **metadata))
+                    points = points[np.isfinite(points).all(axis=1)]
+                    value['points'] = points.round(3).tolist()
+                    state.put(key, value, stamp, age, finite=True)
                 elif key == 'path':
                     rotation, offset = self.transform(msg.header.frame_id, msg.header.stamp)
                     step = max(1, len(msg.poses) // 1000)
@@ -560,21 +478,6 @@ def run(args):
                 state.channels['pose'].update(topic='TF ' + pose['frame'] + ' ← ' + self.base,
                                               type='tf2', publishers=1, qos='TF')
 
-        def odometry_health(self):
-            ros_now = self.get_clock().now().nanoseconds / 1e9
-            tf_status = dict(state='waiting', age=None, error='')
-            try:
-                transform = self.tf.lookup_transform('odom', self.base, Time())
-                stamp = stamp_seconds(transform.header.stamp)
-                age = ros_now - stamp
-                p, q = transform.transform.translation, transform.transform.rotation
-                finite = (all(math.isfinite(v) for v in (p.x, p.y, p.z, q.x, q.y, q.z, q.w)) and
-                          0.5 <= math.sqrt(q.x*q.x + q.y*q.y + q.z*q.z + q.w*q.w) <= 1.5)
-                tf_status.update(state='live' if finite and stamp > 0 and -0.5 <= age <= 3 else 'stale', age=age)
-            except Exception as exc:
-                tf_status['error'] = str(exc)[:200]
-            self.odom_monitor.publish(ros_now, tf_status)
-
         def health(self):
             health = dict(domain_id=os.environ.get('ROS_DOMAIN_ID', '0'), ros_time=self.get_clock().now().nanoseconds / 1e9,
                           sim_time=use_sim_time, cpu=None, memory_percent=None, temperature=None)
@@ -622,18 +525,30 @@ def run(args):
                     state.log(f'{key}: {exc}', 'warn', 'sensor-control')
         if args.mapping:
             try:
-                state.sensor_manager.service_request('mapping', 'start')
+                state.sensor_manager.service_request('mapping', 'start', resume_params=getattr(args, 'resume_mapping_params', None))
             except (ValueError, RuntimeError) as exc:
                 state.log(f'mapping: {exc}', 'warn', 'sensor-control')
         if args.detection:
-            state.sensor_manager.start_auxiliary('head_detection', ['bash', str(Path(__file__).resolve().parent / 'start-head-detection.sh')])
+            try:
+                state.sensor_manager.service_request('detection', 'start')
+            except (ValueError, RuntimeError) as exc:
+                state.log(f'detection: {exc}', 'warn', 'sensor-control')
         print(f'INHA_CONTROL_CENTER_READY http://{args.host}:{args.port}', flush=True)
         print('Jetson web server. Ctrl+C stops processes started by this control center.', flush=True)
+        try:
+            import bridge_profiler
+            bridge_profiler.start()
+        except Exception as exc:
+            print(f'bridge profiler unavailable: {exc}', flush=True)
         while rclpy.ok() and not state.shutdown_requested.is_set():
             rclpy.spin_once(node, timeout_sec=0.2)
     except KeyboardInterrupt:
         pass
     finally:
+        if node and hasattr(node, 'control'):
+            node.control.close()
+        if node and hasattr(node, 'odom_inputs'):
+            node.odom_inputs.close()
         state.closed.set()
         with state.condition:
             state.condition.notify_all()
@@ -659,5 +574,6 @@ if __name__ == '__main__':
     parser.add_argument('--sim-time', action='store_true')
     parser.add_argument('--with-robot', action='store_true', help='Start physical TF/odom core and four owned sensor drivers')
     parser.add_argument('--mapping', action='store_true', help='Start SLAM Toolbox on the Jetson')
+    parser.add_argument('--resume-mapping-params', help='Initial SLAM profile with a serialized map and map_start_pose; later resets use the normal profile')
     parser.add_argument('--detection', action=argparse.BooleanOptionalAction, default=True, help='Start full-frame Head TensorRT by default; --no-detection disables it')
     run(parser.parse_args())

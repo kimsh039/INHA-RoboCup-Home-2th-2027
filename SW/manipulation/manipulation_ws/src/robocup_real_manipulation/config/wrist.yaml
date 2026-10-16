@@ -7,17 +7,21 @@ camera_info_topic: /wrist/wrist/color/camera_info
 optical_frame: wrist_color_optical_frame
 sync_tolerance_s: 0.025
 # [TUNE:VISION] Relative paths are resolved against repo; no implicit downloads.
-yolo_model: SW/detection/head/models/head_yolo11n_20261013.pt
+yolo_model: SW/detection/head/models/head_yolo11n_20261013.engine
 yolo_task: detect
 device: '0'
 imgsz: 640
 nms_iou: 0.45
-# Existing generic SAM2.1 small model/config; bbox prompts come from real YOLO.
+# Generic SAM2.1 tiny already on Jetson. Automatic masks use Head-class geometric
+# association; SAM does not classify objects. sam2 selects the YOLO bbox path.
+# No custom segmentation checkpoint or implicit model download is needed.
 # The .pt checkpoint must exist on Jetson; a git pull of source is insufficient.
-mask_source: sam2
-sam_checkpoint: third_party/sam2/checkpoints/sam2.1_hiera_small.pt
-sam_config: configs/sam2.1/sam2.1_hiera_s.yaml
+mask_source: sam2_auto
+sam_checkpoint: /home/sparo/detection_data/models/sam2.1_hiera_tiny.pt
+sam_config: configs/sam2.1/sam2.1_hiera_t.yaml
 sam_min_score: 0.85
+sam_points_per_side: 8
+sam_points_per_batch: 64
 # [TUNE:QUALITY] Explicit depth systematic-error allowance; tune from measurements.
 position_error_floor_m: 0.003
 # [TUNE:BANANA_PCA] Global PCA direction; translated to a thick real body pixel.
@@ -31,3 +35,20 @@ banana:
   center_band_fraction: 0.15
   min_clearance_px: 3.0
   clearance_fraction: 0.85
+
+# Report actual complete perception latency; this is a target, not a guarantee.
+latency_budget_ms: 50.0
+
+# Fixed resource limits; one worker, no queue of inference jobs.
+max_candidates: 8
+max_frames_per_request: 12
+
+# Shape/depth hypotheses, not semantic classes. Multiple plates are rejected.
+plate:
+  min_diameter_m: 0.12
+  max_diameter_m: 0.40
+  min_height_m: 0.002
+  max_height_m: 0.04
+  plane_tolerance_m: 0.006
+  edge_margin_m: 0.015
+  min_free_radius_m: 0.025

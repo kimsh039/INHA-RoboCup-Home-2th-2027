@@ -161,6 +161,9 @@ body.v2 .camera-empty strong{font-size:13px}body.v2 .camera-empty small{font-siz
 @media(max-width:1050px){body.v2 .camera-row{height:auto}body.v2 .camera-row .camera-frame{aspect-ratio:4/3}body.v2 .map-panel{flex:none}}
 @media(max-width:700px){body.v2 .camera-row{grid-template-columns:1fr}}
 body.v2 .mode-actions button{white-space:nowrap}
+body.v2 .detection-distance{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--muted);line-height:1.5}
+body.v2 .detection-distance input{width:78px;margin-left:auto;background:#0c131b;color:var(--text);border:1px solid #344353;border-radius:5px;padding:7px 9px;font:13px var(--mono)}
+body.v2 #det-target-form{margin-top:0;padding-top:0}
 body.v2 #nav-map-select{flex:1 1 100%}
 /* v2: detections sit next to the Head camera: 검출 | Head | Wrist */
 body.v2 .camera-row{grid-template-columns:minmax(240px,300px) 1fr 1fr}
@@ -210,3 +213,25 @@ body.v2 .map-header .map-tools{display:flex;gap:6px}
 body.v2 .map-panel>.panel-footer{display:none}
 body.v2 .camera-row{height:clamp(230px,29vh,420px)}
 @media(max-width:1280px){body.v2 .map-header .layer-options{display:none}}
+
+/* Manipulation actions: long labels must fit the narrow sidebar. */
+body.v2 .mode-section[data-mode="manipulation"] .mode-actions {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 8px;
+  width: 100%;
+  min-width: 0;
+}
+body.v2 .mode-section[data-mode="manipulation"] .mode-actions button {
+  width: 100%;
+  min-width: 0;
+  min-height: 44px;
+  height: auto;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  line-height: 1.45;
+}
+
+#task-steps { padding-left: 1.4rem; color: var(--muted, #94a3b8); line-height: 1.8; }
+#task-steps .task-current { color: #b6e879; font-weight: 700; }
+.mode-tabs { overflow-x: auto; }

@@ -29,6 +29,49 @@ class PreparedBoxes:
     def __iter__(self):
         return iter(self.boxes)
 
+    def swept_contact(self, scene, previous, pose, movement, deadline):
+        def frames(p):
+            c, s = math.cos(p[2]), math.sin(p[2])
+            rotation = np.array([[c, -s, 0.], [s, c, 0.], [0., 0., 1.]])
+            return self.centers @ rotation.T+[p[0], p[1], 0.], rotation @ self.rotations
+        c0, r0 = frames(previous)
+        c1, r1 = frames(pose)
+        for start in range(0, len(self.boxes), 8):
+            if time.monotonic() > deadline:
+                raise ComputationExpired()
+            end = min(start+8, len(self.boxes))
+            matches = scene.query_ball_point(c1[start:end], self.radii[start:end]+movement,
+                                             eps=0., workers=1, return_sorted=False)
+            lengths = np.fromiter((len(ids) for ids in matches), dtype=np.intp, count=end-start)
+            if not lengths.any():
+                continue
+            indices = np.concatenate([np.asarray(ids, dtype=np.intp) for ids in matches if len(ids)])
+            owners = np.repeat(np.arange(start, end), lengths)
+            for offset in range(0, len(indices), 4096):
+                if time.monotonic() > deadline:
+                    raise ComputationExpired()
+                chosen, owner = indices[offset:offset+4096], owners[offset:offset+4096]
+                before = np.einsum('ni,nij->nj', scene.data[chosen]-c0[owner], r0[owner])
+                after = np.einsum('ni,nij->nj', scene.data[chosen]-c1[owner], r1[owner])
+                delta, half = after-before, self.half[owner]
+                parallel = np.abs(delta) < 1e-12
+                a, b = np.full_like(delta, -np.inf), np.full_like(delta, np.inf)
+                np.divide(-half-before, delta, out=a, where=~parallel)
+                np.divide(half-before, delta, out=b, where=~parallel)
+                enter = np.maximum(0., np.minimum(a, b).max(axis=1))
+                leave = np.minimum(1., np.maximum(a, b).min(axis=1))
+                hit = (enter <= leave) & ~((np.abs(before) > half) & parallel).any(axis=1)
+                faces = np.abs(before)-half
+                signed = faces.max(axis=1)
+                slopes = np.where(before == 0., np.abs(delta), np.sign(before)*delta)
+                slope = np.where(faces >= signed[:, None]-1e-12, slopes, -np.inf).max(axis=1)
+                hit &= ~((signed <= 0.) & (slope >= -1e-12))
+                if hit.any():
+                    return True
+        if time.monotonic() > deadline:
+            raise ComputationExpired()
+        return False
+
     def nearest(self, scene, pose, radius, deadline, from_pose=None, sources=None):
         c, s = math.cos(pose[2]), math.sin(pose[2])
         rotation = np.array([[c, -s, 0.], [s, c, 0.], [0., 0., 1.]])

@@ -1,0 +1,42 @@
+<!-- Reach the selected table side. Reverse only if both in-place turns fail.
+     An inferred edge still requires fresh evidence before docking. -->
+<root main_tree_to_execute="MainTree">
+  <BehaviorTree ID="MainTree">
+    <Fallback name="TableWithFinalReverseAssessment">
+    <RecoveryNode number_of_retries="6" name="TableNavigationRecovery">
+      <PipelineSequence name="NavigateToTableStage">
+      <RateController hz="2.0">
+        <RecoveryNode number_of_retries="1" name="TableStagePlan">
+          <ComputePathToPose goal="{goal}" path="{path}" planner_id="TableStage"/>
+          <ClearEntireCostmap name="ClearTableGlobal" service_name="global_costmap/clear_entirely_global_costmap"/>
+        </RecoveryNode>
+      </RateController>
+      <RecoveryNode number_of_retries="1" name="TableStageControl">
+        <FollowPath path="{path}" controller_id="GraspApproach" goal_checker_id="grasp_stage_checker"/>
+        <ClearEntireCostmap name="ClearTableLocal" service_name="local_costmap/clear_entirely_local_costmap"/>
+      </RecoveryNode>
+      </PipelineSequence>
+      <ReactiveFallback name="TableRecoveryFallback">
+        <GoalUpdated/>
+        <RoundRobin name="TableRecoveryActions">
+          <Fallback name="TableTurnBeforeReverse">
+            <Spin spin_dist="0.7854" time_allowance="6.0"/>
+            <Spin spin_dist="-0.7854" time_allowance="6.0"/>
+            <BackUp backup_dist="0.08" backup_speed="0.05" time_allowance="6.0"/>
+          </Fallback>
+          <Sequence name="ClearTableRecovery">
+            <ClearEntireCostmap name="ClearTableRecoveryLocal" service_name="local_costmap/clear_entirely_local_costmap"/>
+            <ClearEntireCostmap name="ClearTableRecoveryGlobal" service_name="global_costmap/clear_entirely_global_costmap"/>
+          </Sequence>
+          <Wait wait_duration="1.0"/>
+        </RoundRobin>
+      </ReactiveFallback>
+    </RecoveryNode>
+    <Sequence name="TableFinalReverseThenRetry">
+      <BackUp name="TableFinalReverseAssessment" backup_dist="0.08" backup_speed="0.05" time_allowance="6.0"/>
+      <ComputePathToPose goal="{goal}" path="{path}" planner_id="TableStage"/>
+      <FollowPath path="{path}" controller_id="GraspApproach" goal_checker_id="grasp_stage_checker"/>
+    </Sequence>
+    </Fallback>
+  </BehaviorTree>
+</root>

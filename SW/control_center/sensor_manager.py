@@ -10,6 +10,7 @@ import subprocess
 import sys
 import threading
 import time
+import uuid
 
 ROOT = Path(__file__).resolve().parent
 SENSORS = {
@@ -22,6 +23,8 @@ SENSORS = {
 SERVICES = {
     'mapping': ('SLAM Toolbox', '/map'),
     'navigation': ('Nav2', '/local_costmap/costmap'),
+    'detection': ('Head YOLO', '/detection/head/objects'),
+    'manipulation': ('팔·손목 실행기', '/manipulation/readiness'),
 }
 MAP_DIR = Path(os.environ.get('ROBOCUP_MAP_DIR', str(Path.home() / 'maps')))
 MAP_NAME = re.compile(r'[A-Za-z0-9_-]{1,48}')
@@ -79,6 +82,8 @@ class SensorManager:
         raise ValueError('알 수 없는 센서입니다.')
 
     def service_command(self, key, mode='mapping', map_name=''):
+        if key == 'manipulation':
+            return ['bash', str(ROOT / 'start-task-manipulation.sh')]
         if key == 'mapping':
             if mode == 'localization':
                 base = self.map_base(map_name)
@@ -92,6 +97,8 @@ class SensorManager:
             if not NAV2_SHARE.is_dir():
                 raise ValueError('Nav2가 설치되지 않았습니다. 젯슨에서 sudo apt-get install -y ros-humble-navigation2 ros-humble-nav2-bringup')
             return ['bash', str(ROOT / 'start-navigation.sh')]
+        if key == 'detection':
+            return ['bash', str(ROOT / 'start-head-detection.sh')]
         raise ValueError('알 수 없는 기능입니다.')
 
     @staticmethod
@@ -116,7 +123,7 @@ class SensorManager:
         process = self.jobs.get(key)
         return process is not None and process.poll() is None
 
-    def service_request(self, key, action, map_name=''):
+    def service_request(self, key, action, map_name='', resume_params=None):
         if key not in SERVICES or action not in ('start', 'stop', 'reset', 'localize'):
             raise ValueError('지원하는 기능과 동작을 지정하세요.')
         if action in ('reset', 'localize') and key != 'mapping':
@@ -158,10 +165,19 @@ class SensorManager:
             elif not running:
                 raise RuntimeError('관제센터가 실행한 ' + current['label'] + '만 끌 수 있습니다.')
             command = None if action == 'stop' else self.service_command(key, mode, name)
+            if resume_params is not None:
+                if key != 'mapping' or action != 'start':
+                    raise ValueError('지도 이어 읽기는 SLAM 시작에만 사용할 수 있습니다.')
+                command = ['env', 'ROBOCUP_SLAM_PARAMS='+self._path(resume_params), *command]
             current.update(state='stopping' if action == 'stop' else 'starting', error='',
                            pending=dict(mode=mode if key == 'mapping' else '', map=name if mode == 'localization' else ''))
+            if key == 'mapping' and action != 'stop':
+                current['session_id'] = uuid.uuid4().hex
             self.queue.put((key, 'stop' if action == 'stop' else 'start', command))
             self._publish()
+            if key == 'mapping' and action in ('start', 'reset') and mode == 'mapping':
+                callback = getattr(self.state, 'home_on_slam_start', None)
+                if callback: callback()
 
     def require_collision_ready(self):
         with self.state.condition:

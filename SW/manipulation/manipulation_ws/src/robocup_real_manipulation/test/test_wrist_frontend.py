@@ -7,6 +7,7 @@ import cv2
 import numpy as np
 import yaml
 from sensor_msgs.msg import Image, CameraInfo
+from cv_bridge import CvBridge
 from std_msgs.msg import Header
 from robocup_real_manipulation_msgs.msg import ObservationRequest
 from robocup_real_manipulation.wrist_frontend import WristFrontend
@@ -28,7 +29,10 @@ class WristFrontendTests(unittest.TestCase):
             mask=np.zeros((120,160),bool)
             canvas=np.zeros(mask.shape,np.uint8); cv2.circle(canvas,(x,60),12,1,-1)
             masks.append(canvas.astype(bool))
-        def box(x): return NS(cls=np.array([0]),conf=np.array([.95]),xyxy=np.array([[x-12,48,x+12,72]]))
+        def box(x):
+            value=NS(cls=np.array([0]),conf=np.array([.95]),xyxy=np.array([[x-12,48,x+12,72]]))
+            value.cpu=lambda:value
+            return value
         result=NS(names=dict(enumerate(CFG['model_names'])),boxes=[box(50),box(110)])
         queue=iter(now_sequence or [100.,100.])
         node=NS(c=copy.deepcopy(CFG),v={'optical_frame':'wrist_color_optical_frame','sync_tolerance_s':.025,
@@ -36,7 +40,8 @@ class WristFrontendTests(unittest.TestCase):
             get_clock=lambda:NS(now=lambda:NS(nanoseconds=int(next(queue)*1e9))),
             detector=NS(model=NS(predict=lambda *a,**kw:[result])),
             torch=NS(inference_mode=nullcontext),
-            bridge=NS(imgmsg_to_cv2=lambda msg,*a:np.zeros((120,160,3),np.uint8) if msg.encoding=='bgr8' else np.full((120,160),300,np.uint16)))
+            bridge=NS(cv2_to_imgmsg=CvBridge().cv2_to_imgmsg,imgmsg_to_cv2=lambda msg,*a:np.zeros((120,160,3),np.uint8) if msg.encoding=='bgr8' else np.full((120,160),300,np.uint16)))
+        node.record_profile=lambda *args:None
         node.c['camera_min_depth_m']=.1
         count=iter(masks)
         node.predictor=NS(set_image=lambda rgb:None,predict=lambda **kw:(np.array([next(count)]),np.array([.9]),None))

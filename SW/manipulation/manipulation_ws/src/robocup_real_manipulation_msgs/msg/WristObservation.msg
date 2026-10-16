@@ -23,3 +23,6 @@ sensor_msgs/CameraInfo camera_info
 # Banana long-axis yaw in gravity_frame, independently measured at header.stamp
 bool axis_valid
 float32 axis_yaw
+string purpose
+# Conservative free placement disk inside an observed plate, metres.
+float32 free_radius_m

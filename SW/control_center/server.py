@@ -16,6 +16,8 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import urlparse
 import zlib
 
+from detection_approach import target_label
+
 ROOT = Path(__file__).resolve().parent
 
 
@@ -49,6 +51,12 @@ class State:
         self.pending = {}
         self.sensor_manager = None
         self.navigation_request = None  # set by the ROS bridge; queues goal / cancel
+        self.detection_request = None
+        self.manipulation_request = None
+        self.manipulation_interlock = lambda: False
+        self.task_request = None
+        self.task_interlock = lambda: False
+        self.home_on_slam_start = None
         self.control_token = secrets.token_urlsafe(32)
         self.map_png = None
         self.clients = 0
@@ -60,9 +68,12 @@ class State:
         with self.condition:
             self.logs.append(dict(time=time.time(), level=level, source=source, message=str(message)[:800]))
 
-    def put(self, key, value, source_stamp=None, source_age=None):
+    def put(self, key, value, source_stamp=None, source_age=None, finite=False):
+        # finite=True: caller already removed NaN/inf (large point arrays); skip the recursive scan under the lock.
+        if not finite:
+            value = finite_json(value)
         with self.condition:
-            self.values[key] = finite_json(value)
+            self.values[key] = value
             self.versions[key] = self.versions.get(key, 0) + 1
             meta = self.channels.setdefault(key, dict(topic='', type='', candidates=[], publishers=0,
                                                      received=None, arrivals=deque(maxlen=40)))
@@ -130,6 +141,8 @@ def make_server(state, host='127.0.0.1', port=8765):
             self.send_header('Content-Length', str(len(body)))
             self.send_header('Cache-Control', 'no-store')
             self.send_header('X-Content-Type-Options', 'nosniff')
+            if self.close_connection:
+                self.send_header('Connection', 'close')
             if download:
                 self.send_header('Content-Disposition', f'attachment; filename="{download}"')
             self.end_headers()
@@ -137,6 +150,14 @@ def make_server(state, host='127.0.0.1', port=8765):
 
         def send_json(self, value, status=200):
             self.send(json.dumps(finite_json(value), ensure_ascii=False, allow_nan=False).encode(), status=status)
+
+        def send_error(self, code, message=None, explain=None):
+            # HTTP/parser errors on APIs must not become an HTML JSON-parse error in the UI.
+            if urlparse(getattr(self, 'path', '')).path.startswith('/api/'):
+                self.close_connection = True
+                self.send_json({'error': message or self.responses.get(code, ('HTTP error',))[0]}, code)
+            else:
+                super().send_error(code, message, explain)
 
         def do_GET(self):
             if urlparse('http://' + self.headers.get('Host', '')).hostname not in ('localhost', '127.0.0.1', '::1'):
@@ -174,8 +195,11 @@ def make_server(state, host='127.0.0.1', port=8765):
                 self.send((ROOT / 'static' / name).read_bytes(), mime)
 
         def do_POST(self):
+            # A rejected request may still have an unread body. Never parse that
+            # body as the next HTTP request on a reused connection.
+            self.close_connection = True
             path = urlparse(self.path).path
-            if path not in ('/api/select', '/api/sensors', '/api/shutdown', '/api/mapping', '/api/navigation'):
+            if path not in ('/api/select', '/api/sensors', '/api/shutdown', '/api/mapping', '/api/navigation', '/api/detection', '/api/manipulation', '/api/task'):
                 self.send_json({'error': 'Not found'}, 404)
                 return
             if state.mode != 'live':
@@ -196,6 +220,19 @@ def make_server(state, host='127.0.0.1', port=8765):
                 items = json.loads(self.rfile.read(length))
                 if not isinstance(items, dict):
                     raise ValueError('Expected a channel/topic object')
+                if state.task_interlock() and path != '/api/task':
+                    if items.get('action') == 'cancel' and path in ('/api/navigation', '/api/detection', '/api/manipulation'):
+                        state.task_request(dict(action='cancel'))
+                        self.send_json({'queued': '전체 Task 취소'}, 202)
+                        return
+                    raise RuntimeError('전체 Task 실행 중입니다. 전체 Task 취소 후 개별 제어하세요.')
+                if state.manipulation_interlock() and (
+                        path == '/api/shutdown'
+                        or path == '/api/sensors'
+                        or path == '/api/mapping'
+                        or (path == '/api/navigation' and items.get('action') != 'cancel')
+                        or (path == '/api/detection' and items.get('action') not in ('cancel',))):
+                    raise RuntimeError('매니퓰 작업/베이스 잠금 유지 중입니다. 작업 상태와 정지를 확인하세요.')
                 if path == '/api/shutdown':
                     if items != {'action': 'shutdown'}:
                         raise ValueError('action=shutdown을 지정하세요.')
@@ -208,6 +245,20 @@ def make_server(state, host='127.0.0.1', port=8765):
                 if state.shutdown_requested.is_set():
                     self.send_json({'error': '관제센터 종료 중입니다.'}, 409)
                     return
+                if path == '/api/task':
+                    if not state.task_request:
+                        raise RuntimeError('전체 Task 실행기 연결 대기')
+                    state.task_request(items)
+                    self.send_json({'queued': items}, 202)
+                    return
+                if path == '/api/manipulation':
+                    if set(items) != {'action'} or items.get('action') not in ('run', 'cancel', 'arm'):
+                        raise ValueError('action은 arm/run/cancel 중 하나입니다.')
+                    if not state.manipulation_request:
+                        raise RuntimeError('매니퓰 ROS 연결이 준비되지 않았습니다.')
+                    state.manipulation_request(dict(action=items['action']))
+                    self.send_json({'queued': items}, 202)
+                    return
                 if path == '/api/sensors':
                     if not state.sensor_manager:
                         self.send_json({'error': '센서 제어 관리자가 없습니다.'}, 409)
@@ -216,6 +267,26 @@ def make_server(state, host='127.0.0.1', port=8765):
                         raise ValueError('sensor와 action 문자열을 지정하세요.')
                     state.sensor_manager.request(items['sensor'], items['action'])
                     self.send_json({'queued': items}, 202)
+                    return
+                if path == '/api/detection':
+                    if not state.detection_request or not state.sensor_manager:
+                        raise RuntimeError('ROS 검출·접근 연결이 준비되지 않았습니다.')
+                    action = items.get('action')
+                    request = dict(action=action)
+                    if action in ('select', 'find_and_approach'):
+                        request['label'] = target_label(items.get('label'))
+                    if action in ('approach', 'find_and_approach'):
+                        if 'distance' in items:
+                            raise ValueError('접근 방식이 책상 기준으로 바뀌었습니다. 화면을 새로고침하세요.')
+                        clearance = items.get('edge_clearance', 0.)
+                        if (not isinstance(clearance, (int, float)) or isinstance(clearance, bool)
+                                or not math.isfinite(clearance) or not 0 <= clearance <= .1):
+                            raise ValueError('책상 추가 이격은 0~0.1m입니다.')
+                        request['edge_clearance'] = float(clearance)
+                    elif action not in ('start', 'stop', 'select', 'cancel', 'clear'):
+                        raise ValueError('action은 start/stop/select/find_and_approach/approach/cancel/clear 중 하나입니다.')
+                    state.detection_request(request)
+                    self.send_json({'queued': request}, 202)
                     return
                 if path in ('/api/mapping', '/api/navigation'):
                     if not state.sensor_manager:
@@ -230,6 +301,8 @@ def make_server(state, host='127.0.0.1', port=8765):
                         else:
                             raise ValueError('action은 start/stop/reset/localize/save 중 하나입니다.')
                     elif action in ('start', 'stop'):
+                        if action == 'stop' and state.navigation_request:
+                            state.navigation_request(dict(action='cancel'))
                         state.sensor_manager.service_request('navigation', action)
                     elif action in ('goal', 'cancel'):
                         if not state.navigation_request:

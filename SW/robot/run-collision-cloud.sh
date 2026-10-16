@@ -10,7 +10,7 @@ COLLISION_RUNTIME="${ROBOCUP_COLLISION_RUNTIME:-$HOME/robot_setup/collision-runt
 COLLISION_INSTALL="$COLLISION_RUNTIME/install"
 if [[ -L "$COLLISION_RUNTIME/current" ]]; then COLLISION_INSTALL="$COLLISION_RUNTIME/current"; fi
 COLLISION_BINARY="$COLLISION_INSTALL/robocup_collision_processing/lib/robocup_collision_processing/collision_cloud_node"
-if [[ ! -x "$COLLISION_BINARY" ]]; then
+if [[ ! -x "$COLLISION_BINARY" || ! -s "$COLLISION_BINARY" ]]; then
   echo "C++ 전처리 실행파일이 없습니다: bash $ROBOT_DIR/build-collision.sh" >&2
   exit 1
 fi
