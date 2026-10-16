@@ -1,7 +1,9 @@
 """Whitelisted heuristic overlay, distinct from physical calibration."""
 import copy
 from .core import require
-KEYS={'observation_camera_quaternion','observation_surface_clearance_m','observation_camera_distance_m','observation_joints',
+KEYS={'coarse_xy_error_bound_m','observation_image_margin_fraction','observation_max_distance_m',
+      'wrist_search_offsets_m','wrist_search_radius_m','grasp_min_width_m','grasp_open_margin_m',
+      'hold_min_effort','hold_width_slip_m','gripper_stall_m','observation_camera_quaternion','observation_surface_clearance_m','observation_camera_distance_m','observation_joints',
       'return_joints','topdown_quaternion','pregrasp_m','lift_m','retreat_m','place_offset_m',
       'velocity_scale','acceleration_scale','position_tolerance_m','orientation_tolerance_rad',
       'association_radius_m','association_margin_m','min_confidence','max_position_std_m','max_observation_age_s',
@@ -11,7 +13,7 @@ KEYS={'observation_camera_quaternion','observation_surface_clearance_m','observa
       'gripper_command_effort','grasp_min_effort','gripper_settle_s','driver_speed_percent',
       'max_joint_speed_rad_s','max_joint_acceleration_rad_s2','path_tolerance_rad','goal_tolerance_rad',
       'joint_stable_s','stable_speed_rad_s','support_margin_m','coarse_collision_padding_m','axis_stability_tolerance_rad'}
-CLASS_KEYS={'open_m','close_m','grip_height_m','closing_axis_yaw_offset_rad','enabled'}
+CLASS_KEYS={'yaw_sample_degrees','open_m','close_m','grip_height_m','closing_axis_yaw_offset_rad','enabled'}
 
 def overlay(config, tuning):
     require(isinstance(tuning,dict),'INVALID_TUNING_FILE'); result=copy.deepcopy(config)

@@ -220,6 +220,28 @@ def rectangle(boxes, margin=0.):
             [float(low[0]), float(low[1])], [float(low[0]), float(high[1])]]
 
 
+def convex_footprint(boxes):
+    """Smallest convex XY outline containing every physical box vertex."""
+    points = sorted(set(map(tuple, np.concatenate([b.vertices() for b in boxes])[:, :2])))
+    if len(points) < 3:
+        raise ValueError('Physical footprint requires at least three points')
+
+    def half(sequence):
+        out = []
+        for p in sequence:
+            while len(out) >= 2:
+                a, b = out[-2:]
+                cross = (b[0]-a[0])*(p[1]-a[1])-(b[1]-a[1])*(p[0]-a[0])
+                if cross > 0.:
+                    break
+                out.pop()
+            out.append(p)
+        return out
+
+    hull = half(points)[:-1]+half(reversed(points))[:-1]
+    return [[float(x), float(y)] for x, y in hull]
+
+
 def nearest(points, boxes):
     if not len(points):
         return float('inf'), None, None

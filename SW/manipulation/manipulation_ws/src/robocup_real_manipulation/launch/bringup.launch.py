@@ -3,6 +3,7 @@ import yaml
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, OpaqueFunction
 from launch.substitutions import LaunchConfiguration
+from launch.conditions import IfCondition
 from launch_ros.actions import Node
 from ament_index_python.packages import get_package_share_directory
 
@@ -35,7 +36,7 @@ def start(context):
             'moveit_simple_controller_manager':{'controller_names':['arm_controller'],'arm_controller':{'type':'FollowJointTrajectory','action_ns':'follow_joint_trajectory','default':True,'joints':cfg['joint_names']}},
             'trajectory_execution.allowed_execution_duration_scaling':3.0,'trajectory_execution.allowed_goal_duration_margin':3.0,
             'publish_robot_description':True,'publish_robot_description_semantic':True}
-    nodes += [Node(package='robot_state_publisher',executable='robot_state_publisher',parameters=[{'robot_description':urdf}]),
+    nodes += [Node(package='robot_state_publisher',executable='robot_state_publisher',parameters=[{'robot_description':urdf}],condition=IfCondition(LaunchConfiguration('start_robot_state_publisher'))),
               Node(package='moveit_ros_move_group',executable='move_group',parameters=[params],output='screen'),
               Node(package='robocup_real_manipulation',executable='piper_bridge',parameters=[{'config':config,'tuning_file':tuning,'hardware_mode':hardware}],output='screen')]
     if LaunchConfiguration('start_driver').perform(context).lower()=='true':
@@ -48,6 +49,7 @@ def generate_launch_description():
     share=get_package_share_directory('robocup_real_manipulation')
     return LaunchDescription([DeclareLaunchArgument('config',default_value=share+'/config/robot.yaml'),
         DeclareLaunchArgument('tuning_file',default_value=''),
+        DeclareLaunchArgument('start_robot_state_publisher',default_value='true'),
         DeclareLaunchArgument('hardware',default_value='false'),DeclareLaunchArgument('start_driver',default_value='false'),
         DeclareLaunchArgument('auto_start_on_approach',default_value='false'),
         DeclareLaunchArgument('repo',default_value=''),DeclareLaunchArgument('description_output',default_value='~/.ros/robocup_real_manipulation/model'),OpaqueFunction(function=start)])

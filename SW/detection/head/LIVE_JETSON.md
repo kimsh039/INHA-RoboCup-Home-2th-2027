@@ -17,7 +17,7 @@ source ~/venvs/head_detection/bin/activate
 python SW/detection/head/scripts/live_ros_viewer.py
 ```
 
-물리 센서 실행기의 `/head/calibrated/color/image_raw`가 기본 입력이다. 센서 노드와 같은 `ROS_DOMAIN_ID`를 사용한다. 보정 토픽이 없고 원본 Head 카메라가 실행 중이라면 `--topic /head/camera/color/image_raw`를 추가한다. 입력이 없으면 터미널에 waiting for camera input이 출력된다.
+물리 센서 실행기의 `/head/camera/color/image_raw`가 기본 입력이다. 센서 노드와 같은 `ROS_DOMAIN_ID`를 사용한다. 실측 내부 보정은 별도 `/head/calibrated/color/camera_info`로 발행하며 RGB는 중계하지 않는다. 입력이 없으면 터미널에 waiting for camera input이 출력된다.
 
 YOLO GPU venv와 ROS source를 함께 사용한다. checkpoint는 저장소의 `models/head_yolo11n_20261013.pt`가 기본값이며 새 6클래스 재학습 모델이다. 출력 이름은 green_apple, peach, tomato, fanta_can, cup, banana다.
 

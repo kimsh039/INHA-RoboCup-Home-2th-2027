@@ -103,6 +103,8 @@ feedback_age_s: 0.3
 feedback_topic: /joint_states_feedback
 firmware: null
 fixture_only: true
+# Legacy release-ACK cases remain exercised; terminal hold cases override this.
+base_completion_policy: release
 future_tolerance_s: 0.05
 goal_tolerance_rad: 0.015
 grasp_min_effort: 0.5

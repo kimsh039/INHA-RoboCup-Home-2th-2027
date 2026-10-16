@@ -7,7 +7,7 @@ if [[ -z "${FASTRTPS_DEFAULT_PROFILES_FILE:-}" && -z "${FASTDDS_DEFAULT_PROFILES
 fi
 COLLISION_RUNTIME="${ROBOCUP_COLLISION_RUNTIME:-$HOME/robot_setup/collision-runtime}"
 COLLISION_BINARY="$COLLISION_RUNTIME/current/robocup_collision_processing/lib/robocup_collision_processing/collision_guard_node"
-if [[ ! -x "$COLLISION_BINARY" ]]; then
+if [[ ! -x "$COLLISION_BINARY" || ! -s "$COLLISION_BINARY" ]]; then
   echo "C++ 주행 보호 실행파일이 없습니다: bash $ROBOT_DIR/build-collision.sh" >&2
   exit 1
 fi

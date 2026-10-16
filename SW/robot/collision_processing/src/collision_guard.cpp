@@ -39,6 +39,31 @@ Json rectangle(const std::vector<Box> &boxes,double padding) {
   return {{high.x()+padding,high.y()+padding},{high.x()+padding,low.y()-padding},
           {low.x()-padding,low.y()-padding},{low.x()-padding,high.y()+padding}};
 }
+Json convex_footprint(const std::vector<Box> &boxes) {
+  using XY=std::array<double,2>;
+  std::vector<XY> points;
+  for(const auto &box : boxes)for(int x : {-1,1})for(int y : {-1,1})for(int z : {-1,1}) {
+    const V3 p=box.pose*box.half.cwiseProduct(V3(x,y,z));points.push_back({p.x(),p.y()});
+  }
+  std::sort(points.begin(),points.end());
+  points.erase(std::unique(points.begin(),points.end()),points.end());
+  if(points.size()<3)throw std::runtime_error("invalid_physical_footprint");
+  auto half=[](const std::vector<XY> &sequence) {
+    std::vector<XY> out;
+    for(const auto &p : sequence) {
+      while(out.size()>=2) {
+        const auto &a=out[out.size()-2],&b=out.back();
+        if((b[0]-a[0])*(p[1]-a[1])-(b[1]-a[1])*(p[0]-a[0])>0.)break;
+        out.pop_back();
+      }
+      out.push_back(p);
+    }
+    out.pop_back();return out;
+  };
+  auto hull=half(points);std::reverse(points.begin(),points.end());
+  const auto upper=half(points);hull.insert(hull.end(),upper.begin(),upper.end());
+  Json out=Json::array();for(const auto &p : hull)out.push_back({p[0],p[1]});return out;
+}
 struct Observation {
   std::shared_ptr<const Scene> scene;
   int64_t stamp=0;uint64_t epoch=0;
@@ -65,7 +90,8 @@ class Guard : public rclcpp::Node {
     base_=text("base_frame","base_link");odom_=text("odom_frame","odom");
     approved_=text("approved_topic","/collision/cmd_vel_approved");protected_=text("protected_topic","/tracer/cmd_vel_safe");
     command_topic_=text("command_topic","/cmd_vel");
-    cfg_.clearance=real("clearance",.1);cfg_.uncertainty=real("uncertainty_margin",.05);cfg_.voxel=real("safety_voxel",.04);
+    cfg_.body_only=declare_parameter<bool>("body_only",true);
+    cfg_.clearance=real("clearance",0.);cfg_.uncertainty=real("uncertainty_margin",0.);cfg_.voxel=real("safety_voxel",.04);
     cfg_.reaction=real("reaction_time",.3);cfg_.linear_deceleration=real("linear_deceleration",.5);
     cfg_.angular_deceleration=real("angular_deceleration",1.);cfg_.step=real("prediction_step",.04);
     cfg_.minimum_scale=real("minimum_speed_scale",.1);
@@ -75,11 +101,11 @@ class Guard : public rclcpp::Node {
     max_forward_=real("max_linear_velocity",.25);max_reverse_=real("max_reverse_velocity",.15);max_angular_=real("max_angular_velocity",.6);
     costmap_resolution_=real("costmap_resolution",.05);require_arm_=declare_parameter<bool>("require_arm_feedback",true);
     max_cells_=declare_parameter<int>("maximum_cells",250000);
-    for(double value : {cfg_.clearance,cfg_.voxel,cfg_.linear_deceleration,cfg_.angular_deceleration,cfg_.step,
+    for(double value : {cfg_.voxel,cfg_.linear_deceleration,cfg_.angular_deceleration,cfg_.step,
          budget_,frequency_,cloud_timeout_,odom_timeout_,joint_timeout_,command_timeout_,arm_speed_,settle_,
          max_forward_,max_reverse_,max_angular_,costmap_resolution_})
       if(!std::isfinite(value) || value<=0.)throw std::runtime_error("invalid_collision_guard_configuration");
-    if(!std::isfinite(cfg_.uncertainty+cfg_.reaction+cfg_.minimum_scale) || cfg_.uncertainty<0 || cfg_.reaction<0 ||
+    if(!std::isfinite(cfg_.clearance+cfg_.uncertainty+cfg_.reaction+cfg_.minimum_scale) || cfg_.clearance<0 || cfg_.uncertainty<0 || cfg_.reaction<0 ||
        cfg_.minimum_scale<=0 || cfg_.minimum_scale>1 || max_cells_<=0 || approved_==protected_ ||
        approved_==command_topic_ || protected_==command_topic_)throw std::runtime_error("invalid_collision_guard_configuration");
     model_=std::make_unique<collision_model::Geometry>(text("geometry_file",""));
@@ -243,7 +269,7 @@ class Guard : public rclcpp::Node {
       const auto *p=m.data.data()+r*m.row_step+c*m.point_step;V3 point,source;
       for(size_t a=0;a<3;++a){point[a]=packed_float(p+offsets[a],swap);source[a]=packed_float(p+offsets[a+3],swap);}
       if(!point.allFinite() || !source.allFinite())throw std::runtime_error("invalid_retained_scene");
-      points.push_back(point);sources.push_back(source);
+      points.push_back(cfg_.body_only?source:point);sources.push_back(source);
       if(extra_offsets[0]) {
         const double value=packed_float(p+*extra_offsets[0],swap);
         if(!std::isfinite(value) || value<0)throw std::runtime_error("invalid_retained_scene");
@@ -368,7 +394,7 @@ class Guard : public rclcpp::Node {
     };
     if(r.current.found && input.scene.scene) {
       const auto geometry=shape(input,require_arm_);
-      result_["minimum_distance"]=std::max(0.,r.current.value-std::sqrt(3.)*cfg_.voxel/2.);
+      result_["minimum_distance"]=std::max(0.,r.current.value-(cfg_.body_only?0.:std::sqrt(3.)*cfg_.voxel/2.));
       result_["nearest_point"]=point(input.scene.scene->points[r.current.point]);
       result_["nearest_source_point"]=point(input.scene.scene->sources[r.current.point]);result_["nearest_link"]=geometry->boxes[r.current.box].name;
       result_["nearest_source_point_base"]=point(source_in_base(r.current.point));
@@ -397,7 +423,8 @@ class Guard : public rclcpp::Node {
       const auto s=snapshot();const auto geometry=shape(s,require_arm_ && s.joints.size()==model_->required.size());
       // Clearance belongs to the direction-aware prediction, not to an
       // expanded footprint that prevents departing from a rear obstacle.
-      const Json footprint=rectangle(geometry->boxes,0.);geometry_msgs::msg::Polygon polygon;
+      // Keep all physical vertices without the rectangle's empty corners.
+      const Json footprint=convex_footprint(geometry->boxes);geometry_msgs::msg::Polygon polygon;
       for(const auto &p : footprint){geometry_msgs::msg::Point32 value;value.x=p[0].get<float>();value.y=p[1].get<float>();polygon.points.push_back(value);}
       local_footprint_->publish(polygon);global_footprint_->publish(polygon);
       V3 low=V3::Constant(std::numeric_limits<double>::infinity()),high=-low;
@@ -405,8 +432,10 @@ class Guard : public rclcpp::Node {
         const V3 p=b.pose*b.half.cwiseProduct(V3(x,y,z));low=low.cwiseMin(p);high=high.cwiseMax(p);
       }
       Json out=result_;out["clearance"]=cfg_.clearance;out["uncertainty"]=cfg_.uncertainty;out["frame"]=odom_;out["base_frame"]=base_;
-      out["tracer_bounds"]={point(low),point(high)};out["body_footprint"]=rectangle(model_->tracer,0.);
-      out["clearance_footprint"]=rectangle(model_->tracer,cfg_.clearance);out["planning_footprint"]=footprint;
+      out["body_only"]=cfg_.body_only;
+      out["tracer_bounds"]={point(low),point(high)};out["body_footprint"]=convex_footprint(model_->tracer);
+      out["clearance_footprint"]=cfg_.clearance==0.?out["body_footprint"]:rectangle(model_->tracer,cfg_.clearance);
+      out["planning_footprint"]=footprint;
       out["protected_topic"]=protected_;out["scene_parse_ms"]=s.scene.parse_ms;out["scene_tree_build_ms"]=s.scene.build_ms;
       {std::lock_guard<std::mutex> lock(mutex_);out["scene_dropped_pending"]=dropped_;}
       out["cloud"]=s.latest_health.value;

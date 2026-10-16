@@ -3,6 +3,7 @@
 Never enables motors. Sends complete 7-position commands: upstream missing joints
 otherwise default to zero! A single bridge owns both arm and width actions.
 """
+from collections import deque
 import threading
 import time
 import numpy as np
@@ -17,17 +18,25 @@ from piper_msgs.msg import PiperStatusMsg
 from std_srvs.srv import Trigger
 from robocup_real_manipulation_msgs.msg import BaseLease
 from robocup_real_manipulation_msgs.action import SetWidth
-from .core import require, fresh, finite, validate, width_to_driver
+from .integration import ProcessOwner
+from .timing import Timing
+from .core import require, fresh, finite, validate, width_to_driver, grasp_contact
 from .ros_util import read_config, seconds, spin
 from .startup_bounds import feedback_in_bounds, check_trajectory_bounds
+
+from .trajectory import from_message, Spline
 
 class PiperBridge(Node):
     def __init__(self):
         super().__init__('real_piper_bridge'); self.c=validate(read_config(self),hardware=True)
+        self.owner=ProcessOwner(self.c.get('bridge_owner_path','~/.ros/robocup_real_manipulation/piper.owner'))
+        self.timing=Timing(self)
+        self.grip_command=None
         self.group=ReentrantCallbackGroup(); self.mutex=threading.RLock(); self.busy=False; self.tripped=False
         self.q=None; self.v=None; self.width=None; self.effort=None; self.joint_stamp=0.; self.grip_stamp=0.; self.lease=None
         self.status=None; self.status_received=0.; self.command_started=False
         self.last_command=None; self.active_task=None
+        self.grip_speed=None; self.trip_generation=0; self.resetting=False; self.stopping=False
         self.command_pub=self.create_publisher(JointState,self.c['command_topic'],1)
         self.state_pub=self.create_publisher(JointState,'/joint_states',10)
         self.create_subscription(JointState,self.c['feedback_topic'],self.feedback,qos_profile_sensor_data,callback_group=self.group)
@@ -39,9 +48,11 @@ class PiperBridge(Node):
         self.gripper=ActionServer(self,SetWidth,'/manipulation/set_width',self.execute_gripper,
                                  goal_callback=self.accept_width,cancel_callback=lambda _:CancelResponse.ACCEPT,callback_group=self.group)
         self.create_service(Trigger,'/manipulation/stop',self.stop_service,callback_group=self.group)
+        self.create_service(Trigger,'/manipulation/reset',self.reset_service,callback_group=self.group)
         self.create_timer(.02,self.watchdog,callback_group=self.group)
     def now(self): return self.get_clock().now().nanoseconds/1e9
     def feedback(self,msg):
+        self.timing.sample('arm_feedback',seconds(msg.header.stamp),self.now())
         try:
             require(len(msg.name)==len(msg.position) and len(set(msg.name))==len(msg.name),'INVALID_JOINT_STATE')
             raw=dict(zip(msg.name,msg.position)); q=np.array([raw[n] for n in self.c['driver_joint_names']])*self.c['joint_signs']+self.c['joint_offsets']
@@ -57,10 +68,11 @@ class PiperBridge(Node):
                 self.q=q; self.joint_stamp=stamp
                 self.publish_state(msg.header)
         except Exception as e:
-            if self.busy: self.get_logger().error('BRIDGE_TRIP_CAUSE: '+__import__('traceback').format_exc()+'\n'+''.join(__import__('traceback').format_stack(limit=4))); self.tripped=True
+            if self.busy or self.resetting: self.trip('ARM_FEEDBACK:'+str(e))
             age=self.now()-seconds(msg.header.stamp)
             self.get_logger().warning(f'Arm feedback rejected: {e}; age={age:.3f}s limit={self.c["feedback_age_s"]:.3f}s',throttle_duration_sec=5.)
     def gripper_feedback(self,msg):
+        self.timing.sample('gripper_feedback',seconds(msg.header.stamp),self.now())
         try:
             require(msg.name==['gripper'] and len(msg.position)==1 and len(msg.effort)==1,'GRIPPER_FEEDBACK')
             stamp=seconds(msg.header.stamp); fresh(stamp,self.now(),self.c['feedback_age_s'])
@@ -68,11 +80,18 @@ class PiperBridge(Node):
             with self.mutex:
                 if stamp<self.grip_stamp: return
                 if stamp==self.grip_stamp: return
-                self.width=msg.position[0]*self.c['width_scale']+self.c['width_bias_m']
+                measured=msg.position[0]*self.c['width_scale']+self.c['width_bias_m']
+                # Closed feedback has been observed at -0.2 mm. Accept up to
+                # 1 mm of lower-end measurement noise, not negative commands.
+                # Validate before updating the last accepted feedback state.
+                require(finite(measured) and -.001<=measured<=self.c['gripper_max_m']+.002,
+                        'GRIPPER_RANGE')
+                width=float(np.clip(measured,0.,self.c['gripper_max_m']))
+                self.grip_speed=(width-self.width)/(stamp-self.grip_stamp) if self.width is not None else None
+                self.width=width
                 self.effort=msg.effort[0]; self.grip_stamp=stamp
-                require(0<=self.width<=self.c['gripper_max_m']+.002,'GRIPPER_RANGE')
-        except Exception:
-            if self.busy: self.get_logger().error('BRIDGE_TRIP_CAUSE: '+__import__('traceback').format_exc()+'\n'+''.join(__import__('traceback').format_stack(limit=4))); self.tripped=True
+        except Exception as e:
+            if self.busy or self.resetting: self.trip('GRIPPER_FEEDBACK:'+str(e))
     def publish_state(self,header):
         if self.width is None or self.v is None: return
         fresh(self.grip_stamp,self.now(),self.c['feedback_age_s'])
@@ -81,20 +100,25 @@ class PiperBridge(Node):
                                velocity=self.v.tolist()+[0.,0.]))
     def arm_status(self,msg): self.status=msg; self.status_received=time.monotonic()
     def base(self,msg): self.lease=msg
-    def valid(self):
-        c=self.c; require(not self.tripped,'BRIDGE_TRIPPED')
+    def feedback_ready(self):
+        c=self.c
         fresh(self.joint_stamp,self.now(),c['feedback_age_s']); fresh(self.grip_stamp,self.now(),c['feedback_age_s'])
         require(self.q is not None and self.v is not None and self.width is not None,'FEEDBACK_NOT_READY')
         require(self.status is not None and time.monotonic()-self.status_received<c['feedback_age_s'] and self.status.err_code==0,'PIPER_STATUS_STALE_OR_FAULT')
         for i in range(1,7):
             require(not getattr(self.status,f'joint_{i}_angle_limit') and not getattr(self.status,f'communication_status_joint_{i}'),'PIPER_JOINT_FAULT')
+    def valid(self):
+        require(not self.tripped,'BRIDGE_TRIPPED')
+        self.feedback_ready(); c=self.c
         lease=self.lease
         require(lease and lease.task_id and lease.locked and lease.stopped and (self.active_task is None or lease.task_id==self.active_task),'BASE_INTERLOCK')
         fresh(seconds(lease.header.stamp),self.now(),c['base_age_s'])
+        require(self.count_publishers(c['command_topic'])==1,'MULTIPLE_ARM_COMMAND_OWNERS')
+        require(self.count_publishers('/joint_states')==1,'MULTIPLE_ARM_STATE_OWNERS')
     def reserve(self):
         with self.mutex:
             try:
-                self.valid(); require(not self.busy,'DRIVER_BUSY'); self.busy=True; self.active_task=self.lease.task_id; return True
+                self.valid(); require(not self.busy and not self.resetting and not self.stopping,'DRIVER_BUSY'); self.busy=True; self.active_task=self.lease.task_id; return True
             except Exception as e: self.get_logger().warning(str(e)); return False
     def accept_arm(self,goal):
         try:
@@ -110,6 +134,9 @@ class PiperBridge(Node):
             return GoalResponse.ACCEPT if self.reserve() else GoalResponse.REJECT
         except Exception as e: self.get_logger().warning(str(e)); return GoalResponse.REJECT
     def publish(self,q,width,hold=False):
+        with self.mutex:
+            self.publish_locked(q,width,hold)
+    def publish_locked(self,q,width,hold=False):
         if not hold: self.valid()
         else:
             fresh(self.joint_stamp,self.now(),self.c['feedback_age_s']); fresh(self.grip_stamp,self.now(),self.c['feedback_age_s'])
@@ -121,30 +148,75 @@ class PiperBridge(Node):
         msg.effort=[0.]*6+[self.c['gripper_command_effort']]
         self.command_pub.publish(msg); self.last_command=np.array(q); self.command_started=True
     def hold(self):
-        with self.mutex: self.publish(self.q.copy(),self.width,hold=True)
+        with self.mutex: self.publish(self.q.copy(),self.grip_command if self.grip_command is not None else self.width,hold=True)
     def stopped(self):
         return self.v is not None and max(abs(self.v))<self.c['stable_speed_rad_s']
-    def confirm_stop(self):
-        self.get_logger().error('BRIDGE_TRIP_CAUSE: '+__import__('traceback').format_exc()+'\n'+''.join(__import__('traceback').format_stack(limit=4))); self.tripped=True
+    def trip(self, reason):
+        with self.mutex:
+            self.trip_generation+=1
+            if not self.tripped: self.get_logger().error('BRIDGE_TRIP: '+reason)
+            self.tripped=True
+    def confirm_stop(self, latch=True):
+        with self.mutex:
+            if self.stopping: return False
+            self.stopping=True
+            if latch or self.busy or self.resetting: self.trip('STOP_REQUESTED')
+        confirmed=False
         try:
             self.hold(); deadline=time.monotonic()+self.c['stop_timeout_s']; since=None
             while time.monotonic()<deadline:
                 fresh(self.joint_stamp,self.now(),self.c['feedback_age_s'])
-                if self.stopped():
+                fresh(self.grip_stamp,self.now(),self.c['feedback_age_s'])
+                if self.stopped() and self.grip_speed is not None and abs(self.grip_speed)<=self.c.get('gripper_stable_speed_m_s',.002):
                     if since is None: since=time.monotonic()
-                    if time.monotonic()-since>=self.c['joint_stable_s']: return True
+                    if time.monotonic()-since>=self.c['joint_stable_s']:
+                        confirmed=True; return True
                 else: since=None
                 time.sleep(.01)
         except Exception: pass
+        finally:
+            with self.mutex:
+                if not confirmed: self.trip('STOP_UNCONFIRMED')
+                self.stopping=False
         return False
     def stop_service(self,request,response):
-        response.success=self.confirm_stop(); response.message='HOLD_CONFIRMED' if response.success else 'STOP_UNCONFIRMED_PHYSICAL_ESTOP_REQUIRED'
+        response.success=self.confirm_stop(latch=False); response.message='HOLD_CONFIRMED' if response.success else 'STOP_UNCONFIRMED_PHYSICAL_ESTOP_REQUIRED'
         return response
+    def reset_service(self,request,response):
+        """Clear a fault only after fresh, fault-free stationary feedback settles.
+
+        Reset never commands or enables motors. The next action still requires
+        its own current base lease; recovery is possible between tasks as well.
+        """
+        reserved=False
+        try:
+            with self.mutex:
+                require(not self.busy and not self.resetting and not self.stopping,'DRIVER_BUSY')
+                self.resetting=True; reserved=True; generation=self.trip_generation
+            deadline=time.monotonic()+self.c['stop_timeout_s']; since=None
+            while time.monotonic()<deadline:
+                with self.mutex:
+                    require(not self.busy and self.trip_generation==generation,'RESET_INTERRUPTED')
+                    self.feedback_ready()
+                    stationary=self.stopped() and self.grip_speed is not None and abs(self.grip_speed)<=self.c.get('gripper_stable_speed_m_s',.002)
+                    if stationary:
+                        if since is None: since=time.monotonic()
+                        if time.monotonic()-since>=self.c['joint_stable_s']:
+                            self.tripped=False; response.success=True; response.message='BRIDGE_RESET'; return response
+                    else: since=None
+                time.sleep(.01)
+            raise RuntimeError('RESET_NOT_STATIONARY')
+        except Exception as e:
+            response.success=False; response.message=str(e)
+            return response
+        finally:
+            if reserved:
+                with self.mutex: self.resetting=False
     def watchdog(self):
         if not self.busy: return
         try: self.valid()
-        except Exception:
-            self.get_logger().error('BRIDGE_TRIP_CAUSE: '+__import__('traceback').format_exc()+'\n'+''.join(__import__('traceback').format_stack(limit=4))); self.tripped=True
+        except Exception as e:
+            self.trip(str(e))
             try: self.hold()
             except Exception: pass
     def guard(self,handle,deadline):
@@ -152,17 +224,21 @@ class PiperBridge(Node):
     def execute_arm(self,handle):
         result=FollowJointTrajectory.Result(); deadline=time.monotonic()+self.c['stage_timeout_s']
         try:
-            times,points=trajectory_points(handle.request.trajectory,self.c,self.q)
-            q0=self.q.copy(); start=time.monotonic(); width=self.width
+            spline=from_message(handle.request.trajectory,self.c,self.q)
+            times,points=spline.times,spline.points
+            start=time.monotonic(); next_tick=start; width=self.grip_command if self.grip_command is not None else self.width
             while True:
                 self.guard(handle,deadline); elapsed=time.monotonic()-start
-                q=interpolate(times,points,q0,elapsed)
+                q=spline.evaluate(elapsed)
                 require(max(abs(self.q-q))<=self.c['path_tolerance_rad'],'PATH_TOLERANCE')
                 self.publish(q,width)
                 fb=FollowJointTrajectory.Feedback(); fb.joint_names=self.c['joint_names']; fb.header.stamp=self.get_clock().now().to_msg()
                 fb.actual.positions=self.q.tolist(); fb.desired.positions=q.tolist(); fb.error.positions=(q-self.q).tolist(); handle.publish_feedback(fb)
                 if elapsed>=times[-1]: break
-                time.sleep(.02)
+                next_tick+=.01
+                now=time.monotonic()
+                if next_tick<now: next_tick=now
+                time.sleep(max(0.,next_tick-now))
             since=None
             while True:
                 self.guard(handle,deadline)
@@ -182,18 +258,32 @@ class PiperBridge(Node):
     def execute_gripper(self,handle):
         result=SetWidth.Result(); deadline=time.monotonic()+handle.request.timeout_s
         try:
-            q=self.q.copy(); width=handle.request.width_m; since=None; samples=[]
+            q=self.q.copy(); width=handle.request.width_m; initial_width=self.width
+            closing=width<initial_width-self.c['gripper_tolerance_m']
+            since=None; samples=[]; sample_stamp=self.grip_stamp; settled_kind=None
+            self.grip_command=width
             while True:
                 self.guard(handle,deadline); self.publish(q,width)
                 require(max(abs(self.q-q))<=self.c['goal_tolerance_rad'],'ARM_MOVED_DURING_GRIPPER')
                 handle.publish_feedback(SetWidth.Feedback(measured_width_m=float(self.width)))
-                if abs(self.width-width)<=self.c['gripper_tolerance_m']:
-                    if since is None: since=time.monotonic(); samples=[]
-                    samples.append(self.effort)
-                    if time.monotonic()-since>=self.c['gripper_settle_s']: break
-                else: since=None
+                # Count acquisition samples, not repeats of one feedback value.
+                with self.mutex:
+                    stamp, measured, effort, speed=self.grip_stamp,self.width,self.effort,self.grip_speed
+                if stamp>sample_stamp:
+                    sample_stamp=stamp
+                    at_position=abs(measured-width)<=self.c['gripper_tolerance_m']
+                    contact=closing and grasp_contact(measured,effort,width,initial_width,self.c)
+                    stationary=speed is not None and abs(speed)<=self.c.get('gripper_stable_speed_m_s',.002)
+                    kind='contact' if contact else 'position' if at_position else None
+                    if stationary and kind is not None:
+                        if since is None or settled_kind!=kind:
+                            since=stamp; samples=[]; settled_kind=kind
+                        samples.append(effort)
+                        if stamp-since>=self.c['gripper_settle_s'] and len(samples)>=3: break
+                    else: since=None; samples=[]; settled_kind=None
                 time.sleep(.02)
-            result.success=True; result.measured_width_m=float(self.width); result.effort=float(min(samples)); handle.succeed()
+            result.success=True; result.reason='CONTACT_GRASP' if settled_kind=='contact' else 'WIDTH_REACHED'
+            result.measured_width_m=float(measured); result.effort=float(min(samples)); handle.succeed()
         except Exception as e:
             confirmed=self.confirm_stop(); result.reason=str(e)+('' if confirmed else ':STOP_UNCONFIRMED')
             if handle.is_cancel_requested: handle.canceled()
@@ -202,30 +292,16 @@ class PiperBridge(Node):
         return result
 
 def trajectory_points(traj,cfg,current):
-    require(current is not None,'JOINTS_NOT_READY')
-    require(list(traj.joint_names)==cfg['joint_names'] and len(traj.points)>0,'TRAJECTORY_NAMES')
-    require(seconds(traj.header.stamp)==0,'SCHEDULED_TRAJECTORY_UNSUPPORTED')
-    times=np.array([seconds(p.time_from_start) for p in traj.points]); points=np.array([p.positions for p in traj.points])
-    require(points.shape==(len(times),6) and finite(points) and finite(times),'TRAJECTORY_SHAPE')
-    require(times[0]>=0 and np.all(np.diff(times)>0) and times[-1]<cfg['stage_timeout_s']-cfg['joint_stable_s'],'TRAJECTORY_TIMES')
-    check_trajectory_bounds(points,np.array(current),cfg)
-    previous=np.array(current); last=0.
-    for t,q in zip(times,points):
-        dt=t-last; delta=abs(q-previous)
-        if dt==0: require(max(delta)<=cfg['goal_tolerance_rad'],'TRAJECTORY_START')
-        else:
-            require(np.all(1.5*delta/dt<=cfg['max_joint_speed_rad_s']),'TRAJECTORY_SPEED')
-            require(np.all(6*delta/dt**2<=cfg['max_joint_acceleration_rad_s2']),'TRAJECTORY_ACCELERATION')
-        previous=q; last=t
-    return times,points
+    spline=from_message(traj,cfg,current)
+    return spline.times,spline.points
+
 
 def interpolate(times,points,current,t):
-    previous=np.array(current); last=0.
-    for end,q in zip(times,points):
-        if t<=end and end>last:
-            u=np.clip((t-last)/(end-last),0,1); return previous+(q-previous)*(3*u*u-2*u*u*u)
-        previous=q; last=end
-    return points[-1]
+    # Compatibility for offline callers; execute_arm builds its spline once.
+    if times[0]>0:
+        times=np.r_[0.,times]; points=np.vstack([current,points])
+    return Spline(times,points).evaluate(t)
+
 
 def main():
     rclpy.init(); spin(PiperBridge())

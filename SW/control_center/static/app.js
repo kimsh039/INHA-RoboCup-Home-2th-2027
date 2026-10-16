@@ -89,7 +89,7 @@ function render() {
   text('detection-value', detections && fresh('detections') ? (detections.valid ? detections.objects.length : 0) : '—');
   text('detection-foot', detections ? `${detections.state} · ${fresh('detections') ? detections.valid ? '유효 관측' : '유효 목표 없음' : '수신 지연'}` : '검출 토픽 수신 대기');
   updateCamera('head'); updateCamera('wrist');
-  renderDetections(); renderSensors(); renderSensorControls(); renderCanOdometry(); renderServices(); renderLogs();
+  renderDetections(); renderSensors(); renderSensorControls(); renderCanOdometry(); renderServices(); renderManipulation(); renderLogs();
   text('session-time', 'SESSION ' + elapsed(data.uptime));
   $('save-map-button').disabled = !map;
   if (view.follow && p && fresh('pose') && p.frame === currentFrame() && view.kind === '2d') { view.x = p.x; view.y = p.y; }
@@ -130,7 +130,7 @@ function renderCanOdometry() {
     const good = odomFresh && o?.state === 'live';
     const labels = { waiting: '입력 대기', invalid: '좌표계 / 수치 오류', stale: '수신 / timestamp 지연' };
     row(title, good ? `${fmt(o.hz)} Hz · ${fmt(o.linear, 2)} m/s` : !odomFresh ? '상태 수신 대기 / 지연' : labels[o?.state] || '입력 대기',
-      `${topic} · yaw ${fmt(o?.yaw * 180 / Math.PI)}° · 회전 ${fmt(o?.angular, 3)} rad/s · 지연 ${fmt(o?.source_age)}s`, good);
+      `${topic} · 원본 ${fmt(o?.source_hz)}Hz / 수신 ${fmt(o?.receive_hz ?? o?.hz)}Hz · 최대 원본 간격 ${fmt(o?.source_gap_max_ms)}ms · yaw ${fmt(o?.yaw * 180 / Math.PI)}° · 회전 ${fmt(o?.angular, 3)} rad/s · 지연 ${fmt(o?.source_age)}s`, good);
   }
   const rotation = odometry?.rotation, gyro = rotation?.imu;
   const gyroGood = odomFresh && gyro?.state === 'live';
@@ -357,9 +357,9 @@ function drawMap() {
   if (p?.frame === frame && safety && fresh('collision_safety')) {
     const c = Math.cos(p.yaw), s = Math.sin(p.yaw);
     const polygon = points => points?.map(([x, y]) => [p.x+c*x-s*y, p.y+s*x+c*y]);
-    const outline = polygon(safety.body_footprint), clearance = polygon(safety.clearance_footprint);
+    const outline = polygon((pts => pts?.map(([x, y]) => [x - Math.sign(x)*Math.min(.10, Math.abs(x)), y - Math.sign(y)*Math.min(.10, Math.abs(y))]))(safety.body_footprint)), clearance = polygon(safety.clearance_footprint);
     if (outline?.length) worldLine([...outline, outline[0]], '#b8ed7a', 1.5);
-    if (clearance?.length) worldLine([...clearance, clearance[0]], safety.state === 'blocked' ? '#ff8c73' : '#e5bb71', 1.5, true);
+    if (clearance?.length && safety.clearance > 0) worldLine([...clearance, clearance[0]], safety.state === 'blocked' ? '#ff8c73' : '#e5bb71', 1.5, true);
     const marker = collisionMarker(frame);
     if (marker) {
       const [x, y] = world(marker.point);
@@ -376,6 +376,24 @@ function drawMap() {
     ctx.beginPath(); ctx.moveTo(size * .7, 0); ctx.lineTo(-size * .55, -size * .45); ctx.lineTo(-size * .25, 0); ctx.lineTo(-size * .55, size * .45); ctx.closePath(); ctx.fill(); ctx.stroke(); ctx.restore();
   }
   const goal = data.values.navigation?.goal;
+  const graspPlan = data.values.detection_control?.plan;
+  if (fresh('detection_control') && graspPlan?.frame === frame) {
+    const corners = graspPlan.table_corners_map;
+    if (corners?.length) worldLine([...corners, corners[0]], '#62d9ce88', 1.5);
+    if (graspPlan.dock_map) drawArrow(graspPlan.dock_map, graspPlan.dock_map[2], '#62d9ce', graspPlan.boundary_verified ? '파지 위치' : '파지 후보 · 경계 관측 대기');
+  }
+  const objectTarget = data.values.detection_control?.target;
+  if (fresh('detection_control') && objectTarget?.frame === frame && Array.isArray(objectTarget.point_map)) {
+    ctx.fillStyle = objectTarget.visible ? '#62d9ce88' : '#e5bb7188';
+    for (const point of objectTarget.lidar_points_map || []) {
+      const [x, y] = world(point); ctx.fillRect(x-1.5, y-1.5, 3, 3);
+    }
+    const [x, y] = world(objectTarget.point_map);
+    ctx.strokeStyle = objectTarget.visible ? '#62d9ce' : '#e5bb71'; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.arc(x, y, 7, 0, Math.PI*2); ctx.stroke();
+    ctx.fillStyle = ctx.strokeStyle; ctx.font = '12px sans-serif';
+    ctx.fillText(`${objectTarget.label} · ${objectTarget.visible ? 'YOLO + LiDAR' : '저장 LiDAR'}`, x+11, y-11);
+  }
   if (goal?.frame === frame) drawArrow([goal.x, goal.y], goal.yaw, ['active', 'sending', 'canceling'].includes(data.values.navigation.state) ? '#c18bdf' : '#c18bdf77', '목표');
   if (pick.start) {
     const [dx, dy] = [pick.end[0] - pick.start[0], pick.end[1] - pick.start[1]];
@@ -433,11 +451,11 @@ function drawCloud() {
     for (const point of cloud.points) {
       const p = project(point); if (!p || p[0] < 0 || p[0] > view.width || p[1] < 0 || p[1] > view.height) continue;
       ctx.fillStyle = `hsl(${190 - Math.max(0, Math.min(1, (point[2] - view.center[2] + 1) / 3)) * 95},65%,66%)`;
-      const size = cloud.point_size || 2; ctx.fillRect(p[0] - size / 2, p[1] - size / 2, size, size);
+      const size = cloud.point_size || 3; ctx.fillRect(p[0] - size / 2, p[1] - size / 2, size, size);
     }
     ctx.globalAlpha = 1;
   }
-  const robot = data.values.pose, body = data.values.collision_safety?.body_footprint;
+  const robot = data.values.pose, body = (pts => pts?.map(([x, y]) => [x - Math.sign(x)*Math.min(.10, Math.abs(x)), y - Math.sign(y)*Math.min(.10, Math.abs(y))]))(data.values.collision_safety?.body_footprint);  // 표시용 몸체 각 변 10 cm 안쪽 (Nav2 와 같게)
   const collision = collisionMarker(cloud?.frame);
   if (collision) {
     const tip = project(collision.point);
@@ -625,7 +643,7 @@ new ResizeObserver(() => { const r = $('map-stage').getBoundingClientRect(); vie
 setInterval(() => { text('clock', new Date().toLocaleTimeString('ko-KR', { hour12: false, timeZone: 'Asia/Seoul' })); if (data.received && performance.now() - data.received > 2500) { data.connected = false; render(); } }, 1000);
 
 // ---- Modes (관측 / SLAM / NAV) ----
-const modes = { observe: 1, slam: 1, nav: 1 };
+const modes = { observe: 1, slam: 1, nav: 1, detection: 1, manipulation: 1 };
 let mode = 'observe';
 function setMode(next) {
   mode = modes[next] ? next : 'observe';
@@ -699,6 +717,70 @@ $('nav-localize').onclick = () => localize($('nav-map-select').value);
 $('nav-start').onclick = () => serviceAction('/api/navigation', { action: 'start' }, 'Nav2 시작을 요청했습니다. 준비까지 10~20초 걸립니다.', 'navigation');
 $('nav-stop').onclick = () => serviceAction('/api/navigation', { action: 'stop' }, 'Nav2 중지를 요청했습니다.', 'navigation');
 $('nav-cancel').onclick = () => serviceAction('/api/navigation', { action: 'cancel' }, '이동 취소를 요청했습니다.', 'cancel');
+$('det-start').onclick = () => serviceAction('/api/detection', { action: 'start' }, 'YOLO 검출 시작을 요청했습니다.', 'detection');
+$('det-stop').onclick = () => serviceAction('/api/detection', { action: 'stop' }, '검출·접근 중지를 요청했습니다.', 'detection');
+$('det-target-form').onsubmit = event => {
+  event.preventDefault();
+  moveToNamedObject();
+};
+$('det-clear').onclick = () => serviceAction('/api/detection', { action: 'clear' }, '저장된 물체 좌표를 지웁니다.', 'detection');
+$('det-nav-start').onclick = () => serviceAction('/api/navigation', { action: 'start' }, 'Nav2 시작을 요청했습니다.', 'navigation');
+function moveToNamedObject() {
+  const label = $('det-target-name').value.trim() || data.values.detection_control?.label || '';
+  if (!label) { toast('찾을 물체 이름을 입력하세요.'); return; }
+  const edge_clearance = Number($('det-distance').value);
+  if (!Number.isFinite(edge_clearance) || edge_clearance < 0 || edge_clearance > .1) { toast('책상 추가 이격은 0~0.1m입니다.'); return; }
+  serviceAction('/api/detection', { action: 'find_and_approach', label, edge_clearance }, 'YOLO 물체 방향으로 접근합니다. LiDAR 좌표는 이동 중 확보합니다.', 'detection');
+}
+$('det-approach').onclick = moveToNamedObject;
+$('det-cancel').onclick = () => serviceAction('/api/detection', { action: 'cancel' }, '물체 접근 취소를 요청했습니다.', 'detection');
+
+function renderDetectionControl() {
+  const alive = data.mode === 'live' && data.connected && performance.now()-data.received < 2500;
+  const sc = data.values.service_control || {}, service = sc.detection, control = data.values.detection_control;
+  const connected = alive && fresh('detection_control');
+  const running = Boolean(service?.managed || service?.state === 'external');
+  const active = Boolean(control?.active), target = control?.target, visual = control?.visual_target;
+  const busy = !connected || servicePending.has('detection') || service?.busy;
+  const safetyReady = Boolean(alive && data.meta.collision_safety?.age <= .8 && data.meta.collision_actuator?.age <= .8
+    && data.values.collision_safety?.ready && data.values.collision_actuator?.ready);
+  const nav = sc.navigation, navRunning = Boolean(nav?.managed || nav?.state === 'external');
+  const slamRunning = Boolean(sc.mapping?.managed || sc.mapping?.state === 'external');
+  const navBusy = ['sending', 'active', 'canceling'].includes(data.values.navigation?.state) || Boolean(data.values.navigation?.front_retreat?.active);
+  const phases = { idle: '대상 입력 대기', searching: '관측 대기', confirming: '위치 확인 중', ready: '접근 준비',
+    waiting_target: 'YOLO 물체 대기 · 발견 시 접근', visual_waiting: 'YOLO 접근 입력 대기',
+    visual_aligning: 'YOLO 물체 방향 정렬', visual_approaching: 'YOLO 영상으로 접근 중',
+    visual_handoff: 'LiDAR 좌표 저장·근접 접근 전환', waiting_nav: 'Nav2 연결 중', navigating_target: '3D 물체 좌표로 이동 중',
+    target_settling: '3D 좌표 접근 전환', point_handoff: 'Nav2 정지·LiDAR 근접 접근 전환', point_aligning: '3D 물체 방향 정렬', point_approaching: '3D 물체로 계속 접근', at_target: '3D 목표 앞 도착',
+    planning: '책상 파지 위치 계획', planning_table: '도달 가능한 책상 면 계획', rerouting_table: '책상 우회 경로 전환',
+    front_retreat: '전방 장애물 · 짧은 후진 우선', rerouting_obstacle: '후진 효과 없음 · 다른 경로 선택', checking_reverse: '실패 전 후진 가능 여부 확인', final_reverse: '최종 후진 판단·재접근',
+    navigating: 'Nav2 책상 접근 면으로 이동', docking_handoff: '2D 주행 종료·3D 도킹 전환', observing_table: '우회한 면의 가장자리 확인', settling: '정지·전환 중',
+    recovering: '회전 우선 · 필요 시 후진', realigning: '회전 공간 확보 후 선정렬', aligning: '물체 방향 정렬', approaching: '책상 최대 접근 중', final_align: '최종 방향·정지 확인', succeeded: '파지 위치·방향 도착', canceled: '접근 취소', error: '접근 중지' };
+  badge('det-pill', !connected ? '대기' : active ? 'APPROACH' : running ? 'YOLO' : 'OFF', active || running ? 'live' : 'waiting');
+  text('det-state', !alive ? '연결 대기' : service?.state === 'starting' ? 'YOLO 시작 중…' : service?.state === 'stopping' ? 'YOLO 중지 중…' : running ? 'YOLO 검출 중' : service?.state === 'error' ? 'YOLO 실행 오류' : '검출 중지됨');
+  text('det-hint', service?.error || (running ? `Head RGB · YOLO ${fmt(data.values.detections?.detection_fps)} FPS · MID-360 위치 연결` : 'Head 카메라와 MID-360 센서를 켠 뒤 검출을 시작하세요.'));
+  $('det-start').disabled = busy || running;
+  $('det-stop').disabled = busy || !service?.managed;
+  $('det-select').disabled = busy || active || navBusy;
+  $('det-target-name').disabled = !connected || active;
+  if (!$('det-target-name').value && control?.label && document.activeElement !== $('det-target-name')) $('det-target-name').value = control.label;
+  text('det-target-state', !connected ? '대상 연결 대기' : `${control?.label || '대상 미선택'} · ${target ? target.visible ? 'YOLO + LiDAR 관측 중' : '저장 LiDAR 좌표 사용' : visual ? 'YOLO 영상으로 접근 · LiDAR 좌표 수집 중' : phases[control?.phase] || '위치 관측 대기'}${!active && ['idle', 'searching', 'confirming', 'ready'].includes(control?.phase) ? ' · 이동 시작 대기' : ''}`);
+  const inputs = control?.inputs;
+  text('det-inputs', inputs ? `${active ? '이동 요청됨' : '관측 상태'} · YOLO ${fmt(inputs.yolo_source_age, 2)}초 전 · LiDAR ${fmt(inputs.cloud_source_age, 2)}초 전 · ${inputs.obstacle_frames}개 점군${control?.position_note ? ' · ' + control.position_note : ''}${inputs.input_error ? ' · 입력 오류: ' + inputs.input_error : ''}` : '3D 위치 입력 대기');
+  const base = target?.point_base, map = target?.point_map;
+  text('det-position', map ? `${target.frame} (${map.map(v => fmt(v, 2)).join(', ')}) m` : target ? `odom (${target.point_odom.map(v => fmt(v, 2)).join(', ')}) m · map TF 대기` : visual ? `YOLO 방향 ${fmt(visual.bearing*180/Math.PI, 1)}° · 영상 접근 중 LiDAR 좌표 수집` : 'YOLO 발견 시 먼저 접근하고, 이동 중 물체의 LiDAR 좌표를 저장합니다.');
+  text('det-source', target ? `Head YOLO로 선택 · MID-360 ${target.lidar_count}점 좌표 · ${target.table ? '책상 형상 확인됨' : '책상 형상 별도 관측'}${base ? ` · ${base[0] >= 0 ? '앞' : '뒤'} ${fmt(Math.abs(base[0]), 2)}m / ${base[1] >= 0 ? '왼쪽' : '오른쪽'} ${fmt(Math.abs(base[1]), 2)}m` : ''}` : '');
+  text('det-capture', target ? `${new Date(target.capture_stamp*1000).toLocaleTimeString('ko-KR', {hour12: false})} 촬영 · ${fmt(target.capture_age, 1)}초 전 · LiDAR ${new Date(target.lidar_stamp*1000).toLocaleTimeString('ko-KR', {hour12: false})} 측정${target.range != null ? ' · 수평 거리 ' + fmt(target.range, 2) + 'm' : ''}` : '');
+  $('det-clear').disabled = busy || active || !target;
+  $('det-distance').disabled = !connected || active;
+  text('det-approach-state', !connected ? '접근 연결 대기' : phases[control?.phase] || '접근 대기');
+  text('det-approach-hint', (control?.message || '물체 이름을 적용하고 물체로 이동을 누르세요. 3D 관측부터 이동을 연결합니다.')+(control?.table_gap != null ? ` · 책상 높이 간격 ${fmt(Math.max(0, control.table_gap)*100, 1)}cm / 완료 상한 ${fmt(control.table_gap_limit*100, 1)}cm${control.grasp_distance_satisfied ? ' · 거리 충족' : ' · 더 접근 필요'}` : '')+(control?.reverse_assessment ? ' · '+control.reverse_assessment.reason : ''));
+  $('det-nav-start').disabled = !connected || navRunning || nav?.busy || servicePending.has('navigation') || !(sc.mapping?.managed || sc.mapping?.state === 'external');
+  $('det-nav-start').classList.toggle('hidden', navRunning);
+  $('det-approach').disabled = busy || active || navBusy;
+  $('det-cancel').disabled = !alive || !active;
+  text('det-motion-hint', !safetyReady ? '현재 3D 충돌 보호 입력 대기 · 이동 요청은 예약할 수 있습니다.' : control?.plan ? `책상 ${control.plan.side+1}번 면 · ${control.plan.boundary_verified ? '실제 가장자리 확인됨' : '우회 후 가장자리 확인 필요'} · 추가 이격 ${fmt(control.edge_clearance*100, 1)}cm · 물체 거리 ${fmt(control.distance, 2)}m${control.plan.position_error != null ? ' · 위치 오차 ' + fmt(control.plan.position_error*100, 1) + 'cm' : ''}${base ? ' · 물체 방향 오차 ' + fmt(Math.atan2(base[1], base[0])*180/Math.PI, 1) + '°' : ''}${control.surface_note ? ' · ' + control.surface_note : ''}` : active && !target ? 'YOLO 영상 방향으로 최대 0.04m/s 접근 · 이동 중 LiDAR 좌표 확보' : active ? `저장한 3D 목표로 접근 중${target?.range != null ? ' · 현재 물체 거리 ' + fmt(target.range, 2) + 'm' : ''}${control?.surface_note ? ' · ' + control.surface_note : ''}` : 'YOLO 발견 시 먼저 접근합니다. LiDAR 좌표 확보 후 저장 좌표로 근접 접근하며, 책상 우회에는 Nav2를 사용합니다.');
+}
 
 function renderServices() {
   const alive = data.mode === 'live' && data.connected && performance.now() - data.received < 2500;
@@ -777,7 +859,7 @@ function renderServices() {
   };
   text('collision-state', !safetyFresh ? '보호 상태 수신 대기 / 지연' : !actuator?.ready ? '차체 출력 정지' : safetyLabels[safety?.state] || '보호 입력 대기');
   const clearanceCm = Number.isFinite(safety?.minimum_distance) ? safety.minimum_distance*100 : NaN;
-  text('collision-distance', `로봇 외곽 거리 ${fmt(clearanceCm, 1)} cm · 기준 ${fmt((safety?.clearance ?? .1)*100, 0)} cm`);
+  text('collision-distance', `로봇 외곽 거리 ${fmt(clearanceCm, 1)} cm · ${safety?.body_only ? '몸체 형상만 적용 · 추가 여유 0cm' : '기준 ' + fmt((safety?.clearance ?? 0)*100, 0) + ' cm'}`);
   const pointKind = Array.isArray(safety?.blocking_source_point_base) ? 'blocking' : 'nearest';
   const sensed = safety?.[pointKind + '_source_point_base'];
   const sensedHeight = safety?.[pointKind + '_height_above_floor'];
@@ -800,12 +882,54 @@ function renderServices() {
   $('nav-stop').disabled = navBusy || !nav?.managed;
   const goalLabels = { idle: '목표 없음', sending: '목표 전송 중', active: '이동 중', canceling: '취소 중', succeeded: '도착', aborted: '실패', canceled: '취소됨', rejected: '거부됨', error: '오류' };
   text('goal-state', goal ? (goalLabels[goal.state] || goal.state) + (goal.goal ? ` · (${fmt(goal.goal.x, 2)}, ${fmt(goal.goal.y, 2)})` : '') : '목표 없음');
-  text('goal-hint', goal?.state === 'active' ? `남은 거리 ${fmt(goal.distance, 2)} m · 예상 ${fmt(goal.eta, 0)} s · 복구 ${goal.recoveries ?? 0}회` : goal && goal.state !== 'idle' ? goal.message : '');
-  $('nav-goal').disabled = !alive || !navRunning || !ready || !safetyReady;
-  $('nav-cancel').disabled = !alive || !goal || !['active', 'sending', 'canceling'].includes(goal.state);
+  text('goal-hint', goal?.state === 'active' ? `남은 거리 ${fmt(goal.distance, 2)} m · 예상 ${fmt(goal.eta, 0)} s · 복구 ${goal.recoveries ?? 0}회${goal.reverse_assessment ? ' · '+goal.reverse_assessment.reason : ''}` : goal && goal.state !== 'idle' ? goal.message : '');
+  if (goal?.detection_active) {
+    const stages = { waiting_target: 'YOLO 3D 관측 후 이동', waiting_nav: 'Nav2 연결', navigating_target: '표시된 3D 물체로 이동',
+      target_settling: '3D 목표 접근 전환', point_aligning: '물체 방향 정렬', point_approaching: '3D 물체로 접근',
+      planning: '파지 위치 계획', planning_table: '책상 접근 면 계획', rerouting_table: '책상 우회로 전환',
+      front_retreat: '전방 장애물 · 짧은 후진 우선', rerouting_obstacle: '후진 효과 없음 · 다른 경로 선택', checking_reverse: '실패 전 후진 가능 여부 확인', final_reverse: '최종 후진 판단·재접근',
+      navigating: 'Nav2 책상 접근 면으로 이동', docking_handoff: '2D 주행 종료·3D 도킹 전환', observing_table: '우회한 면의 가장자리 확인',
+      recovering: '회전 우선 · 필요 시 후진', realigning: '공간 확보 후 물체 방향 선정렬', settling: '정지·제어 전환', aligning: '물체 방향 정렬', approaching: '책상 최대 접근', final_align: '최종 방향·정지 확인' };
+    text('goal-state', 'Detection · '+(stages[goal.detection_phase] || '물체 접근'));
+    text('goal-hint', (data.values.detection_control?.message || '')+(['navigating', 'navigating_target'].includes(goal.detection_phase) ? ` · 남은 거리 ${fmt(goal.distance, 2)}m · 복구 ${goal.recoveries ?? 0}회` : '')+(data.values.detection_control?.reverse_assessment ? ' · '+data.values.detection_control.reverse_assessment.reason : goal.reverse_assessment ? ' · '+goal.reverse_assessment.reason : ''));
+  }
+  if (goal?.front_retreat?.active && !goal?.detection_active) {
+    text('goal-state', '전방 장애물 · 짧은 후진 우선');
+    text('goal-hint', goal.front_retreat.reason);
+  }
+  $('nav-goal').disabled = !alive || !navRunning || !ready || !safetyReady || Boolean(data.values.detection_control?.active) || Boolean(goal?.front_retreat?.active);
+  $('nav-cancel').disabled = !alive || (!data.values.detection_control?.active && !goal?.front_retreat?.active && (!goal || !['active', 'sending', 'canceling'].includes(goal.state)));
   if (pick.mode === 'goal' && $('nav-goal').disabled) setPick(null);
+  renderDetectionControl();
 }
 let savedMode = 'observe';
 try { savedMode = localStorage.getItem('inha-cc-mode') || 'observe'; } catch { /* storage unavailable */ }
 setMode(savedMode);
 connect();
+
+// Same snapshot/event stream as navigation; no extra polling or inference.
+function renderManipulation() {
+  const m = data.values.manipulation || {}, status = m.status || {}, readiness = m.readiness || {};
+  const ages = m.ages || {}, blockers = m.execution?.blockers || ['ROS 상태 수신 대기'];
+  const fresh = key => Number.isFinite(ages[key]) && ages[key] <= 3;
+  const online = data.connected && m.available;
+  const prepared = online && fresh('readiness') && readiness.ready === true;
+  text('manip-pill', !online ? '미연결' : m.active ? '진행 중' : m.execution?.armed ? '인계 대기' : prepared ? '준비' : '준비 필요');
+  text('manip-state', !online ? (m.reason || '매니퓰 ROS 연결 대기') : m.active ? '매니퓰레이션 진행 중' : prepared ? '실행기 준비 완료' : '실행 조건 확인 필요');
+  text('manip-readiness', fresh('readiness') ? (readiness.errors?.join(' · ') || '실행기 준비 정상') : '실행기 상태 수신 없음 / 지연');
+  text('manip-blockers', blockers.join(' · '));
+  text('manip-stage', status.stage || '새 물체 접근 완료 대기');
+  text('manip-task', '작업 ID · '+(status.task_id || m.execution?.handoff_task || '—'));
+  text('manip-result', status.outcome ? [status.outcome, status.reason, '물체 '+(status.holding || 'UNKNOWN')].filter(Boolean).join(' · ') : '손목 재관측 → 정밀 위치·마스크 → 규칙 기반 파지 → 좌/우 배치 → 팔 복귀');
+  const p = status.precise_center;
+  text('manip-position', p?.frame && p.xyz?.every(Number.isFinite) ? p.frame+' ('+p.xyz.map(v=>v.toFixed(3)).join(', ')+') m' : '정밀 좌표 —');
+  text('manip-base', !fresh('base') ? '베이스 게이트 상태 수신 없음 / 지연' : '베이스 '+(m.base.locked ? '잠금 유지' : '잠금 해제')+' · '+(m.base.stopped ? '정지 확인' : '정지 미확인')+' · '+(m.base.reason || ''));
+  text('manip-inputs', [['adapter','디텍션 인계'],['wrist','손목'],['readiness','실행기'],['base','베이스']].map(([k,n])=>n+' '+(fresh(k)?'연결':'미수신')).join(' · '));
+  $('manip-arm').disabled = !online || (m.execution?.arm_blockers || ['대기']).length > 0 || m.execution?.armed || servicePending.has('manipulation');
+  $('manip-run').disabled = !online || blockers.length > 0 || servicePending.has('manipulation');
+  $('manip-cancel').disabled = !online || (!m.active && !m.execution?.armed) || servicePending.has('manipulation');
+}
+$('manip-run').onclick = () => serviceAction('/api/manipulation', {action:'run'}, '매니퓰 실행 요청을 보냈습니다. 접수 결과는 이벤트에서 확인하세요.', 'manipulation');
+$('manip-cancel').onclick = () => serviceAction('/api/manipulation', {action:'cancel'}, '매니퓰 작업 취소를 요청했습니다.', 'manipulation');
+
+$('manip-arm').onclick = () => serviceAction('/api/manipulation', {action:'arm'}, '새 Detection 접근 완료 후 자동 실행을 예약했습니다. 접수 결과는 이벤트에서 확인하세요.', 'manipulation');

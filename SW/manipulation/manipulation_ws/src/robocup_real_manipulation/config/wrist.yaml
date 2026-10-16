@@ -7,12 +7,13 @@ camera_info_topic: /wrist/wrist/color/camera_info
 optical_frame: wrist_color_optical_frame
 sync_tolerance_s: 0.025
 # [TUNE:VISION] Relative paths are resolved against repo; no implicit downloads.
-yolo_model: SW/detection/head/models/head_yolo11n_20261013.pt
+yolo_model: SW/detection/head/models/head_yolo11n_20261013.engine
 yolo_task: detect
 device: '0'
 imgsz: 640
 nms_iou: 0.45
-# Existing generic SAM2.1 small model/config; bbox prompts come from real YOLO.
+# Generic SAM2.1 small is intentionally retained; bbox prompts use YOLO TensorRT.
+# No custom segmentation checkpoint or implicit model download is needed.
 # The .pt checkpoint must exist on Jetson; a git pull of source is insufficient.
 mask_source: sam2
 sam_checkpoint: third_party/sam2/checkpoints/sam2.1_hiera_small.pt
@@ -31,3 +32,10 @@ banana:
   center_band_fraction: 0.15
   min_clearance_px: 3.0
   clearance_fraction: 0.85
+
+# Report actual complete perception latency; this is a target, not a guarantee.
+latency_budget_ms: 50.0
+
+# Fixed resource limits; one worker, no queue of inference jobs.
+max_candidates: 8
+max_frames_per_request: 12

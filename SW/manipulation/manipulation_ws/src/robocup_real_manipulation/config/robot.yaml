@@ -58,7 +58,11 @@ handeye_transform: {xyz: [-0.063877, 0.028728, -0.012631], quaternion_xyzw: [0.0
 # Repository STL confirms jaw-tip height on center axis = 142.5 mm.
 # This is a usable CAD tool definition; pivot refinement remains optional until error assessment.
 link6_tcp_transform: {xyz: [0.0, 0.0, 0.1425], quaternion_xyzw: [0.0, 0.0, 0.0, 1.0]}
-# Table top and support rectangle in gravity_frame. Include body/sensor meshes in URDF.
+# Dynamic table is pinned after a matching stopped approach and base lease.
+# Static mode remains available for measured fixtures; never falls back implicitly.
+table_source: dock_surface
+table_thickness_m: 0.12
+# Static support in gravity_frame. Include body/sensor meshes in URDF.
 table_z_m: null
 table_bounds_xy: null
 # Boxes {id, center: [x,y,z], size: [x,y,z]} incl surrounding objects; required even if []
@@ -133,6 +137,9 @@ gripper_tolerance_m: 0.001
 grasp_min_effort: null
 gripper_command_effort: 1.0
 gripper_settle_s: 0.4
+# Contact must follow measured closure and remain stationary over fresh samples.
+gripper_stable_speed_m_s: 0.002
+gripper_contact_min_travel_m: 0.002
 driver_speed_percent: 5
 max_joint_speed_rad_s: 0.15
 max_joint_acceleration_rad_s2: 0.3
@@ -147,11 +154,11 @@ gripper_joint_signs: [1.0, -1.0]
 classes:
   # User heights 2026-10-12; all meters. Geometry center at half height for tabletop placement.
   # [TUNE:GRASP_HEIGHT] Initial grip at body midpoint; tune against actual contact pads.
-  green_apple: {display_name: 청사과, class_id: 0, enabled: true, size_m: [0.080, 0.080], height_m: 0.068, open_m: 0.100, close_m: 0.079, center_height_m: 0.034, grip_height_m: 0.034, radius_m: 0.040}
-  peach: {display_name: 복숭아, class_id: 1, enabled: true, size_m: [0.080, 0.070], height_m: 0.068, open_m: 0.100, close_m: 0.079, center_height_m: 0.034, grip_height_m: 0.034, radius_m: 0.040}
-  tomato: {display_name: 토마토, class_id: 2, enabled: true, size_m: [0.083, 0.078], height_m: 0.068, open_m: 0.100, close_m: 0.082, center_height_m: 0.034, grip_height_m: 0.034, radius_m: 0.0415}
-  fanta_can: {display_name: 환타, class_id: 3, enabled: true, size_m: [0.0646], height_m: 0.124, open_m: 0.080, close_m: 0.064, center_height_m: 0.062, grip_height_m: 0.062, radius_m: 0.0323}
-  cup: {display_name: 컵, class_id: 4, enabled: true, size_m: [0.091], height_m: 0.078, open_m: 0.100, close_m: 0.090, center_height_m: 0.039, grip_height_m: 0.039, radius_m: 0.0455}
+  green_apple: {yaw_sample_degrees: [0, 30, 60, 90, 120, 150], display_name: 청사과, class_id: 0, enabled: true, size_m: [0.080, 0.080], height_m: 0.068, open_m: 0.100, close_m: 0.079, center_height_m: 0.034, grip_height_m: 0.034, radius_m: 0.040}
+  peach: {yaw_sample_degrees: [0, 30, 60, 90, 120, 150], display_name: 복숭아, class_id: 1, enabled: true, size_m: [0.080, 0.070], height_m: 0.068, open_m: 0.100, close_m: 0.079, center_height_m: 0.034, grip_height_m: 0.034, radius_m: 0.040}
+  tomato: {yaw_sample_degrees: [0, 30, 60, 90, 120, 150], display_name: 토마토, class_id: 2, enabled: true, size_m: [0.083, 0.078], height_m: 0.068, open_m: 0.100, close_m: 0.082, center_height_m: 0.034, grip_height_m: 0.034, radius_m: 0.0415}
+  fanta_can: {yaw_sample_degrees: [0, 30, 60, 90, 120, 150], display_name: 환타, class_id: 3, enabled: true, size_m: [0.0646], height_m: 0.124, open_m: 0.080, close_m: 0.064, center_height_m: 0.062, grip_height_m: 0.062, radius_m: 0.0323}
+  cup: {yaw_sample_degrees: [0, 30, 60, 90, 120, 150], display_name: 컵, class_id: 4, enabled: true, size_m: [0.091], height_m: 0.078, open_m: 0.100, close_m: 0.090, center_height_m: 0.039, grip_height_m: 0.039, radius_m: 0.0455}
   # [CALIB:BANANA] User length=160mm,width=30mm. ASSUMPTION: lying body height
   # equals width=30mm, center/contact=15mm; confirm the actual vertical thickness.
   # Radius=110mm is a conservative INITIAL bound about the selected BODY point;
@@ -182,3 +189,41 @@ reference_sources:
   detector_class_map: SW/detection/head/datasets/20261012/data.yaml
   detector_class_map_commit: ddae58cb002ae533989bddd3f2b8147029a5ad0f
   detector_class_map_note: Current 6-class output. Old checkpoint names are adapted in Head class_schema.py; plate excluded.
+
+# Integration scene coordinates MUST be measured in coarse_fixed_frame before motion.
+# Old stationary base_link bounds are intentionally not accepted by the coordinator.
+scene_frame: odom
+wrist_info_topic: /wrist/wrist/color/camera_info
+coarse_xy_error_bound_m: 0.08   # trial bound, not an accuracy claim
+observation_image_margin_fraction: 0.12
+observation_max_distance_m: 0.65
+wrist_search_offsets_m: [[0.0, 0.0], [0.05, 0.0], [-0.05, 0.0], [0.0, 0.05]]
+wrist_search_radius_m: 0.08
+# Magnitude is used because squeezing feedback is negative in the recorded trial.
+grasp_min_width_m: 0.01
+grasp_open_margin_m: 0.005
+hold_min_effort: 0.1      # trial from successful grip, requires configuration review
+hold_width_slip_m: 0.004 # trial, measured relative to INITIAL CONTACT aperture
+gripper_stall_m: 0.0005
+# Explicit class execution gates: structures exist for all six classes.
+# Only green_apple has the cited physical pick/place success. Other classes must
+# have contact/clearance/geometry reviewed before setting ready=true in measured config.
+class_execution:
+  green_apple: {ready: true, reason: '20261015 stationary success; integration still unverified'}
+  peach: {ready: false, reason: 'contact aperture/effort and collision extent not commissioned'}
+  tomato: {ready: false, reason: 'contact aperture/effort and soft-object grip not commissioned'}
+  fanta_can: {ready: false, reason: 'contact aperture/effort and clearance not commissioned'}
+  cup: {ready: false, reason: 'handle-inclusive collision extent and grip contact not commissioned'}
+  banana: {ready: false, reason: 'vertical body thickness, full extent and CAD closure-axis trial unverified'}
+
+# User-confirmed table thickness; XY bounds/pose still measured in the fixed frame.
+base_unlock_timeout_s: 3.0
+# Final task: keep the base locked after arm return; no automatic next drive.
+# Explicit release policy is for a future following-navigation sequence only.
+base_completion_policy: hold
+scene_depth_stride_px: 6
+scene_voxel_m: 0.02
+scene_max_voxels: 600
+scene_table_margin_m: 0.008
+mask_extent_tolerance_m: 0.008
+placed_history_limit: 32

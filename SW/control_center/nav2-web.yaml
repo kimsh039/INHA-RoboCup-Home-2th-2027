@@ -2,8 +2,8 @@
 # Real ROS time, slow speeds and gentle accelerations for the Tracer with the 1.3 m mast.
 # Localization comes from SLAM Toolbox (map -> odom); odom -> base_link from the EKF.
 # Heights are in base_link / odom z; -0.1425 m is the nominal floor prior.
-# collision_cloud.py separates the measured floor and publishes obstacle-only
-# marking input plus floor-inclusive clearing input and retained 3D obstacles.
+# Flat indoor floor: the lowest 5 cm is excluded from furniture obstacles.
+# Nav2 and the guard consume the same retained 3D obstacle scene.
 # prepare-navigation-profile.py derives physical geometry from URDF at startup;
 # collision_guard updates it from measured arm joints and gates every /cmd_vel.
 bt_navigator:
@@ -84,19 +84,22 @@ controller_server:
     goal_checker_plugins: ["general_goal_checker"]
     controller_plugins: ["FollowPath"]
     progress_checker:
-      plugin: "nav2_controller::SimpleProgressChecker"
-      required_movement_radius: 0.3
-      movement_time_allowance: 15.0
+      plugin: "nav2_controller::PoseProgressChecker"
+      required_movement_radius: 0.05
+      required_movement_angle: 0.10
+      movement_time_allowance: 6.0
     # Stage pose only; dock_node does the final 5 mm / 1 deg approach in odom.
     general_goal_checker:
-      stateful: True
-      plugin: "nav2_controller::SimpleGoalChecker"
-      xy_goal_tolerance: 0.15
-      yaw_goal_tolerance: 0.20
+      stateful: False
+      plugin: "nav2_controller::StoppedGoalChecker"
+      xy_goal_tolerance: 0.05
+      yaw_goal_tolerance: 0.02
+      trans_stopped_velocity: 0.01
+      rot_stopped_velocity: 0.02
     FollowPath:
       plugin: "dwb_core::DWBLocalPlanner"
       debug_trajectory_details: True
-      min_vel_x: 0.0
+      min_vel_x: 0.0  # reverse is reserved for recovery after both spins fail
       min_vel_y: 0.0
       max_vel_x: 0.25
       max_vel_y: 0.0
@@ -117,13 +120,13 @@ controller_server:
       linear_granularity: 0.05
       angular_granularity: 0.025
       transform_tolerance: 0.3
-      xy_goal_tolerance: 0.15
-      trans_stopped_velocity: 0.25
+      xy_goal_tolerance: 0.05
+      trans_stopped_velocity: 0.01
       short_circuit_trajectory_evaluation: True
       stateful: True
       critics: ["RotateToGoal", "Oscillation", "BaseObstacle", "ObstacleFootprint", "GoalAlign", "PathAlign", "PathDist", "GoalDist"]
-      BaseObstacle.scale: 0.02
-      ObstacleFootprint.scale: 0.02
+      BaseObstacle.scale: 0.03  # follow the centered global path while reaching near-wall goals
+      ObstacleFootprint.scale: 0.10
       PathAlign.scale: 32.0
       PathAlign.forward_point_distance: 0.1
       GoalAlign.scale: 24.0
@@ -150,12 +153,20 @@ local_costmap:
       # Runtime uses physical URDF geometry; the 3D guard applies clearance
       # to approaching obstacles along the candidate motion and braking path.
       footprint: "[[0.343, 0.286], [0.343, -0.286], [-0.343, -0.286], [-0.343, 0.286]]"
-      footprint_padding: 0.0
-      plugins: ["voxel_layer", "inflation_layer"]
+      footprint_padding: -0.10
+      plugins: ["voxel_layer", "collision_scene", "inflation_layer"]
+      collision_scene:
+        plugin: "robocup_collision_processing::SceneLayer"
+        topic: /collision/points
+        min_height_above_floor: 0.05
+        max_obstacle_height: 2.10
+        voxel_size: 0.04
+        use_source_points: True
+        cloud_timeout: 0.40
       inflation_layer:
         plugin: "nav2_costmap_2d::InflationLayer"
-        cost_scaling_factor: 4.0
-        inflation_radius: 0.85
+        cost_scaling_factor: 2.0
+        inflation_radius: 1.50  # soft corridor-centering cost field; physical footprint stays unchanged
       voxel_layer:
         plugin: "nav2_costmap_2d::VoxelLayer"
         enabled: True
@@ -166,7 +177,7 @@ local_costmap:
         max_obstacle_height: 2.10
         footprint_clearing_enabled: False
         mark_threshold: 0
-        observation_sources: scan mid360 mid360_clear
+        observation_sources: scan
         scan:
           topic: /scan
           max_obstacle_height: 2.0
@@ -177,50 +188,35 @@ local_costmap:
           raytrace_min_range: 0.0
           obstacle_max_range: 2.5
           obstacle_min_range: 0.0   # calibrated /scan already applies the rack mask
-        # Plane-relative ground removal is shared with the 3D guard.
-        mid360:
-          topic: /mid360/points_obstacles
-          data_type: "PointCloud2"
-          sensor_frame: livox_frame
-          min_obstacle_height: -0.5
-          max_obstacle_height: 2.10
-          marking: True
-          clearing: False
-          obstacle_max_range: 2.5
-          obstacle_min_range: 0.0
-          raytrace_max_range: 3.0
-          raytrace_min_range: 0.0
-        mid360_clear:
-          topic: /mid360/points_clearing
-          data_type: "PointCloud2"
-          sensor_frame: livox_frame
-          min_obstacle_height: -0.5
-          max_obstacle_height: 2.10
-          marking: False
-          clearing: True
-          raytrace_max_range: 3.0
-          raytrace_min_range: 0.0
       always_send_full_costmap: True
 
 global_costmap:
   global_costmap:
     ros__parameters:
-      update_frequency: 1.0
-      publish_frequency: 1.0
+      update_frequency: 5.0
+      publish_frequency: 2.0
       global_frame: map
       robot_base_frame: base_link
       use_sim_time: False
       transform_tolerance: 0.3
       footprint: "[[0.343, 0.286], [0.343, -0.286], [-0.343, -0.286], [-0.343, 0.286]]"
-      footprint_padding: 0.0
+      footprint_padding: -0.10
       resolution: 0.05
       track_unknown_space: true
-      plugins: ["static_layer", "obstacle_layer", "inflation_layer"]
+      plugins: ["static_layer", "obstacle_layer", "collision_scene", "inflation_layer"]
+      collision_scene:
+        plugin: "robocup_collision_processing::SceneLayer"
+        topic: /collision/points
+        min_height_above_floor: 0.05
+        max_obstacle_height: 2.10
+        voxel_size: 0.04
+        use_source_points: True
+        cloud_timeout: 0.40
       obstacle_layer:
         plugin: "nav2_costmap_2d::ObstacleLayer"
         enabled: True
         footprint_clearing_enabled: False
-        observation_sources: scan mid360 mid360_clear
+        observation_sources: scan
         scan:
           topic: /scan
           max_obstacle_height: 2.0
@@ -231,35 +227,13 @@ global_costmap:
           raytrace_min_range: 0.0
           obstacle_max_range: 2.5
           obstacle_min_range: 0.0
-        mid360:
-          topic: /mid360/points_obstacles
-          data_type: "PointCloud2"
-          sensor_frame: livox_frame
-          min_obstacle_height: -0.5
-          max_obstacle_height: 2.10
-          marking: True
-          clearing: False
-          obstacle_max_range: 2.5
-          obstacle_min_range: 0.0
-          raytrace_max_range: 3.0
-          raytrace_min_range: 0.0
-        mid360_clear:
-          topic: /mid360/points_clearing
-          data_type: "PointCloud2"
-          sensor_frame: livox_frame
-          min_obstacle_height: -0.5
-          max_obstacle_height: 2.10
-          marking: False
-          clearing: True
-          raytrace_max_range: 3.0
-          raytrace_min_range: 0.0
       static_layer:
         plugin: "nav2_costmap_2d::StaticLayer"
         map_subscribe_transient_local: True
       inflation_layer:
         plugin: "nav2_costmap_2d::InflationLayer"
-        cost_scaling_factor: 4.0
-        inflation_radius: 0.85
+        cost_scaling_factor: 2.0
+        inflation_radius: 1.50  # gradual costs favor the corridor middle over wall-hugging shortcuts
       always_send_full_costmap: True
 
 map_saver:
@@ -272,7 +246,7 @@ map_saver:
 
 planner_server:
   ros__parameters:
-    expected_planner_frequency: 20.0
+    expected_planner_frequency: 2.0
     use_sim_time: False
     planner_plugins: ["GridBased"]
     GridBased:
@@ -300,7 +274,7 @@ behavior_server:
     spin:
       plugin: "nav2_behaviors/Spin"
     backup:
-      plugin: "nav2_behaviors/BackUp"
+      plugin: "robocup_collision_processing::GuardedBackUp"
     drive_on_heading:
       plugin: "nav2_behaviors/DriveOnHeading"
     wait:
@@ -312,9 +286,9 @@ behavior_server:
     transform_tolerance: 0.3
     use_sim_time: False
     simulate_ahead_time: 2.0
-    max_rotational_vel: 0.6
-    min_rotational_vel: 0.3
-    rotational_acc_lim: 1.2
+    max_rotational_vel: 0.35
+    min_rotational_vel: 0.10
+    rotational_acc_lim: 0.8
 
 waypoint_follower:
   ros__parameters:

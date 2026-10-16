@@ -8,9 +8,9 @@ import numpy as np
 
 class CloudHistory:
     def __init__(self, config):
-        self.window = max(0.0, min(5.0, float(config.get('cloud_decay_sec', 2.0))))
+        self.window = max(0.0, min(5.0, float(config.get('cloud_decay_sec', 3.0))))
         self.voxel = max(0.0, float(config.get('cloud_voxel_size', 0.04)))
-        self.maximum = max(1, int(config.get('max_accumulated_cloud_points', 80000)))
+        self.maximum = max(1, int(config.get('max_accumulated_cloud_points', 120000)))
         # Rebuilding the accumulated cloud and its browser payload costs ~0.1 s; doing it for every
         # frame (5 Hz) saturated the bridge loop and starved every other channel.
         self.period = max(0.0, float(config.get('cloud_accumulated_period_sec', 0.5)))

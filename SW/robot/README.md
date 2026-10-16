@@ -1,12 +1,12 @@
 # 실물 캘리브레이션을 적용한 Jetson 로봇 실행
 
-Tracer 주행은 [URDF 외곽 기준 10 cm의 3D 충돌 보호](collision-avoidance.md)를 거칩니다. 실물 core는 점군 전처리·속도 guard·별도 watchdog을 실행하고, Tracer는 `/tracer/cmd_vel_safe`를 구독합니다. 기존 실행에 적용하려면 관제센터와 실물 core를 재시작해야 합니다.
+Tracer 주행은 [추가 이격 없이 URDF 몸체 형상을 사용하는 3D 충돌 보호](collision-avoidance.md)를 거칩니다. `body_only: true`, `clearance: 0.0`, `uncertainty_margin: 0.0`으로 원래 측정점과 로봇 형상의 겹침을 검사합니다. 평탄한 실내 바닥을 전제로 바닥 위 5 cm까지의 반사점은 제외하고, 그 위 의자·책상 다리 등의 장애물을 처리합니다. 실물 core는 점군 전처리·속도 guard·별도 watchdog을 실행하고, Tracer는 `/tracer/cmd_vel_safe`를 구독합니다. Nav2는 같은 장애물 scene을 경로 계획에 반영합니다.
 
 2026-10-12 기준, 이 젯슨(`/home/sparo`)에서 **Git에 올라온 실물 측정값으로 Tracer·G2·Mid-360S·Head·Wrist와 팔 피드백을 실행**합니다. 실물 기록이 다른 브랜치나 `SW/simulation` 경로에 있어도 측정 내용을 기준으로 선택했습니다. Gazebo/MuJoCo 센서 보정과 시뮬레이션 TCP 보정은 실행 설정에 사용하지 않습니다.
 
 ## 바로 실행
 
-MID-360 전처리와 3D 주행 보호 계산은 C++ 실행 파일을 사용합니다. 최초 실행 또는 해당 소스 변경 후 두 실행 파일을 함께 생성합니다. 빌드에는 ROS 2 Humble 개발 환경, Eigen3, yaml-cpp, nanoflann, nlohmann-json 헤더가 필요하며 이 Jetson에는 설치돼 있습니다.
+MID-360 전처리와 3D 주행 보호 계산은 C++ 실행 파일을 사용합니다. 최초 실행 또는 해당 소스 변경 후 두 실행 파일과 Nav2의 공유 장애물 플러그인을 함께 생성합니다. 빌드에는 ROS 2 Humble 개발 환경, nav2_costmap_2d, pluginlib, Eigen3, yaml-cpp, nanoflann, nlohmann-json 헤더가 필요하며 이 Jetson에는 설치돼 있습니다.
 
 ```bash
 bash ~/robocup/SW/robot/build-collision.sh
@@ -105,8 +105,8 @@ odom                                  ← EKF가 몸체 이동을 발행
 | 몸체 오도메트리 | `/odom_ekf` — 보정 바퀴 선속도 + bias 제거한 IMU yaw rate |
 | 바퀴 오도메트리 | `/odom` — v4 속도 보정은 적용되지만 방향은 바퀴 추정 |
 | 몸체 좌표 IMU | `/imu/base` — 실물 Mid360 회전 + gyro bias 제거 |
-| Head RGB 실측 내부 보정 사용 | `/head/calibrated/color/image_raw` + `/head/calibrated/color/camera_info` |
-| Wrist RGB 실측 내부 보정 사용 | `/wrist/calibrated/color/image_raw` + `/wrist/calibrated/color/camera_info` |
+| Head RGB 실측 내부 보정 사용 | `/head/camera/color/image_raw` + `/head/calibrated/color/camera_info` |
+| Wrist RGB 실측 내부 보정 사용 | `/wrist/wrist/color/image_raw` + `/wrist/calibrated/color/camera_info` |
 | Head 드라이버 원본 | `/head/camera/color/image_raw` + `/head/camera/color/camera_info` |
 | Wrist 드라이버 원본 | `/wrist/wrist/color/image_raw` + `/wrist/wrist/color/camera_info` |
 | Head aligned depth | `/head/camera/aligned_depth_to_color/image_raw` + 해당 드라이버 CameraInfo |
@@ -114,7 +114,7 @@ odom                                  ← EKF가 몸체 이동을 발행
 | 실제 팔 관절 피드백 | `/piper/joint_states_feedback` |
 | 모델에 맞춘 팔 관절값 | `/robot/joint_states` |
 
-내부 보정 노드는 원본 RGB 영상을 그대로 전달하면서 **같은 이미지 timestamp/frame_id의 실측 CameraInfo**를 발행합니다. `/calibrated/color/image_raw`는 아직 왜곡 보정하지 않은 영상입니다. 원본 영상의 투영·PnP에는 K/D를 쓰고, 왜곡 보정한 영상에는 해당 보정 영상의 P를 사용합니다. 해상도가 640×480이 아니면 저장된 내부 보정을 적용한 영상을 발행하지 않습니다.
+내부 보정 노드는 드라이버 CameraInfo의 timestamp/frame_id를 보존하여 **실측 CameraInfo만** 발행합니다. RGB는 RealSense 원본 토픽을 직접 구독하며, 보정 이미지 중계 토픽은 발행하지 않습니다. 원본 영상의 투영·PnP에는 K/D를 쓰고, 왜곡 보정한 영상에는 해당 보정 영상의 P를 사용합니다. 해상도가 640×480이 아니면 실측 CameraInfo를 발행하지 않습니다.
 
 장치 펌웨어나 드라이버의 factory CameraInfo를 덮어쓰지는 않습니다. RealSense aligned depth는 factory 내부 파라미터로 정렬된 결과이므로 그 드라이버의 CameraInfo와 함께 사용하세요. `/calibrated/color`의 실측 K/P를 factory aligned depth에 그대로 끼워 넣으면 픽셀 좌표계가 달라집니다.
 

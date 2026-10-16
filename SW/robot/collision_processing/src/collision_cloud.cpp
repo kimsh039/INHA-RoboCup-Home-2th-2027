@@ -83,7 +83,7 @@ struct Pending {Cloud::ConstSharedPtr cloud; Steady::time_point received; uint64
 struct Metrics {
   int64_t start=0,end=0,reference=0;
   uint64_t sequence=0,epoch=0;
-  size_t raw=0,obstacles=0,masked=0,near_sensor=0,isolated=0;
+  size_t raw=0,obstacles=0,masked=0,near_sensor=0,isolated=0,arm_shadow=0;
   size_t ground=0,ground_cells_removed=0,free_cells_removed=0,clearing_rays=0,long_range_clearing_rays=0;
   collision_floor::Plane floor_plane;
   double queue_ms=0,parse_ms=0,deskew_ms=0,mask_ms=0,outlier_ms=0,floor_ms=0,map_ms=0,publish_ms=0,total_ms=0,odom_gap_ms=0;
@@ -100,7 +100,7 @@ class CollisionCloud : public rclcpp::Node {
     pending_timeout_=real("max_pending_sec",.25); timeout_=real("cloud_timeout",.4);
     joint_timeout_=real("joint_timeout",.5); scan_duration_=real("max_scan_duration",.25);
     require_arm_=declare_parameter<bool>("require_arm_feedback",true);
-    floor_=real("floor_z",-.1425); floor_band_=real("floor_band",.02);
+    floor_=real("floor_z",-.1425); floor_band_=real("floor_band",.05);
     floor_config_.nominal=floor_;floor_config_.band=floor_band_;
     floor_config_.radius=real("floor_fit_radius",3.);
     floor_config_.inlier_distance=real("floor_fit_distance",.012);
@@ -114,6 +114,8 @@ class CollisionCloud : public rclcpp::Node {
     rack_padding_=real("rack_self_padding",.03);
     base_padding_=real("base_self_padding",.02);
     min_sensor_range_=real("min_sensor_range",.15);
+    arm_shadow_radius_=real("arm_shadow_radius",.03);
+    arm_shadow_depth_=real("arm_shadow_depth",.6);
     outlier_radius_=real("outlier_radius",.05);
     outlier_min_neighbors_=declare_parameter<int>("outlier_min_neighbors",1);
     radius_=real("memory_radius",4.); arm_speed_=real("arm_motion_limit",.08);
@@ -166,7 +168,7 @@ class CollisionCloud : public rclcpp::Node {
  private:
   std::string base_,odom_,format_,time_field_;
   double history_,gap_,pending_timeout_,timeout_,joint_timeout_,scan_duration_,floor_,floor_band_,height_,range_,voxel_,padding_,radius_,arm_speed_;
-  double min_sensor_range_,outlier_radius_,rack_padding_,base_padding_;
+  double min_sensor_range_,outlier_radius_,rack_padding_,base_padding_,arm_shadow_radius_,arm_shadow_depth_;
   collision_floor::Config floor_config_;
   collision_floor::Plane floor_plane_;uint64_t floor_epoch_=0;
   double floor_interval_,floor_timeout_;int free_observations_;
@@ -419,6 +421,33 @@ class CollisionCloud : public rclcpp::Node {
         self[i]=1;++m.masked;++m.mask_hits[box.name];
       }
     }
+    // A beam that grazes an arm edge returns a range between the arm and the
+    // surface behind it. Those mixed returns lie on the ray just beyond the
+    // arm and are swept into by the arm boxes when the base moves.
+    // Only the retained safety map skips them; detection clouds keep every return.
+    std::vector<uint8_t> shadow(raw.size(),0);
+    if(require_arm_ && arm_shadow_radius_>0. && arm_shadow_depth_>0.) {
+      std::vector<size_t> arm;
+      for(size_t b=0;b<body_boxes.size();++b)if(body_boxes[b].name.rfind("piper_",0)==0)arm.push_back(b);
+      for(size_t i=0;i<body.size();++i) {
+        if(self[i])continue;
+        const V3 ray=body[i]-offset;const double length=ray.norm();
+        if(length<1e-6)continue;
+        for(const auto b : arm) {
+          const auto &box=body_boxes[b];const M3 inverse=box.pose.linear().transpose();
+          const V3 origin=inverse*(offset-box.pose.translation()),direction=inverse*ray;
+          const V3 half=box.half.array()+arm_shadow_radius_;
+          double enter=0.,leave=1.;bool hit=true;
+          for(int a=0;a<3 && hit;++a) {
+            if(std::abs(direction[a])<1e-12) {hit=std::abs(origin[a])<=half[a];continue;}
+            double t0=(-half[a]-origin[a])/direction[a],t1=(half[a]-origin[a])/direction[a];
+            if(t0>t1)std::swap(t0,t1);
+            enter=std::max(enter,t0);leave=std::min(leave,t1);hit=enter<=leave;
+          }
+          if(hit && (1.-leave)*length<=arm_shadow_depth_) {shadow[i]=1;++m.arm_shadow;break;}
+        }
+      }
+    }
     m.mask_ms=elapsed_ms(section);section=Steady::now();
     std::vector<uint8_t> eligible(raw.size(),0);
     for(size_t i=0;i<world.size();++i) {
@@ -452,6 +481,7 @@ class CollisionCloud : public rclcpp::Node {
       nav.push_back(clearing.back());
       if(floor.height(world[i])>floor_band_ && world[i].z()<=height_) {
         obstacles.push_back(nav.back());
+        if(shadow[i])continue;
         auto &cell=next_cells[key(world[i])];cell.hit_frame=job.sequence;cell.misses=0;
         if(stamps[i]>=cell.last_seen){cell.source=world[i];cell.last_seen=stamps[i];}
       } else if(floor.height(world[i])<=floor_band_) {
@@ -510,7 +540,7 @@ class CollisionCloud : public rclcpp::Node {
       <<",\"scan_start_ns\":"<<metrics_.start<<",\"scan_end_ns\":"<<metrics_.end<<",\"generation\":"<<epoch_
       <<",\"session_id\":"<<quoted(session_)
       <<",\"result_id\":"<<metrics_.sequence<<",\"raw_points\":"<<metrics_.raw<<",\"obstacles\":"<<metrics_.obstacles
-      <<",\"self_masked_points\":"<<metrics_.masked<<",\"near_sensor_masked_points\":"<<metrics_.near_sensor
+      <<",\"self_masked_points\":"<<metrics_.masked<<",\"near_sensor_masked_points\":"<<metrics_.near_sensor<<",\"arm_shadow_masked_points\":"<<metrics_.arm_shadow
       <<",\"min_sensor_range\":"<<min_sensor_range_
       <<",\"mask_rack_interior\":"<<(mask_rack_interior_?"true":"false")<<",\"dropped_pending\":"<<dropped_
       <<",\"rejected_frames\":"<<rejected_frames_<<",\"last_rejection\":"<<quoted(last_rejection_)

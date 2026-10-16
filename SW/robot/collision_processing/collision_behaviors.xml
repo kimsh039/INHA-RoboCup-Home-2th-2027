@@ -1,0 +1,7 @@
+<library path="collision_guarded_behaviors">
+  <class name="robocup_collision_processing::GuardedBackUp"
+         type="robocup_collision_processing::GuardedBackUp"
+         base_class_type="nav2_core::Behavior">
+    <description>Short reverse through the live 3D guard, permitting departure from front 2D footprint overlap.</description>
+  </class>
+</library>
