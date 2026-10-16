@@ -1,9 +1,0 @@
-train: images/train
-val: images/val
-names:
-  0: green_apple
-  1: peach
-  2: tomato
-  3: fanta_can
-  4: cup
-  5: banana

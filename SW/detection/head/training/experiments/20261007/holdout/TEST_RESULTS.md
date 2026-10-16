@@ -23,20 +23,20 @@ These videos have no independent bounding-box ground truth. Precision, recall, m
 | peach | 301 | 0.977 | 301 | 0.662 |
 | plate | 308 | 1.000 | 308 | 0.879 |
 
-[Annotated video](WIN_20261006_23_49_36_Pro/annotated.mp4) · [Raw detections](WIN_20261006_23_49_36_Pro/detections.csv)
+[Annotated video](https://github.com/kimsh039/INHA-RoboCup-Home-2th-2027/blob/a23d6e287a29ed34e65aaaab439b57405108636a/SW/detection/head/training/experiments/20261007/holdout/WIN_20261006_23_49_36_Pro/annotated.mp4) · [Raw detections](WIN_20261006_23_49_36_Pro/detections.csv)
 
-![frame_000000.jpg](WIN_20261006_23_49_36_Pro/frame_000000.jpg)
-![frame_000027.jpg](WIN_20261006_23_49_36_Pro/frame_000027.jpg)
-![frame_000055.jpg](WIN_20261006_23_49_36_Pro/frame_000055.jpg)
-![frame_000083.jpg](WIN_20261006_23_49_36_Pro/frame_000083.jpg)
-![frame_000111.jpg](WIN_20261006_23_49_36_Pro/frame_000111.jpg)
-![frame_000139.jpg](WIN_20261006_23_49_36_Pro/frame_000139.jpg)
-![frame_000167.jpg](WIN_20261006_23_49_36_Pro/frame_000167.jpg)
-![frame_000195.jpg](WIN_20261006_23_49_36_Pro/frame_000195.jpg)
-![frame_000223.jpg](WIN_20261006_23_49_36_Pro/frame_000223.jpg)
-![frame_000251.jpg](WIN_20261006_23_49_36_Pro/frame_000251.jpg)
-![frame_000279.jpg](WIN_20261006_23_49_36_Pro/frame_000279.jpg)
-![frame_000307.jpg](WIN_20261006_23_49_36_Pro/frame_000307.jpg)
+![frame_000000.jpg](https://github.com/kimsh039/INHA-RoboCup-Home-2th-2027/blob/a23d6e287a29ed34e65aaaab439b57405108636a/SW/detection/head/training/experiments/20261007/holdout/WIN_20261006_23_49_36_Pro/frame_000000.jpg)
+![frame_000027.jpg](https://github.com/kimsh039/INHA-RoboCup-Home-2th-2027/blob/a23d6e287a29ed34e65aaaab439b57405108636a/SW/detection/head/training/experiments/20261007/holdout/WIN_20261006_23_49_36_Pro/frame_000027.jpg)
+![frame_000055.jpg](https://github.com/kimsh039/INHA-RoboCup-Home-2th-2027/blob/a23d6e287a29ed34e65aaaab439b57405108636a/SW/detection/head/training/experiments/20261007/holdout/WIN_20261006_23_49_36_Pro/frame_000055.jpg)
+![frame_000083.jpg](https://github.com/kimsh039/INHA-RoboCup-Home-2th-2027/blob/a23d6e287a29ed34e65aaaab439b57405108636a/SW/detection/head/training/experiments/20261007/holdout/WIN_20261006_23_49_36_Pro/frame_000083.jpg)
+![frame_000111.jpg](https://github.com/kimsh039/INHA-RoboCup-Home-2th-2027/blob/a23d6e287a29ed34e65aaaab439b57405108636a/SW/detection/head/training/experiments/20261007/holdout/WIN_20261006_23_49_36_Pro/frame_000111.jpg)
+![frame_000139.jpg](https://github.com/kimsh039/INHA-RoboCup-Home-2th-2027/blob/a23d6e287a29ed34e65aaaab439b57405108636a/SW/detection/head/training/experiments/20261007/holdout/WIN_20261006_23_49_36_Pro/frame_000139.jpg)
+![frame_000167.jpg](https://github.com/kimsh039/INHA-RoboCup-Home-2th-2027/blob/a23d6e287a29ed34e65aaaab439b57405108636a/SW/detection/head/training/experiments/20261007/holdout/WIN_20261006_23_49_36_Pro/frame_000167.jpg)
+![frame_000195.jpg](https://github.com/kimsh039/INHA-RoboCup-Home-2th-2027/blob/a23d6e287a29ed34e65aaaab439b57405108636a/SW/detection/head/training/experiments/20261007/holdout/WIN_20261006_23_49_36_Pro/frame_000195.jpg)
+![frame_000223.jpg](https://github.com/kimsh039/INHA-RoboCup-Home-2th-2027/blob/a23d6e287a29ed34e65aaaab439b57405108636a/SW/detection/head/training/experiments/20261007/holdout/WIN_20261006_23_49_36_Pro/frame_000223.jpg)
+![frame_000251.jpg](https://github.com/kimsh039/INHA-RoboCup-Home-2th-2027/blob/a23d6e287a29ed34e65aaaab439b57405108636a/SW/detection/head/training/experiments/20261007/holdout/WIN_20261006_23_49_36_Pro/frame_000251.jpg)
+![frame_000279.jpg](https://github.com/kimsh039/INHA-RoboCup-Home-2th-2027/blob/a23d6e287a29ed34e65aaaab439b57405108636a/SW/detection/head/training/experiments/20261007/holdout/WIN_20261006_23_49_36_Pro/frame_000279.jpg)
+![frame_000307.jpg](https://github.com/kimsh039/INHA-RoboCup-Home-2th-2027/blob/a23d6e287a29ed34e65aaaab439b57405108636a/SW/detection/head/training/experiments/20261007/holdout/WIN_20261006_23_49_36_Pro/frame_000307.jpg)
 
 ## WIN_20261006_23_52_09_Pro.mp4
 
@@ -50,20 +50,20 @@ These videos have no independent bounding-box ground truth. Precision, recall, m
 | peach | 161 | 0.374 | 161 | 0.391 |
 | plate | 431 | 1.000 | 573 | 0.680 |
 
-[Annotated video](WIN_20261006_23_52_09_Pro/annotated.mp4) · [Raw detections](WIN_20261006_23_52_09_Pro/detections.csv)
+[Annotated video](https://github.com/kimsh039/INHA-RoboCup-Home-2th-2027/blob/a23d6e287a29ed34e65aaaab439b57405108636a/SW/detection/head/training/experiments/20261007/holdout/WIN_20261006_23_52_09_Pro/annotated.mp4) · [Raw detections](WIN_20261006_23_52_09_Pro/detections.csv)
 
-![frame_000000.jpg](WIN_20261006_23_52_09_Pro/frame_000000.jpg)
-![frame_000039.jpg](WIN_20261006_23_52_09_Pro/frame_000039.jpg)
-![frame_000078.jpg](WIN_20261006_23_52_09_Pro/frame_000078.jpg)
-![frame_000117.jpg](WIN_20261006_23_52_09_Pro/frame_000117.jpg)
-![frame_000156.jpg](WIN_20261006_23_52_09_Pro/frame_000156.jpg)
-![frame_000195.jpg](WIN_20261006_23_52_09_Pro/frame_000195.jpg)
-![frame_000234.jpg](WIN_20261006_23_52_09_Pro/frame_000234.jpg)
-![frame_000273.jpg](WIN_20261006_23_52_09_Pro/frame_000273.jpg)
-![frame_000312.jpg](WIN_20261006_23_52_09_Pro/frame_000312.jpg)
-![frame_000351.jpg](WIN_20261006_23_52_09_Pro/frame_000351.jpg)
-![frame_000390.jpg](WIN_20261006_23_52_09_Pro/frame_000390.jpg)
-![frame_000430.jpg](WIN_20261006_23_52_09_Pro/frame_000430.jpg)
+![frame_000000.jpg](https://github.com/kimsh039/INHA-RoboCup-Home-2th-2027/blob/a23d6e287a29ed34e65aaaab439b57405108636a/SW/detection/head/training/experiments/20261007/holdout/WIN_20261006_23_52_09_Pro/frame_000000.jpg)
+![frame_000039.jpg](https://github.com/kimsh039/INHA-RoboCup-Home-2th-2027/blob/a23d6e287a29ed34e65aaaab439b57405108636a/SW/detection/head/training/experiments/20261007/holdout/WIN_20261006_23_52_09_Pro/frame_000039.jpg)
+![frame_000078.jpg](https://github.com/kimsh039/INHA-RoboCup-Home-2th-2027/blob/a23d6e287a29ed34e65aaaab439b57405108636a/SW/detection/head/training/experiments/20261007/holdout/WIN_20261006_23_52_09_Pro/frame_000078.jpg)
+![frame_000117.jpg](https://github.com/kimsh039/INHA-RoboCup-Home-2th-2027/blob/a23d6e287a29ed34e65aaaab439b57405108636a/SW/detection/head/training/experiments/20261007/holdout/WIN_20261006_23_52_09_Pro/frame_000117.jpg)
+![frame_000156.jpg](https://github.com/kimsh039/INHA-RoboCup-Home-2th-2027/blob/a23d6e287a29ed34e65aaaab439b57405108636a/SW/detection/head/training/experiments/20261007/holdout/WIN_20261006_23_52_09_Pro/frame_000156.jpg)
+![frame_000195.jpg](https://github.com/kimsh039/INHA-RoboCup-Home-2th-2027/blob/a23d6e287a29ed34e65aaaab439b57405108636a/SW/detection/head/training/experiments/20261007/holdout/WIN_20261006_23_52_09_Pro/frame_000195.jpg)
+![frame_000234.jpg](https://github.com/kimsh039/INHA-RoboCup-Home-2th-2027/blob/a23d6e287a29ed34e65aaaab439b57405108636a/SW/detection/head/training/experiments/20261007/holdout/WIN_20261006_23_52_09_Pro/frame_000234.jpg)
+![frame_000273.jpg](https://github.com/kimsh039/INHA-RoboCup-Home-2th-2027/blob/a23d6e287a29ed34e65aaaab439b57405108636a/SW/detection/head/training/experiments/20261007/holdout/WIN_20261006_23_52_09_Pro/frame_000273.jpg)
+![frame_000312.jpg](https://github.com/kimsh039/INHA-RoboCup-Home-2th-2027/blob/a23d6e287a29ed34e65aaaab439b57405108636a/SW/detection/head/training/experiments/20261007/holdout/WIN_20261006_23_52_09_Pro/frame_000312.jpg)
+![frame_000351.jpg](https://github.com/kimsh039/INHA-RoboCup-Home-2th-2027/blob/a23d6e287a29ed34e65aaaab439b57405108636a/SW/detection/head/training/experiments/20261007/holdout/WIN_20261006_23_52_09_Pro/frame_000351.jpg)
+![frame_000390.jpg](https://github.com/kimsh039/INHA-RoboCup-Home-2th-2027/blob/a23d6e287a29ed34e65aaaab439b57405108636a/SW/detection/head/training/experiments/20261007/holdout/WIN_20261006_23_52_09_Pro/frame_000390.jpg)
+![frame_000430.jpg](https://github.com/kimsh039/INHA-RoboCup-Home-2th-2027/blob/a23d6e287a29ed34e65aaaab439b57405108636a/SW/detection/head/training/experiments/20261007/holdout/WIN_20261006_23_52_09_Pro/frame_000430.jpg)
 
 ## 대표 프레임 시각 검토 · 2026-10-07
 

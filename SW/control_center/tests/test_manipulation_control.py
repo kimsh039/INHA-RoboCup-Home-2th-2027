@@ -105,7 +105,9 @@ def test_manipulation_tab_uses_existing_theme_and_events():
     assert 'mode-section mode-panel hidden" data-mode="manipulation"' in html
     assert html.count('id="event-list"')==1
     assert 'manipulation: 1' in js
-    assert 'renderManipulation(); renderLogs();' in js
+    # The full Task panel may render between these two independent panels.
+    assert 'renderManipulation();' in js
+    assert 'renderLogs();' in js
 
 
 def controller():

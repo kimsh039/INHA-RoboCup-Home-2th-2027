@@ -1,3 +1,5 @@
+> 현재 Wrist sensor_tf 입력은 [최신 55자세 ChArUco JSON](../../HW/calibration/physical/wrist_handeye/README.md)이다. 아래 과거 브랜치/15자세 출처는 이전 기록이며 현재 입력과 구분한다.
+
 # 실물 캘리브레이션을 적용한 Jetson 로봇 실행
 
 Tracer 주행은 [추가 이격 없이 URDF 몸체 형상을 사용하는 3D 충돌 보호](collision-avoidance.md)를 거칩니다. `body_only: true`, `clearance: 0.0`, `uncertainty_margin: 0.0`으로 원래 측정점과 로봇 형상의 겹침을 검사합니다. 평탄한 실내 바닥을 전제로 바닥 위 5 cm까지의 반사점은 제외하고, 그 위 의자·책상 다리 등의 장애물을 처리합니다. 실물 core는 점군 전처리·속도 guard·별도 watchdog을 실행하고, Tracer는 `/tracer/cmd_vel_safe`를 구독합니다. Nav2는 같은 장애물 scene을 경로 계획에 반영합니다.
@@ -62,7 +64,7 @@ bash ~/robocup/SW/robot/start_robot.sh arm:=false
 | G2–Mid360 | 같은 세션의 6자유도 정합. Base 기준 G2 xyz ≈ (5.029, 7.795, 344.269) mm, RPY ≈ (−1.279°, −0.953°, 0.881°) | `livox_frame → laser_frame` TF |
 | G2 거리 배율 | 1.0070145819155318 | `/scan_raw`의 유효 거리·최소/최대 거리에 한 번 곱하여 `/scan`으로 발행 |
 | Head–Mid360 | 2026-10-12 koide3 4개 bag 최적화, 사용자 수락 결과 | `livox_frame → camera_link`, 실제 RGB optical 프레임까지 드라이버 내부 TF로 연결 |
-| Wrist hand-eye | 실물 PiPER 15자세, PARK. Link6←RGB optical xyz = (−63.877, 28.728, −12.631) mm | `piper_link6 → wrist_link`, 실제 RGB optical 프레임까지 드라이버 내부 TF로 연결 |
+| Wrist hand-eye | 최신 실물 ChArUco 55자세. Link6←RGB optical xyz = (−64.927, 31.071, 19.479) mm | `piper_link6 → wrist_link`, 실제 RGB optical 프레임까지 드라이버 내부 TF로 연결 |
 | Head RGB 내부 보정 | D435 `244622071116`, RGB 640×480, 저장된 K/D/R/P | `/head/calibrated/color/camera_info` |
 | Wrist RGB 내부 보정 | D435IF `243222070076`, RGB 640×480, 저장된 K/D/R/P | `/wrist/calibrated/color/camera_info` |
 | Tracer 오도메트리 | 2026-10-11 v4 속도 보정 + Mid360 gyro bias 제거 | 드라이버 `/odom`에 속도 보정, `/odom_ekf`와 `odom → base_link`에 IMU yaw 융합 |

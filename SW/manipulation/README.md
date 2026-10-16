@@ -62,7 +62,7 @@ manipulation_ws/src/
     test/test_core.py
 ```
 
-이전 매니퓰레이션 사본의 `PickPlace/RunStage`는 GraspNet·시뮬레이션 관련 필드를 포함한다. 현재 실제 저장소의 `SW`에는 실물 manipulation 패키지가 없어, **이름이 구분되는 신규 패키지**로 추가했다. 기존 head detector는 변경하지 않는다. 외부 head/MID360 모듈은 `HeadTarget`의 class/ID/원본 측정시각과 자신이 계산한 3D를 `Target`으로 연결한다. bbox만 있는 `HeadTarget`을 3D로 간주하지 않는다.
+이전 매니퓰레이션 사본의 `PickPlace/RunStage`는 GraspNet·시뮬레이션 관련 필드를 포함한다. 초기 통합 때 **이름이 구분되는 신규 패키지**로 추가한 이 폴더가 현재 실물 manipulation 실행 위치다. 기존 head detector는 변경하지 않는다. 외부 head/MID360 모듈은 `HeadTarget`의 class/ID/원본 측정시각과 자신이 계산한 3D를 `Target`으로 연결한다. bbox만 있는 `HeadTarget`을 3D로 간주하지 않는다.
 
 ## 빠른 시작 — 로봇 구동 없음
 

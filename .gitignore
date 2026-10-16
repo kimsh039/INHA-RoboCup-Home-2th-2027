@@ -8,3 +8,10 @@ __pycache__/
 /detection/head_detection_ws/log/
 /detection/models/*.pt
 /simulation/gazebo/build/
+
+# Local inspection and Python tooling (published data stays under SW/).
+/outputs/
+.pytest_cache/
+.ruff_cache/
+.DS_Store
+Thumbs.db

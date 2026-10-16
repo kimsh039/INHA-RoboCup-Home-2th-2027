@@ -1,3 +1,5 @@
+> **2026-10-16 현재 통합 상태:** [전체 Task](../../control_center/TASK.md), [통합 변경](../../CHANGES_20261016.md), [Wrist 현재 경로](../../detection/wrist/README.md)를 우선한다. 아래 2026-10-14 값은 초기/프로파일별 기록이다. sensor_tf의 최신 55자세 JSON과 이 프로파일의 best15를 혼동하지 않는다.
+
 # 현재 구현 상태 — 2026-10-14
 
 이 문서는 이미 구현된 기능, 사용 가능한 기준값, 실제 실행을 위해 남은 항목을 구분한다. “실물에서 검증하지 않음”은 “코드가 없음”을 뜻하지 않는다.
@@ -42,7 +44,6 @@
 - 실물15개 dataset의 OpenCV PARK를 재계산해 공개 행렬과 위치 차0.000496mm, 방향 차0.0000448°로 일치함을 확인했다. 이는 파일/계산 일치이며 새 실물 재측정의 정밀도가 아니다.
 - source 결과에 기록된5개 live 검증 자세: 평균 위치 편차9.37mm, 최대12.71mm, 평균 방향0.99°, 최대1.25°. 현재 작업에서 로봇에 연결해 재검증하지 않았다.
 - [검증 기록](../validation/wrist_handeye_import.json) 및 `tools/verify_wrist_handeye.py`로 재현한다. 실행용 NumPy/ROS 코드는 scipy/OpenCV를 추가로 요구하지 않는다.
-- 같은15개 fit 데이터 재평가에서 PARK 평균/최대3D 편차22.34/37.01mm, Tsai22.40/41.12mm다. 별도5개 live 자세 결과와 대상이 다르다. [비교 기록](../validation/handeye_algorithm_comparison.json). YAML의 알고리즘 간 차이3.471mm/1.173°는 OpenCV4.5.4 재계산1.673mm/1.548°와 다르며 원 실행환경/데이터 대조가 필요하다.
 
 2026-10-14 추가: 기존 패키지 수정으로 실제 손목 YOLO+SAM2/정합 depth 연결부와 접근 완료 조건의 phase1 실행 방법을 제공했다. 첫 좌표는 기존 실제 디텍션3D를 구독하고 손목 결과는 합성하지 않는다. [PHASE1_RUN.md](PHASE1_RUN.md).
 

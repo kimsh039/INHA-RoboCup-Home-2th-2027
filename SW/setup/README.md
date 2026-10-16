@@ -1,3 +1,5 @@
+> 날짜별 설치 기록을 보존한다. 현재 실행/배포 진입점은 [SW 안내](../README.md)와 [전체 Task](../control_center/TASK.md)를 먼저 확인한다.
+
 # Setup · 개발 PC와 Jetson
 
 [프로젝트 홈](../README.md) · [Jetson 문서 모음](jetson/README.md)

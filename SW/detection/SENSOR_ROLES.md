@@ -1,3 +1,5 @@
+> **역사적 설계/시뮬레이션 문서.** 현재 실행은 [Detection·도킹](../control_center/DETECTION.md), [Wrist/팔](../manipulation/README.md), [전체 Task](../control_center/TASK.md)를 기준으로 한다. 아래 완료/미구현 표시는 당시 문맥이며 최신 runtime 상태와 구분한다.
+
 # 센서 역할과 Navigation → Manipulation 연결
 
 **설계 기준: 2026-10-05. Head와 Wrist는 모두 RealSense D435를 사용한다.**
