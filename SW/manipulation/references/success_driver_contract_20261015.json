@@ -1,0 +1,54 @@
+{
+  "task_id": "7ece08d387f547cd942d794076f82bb0",
+  "config_sha256": "2d6245769bc5b9a4488c6d5a765120b3d797aa453bdc5f90eb45ceb674f9474a",
+  "source": "artifacts/jetson_pick_place_20261015/manip_fix/pick_logs/config_2d6245769bc5b9a4488c6d5a765120b3d797aa453bdc5f90eb45ceb674f9474a.json",
+  "driver_settings": {
+    "driver_joint_names": [
+      "joint1",
+      "joint2",
+      "joint3",
+      "joint4",
+      "joint5",
+      "joint6"
+    ],
+    "joint_names": [
+      "piper_joint1",
+      "piper_joint2",
+      "piper_joint3",
+      "piper_joint4",
+      "piper_joint5",
+      "piper_joint6"
+    ],
+    "joint_signs": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "joint_offsets": [
+      -1.6,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "feedback_topic": "/joint_states_feedback",
+    "gripper_feedback_topic": "/gripper_states_feedback",
+    "arm_status_topic": "/arm_status",
+    "command_topic": "/joint_ctrl_single",
+    "enable_service": "/enable_srv",
+    "can_port": "can_arm",
+    "firmware": "S-V1.6-5"
+  },
+  "trial_gripper_settings": {
+    "width_scale": 1.00505689,
+    "width_bias_m": 0.0,
+    "driver_width_max": 0.1,
+    "width_mapping_mode": "nominal_trial",
+    "width_mapping_verified": false
+  },
+  "note": "Historical successful stationary trial; not live feedback or current hardware commissioning evidence."
+}

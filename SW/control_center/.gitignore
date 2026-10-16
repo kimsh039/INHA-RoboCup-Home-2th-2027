@@ -3,3 +3,6 @@ config.json
 config.json.bak*
 *.log
 .DS_Store
+
+# Transactional manipulation deployment snapshots (private on Jetson)
+.manipulation-backup-*/

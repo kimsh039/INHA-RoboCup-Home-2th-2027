@@ -1,6 +1,7 @@
 """Bounded ROS manipulation monitor/action client; never starts hardware on import."""
 from collections import deque
 import json
+import math
 import threading
 import time
 
@@ -104,6 +105,8 @@ class ManipulationControl:
         self.armed = False
         self.armed_at = 0.
         self.armed_task = None
+        self.started_ros = self.now()
+        self.armed_at_ros = 0.
         state.manipulation_interlock = self.interlock
         state.manipulation_request = self.request
         try:
@@ -124,10 +127,9 @@ class ManipulationControl:
                                ('wrist', '/manipulation/wrist/status')]:
                 self.subscriptions.append(node.create_subscription(String, topic,
                     lambda msg, key=key: self.json_status(key, msg), 1))
-            # The handoff adapter publishes one-shot data with the default
-            # volatile QoS. Do not require transient-local durability here.
-            handoff_qos = QoSProfile(depth=10, reliability=ReliabilityPolicy.RELIABLE,
-                                     durability=DurabilityPolicy.VOLATILE)
+            # Match the adapter's retained, original-stamped terminal pair.
+            handoff_qos = QoSProfile(depth=1, reliability=ReliabilityPolicy.RELIABLE,
+                                     durability=DurabilityPolicy.TRANSIENT_LOCAL)
             for cls, topic, callback in [(Target, '/manipulation/target', self.target),
                     (ApproachResult, '/manipulation/approach_result', self.approach)]:
                 self.subscriptions.append(node.create_subscription(cls, topic, callback, handoff_qos))
@@ -166,9 +168,15 @@ class ManipulationControl:
             if key == 'adapter':
                 value = self.monitor.values[key]
                 task = value.get('task_id')
-                if task and value.get('reason') == 'APPROACH_RUNNING' and task not in self.seen_sessions:
+                started = value.get('approach_started_at')
+                new_session = (type(started) in (int, float) and math.isfinite(started)
+                               and self.started_ros-.1 <= started <= self.now()+.1)
+                observed = value.get('reason') == 'APPROACH_RUNNING' or (
+                    value.get('reason') == 'HANDED_OFF_EXTERNAL_BASE_LEASE_REQUIRED' and new_session)
+                if task and observed and task not in self.seen_sessions:
                     self.seen_sessions.append(task)
-                    if self.armed:
+                    if self.armed and (value.get('reason') == 'APPROACH_RUNNING' or
+                                       new_session and started >= self.armed_at_ros):
                         self.armed_task = task
                 if self.armed and value.get('reason') not in IDLE_REASONS:
                     self.armed = False
@@ -193,14 +201,43 @@ class ManipulationControl:
         for task in reversed(self.approaches):
             msg, stamp = self.approaches[task]
             source_stamp = msg.header.stamp.sec+msg.header.stamp.nanosec*1e-9
-            if (task in self.targets and task in self.seen_sessions and task not in self.consumed and msg.outcome == 'SUCCESS'
-                    and msg.base_stopped and 0 <= time.monotonic()-stamp <= 10.
-                    and -.1 <= self.now()-source_stamp <= 10.
+            target = self.targets.get(task, (None,))[0]
+            target_stamp = (target.header.stamp.sec+target.header.stamp.nanosec*1e-9) if target else 0.
+            valid_target = (target is not None and target.header.frame_id == 'odom'
+                and 0 <= target.class_id < 6 and -.1 <= self.now()-target_stamp <= 120.
+                and all(math.isfinite(v) for v in (target.coarse_position.x,
+                    target.coarse_position.y, target.coarse_position.z)))
+            if (valid_target and task in self.seen_sessions and task not in self.consumed and msg.outcome == 'SUCCESS'
+                    and msg.base_stopped and 0 <= time.monotonic()-stamp <= 30.
+                    and -.1 <= self.now()-source_stamp <= 30.
                     and self.monitor.fresh('adapter')
                     and self.monitor.values['adapter'].get('task_id') == task
-                    and self.monitor.values['adapter'].get('reason') == 'HANDED_OFF_EXTERNAL_BASE_LEASE_REQUIRED'):
+                    and self.monitor.values['adapter'].get('reason') == 'HANDED_OFF_EXTERNAL_BASE_LEASE_REQUIRED'
+                    and self.monitor.values['adapter'].get('measured_stop_confirmed') is True
+                    and self.monitor.fresh('base') and self.monitor.values['base'].get('stopped') is True):
                 return task
         return None
+
+    def handoff_state(self):
+        adapter = self.monitor.values.get('adapter', {})
+        task = adapter.get('task_id')
+        ready = self.candidate()
+        reason = adapter.get('reason', 'WAITING_FOR_NEW_APPROACH')
+        messages = {'WAITING_FOR_NEW_APPROACH': '새 물체 도킹 완료 대기',
+            'WAITING_FOR_MEASURED_TARGET': '접근 중 · 실측 물체 좌표 수집 대기',
+            'APPROACH_RUNNING': '물체 접근·도킹 진행 중',
+            'WAITING_FOR_MEASURED_STOP': '도킹 완료 · 실측 정지 확인 중',
+            'HANDED_OFF_EXTERNAL_BASE_LEASE_REQUIRED': '도킹 인계 확인 중'}
+        message = '도킹 완료·실측 정지 인계 완료' if ready else messages.get(reason, '인계 대기 · '+str(reason))
+        if reason == 'HANDED_OFF_EXTERNAL_BASE_LEASE_REQUIRED' and not ready:
+            message = '인계 유효기간·연결·현재 정지 상태 확인 필요'
+        if not self.monitor.fresh('adapter'):
+            message = '디텍션 인계 상태 수신 대기 / 지연'
+        target = self.targets.get(task, (None,))[0]
+        return dict(ready=bool(ready), task_id=task, reason=reason, message=message,
+            coarse_position=dict(frame=target.header.frame_id,
+                xyz=[target.coarse_position.x, target.coarse_position.y, target.coarse_position.z]) if target else None,
+            base_lock_policy='실행 요청 후 실제 베이스 잠금 확인, 확인 전 팔 동작 금지')
 
     def blockers(self, require_handoff=True):
         result = []
@@ -235,6 +272,7 @@ class ManipulationControl:
                     if errors:
                         raise RuntimeError(' / '.join(errors))
                     self.armed, self.armed_at, self.armed_task = True, time.monotonic(), None
+                    self.armed_at_ros = self.now()
                     self.state.log('매니퓰 자동 인계 대기 · 이후 시작하는 새 Detection 접근 완료 후 실행', source='manipulation')
                 elif request['action'] == 'run':
                     errors = self.blockers()
@@ -265,8 +303,14 @@ class ManipulationControl:
             elif self.armed_task and self.candidate() == self.armed_task:
                 self.armed = False
                 self.request(dict(action='run'))
+        handoff = self.handoff_state()
+        if handoff['ready']:
+            self.monitor.event('handoff', handoff['task_id'],
+                '매니퓰 · 도킹 완료·실측 정지 인계 완료 · 작업 '+handoff['task_id'][:12],
+                'info', 'manipulation-handoff')
         self.monitor.values['execution'] = dict(blockers=self.blockers(),
-            arm_blockers=self.blockers(require_handoff=False), armed=self.armed, handoff_task=self.candidate())
+            arm_blockers=self.blockers(require_handoff=False), armed=self.armed,
+            handoff_task=self.candidate(), handoff=handoff)
         self.monitor.tick()
 
     def accepted(self, future):

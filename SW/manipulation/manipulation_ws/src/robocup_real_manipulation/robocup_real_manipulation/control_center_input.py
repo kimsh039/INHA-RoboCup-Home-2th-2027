@@ -13,7 +13,12 @@ ACTIVE_PHASES = {'waiting_nav', 'planning', 'navigating', 'settling',
                  'aligning', 'approaching', 'final_align', 'waiting_target',
                  'navigating_target', 'rerouting_table', 'planning_table',
                  'target_settling', 'point_aligning', 'point_approaching',
-                 'recovering', 'observing_table', 'realigning'}
+                 'recovering', 'observing_table', 'realigning', 'point_handoff',
+                 'docking_handoff', 'visual_aligning', 'visual_approaching',
+                 'visual_waiting', 'visual_handoff', 'front_retreat',
+                 'checking_reverse', 'final_reverse'}
+PRE_TARGET_PHASES = {'waiting_target', 'visual_aligning', 'visual_approaching',
+                     'visual_waiting', 'visual_handoff', 'front_retreat'}
 INACTIVE_PHASES = {'idle', 'searching', 'confirming', 'ready', 'canceled', 'error', 'at_target'}
 
 
@@ -47,19 +52,20 @@ def observed_target(value, now, max_age):
 
 
 class ApproachSession:
-    def __init__(self, stream_timeout=1., target_age=120., stop_duration=.6):
+    def __init__(self, stream_timeout=3., target_age=120., stop_duration=.6):
         self.timeout, self.target_age, self.stop_duration = stream_timeout, target_age, stop_duration
         self.received = None
         self.armed = False
         self.task = None
         self.target = None
         self.succeeded_at = None
+        self.started_at = None
         self.sent = False
         self.reason = 'WAITING_FOR_NEW_APPROACH'
 
     def invalidate(self, reason):
         self.armed = False
-        self.task = self.target = self.succeeded_at = None
+        self.task = self.target = self.succeeded_at = self.started_at = None
         self.sent = False
         self.reason = reason
 
@@ -73,7 +79,7 @@ class ApproachSession:
         if active:
             if phase not in ACTIVE_PHASES:
                 raise ValueError('CONTROL_CENTER_INVALID_ACTIVE_PHASE')
-            if phase == 'waiting_target' and value.get('target') is None:
+            if phase in PRE_TARGET_PHASES and value.get('target') is None:
                 if self.task is not None:
                     self.invalidate('CONTROL_CENTER_TARGET_LOST')
                 else:
@@ -82,6 +88,7 @@ class ApproachSession:
             target = observed_target(value, now, self.target_age)
             if self.task is None and self.armed:
                 self.task = uuid.uuid4().hex
+                self.started_at = now
                 self.target = target
                 self.succeeded_at = None
                 self.sent = False
@@ -129,13 +136,18 @@ class ApproachSession:
         self.reason = 'HANDED_OFF_EXTERNAL_BASE_LEASE_REQUIRED'
         return dict(task_id=self.task, target=copy.deepcopy(self.target), completed_at=self.succeeded_at)
 
+    def moved(self):
+        if self.succeeded_at is not None:
+            self.invalidate('CONTROL_CENTER_BASE_MOVED_AFTER_COMPLETION')
+
 
 def main():
     import json
     import rclpy
+    from rclpy.executors import ExternalShutdownException
     from rclpy.node import Node
     from rclpy.time import Time
-    from rclpy.qos import qos_profile_sensor_data
+    from rclpy.qos import qos_profile_sensor_data, QoSProfile, DurabilityPolicy, ReliabilityPolicy
     from nav_msgs.msg import Odometry
     from std_msgs.msg import String
     from robocup_real_manipulation_msgs.msg import Target, ApproachResult
@@ -152,8 +164,10 @@ def main():
             odom = self.declare_parameter('odom_topic', '/odom_ekf').value
             self.create_subscription(String, status, self.input, 1)
             self.create_subscription(Odometry, odom, self.odometry, qos_profile_sensor_data)
-            self.targets = self.create_publisher(Target, '/manipulation/target', 10)
-            self.approaches = self.create_publisher(ApproachResult, '/manipulation/approach_result', 10)
+            handoff_qos = QoSProfile(depth=1, reliability=ReliabilityPolicy.RELIABLE,
+                                     durability=DurabilityPolicy.TRANSIENT_LOCAL)
+            self.targets = self.create_publisher(Target, '/manipulation/target', handoff_qos)
+            self.approaches = self.create_publisher(ApproachResult, '/manipulation/approach_result', handoff_qos)
             self.status = self.create_publisher(String, '/manipulation/control_center/status', 1)
             self.create_timer(.1, self.tick)
             self.create_timer(1., self.report)
@@ -162,12 +176,15 @@ def main():
             return self.get_clock().now().nanoseconds/1e9
 
         def input(self, msg):
+            previous = self.session.reason, self.session.task
             try:
                 if len(msg.data) > 65536:
                     raise ValueError('CONTROL_CENTER_STATUS_TOO_LARGE')
                 self.session.update(json.loads(msg.data), self.now())
             except (ValueError, TypeError, KeyError) as exc:
                 self.session.invalidate(str(exc))
+            if previous != (self.session.reason, self.session.task):
+                self.report()
 
         def odometry(self, msg):
             now = self.now()
@@ -185,6 +202,10 @@ def main():
                     math.sqrt(sum(x*x for x in values[:3])) > .02 or
                     math.sqrt(sum(x*x for x in values[3:])) > .04):
                 self.stop_since = None
+                previous_reason = self.session.reason
+                self.session.moved()
+                if previous_reason != self.session.reason:
+                    self.report()
             elif previous is None or stamp-previous > .3 or self.stop_since is None:
                 self.stop_since = now
 
@@ -207,15 +228,24 @@ def main():
             approach.header.stamp = Time(nanoseconds=round(result['completed_at']*1e9)).to_msg()
             self.targets.publish(target)
             self.approaches.publish(approach)
+            self.report()
 
         def report(self):
             self.status.publish(String(data=json.dumps(dict(reason=self.session.reason,
-                task_id=self.session.task, external_base_lease_required=True))))
+                task_id=self.session.task, approach_started_at=self.session.started_at,
+                completed_at=self.session.succeeded_at, handed_off=self.session.sent,
+                measured_stop_confirmed=bool(self.stop_since is not None and self.odom_stamp is not None
+                    and 0 <= self.now()-self.odom_stamp <= .3
+                    and self.now()-self.stop_since >= self.session.stop_duration),
+                external_base_lease_required=True))))
 
     rclpy.init()
     node = Adapter()
     try:
         rclpy.spin(node)
+    except (KeyboardInterrupt, ExternalShutdownException):
+        pass
     finally:
         node.destroy_node()
-        rclpy.shutdown()
+        if rclpy.ok():
+            rclpy.shutdown()

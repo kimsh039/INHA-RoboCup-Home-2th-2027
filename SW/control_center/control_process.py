@@ -30,6 +30,24 @@ class Outbox:
         return batch
 
 
+class ControlSensors:
+    """SensorManager interface backed by the parent's service snapshot."""
+    def __init__(self, state, outgoing, require_collision_ready):
+        self.state = state
+        self.outgoing = outgoing
+        self.require_collision_ready = require_collision_ready
+
+    def service_request(self, key, action):
+        self.outgoing.put(('service', key, action))
+
+    def navigation_available(self):
+        with self.state.condition:
+            service = (self.state.values.get('service_control') or {}).get('navigation') or {}
+            # Availability prevents duplicate starts; lifecycle readiness is
+            # checked separately by NavigationController before sending goals.
+            return bool(service.get('managed') or service.get('publishers'))
+
+
 class ControllerProcess:
     def __init__(self, state, config, use_sim_time):
         self.state = state
@@ -165,20 +183,14 @@ def run_controller(connection, config, use_sim_time):
             super().log(message, level, source)
             outgoing.put(('log', message, level, source))
 
-    class Sensors:
-        def service_request(self, key, action):
-            outgoing.put(('service', key, action))
-
-        def require_collision_ready(self):
-            node.detection_approach.require_protection_ready()
-
     node = None
     thread = threading.Thread(target=transport, name='control-web-ipc', daemon=True)
     thread.start()
     rclpy.init(args=['--ros-args', '-p', 'use_sim_time:='+str(use_sim_time).lower()],
                signal_handler_options=SignalHandlerOptions.NO)
     state = ControlState('live', config)
-    state.sensor_manager = Sensors()
+    state.sensor_manager = ControlSensors(state, outgoing,
+        lambda: node.detection_approach.require_protection_ready())
     shutdown = False
     try:
         node = NavigationController(state, config)

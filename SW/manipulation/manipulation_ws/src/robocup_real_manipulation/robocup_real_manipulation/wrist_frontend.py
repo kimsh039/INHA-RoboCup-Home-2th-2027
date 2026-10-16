@@ -4,8 +4,6 @@ RealSense ROS owns the camera. No pyrealsense2 pipeline, camera reopening, arm
 commands, fabricated classes, or copied coarse positions appear in this node.
 """
 from contextlib import nullcontext
-from collections import deque
-import json
 from pathlib import Path
 from collections import deque
 import json

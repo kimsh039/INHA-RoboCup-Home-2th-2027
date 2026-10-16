@@ -81,5 +81,43 @@ class ControlProcessLifecycleTests(unittest.TestCase):
         self.run_offline(disconnect=True)
 
 
+class ControlSensorContractTests(unittest.TestCase):
+    def connect(self, service):
+        from control_process import ControlSensors, Outbox
+        from detection_approach import DetectionApproach
+        from server import State
+        state = State('live', {})
+        state.values['service_control'] = {'navigation': service}
+        outgoing = Outbox()
+        state.sensor_manager = ControlSensors(state, outgoing, Mock())
+        approach = SimpleNamespace(state=state, report=Mock())
+        DetectionApproach.connect_navigation(approach)
+        approach.report.assert_called_once()
+        self.assertEqual(approach.report.call_args.args[0], 'waiting_nav')
+        return outgoing.drain()
+
+    def test_missing_navigation_requests_start_through_parent(self):
+        self.assertEqual(self.connect({}), [('service', 'navigation', 'start')])
+
+    def test_running_or_starting_navigation_is_not_restarted(self):
+        for service in ({'managed': True}, {'publishers': 1}, {'busy': True}):
+            with self.subTest(service=service):
+                self.assertEqual(self.connect(service), [])
+
+    def test_updated_service_snapshot_controls_availability(self):
+        from control_process import ControlSensors, Outbox
+        from server import State
+        state = State('live', {})
+        ready = Mock()
+        sensors = ControlSensors(state, Outbox(), ready)
+        self.assertFalse(sensors.navigation_available())
+        state.values['service_control'] = {'navigation': {'managed': True}}
+        self.assertTrue(sensors.navigation_available())
+        state.values['service_control'] = {'navigation': {'managed': False, 'publishers': 0}}
+        self.assertFalse(sensors.navigation_available())
+        sensors.require_collision_ready()
+        ready.assert_called_once_with()
+
+
 if __name__ == '__main__':
     unittest.main()
