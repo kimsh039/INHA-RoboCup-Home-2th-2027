@@ -82,8 +82,8 @@ def test_target_change_cancellation_and_stream_gap_prevent_handoff():
         elif failure == 'cancel':
             s.update(status('canceled'), 100.2)
         else:
-            s.update(status('succeeded'), 102.)
-        assert s.take(102.5, 100.) is None
+            s.update(status('succeeded'), 104.)
+        assert s.take(104.5, 100.) is None
 
 
 def test_new_observed_approach_has_new_uuid_and_frozen_start_measurement():
@@ -172,3 +172,40 @@ def test_realigning_does_not_allow_premature_grasp_handoff():
     s.update(status('final_align', True), 100.5)
     s.update(status('at_target'), 100.6)
     assert s.take(101., 99.) is None
+
+
+def test_visual_docking_handoffs_keep_one_task_until_success_and_real_stop():
+    s = ApproachSession(); s.update(status(), 100.)
+    for i, phase in enumerate(('waiting_target', 'visual_waiting', 'visual_aligning', 'visual_approaching')):
+        v = status(phase, True); v['target'] = None
+        s.update(v, 100.1+i*.1)
+        assert s.task is None and s.armed
+    s.update(status('visual_handoff', True), 100.5)
+    task = s.task
+    assert task and s.started_at == 100.5
+    for i, phase in enumerate(('navigating_target', 'point_handoff', 'docking_handoff',
+                               'front_retreat', 'checking_reverse', 'final_reverse', 'final_align')):
+        s.update(status(phase, True), 100.6+i*.1)
+        assert s.task == task and s.take(100.6+i*.1, 100.) is None
+    s.update(status('succeeded'), 101.4)
+    assert s.take(101.9, 101.4) is None
+    s.update(status('succeeded'), 102.1)
+    assert s.take(102.1, 101.4)['task_id'] == task
+
+
+def test_short_status_delay_keeps_live_task_but_long_gap_invalidates():
+    s = running(); task = s.task
+    s.update(status('docking_handoff', True), 101.6)
+    assert s.task == task
+    s.update(status('succeeded'), 105.)
+    assert s.task is None and s.take(105.8, 105.) is None
+
+
+def test_base_movement_after_completion_revokes_handoff():
+    s = running(); s.update(status('succeeded'), 100.2)
+    s.update(status('succeeded'), 100.9)
+    assert s.take(100.9, 100.2)
+    s.moved()
+    assert s.task is None and s.reason == 'CONTROL_CENTER_BASE_MOVED_AFTER_COMPLETION'
+    s.update(status('succeeded'), 101.)
+    assert s.take(101.8, 101.) is None
