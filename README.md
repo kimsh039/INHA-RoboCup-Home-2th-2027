@@ -1,41 +1,80 @@
-# INHA United @Home · 2027
+## 프로젝트 소개
+이 프로젝트는 **RoboCup@Home 2027**을 위한 모바일 매니퓰레이터를 개발합니다. 로봇은 **TRACER** 이동 베이스 위에 **AgileX PiPER** 팔을 올린 구성입니다. 요청받은 물체를 책상 위에서 찾고, 그 앞에 정밀하게 도킹한 뒤, 집어서 옮깁니다. 모든 소프트웨어는 **Jetson AGX Orin**의 **ROS 2 Humble**에서 실행합니다.
 
-TRACER × PiPER · Head D435 / Wrist D435IF · YDLIDAR G2 / Livox MID-360S · Jetson AGX Orin · ROS 2 Humble
+이 저장소에는 전체 시스템이 들어 있습니다.
+- `HW/`: 하드웨어 모델과 보정 기록
+- `SW/`: 로봇 실행, 인식, 주행, 도킹, 매니퓰레이션, 웹 관제센터
 
-**실물 실행과 관제:** [로봇·센서](SW/robot/README.md) · [웹 관제센터](SW/control_center/README.md) · [최신 구현 변경](SW/CHANGES_20261016.md)
-**발표 준비:** [전체 구조·공부 순서·예상 질문](SW/PRESENTATION_STUDY_GUIDE.md) · [저장소 정리 기준과 복구](SW/REPOSITORY_MAINTENANCE.md)
+## **시스템 개요**
 
-## 현재 작업 흐름
+```mermaid
+flowchart LR
+  A["웹 관제센터<br/>물체 이름 입력"] --> B["Head D435<br/>YOLO11n · TensorRT"]
+  B --> C["RGB–LiDAR 결합<br/>목표 · 책상 경계(odom)"]
+  C --> D["SLAM Toolbox + EKF<br/>Nav2 + 3D 충돌 관문"]
+  D --> E["근접 접근<br/>20 Hz 정밀 도킹"]
+  E --> F["베이스 잠금 · 작업 인계"]
+  F --> G["Wrist D435IF<br/>SAM 2.1 + depth"]
+  G --> H["MoveIt · PiPER<br/>집기 · 놓기"]
+  H --> I["팔 수납 · 후진<br/>홈 복귀"]
+```
 
-Head YOLO11n → RGB–LiDAR 목표 대응 → 책상 탐색·closed approach → 베이스 잠금 → Wrist SAM 2.1 Tiny 재관측 → MoveIt/PiPER 집기 → 책상 위 접시 관측·배치 → 팔 수납 → 직선 후진·정지 → 회전·정렬·정지 → 홈 복귀를 연결한다.
+<!-- TODO: 발표용 시스템 그림(system_overview.png)이 있으면 mermaid 대신 이미지로 교체 -->
 
-전체 Task 코드는 통합됐지만 **접시 관측 자세와 실측 프로파일 commissioning이 남아 있으며, 전체 작업의 실물 성공을 확인한 상태는 아니다.** 과거 청사과 정차 실험, 오프라인 회귀, ROS 통신 검사와 전체 주행·파지 성공을 구분한다. [현재 전체 Task 조건](SW/control_center/TASK.md)
+## **하드웨어 구성**
 
-## 어디에서 무엇을 관리하는가
+<!-- TODO: 실물 로봇 사진 -->
+<p align="center">
+  <img src="docs/assets/hardware.png" width="500" />
+  <br/>
+  <b>TRACER × PiPER</b>
+</p>
 
-| 경로 | 역할 | 먼저 읽을 문서 |
+- **이동 베이스:** AgileX TRACER (차동 구동)
+- **팔:** AgileX PiPER 6자유도 팔 + 평행 그리퍼
+- **메인 컴퓨터:** NVIDIA Jetson AGX Orin (JetPack 6.2, ROS 2 Humble)
+- **카메라:** Intel RealSense D435 (머리), D435IF (손목)
+- **LiDAR:** Livox MID-360S (3D, 1.33 m 높이에 거꾸로 장착), YDLIDAR G2 (2D)
+- **센서 랙:** 알루미늄 프로파일 자체 제작 랙 ([URDF](HW/URDF/sensor_rack_description))
+
+### 캘리브레이션 요약
+
+| 대상 | 방법 | 결과 |
 |---|---|---|
-| `HW/` | CAD·메시·질량/관성·실물 보정 원본 | [하드웨어](HW/README.md) |
-| `SW/robot/` | 실물 센서·TF·오도메트리·충돌 보호·베이스 잠금 | [실물 로봇](SW/robot/README.md) |
-| `SW/control_center/` | 관제·SLAM/Nav2·Head/LiDAR 대응·도킹·전체 Task | [관제센터](SW/control_center/README.md) |
-| `SW/detection/head/` | YOLO 모델·공통 adapter·현재 데이터·학습/평가 | [Head](SW/detection/head/README.md) |
-| `SW/manipulation/` | 현재 Wrist SAM·점군/기하·팔 제어·접시 배치 | [Manipulation](SW/manipulation/README.md) |
-| `SW/detection/wrist/` | 현재 손목 실행 코드로 안내하는 진입 문서 | [Wrist](SW/detection/wrist/README.md) |
-| `SW/simulation/` | Gazebo/MuJoCo·CAD 및 시뮬레이션 보정 | [Simulation](SW/simulation/README.md) |
-| `SW/setup/` | Jetson 설치·버전·환경 기록 | [Setup](SW/setup/README.md) |
+| 바퀴 오도메트리 | `/cmd_vel` 자동 주행, MID-360 점군 정합을 기준값으로 속도 모델(v4) 보정 | 직진 1 m당 5~7 mm |
+| 회전 방향 | IMU 자이로 편향 제거 + `robot_localization` EKF → `/odom_ekf` | 90° 회전당 0.1° |
+| Base ↔ MID-360 | 바닥 평면 RANSAC(roll·pitch·z) + 주행 걸음 점-평면 ICP(x·y·yaw) | [기록](HW/calibration/physical/base_mid360/README.md) |
+| Base ↔ G2 | MID-360 기준 2D–3D 6자유도 정합 | [기록](HW/calibration/physical/base_2dlidar/README.md) |
+| Head D435 ↔ MID-360 | koide3 `direct_visual_lidar_calibration`, bag 4개 | [기록](HW/calibration/head_mid360/README.md) |
+| 손목 hand-eye | ChArUco 55자세, Park 초기값 + 비선형 최적화 | [기록](HW/calibration/physical/wrist_handeye/README.md) |
+| 카메라 내부 파라미터 | 카메라별 체커보드 11×8칸(2.5 cm) | [기록](HW/calibration/camera_intrinsics/README.md) |
 
-## 현재 인식 모델과 데이터
+## **패키지 구성**
 
-Head는 `head_yolo11n_20261013.pt`에서 만든 대상 장치의 TensorRT FP16 engine을 우선 사용한다. 클래스는 **green_apple, peach, tomato, fanta_can, cup, banana**이고 cup은 손잡이를 포함한 빨간 머그컵이다. 기본 confidence는 **cup/banana 0.50, 나머지 0.25**, NMS IoU 0.7이며 공통 adapter는 클래스별 최고 점수 박스 하나를 남긴다. 같은 클래스가 여러 테이블에 있을 때의 관측 누락은 별도 고려해야 한다.
+- 🤖 **로봇 실행 · 안전**
+  - [SW/robot](SW/robot) - 실물 센서, 센서 TF, EKF 오도메트리, 베이스 잠금
+  - [SW/robot/collision_processing](SW/robot/collision_processing) - 모든 `/cmd_vel`을 검사하는 3D 충돌 관문, Nav2 장면·경로 레이어, 보호 후진
 
-현재 학습 데이터는 [20261013 스냅샷](SW/detection/head/datasets/20261013/README.md) 2,155장(train 1,786 / val 369)이다. [검증 mAP50 0.97474 / mAP50–95 0.70237](SW/detection/head/training/experiments/20261013/TRAINING_RESULTS.md)은 부분 수동 검토 라벨 기준 학습 검증 수치이며, 현재 후처리·실물 Task 성공률과 다르다.
+- 🖥️ **관제센터 · Task**
+  - [SW/control_center](SW/control_center) - 웹 대시보드, SLAM/Nav2 모드, Head–LiDAR 목표 결합, 근접 접근 도킹, 전체 Task 상태 머신
 
-## 모델과 좌표계 사용 기준
+- 👁️ **인식 · 비전**
+  - [SW/detection/head](SW/detection/head) - 6종 YOLO11n(green_apple, peach, tomato, fanta_can, cup, banana), 젯슨 TensorRT FP16
+  - [SW/detection/wrist](SW/detection/wrist) - 손목 인식 안내 문서(SAM 2.1 Tiny + aligned depth)
 
-- CAD 원본: [robocup.urdf](SW/simulation/robot_description/robocup.urdf).
-- 시뮬레이션/통합 보정 기록: [robocup.calibrated.urdf](SW/simulation/robot_description/robocup.calibrated.urdf).
-- 실물: [부분 arm URDF + 실측 센서 TF](SW/robot/README.md). 전체 calibrated 모델을 실물에 중복 발행하지 않는다.
-- RGB는 RealSense 원본 토픽을 사용한다. `calibrated_streams.py`는 CameraInfo를 발행하며 RGB를 중계하지 않는다.
-- 모델·실행 패키지 변경은 실행 중 프로세스를 자동 갱신하지 않는다. [전체 Task 배포/필수 조건](SW/control_center/TASK.md)을 따른다.
+- 🦾 **매니퓰레이션**
+  - [SW/manipulation](SW/manipulation) - 손목 SAM 기하 계산, MoveIt 계획, PiPER 실행, 접시 배치
 
-최상위는 `HW/`, `SW/`, 이 README와 Git 설정만 유지한다. 오래된 실행 예시·중복 데이터는 활성 트리에서 정리하고, 과거 실험 지표와 복구 커밋은 남긴다.
+- 🎮 **시뮬레이션**
+  - [SW/simulation](SW/simulation) - Gazebo Harmonic·MuJoCo 환경, 통합 URDF, 시뮬레이션 보정
+
+- 📐 **하드웨어 · 보정**
+  - [HW/URDF](HW/URDF) - TRACER, PiPER, 센서 랙, 손목 카메라 모델(CAD, 메시, 관성)
+  - [HW/calibration](HW/calibration) - 실물 로봇 보정 원본과 적용 기록
+
+- 📊 **데이터셋**
+  - [Head 데이터셋 20261013](SW/detection/head/datasets/20261013/README.md) - 2,155장(train 1,786 / val 369), 검증 mAP50 0.975
+
+- 🛠️ **설치 · 도구**
+  - [SW/setup](SW/setup) - 젯슨 설치와 버전 기록
+  - [SW/tools](SW/tools) - 저장소 관리 도구
